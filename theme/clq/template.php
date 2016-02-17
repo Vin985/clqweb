@@ -6,6 +6,7 @@
 * @Action:		clq theme for GetSimple CMS
 *
 *****************************************************/
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,11 +17,11 @@
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 
 		<link rel="icon" href="<?php get_theme_url(); ?>/images/favicon.ico">
-		
+
 		<title>
 			<?php if (function_exists('get_custom_title_tag')){
 					echo(get_custom_title_tag());
-				} else { 
+				} else {
 					get_page_clean_title(); echo"&nbsp;&mdash;&nbsp;"; get_site_name();
 				}  ?>
 		</title>
@@ -28,21 +29,15 @@
 		<!-- JavaScript -->
 		<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery.min.js"></script>
 		<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery-migrate-1.2.1.min.js"></script>
-		<script type="text/javascript">
-			function loadContent(page) {
-				alert(decodeURIComponent(page));
-				$("#content" ).load(decodeURIComponent(page));              // The function returns the product of p1 and p2
-			}
-		</script>
-		
+
 		<!-- Fonts -->
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600,400&amp;subset=latin,cyrillic" rel="stylesheet" type="text/css">
-		<link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700&amp;subset=latin,cyrillic" rel="stylesheet" type="text/css">	
+		<link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700&amp;subset=latin,cyrillic" rel="stylesheet" type="text/css">
 
-		
+
 		<!-- CLQ CSS -->
 		<link rel="stylesheet" href="<?php get_theme_url(); ?>/css/global.css" type="text/css">
-		<link rel="stylesheet" href="<?php get_theme_url(); ?>/css/font-awesome.min.css" type="text/css">	
+		<link rel="stylesheet" href="<?php get_theme_url(); ?>/css/font-awesome.min.css" type="text/css">
 		<!-- Custom styles for this template -->
 		<link rel="stylesheet" href="<?php get_theme_url(); ?>/css/clq.css" type="text/css">
 
@@ -51,26 +46,35 @@
 			  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 			  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 			<![endif]-->
-		
+
 		<?php function_exists('get_i18n_header') ? get_i18n_header() : get_header(); ?>
 </head>
-	
-<!-- BODY -->	
+
+<!-- BODY -->
 <body id="<?php get_page_slug(); ?>" class="stickybody">
 
 	<!-- HEADER -->
 	<?php include('header.inc.php'); ?>
-	
-	<!-- NAVIGATION BAR -->
-	<?php include('navigation.inc.php'); ?>
-	
-	<!-- SITE CONTENT -->
-	<div class="container">
 
-		<div class="row">
-			<div class="c8">
-				<h1 class="pajaxTitle"><?php get_page_title(); ?></h1>
-				
+	<!-- NAVIGATION BAR -->
+	<nav class="topnav">
+		<ul>
+			<?php get_i18n_navigation(return_page_slug(), 0, 1, I18N_SHOW_MENU); ?>
+		</ul>
+	</nav>
+
+	<!-- SITE CONTENT -->
+
+	<div class="container">
+		<h2 class="title"><?php get_page_title(); ?></h2>
+		<?php  ?>
+		<nav class="sidenav">
+				<ul>
+					<?php get_i18n_navigation(return_page_slug(), 1, 1, I18N_SHOW_MENU); ?>
+				</ul>
+		</nav>
+			<?php  ?>
+		<div class="content">
 				<div class="page-text pajaxContent">
 					<?php get_page_content(); ?>
 				</div>
@@ -85,7 +89,7 @@
 
 
 	<!-- SCRIPTS-->
-	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/plugins.js"></script>
+	<!-- script type="text/javascript" src="<?php get_theme_url(); ?>/js/plugins.js"></script>
 	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/custom.js"></script>
 	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/bootstrap.min.js"></script>
 	<!-- SCRIPTS -->

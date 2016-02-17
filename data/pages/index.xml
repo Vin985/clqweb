@@ -1,3 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<item><pubDate>Mon, 15 Feb 2016 10:58:22 -0500</pubDate><title><![CDATA[Accueil]]></title><url><![CDATA[index]]></url><meta><![CDATA[getsimple, easy, content management system]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Accueil]]></menu><menuOrder><![CDATA[0]]></menuOrder><menuStatus><![CDATA[]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[]]></parent><content><![CDATA[&lt;p&gt;Hello hello&lt;/p&gt;
-]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author></item>
+<item><pubDate>Tue, 16 Feb 2016 18:04:28 -0500</pubDate><title><![CDATA[Accueil]]></title><url><![CDATA[index]]></url><meta><![CDATA[getsimple, easy, content management system]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Accueil]]></menu><menuStatus><![CDATA[]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[]]></parent><content><![CDATA[&lt;p&gt;Hello hello&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author><menuOrder><![CDATA[1]]></menuOrder></item>

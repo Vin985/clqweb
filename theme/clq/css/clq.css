@@ -1,5 +1,5 @@
-/*! 
-* Theme's Stylesheet - Modify/Add your own stylesheet + Your Copyright 
+/*!
+* Theme's Stylesheet - Modify/Add your own stylesheet + Your Copyright
 */
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic);
 
@@ -14,6 +14,11 @@ body,input,select,textarea {
 .container {
 	padding: 50px 0 50px;
 }
+
+.title{
+	width:100%;
+}
+
 
 nav ul li a {
 	text-transform: uppercase;
@@ -54,7 +59,7 @@ header a.logo {
 }
 
 .header-wrapper {
-	height:95px;
+	height:auto;
 }
 
 .header-wrapper header .logo {
@@ -66,6 +71,85 @@ header a.logo {
 }
 
 
+.topnav {
+	height:auto;
+	float:right;
+	width:auto;
+	padding:0px 7.5%;
+	margin:0px auto;
+	background-color:#fff;
+	z-index:9999;
+}
+.topnav li {
+	position:relative;
+	margin:0px 0px 0px 10px;
+	font-size:14px;
+	padding-bottom:1px;
+	letter-spacing:1px;
+	font-weight:500;
+	display:inline-block;
+}
+.topnav li a {
+	color:#282828;
+	padding:20px 10px;
+}
+.topnav li a:hover,.topnav li a.active {
+	text-decoration:none;
+	color:#337ab7;
+}
+.topnav li ul {
+	display:none;
+	padding:15px 0px 0px;
+	position:absolute;
+	top:25px;
+	left:0px;
+	z-index:1000;
+	width:200px;
+	background:#fff;
+	border:1px solid #eee;
+}
+.topnav li:hover>ul {
+	display:block;
+}
+.topnav li ul li {
+	padding:0;
+	color:#444c57;
+	margin:0 12px 10px 12px;
+	line-height:1.4;
+	font-weight:400;
+}
+.topnav li ul li a {
+	color:#444c57;
+}
+.topnav li ul li a:hover {
+	color:#337ab7;
+}
+
+.sidenav {
+	float:left;
+	width: auto;
+	padding-right: 5%;
+}
+.sidenav ul {
+	padding: 0;
+	list-style-type:none;
+}
+.sidenav li {
+
+}
+.sidenav li a {
+	padding:10px 10px;
+}
+.sidenav li ul li {
+	padding:0;
+	color:#444c57;
+	margin:0 12px 10px 12px;
+	line-height:1.4;
+	font-weight:400;
+}
+
+
+
 .contact-band {
 		text-align:right;
 		padding-right:30px;
@@ -74,6 +158,10 @@ header a.logo {
 
 .contact-band a{
 		color:#000000;
+}
+
+.content {
+	max-width:100%;
 }
 
 @media (max-width: 992px){

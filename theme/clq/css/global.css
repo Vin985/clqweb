@@ -1,7 +1,7 @@
-/*! 
-* Wow Framework v 1.0.0 (www.wowthemes.net) 
-* Copyright 2015 Wow Development 
-* Licensed under MIT 
+/*!
+* Wow Framework v 1.0.0 (www.wowthemes.net)
+* Copyright 2015 Wow Development
+* Licensed under MIT
 * Credits:Bootstrap,Google Fonts,Font Awesome */
 
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
@@ -209,6 +209,11 @@ hr {
 }
 /* Grid based on Bootstrap v3.3.5 (http://getbootstrap.com) * Copyright 2011-2015 Twitter,Inc.*/
 .container {
+	display : flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: flex-start;
+	flex-wrap: wrap;
 	margin-right:auto;
 	margin-left:auto;
 	padding-left:15px;
@@ -222,7 +227,7 @@ hr {
 }
 @media (min-width:1200px) {
 	.container {
-		width:900px;
+		width:80%;
 	}
 }
 .container-fluid {
@@ -530,13 +535,6 @@ hr {
 	z-index:9999;
 }
 
-.nav-wrapper {
-	height:auto;
-	width:100%;
-	height:59px;
-	background-color:#fff;
-	z-index:9999;
-}
 
 @media (min-width:992px) {
 	.header-wrapper.sticky {
@@ -564,18 +562,18 @@ hr {
 		letter-spacing:1px;
 		color:#333;
 	}
-	
-	.nav-wrapper {
+
+/*	.nav-wrapper {
 		float:right;
 		width:100%;
 		padding:0px 7.5%;
 		margin:0px auto;
 	}
-	
+
 	.nav-wrapper nav {
 		margin:0px 0px 0px;
 	}
-	
+
 	.nav-wrapper  nav ul {
 		list-style:none;
 		float:right;
@@ -624,7 +622,7 @@ hr {
 	}
 	.nav-wrapper nav li ul li a:hover {
 		color:#337ab7;
-	}
+	} */
 	.js .nav-collapse {
 		position:relative;
 	}
