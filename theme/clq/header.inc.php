@@ -15,13 +15,13 @@
 		</header>
 		<div class="contact-band">
 			<span>
-				<a href="tel:(450) 788-2680">
-					<i class="fa fa-phone"></i>&nbsp;(450) 788-2880
+				<a href="">
+					<i class="fa fa-phone"></i>(450) 788-2680
 				</a>
-			</span>&nbsp;&nbsp;&nbsp;&nbsp;
+			</span>
 			<span>
 				<a href="mailto:info@campinglequebecois.qc.ca">
-					<i class="fa fa-envelope"></i>&nbsp;info@campinglequebecois.qc.ca
+					<i class="fa fa-envelope"></i>info@campinglequebecois.qc.ca
 				</a>
 			</span>
 		</div>

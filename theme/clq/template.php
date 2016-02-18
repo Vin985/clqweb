@@ -30,10 +30,10 @@
 		<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery.min.js"></script>
 		<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery-migrate-1.2.1.min.js"></script>
 
-		<!-- Fonts -->
+		<!-- Fonts
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600,400&amp;subset=latin,cyrillic" rel="stylesheet" type="text/css">
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700&amp;subset=latin,cyrillic" rel="stylesheet" type="text/css">
-
+ 	-->
 
 		<!-- CLQ CSS -->
 		<link rel="stylesheet" href="<?php get_theme_url(); ?>/css/global.css" type="text/css">
@@ -57,8 +57,10 @@
 	<?php include('header.inc.php'); ?>
 
 	<!-- NAVIGATION BAR -->
-	<nav class="topnav">
-		<ul>
+	<nav  class="topnav">
+		<label for="show-menu" class="show-menu">Menu</label>
+		<input type="checkbox" id="show-menu" role="button">
+		<ul id="topnav">
 			<?php get_i18n_navigation(return_page_slug(), 0, 1, I18N_SHOW_MENU); ?>
 		</ul>
 	</nav>
@@ -68,7 +70,7 @@
 	<div class="container">
 		<h2 class="title"><?php get_page_title(); ?></h2>
 		<?php  ?>
-		<nav class="sidenav">
+		<nav class="sidenav nav-collapse">
 				<ul>
 					<?php get_i18n_navigation(return_page_slug(), 1, 1, I18N_SHOW_MENU); ?>
 				</ul>
@@ -79,7 +81,6 @@
 					<?php get_page_content(); ?>
 				</div>
 			</div>
-		</div>
 	</div>
 	<!-- SITE CONTENT -->
 
@@ -89,10 +90,10 @@
 
 
 	<!-- SCRIPTS-->
-	<!-- script type="text/javascript" src="<?php get_theme_url(); ?>/js/plugins.js"></script>
+	<!--<script type="text/javascript" src="<?php get_theme_url(); ?>/js/plugins.js"></script>
 	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/custom.js"></script>
-	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/bootstrap.min.js"></script>
-	<!-- SCRIPTS -->
+	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/bootstrap.min.js"></script>-->
+	<!--  SCRIPTS -->
 
 </body>
 </html>

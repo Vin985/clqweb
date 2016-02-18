@@ -1,203 +1,263 @@
 /*!
 * Theme's Stylesheet - Modify/Add your own stylesheet + Your Copyright
 */
+
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic);
-
-body,input,select,textarea {
-	color:#6e6e6e;
-	font-family:'Roboto',sans-serif;
-	font-size:16px;
-	font-weight:300;
-	line-height: 1.6;
+body, input, select, textarea {
+  color: #6e6e6e;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.6;
 }
-
 .container {
-	padding: 50px 0 50px;
+  padding: 50px 0 50px;
+}
+.title {
+  width: 100%;
+}
+.banner {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-content: flex-start;
+  justify-content: space-between;
+}
+.contact-band {
+  width: auto;
+  /*text-align:right;*/
+  padding: 20px 0px 10px 30px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+.contact-band span {
+  margin-right: 15px;
+}
+.contact-band i {
+  padding-right: 5px;
+}
+.contact-band a {
+  color: #000000;
 }
 
-.title{
-	width:100%;
+/*Style 'show menu' label button and hide it by default*/
+
+.show-menu {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-decoration: none;
+  color: #fff;
+  background: #19c589;
+  text-align: center;
+  padding: 10px 0;
+  display: none;
+  width: 100%;
 }
 
+/*Hide checkbox*/
 
+input[type=checkbox] {
+  display: none;
+}
+
+/*Show menu when invisible checkbox is checked*/
+
+input[type=checkbox]:checked ~ #topnav {
+  display: block;
+}
 nav ul li a {
-	text-transform: uppercase;
+  text-transform: uppercase;
 }
-
 nav ul ul li a {
-	text-transform: capitalize;
+  text-transform: capitalize;
 }
-
 footer .container {
-	padding: 5px 7.5% 0px;
-	width: 100%;
+  padding: 5px 7.5% 0px;
+  width: 100%;
 }
-
 footer {
-	background-color:#222;
-	color:#999;
-	padding: 0;
-	font-size:15px;
+  background-color: #222;
+  color: #999;
+  padding: 0;
+  font-size: 15px;
 }
 footer hr {
-	border-top:1px solid #444;
+  border-top: 1px solid #444;
 }
-footer a, footer a:active, footer a:focus{
-	color:#fff;
+footer a, footer a:active, footer a:focus {
+  color: #fff;
 }
 
 /* Tidying Logo and mobile menu behaviour */
 
-
 header a.logo {
-	background : url(img/logo.png);
-	height:95px;
-	width:200px;
-	background-position: top left;
-    background-repeat: no-repeat;
-    text-indent: -999em;
+  background: url(img/logo.png);
+  height: 95px;
+  width: 200px;
+  background-position: top left;
+  background-repeat: no-repeat;
+  text-indent: -999em;
 }
-
 .header-wrapper {
-	height:auto;
+  height: auto;
 }
-
 .header-wrapper header .logo {
-	font-size:17px;
-	float:left;
-	line-height:57px;
-	letter-spacing:1px;
-	color:#333;
+  font-size: 17px;
+  float: left;
+  line-height: 57px;
+  letter-spacing: 1px;
+  color: #333;
 }
-
-
 .topnav {
-	height:auto;
-	float:right;
-	width:auto;
-	padding:0px 7.5%;
-	margin:0px auto;
-	background-color:#fff;
-	z-index:9999;
+  height: auto;
+  float: right;
+  width: auto;
+  padding: 0px 7.5%;
+  margin: 0px auto;
+  background-color: #ffffff;
+  z-index: 9999;
 }
 .topnav li {
-	position:relative;
-	margin:0px 0px 0px 10px;
-	font-size:14px;
-	padding-bottom:1px;
-	letter-spacing:1px;
-	font-weight:500;
-	display:inline-block;
+  position: relative;
+  margin: 0px 0px 0px 10px;
+  font-size: 14px;
+  padding-bottom: 1px;
+  letter-spacing: 1px;
+  font-weight: 500;
+  display: inline-block;
 }
 .topnav li a {
-	color:#282828;
-	padding:20px 10px;
+  color: #282828;
+  padding: 20px 10px;
 }
-.topnav li a:hover,.topnav li a.active {
-	text-decoration:none;
-	color:#337ab7;
+.topnav li a:hover, .topnav li a.active {
+  text-decoration: none;
+  color: #337ab7;
 }
 .topnav li ul {
-	display:none;
-	padding:15px 0px 0px;
-	position:absolute;
-	top:25px;
-	left:0px;
-	z-index:1000;
-	width:200px;
-	background:#fff;
-	border:1px solid #eee;
+  display: none;
+  padding: 15px 0px 0px;
+  position: absolute;
+  top: 25px;
+  left: 0px;
+  z-index: 1000;
+  width: 200px;
+  background: #fff;
+  border: 1px solid #eee;
 }
 .topnav li:hover>ul {
-	display:block;
+  display: block;
 }
 .topnav li ul li {
-	padding:0;
-	color:#444c57;
-	margin:0 12px 10px 12px;
-	line-height:1.4;
-	font-weight:400;
+  padding: 0;
+  color: #444c57;
+  margin: 0 12px 10px 12px;
+  line-height: 1.4;
+  font-weight: 400;
 }
 .topnav li ul li a {
-	color:#444c57;
+  color: #444c57;
 }
 .topnav li ul li a:hover {
-	color:#337ab7;
+  color: #337ab7;
 }
-
 .sidenav {
-	float:left;
-	width: auto;
-	padding-right: 5%;
+  float: left;
+  width: auto;
+  padding-right: 5%;
 }
 .sidenav ul {
-	padding: 0;
-	list-style-type:none;
+  padding: 0;
+  list-style-type: none;
 }
-.sidenav li {
-
-}
+.sidenav li {}
 .sidenav li a {
-	padding:10px 10px;
+  padding: 10px 10px;
 }
 .sidenav li ul li {
-	padding:0;
-	color:#444c57;
-	margin:0 12px 10px 12px;
-	line-height:1.4;
-	font-weight:400;
+  padding: 0;
+  color: #444c57;
+  margin: 0 12px 10px 12px;
+  line-height: 1.4;
+  font-weight: 400;
 }
-
-
-
-.contact-band {
-		text-align:right;
-		padding-right:30px;
-		padding-top:15px;
-}
-
-.contact-band a{
-		color:#000000;
-}
-
 .content {
-	max-width:100%;
+  max-width: 100%;
 }
-
-@media (max-width: 992px){
-	.js .nav-collapse {
-		width: 300px;
-		float: right;
-}}
 
 
 /*Making the 'stickybody' work'*/
 
 body.stickybody {
-	margin-top:0;
+  margin-top: 0;
 }
-
 .header-wrapper.sticky {
-	position:fixed;
-	border-bottom:1px solid #eee;
-	top:0;
+  position: fixed;
+  border-bottom: 1px solid #eee;
+  top: 0;
 }
-
 
 /*Making the Footer 'sticky'*/
 
 html {
-    position: relative;
-    min-height: 100%;
+  position: relative;
+  min-height: 100%;
 }
-
 body {
-    margin-bottom: 250px;
+  margin-bottom: 250px;
 }
 footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 30px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 30px;
+  width: 100%;
+}
+
+@media (max-width: 992px) {
+  .js .nav-collapse {
+    width: 300px;
+    float: right;
+  }
+}
+
+@media (max-width:768px) {
+  .contact-band {
+    font-size: 12px;
+    padding: 10px 0px 10px 30px;
+  }
+  .topnav {
+		position: absolute;
+		top:0;
+		right:0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		background-color: transparent;
+		width: 100%;
+  }
+  /*Make dropdown links appear inline*/
+  .topnav ul {
+    position: static;
+    display: none;
+  }
+  /*Create vertical spacing*/
+  .topnav li {
+    margin-bottom: 1px;
+  }
+  /*Make all menu links full width*/
+  .topnav nav ul li, li a {
     width: 100%;
+  }
+  /*Display 'show menu' link*/
+  .show-menu {
+    display: block;
+		width: 25%;
+  }
+}
+@media (max-width:320px) {
+  .contact-band {
+    font-size: 10px;
+  }
 }

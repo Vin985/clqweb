@@ -528,9 +528,7 @@ hr {
 }
 /* HEADER */
 .header-wrapper {
-	height:auto;
 	width:100%;
-	height:59px;
 	background-color:#fff;
 	z-index:9999;
 }
@@ -549,9 +547,9 @@ hr {
 		color:#fff;
 	}
 	.header-wrapper header {
-		width:100%;
+		width:auto;
 		padding:0px 7.5%;
-		margin:0px auto;
+		/*margin:0px auto;*/
 	}
 	.header-wrapper header .logo {
 		font-size:17px;
