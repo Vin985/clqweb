@@ -26,7 +26,7 @@ body, input, select, textarea {
 .contact-band {
   width: auto;
   /*text-align:right;*/
-  padding: 20px 0px 10px 30px;
+  padding: 20px 0 10px 30px;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -65,14 +65,10 @@ input[type=checkbox] {
 input[type=checkbox]:checked ~ #topnav {
   display: block;
 }
-nav ul li a {
-  text-transform: uppercase;
-}
-nav ul ul li a {
-  text-transform: capitalize;
-}
+
+
 footer .container {
-  padding: 5px 7.5% 0px;
+  padding: 5px 7.5% 0;
   width: 100%;
 }
 footer {
@@ -108,18 +104,20 @@ header a.logo {
   letter-spacing: 1px;
   color: #333;
 }
+
+/*
 .topnav {
   height: auto;
   float: right;
   width: auto;
-  padding: 0px 7.5%;
-  margin: 0px auto;
+  padding: 0 7.5%;
+  margin: 0 auto;
   background-color: #ffffff;
   z-index: 9999;
 }
 .topnav li {
   position: relative;
-  margin: 0px 0px 0px 10px;
+  margin: 0 0 0 10px;
   font-size: 14px;
   padding-bottom: 1px;
   letter-spacing: 1px;
@@ -130,16 +128,16 @@ header a.logo {
   color: #282828;
   padding: 20px 10px;
 }
-.topnav li a:hover, .topnav li a.active {
+.topnav li a:hover, .topnav li .active {
   text-decoration: none;
   color: #337ab7;
 }
 .topnav li ul {
   display: none;
-  padding: 15px 0px 0px;
+  padding: 15px 0 0;
   position: absolute;
   top: 25px;
-  left: 0px;
+  left: 0;
   z-index: 1000;
   width: 200px;
   background: #fff;
@@ -161,6 +159,8 @@ header a.logo {
 .topnav li ul li a:hover {
   color: #337ab7;
 }
+*/
+
 .sidenav {
   float: left;
   width: auto;
@@ -170,7 +170,6 @@ header a.logo {
   padding: 0;
   list-style-type: none;
 }
-.sidenav li {}
 .sidenav li a {
   padding: 10px 10px;
 }
@@ -185,13 +184,12 @@ header a.logo {
   max-width: 100%;
 }
 
-
 /*Making the 'stickybody' work'*/
 
 body.stickybody {
   margin-top: 0;
 }
-.header-wrapper.sticky {
+.header-wrapper .sticky {
   position: fixed;
   border-bottom: 1px solid #eee;
   top: 0;
@@ -213,47 +211,84 @@ footer {
   height: 30px;
   width: 100%;
 }
-
 @media (max-width: 992px) {
   .js .nav-collapse {
     width: 300px;
     float: right;
   }
 }
-
 @media (max-width:768px) {
   .contact-band {
     font-size: 12px;
     padding: 10px 0px 10px 30px;
   }
   .topnav {
-		position: absolute;
-		top:0;
-		right:0;
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		background-color: transparent;
-		width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background-color: transparent;
+    width: 100%;
   }
   /*Make dropdown links appear inline*/
   .topnav ul {
     position: static;
     display: none;
+    background-color: #000;
+    width: auto;
+    padding: 0;
+    margin: 0;
   }
   /*Create vertical spacing*/
   .topnav li {
     margin-bottom: 1px;
+    border-bottom: 1px solid #fff;
+    border-color: #fff;
+    padding: 5px 0;
+    display: block;
+  }
+  .topnav li a {
+    font-size: 12px;
+    color: #fff;
   }
   /*Make all menu links full width*/
-  .topnav nav ul li, li a {
+  .topnav ul li, li a {
     width: 100%;
+  }
+  .topnav li ul {
+    display: block;
+    position: relative;
+    width: auto;
+    background-color: #000;
+    color: #fff;
+    top: 0;
+    padding: 0 0 0 10px;
+    border: none;
+  }
+  .topnav li ul li {
+    padding: 0;
+    margin: 5px 12px 5px 0px;
+    line-height: 1.4;
+    font-weight: 400;
+    border: none;
+  }
+  .topnav li ul li a {
+    color: #fff;
   }
   /*Display 'show menu' link*/
   .show-menu {
     display: block;
-		width: 25%;
+    width: 25%;
+  }
+  .topnav li>ul li a:before {
+    content: '-';
+    margin-right: 5px;
+  }
+  .sidenav {
+    display: none;
   }
 }
 @media (max-width:320px) {

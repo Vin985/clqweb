@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<channel><item><title><![CDATA[Navbar]]></title><slug>navbar</slug><value><![CDATA[    	&lt;li class=&quot;&lt;?php echo $item-&gt;classes; ?&gt;&quot;&gt;
-            &lt;a  href=&quot;&lt;?php echo($item-&gt;link); ?&gt;&quot;  title=&quot;&lt;?php echo htmlspecialchars($item-&gt;text); ?&gt;&quot;&gt;
-            &lt;?php echo htmlspecialchars($item-&gt;text); ?&gt;
-       &lt;/a&gt;
-   &lt;/li&gt;
-
- &lt;?php if ($item-&gt;isOpen) { ?&gt;
-    &lt;?php $item-&gt;outputChildren(); ?&gt;
-  &lt;?php }  ?&gt;
+<channel><item><title><![CDATA[Navbar]]></title><slug>navbar</slug><value><![CDATA[&lt;li class=&quot;navitem &lt;?php echo $item-&gt;classes; ?&gt;&quot;&gt;
+  &lt;a href=&quot;&lt;?php echo htmlspecialchars($item-&gt;link); ?&gt;&quot; &gt;
+    &lt;?php echo htmlspecialchars($item-&gt;text); ?&gt;
+  &lt;/a&gt;
+  &lt;?php if ($item-&gt;isOpen) { ?&gt;
+    &lt;ul class=&quot;dropdown&quot;&gt;&lt;?php $item-&gt;outputChildren(); ?&gt;&lt;/ul&gt;
+  &lt;?php } ?&gt;
+&lt;/li&gt;
 
 
 	

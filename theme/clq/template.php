@@ -40,6 +40,7 @@
 		<link rel="stylesheet" href="<?php get_theme_url(); ?>/css/font-awesome.min.css" type="text/css">
 		<!-- Custom styles for this template -->
 		<link rel="stylesheet" href="<?php get_theme_url(); ?>/css/clq.css" type="text/css">
+		<link rel="stylesheet" href="<?php get_theme_url(); ?>/css/clqless.css" type="text/css">
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
@@ -57,11 +58,11 @@
 	<?php include('header.inc.php'); ?>
 
 	<!-- NAVIGATION BAR -->
-	<nav  class="topnav">
+	<nav  class="topnav hw-auto center right upper">
 		<label for="show-menu" class="show-menu">Menu</label>
-		<input type="checkbox" id="show-menu" role="button">
+		<input id="show-menu" type="checkbox"  role="button">
 		<ul id="topnav">
-			<?php get_i18n_navigation(return_page_slug(), 0, 1, I18N_SHOW_MENU); ?>
+			<?php get_i18n_navigation(return_page_slug(), 0, 1, I18N_SHOW_MENU, "navbar"); ?>
 		</ul>
 	</nav>
 
