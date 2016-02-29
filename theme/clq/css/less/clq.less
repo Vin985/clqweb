@@ -26,16 +26,20 @@
 .tools {
   padding: 20px 0 10px 30px;
   display: flex;
-  flex-wrap: wrap;
   align-content: flex-start;
   justify-content: flex-end;
 }
 .lang {
-   margin: 0 0 0 10px;
+  margin: 0 0 0 10px;
+  a {
+    color: @default-txt;
+    text-decoration: none;
+  }
 }
 .contact-band {
   span {
     margin-right: 15px;
+    display:inline-block;
   }
   i {
     padding-right: 5px;
@@ -112,13 +116,24 @@
 }
 .title {
   width: 100%;
-  margin: 40px 0;
+  margin: 20px 0;
 }
 .content {
   width: 75%;
   p {
     margin: 0;
   }
+}
+.photo {
+  margin: 10px;
+}
+.foot-banner{
+  background-image: url(img/front-fleur.jpg);
+  background-repeat: no-repeat;
+  background-position:center;
+  height: 260px;
+  width: 100%;
+  z-index: 9999;
 }
 @media (max-width:768px) {
   .banner {
@@ -127,9 +142,13 @@
     align-content: flex-start;
     justify-content: flex-start;
   }
-  .contact-band {
+  .tools {
     font-size: 12px;
     padding: 10px 0 10px 30px;
+    justify-content: flex-start;
+  }
+  .lang{
+    margin: 0;
   }
   /*Display 'show menu' link*/
   .show-menu {
@@ -194,9 +213,12 @@
     padding: 0;
   }
 }
-@media (max-width:320px) {
-  .contact-band {
-    font-size: 10px;
+@media (max-width:400px) {
+  body {
+    font-size:12px;
+  }
+  .tools {
     justify-content: flex-start;
+    padding: 20px 0 10px 10px;
   }
 }

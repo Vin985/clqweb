@@ -81,7 +81,7 @@
 			</div>
 	</div>
 	<!-- SITE CONTENT -->
-
+<div class="foot-banner"></div>
 
 	<!-- FOOTER -->
 	<?php include('footer.inc.php'); ?>
