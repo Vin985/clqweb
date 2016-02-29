@@ -4,7 +4,7 @@
     &lt;?php echo htmlspecialchars($item-&gt;text); ?&gt;
   &lt;/a&gt;
   &lt;?php if ($item-&gt;isOpen) { ?&gt;
-    &lt;ul class=&quot;dropdown&quot;&gt;&lt;?php $item-&gt;outputChildren(); ?&gt;&lt;/ul&gt;
+    &lt;ul class=&quot;subnav&quot;&gt;&lt;?php $item-&gt;outputChildren(); ?&gt;&lt;/ul&gt;
   &lt;?php } ?&gt;
 &lt;/li&gt;
 

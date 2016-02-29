@@ -227,7 +227,7 @@ hr {
 }
 @media (min-width:1200px) {
 	.container {
-		width:80%;
+		width:85%;
 	}
 }
 .container-fluid {
@@ -548,14 +548,14 @@ hr {
 	}
 	.header-wrapper header {
 		width:auto;
-		padding:0px 7.5%;
+		padding:0 ;
 		/*margin:0px auto;*/
 	}
 	.header-wrapper header .logo {
 		font-size:17px;
 		float:left;
 		display:inline-block;
-		margin:0px 0px 0px;
+		margin:0;
 		line-height:57px;
 		letter-spacing:1px;
 		color:#333;

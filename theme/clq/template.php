@@ -23,7 +23,8 @@
 					echo(get_custom_title_tag());
 				} else {
 					get_page_clean_title(); echo"&nbsp;&mdash;&nbsp;"; get_site_name();
-				}  ?>
+				}
+				?>
 		</title>
 
 		<!-- JavaScript -->
@@ -33,7 +34,9 @@
 		<!-- Fonts
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600,400&amp;subset=latin,cyrillic" rel="stylesheet" type="text/css">
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700&amp;subset=latin,cyrillic" rel="stylesheet" type="text/css">
+
  	-->
+		<link href="http://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic" rel="stylesheet" type="text/css">
 
 		<!-- CLQ CSS -->
 		<link rel="stylesheet" href="<?php get_theme_url(); ?>/css/global.css" type="text/css">
@@ -54,31 +57,25 @@
 <!-- BODY -->
 <body id="<?php get_page_slug(); ?>" class="stickybody">
 
+<div class="container">
 	<!-- HEADER -->
 	<?php include('header.inc.php'); ?>
 
-	<!-- NAVIGATION BAR -->
-	<nav  class="topnav hw-auto center right upper">
-		<label for="show-menu" class="show-menu">Menu</label>
-		<input id="show-menu" type="checkbox"  role="button">
-		<ul id="topnav">
-			<?php get_i18n_navigation(return_page_slug(), 0, 1, I18N_SHOW_MENU, "navbar"); ?>
-		</ul>
-	</nav>
+
 
 	<!-- SITE CONTENT -->
 
-	<div class="container">
+
 		<h2 class="title"><?php get_page_title(); ?></h2>
 		<?php  ?>
-		<nav class="sidenav nav-collapse">
-				<ul>
-					<?php get_i18n_navigation(return_page_slug(), 1, 1, I18N_SHOW_MENU); ?>
+		<nav class="sidenav">
+				<ul class="rootnav">
+					<?php get_i18n_navigation(return_page_slug(), 1, 1, I18N_SHOW_MENU, "navbar"); ?>
 				</ul>
 		</nav>
 			<?php  ?>
 		<div class="content">
-				<div class="page-text pajaxContent">
+				<div class="page-text">
 					<?php get_page_content(); ?>
 				</div>
 			</div>
