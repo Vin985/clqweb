@@ -55,7 +55,7 @@
 </head>
 
 <!-- BODY -->
-<body id="<?php get_page_slug(); ?>" class="stickybody">
+<body id="<?php get_page_slug(); ?>" class="stickybody clq">
 
 <div class="container">
 	<!-- HEADER -->
@@ -69,7 +69,7 @@
 		<h2 class="title"><?php get_page_title(); ?></h2>
 		<?php  ?>
 		<nav class="sidenav">
-				<ul class="rootnav">
+				<ul class="sidemenu root">
 					<?php get_i18n_navigation(return_page_slug(), 1, 1, I18N_SHOW_MENU, "navbar"); ?>
 				</ul>
 		</nav>

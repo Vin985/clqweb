@@ -48,7 +48,7 @@
 	<nav  class="topnav hw-auto center right upper">
 		<label for="show-menu" class="show-menu">Menu</label>
 		<input id="show-menu" type="checkbox"  role="button">
-		<ul id="navmenu" class="rootnav">
+		<ul id="navmenu" class="topmenu root">
 			<?php get_i18n_navigation(return_page_slug(), 0, 1, I18N_SHOW_MENU, 'navbar'); ?>
 		</ul>
 	</nav>
