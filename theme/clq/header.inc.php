@@ -45,7 +45,7 @@
       </div>
 	</div>
 	<!-- NAVIGATION BAR -->
-	<nav  class="topnav hw-auto center right upper">
+	<nav class="topnav hw-auto center right upper">
 		<label for="show-menu" class="show-menu">Menu</label>
 		<input id="show-menu" type="checkbox"  role="button">
 		<ul id="navmenu" class="topmenu root">

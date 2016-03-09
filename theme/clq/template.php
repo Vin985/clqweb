@@ -91,6 +91,13 @@
 	<!--<script type="text/javascript" src="<?php get_theme_url(); ?>/js/plugins.js"></script>
 	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/custom.js"></script>
 	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/bootstrap.min.js"></script>-->
+	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/doubletaptogo.js"></script>
+	<script>
+		$( function()
+		{
+			$( '#navmenu li:has(ul)' ).doubleTapToGo();
+		});
+</script>
 	<!--  SCRIPTS -->
 
 </body>

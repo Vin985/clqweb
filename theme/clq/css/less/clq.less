@@ -20,33 +20,36 @@
 .upper {
   text-transform: uppercase;
 }
+.drop-transition {
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  -ms-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
 .clq {
-  background: #cae9fb;
-  background: -webkit-linear-gradient(@bg-sky, white);
-  /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(@bg-sky, white);
-  /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(@bg-sky, white);
-  /* For Firefox 3.6 to 15 */
-  background: linear-gradient(@bg-sky, white);
-  /* Standard syntax */
+  .gradient(@bg-sky; white);
 }
 .banner {
   width: 100%;
 }
 .header-wrapper {
+  margin: 5px 0 0 0;
   background-color: transparent;
 }
 .logo {
-  background: url("img/logo2.png");
-  height: 95px;
-  width: 200px;
-  background-position: top left;
-  background-repeat: no-repeat;
+  background: @img-logo;
+  height: 150px;
+  width: 293px;
+  float: left;
+  line-height: 57px;
+  letter-spacing: 1px;
+  color: #333;
   text-indent: -999em;
+  direction: ltr;
 }
 .tools {
-  padding: 20px 0 10px 30px;
+  padding: 10px 0 10px 30px;
   display: flex;
   align-content: flex-start;
   justify-content: flex-end;
@@ -77,27 +80,16 @@
 .root {
   padding: 0;
 }
-.open a {
-  &:after {
-    content: '\25bc';
-    font-size: 12px;
-  }
-
-}
 .topmenu {
-  border-bottom: 2px solid @subnav-border;
+  //border-bottom: 2px solid @subnav-border;
   .navitem {
     display: inline-block;
     a {
       padding: 5px 5px 3px;
-      border: 2px solid transparent;
       &:hover {
-        border: 2px solid @subnav-border;
-        //border-radius: 5px 5px 0 0;
-        border-bottom: none;
         text-decoration: none;
         color: @topnav-txt-sel;
-        background: @topnav-bg-sel;
+        //background: @topnav-bg-sel;
       }
     }
     &:hover>.subnav {
@@ -107,23 +99,15 @@
   }
 }
 .subnav {
-  // dropdown transition
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: all 0.25s ease;
-  -moz-transition: all 0.25s ease;
-  -ms-transition: all 0.25s ease;
-  -o-transition: all 0.25s ease;
-  transition: all 0.25s ease;
+  .drop-transition();
   padding: 15px 0 0;
   position: absolute;
   width: auto;
   min-width: 100%;
-  margin-top: 2px;
-  //border-radius: 0 0 10px 10px;
   background: @subnav-bg;
   border: 2px solid @subnav-border;
-  border-top: none;
   white-space: nowrap;
   .navitem {
     padding: 0;
@@ -136,15 +120,15 @@
         border: none;
       }
       &:after {
-        content : '';
+        content: '';
       }
-      color: @topnav-drop-txt;
+      color: @subnav-drop-txt;
     }
   }
 }
 .navitem {
   position: relative;
-  margin: 0 10px 0 0;
+  //margin: 0 10px 0 0;
   .text-params();
   a {
     padding: 5px 15px 4px;
@@ -155,6 +139,14 @@
     }
   }
 }
+.current {
+  border-bottom: 2px solid @subnav-border;
+}
+.current2 {
+  //border-bottom: 2px solid @subnav-border;
+  background: @topnav-bg-sel;
+  //border-radius: 5px 5px 0 0;
+}
 .sidenav {
   width: 25%;
   .rootnav {
@@ -163,7 +155,6 @@
   }
   .navitem {
     display: block;
-    padding: 0;
     color: @sidenav-txt;
     margin: 0;
     padding: 0 10px 15px;
@@ -177,7 +168,8 @@
 }
 .title {
   width: 100%;
-  margin: 20px 0;
+  margin: 15px 0 20px 0;
+  text-indent: 25%;
 }
 .content {
   width: 75%;
@@ -189,14 +181,37 @@
   margin: 10px;
 }
 .foot-banner {
-  background-image: url("img/front-fleur.png");
+  background-image: @img-fleur;
   background-repeat: no-repeat;
   background-position: center;
   height: 260px;
   width: 100%;
   z-index: 9999;
 }
+@media (min-width:768px) {
+  .open a {
+    &:after {
+      content: '\25bc';
+      font-size: 12px;
+    }
+  }
+}
+@media (max-width:1200px){
+  .navitem {
+    .text-params(@size:14px; @height: 1.4; @weigth: 400);
+  }
+  .subnav {
+    .navitem {
+      .text-params(@size:12px);
+    }
+  }
+}
 @media (max-width:768px) {
+  .logo {
+    background: @img-logo-small;
+    height: 95px;
+    width: 186px;
+  }
   .banner {
     display: flex;
     flex-wrap: wrap-reverse;
@@ -209,25 +224,16 @@
     justify-content: flex-start;
   }
   .lang {
-    margin: 0;
+    margin: 0 10px 0;
   }
-  /*Display 'show menu' link*/
   .show-menu {
     display: block;
   }
   .topnav {
-    /*position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;*/
     background-color: transparent;
     width: 100%;
-    //z-index: 9999;
   }
-  .rootnav {
+  .topmenu {
     display: none;
     background-color: @topnav-resp-bg;
     width: 100%;
@@ -242,6 +248,8 @@
   }
   .subnav {
     display: block;
+    visibility: visible;
+    opacity:1;
     position: relative;
     background-color: @topnav-resp-bg;
     top: 0;

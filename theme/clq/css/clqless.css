@@ -1,4 +1,5 @@
-/* colors */
+/* Top Menu */
+/* Dropdown submenu */
 .hw-auto {
   height: auto;
   width: auto;
@@ -18,33 +19,48 @@
 .upper {
   text-transform: uppercase;
 }
+.drop-transition {
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  -ms-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
 .clq {
-  background: #cae9fb;
-  background: -webkit-linear-gradient(#ddecf6, #ffffff);
-  /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(#ddecf6, #ffffff);
-  /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(#ddecf6, #ffffff);
+  background: #ddf1fe;
   /* For Firefox 3.6 to 15 */
-  background: linear-gradient(#ddecf6, #ffffff);
+  background: -moz-linear-gradient(#ddf1fe, #ffffff);
+  /* For Safari 4+ and Chrome */
+  background: -webkit-gradient(#ddf1fe, #ffffff);
+  /* For Safari 5.1 to 6.0 */
+  background: -webkit-linear-gradient(#ddf1fe, #ffffff);
+  /* For Opera 11.1 to 12.0 */
+  background: -o-linear-gradient(#ddf1fe, #ffffff);
+  /* For IE10+ */
+  background: -ms-linear-gradient(#ddf1fe, #ffffff);
   /* Standard syntax */
+  background: linear-gradient(#ddf1fe, #ffffff);
 }
 .banner {
   width: 100%;
 }
 .header-wrapper {
+  margin: 5px 0 0 0;
   background-color: transparent;
 }
 .logo {
-  background: url("img/logo2.png");
-  height: 95px;
-  width: 200px;
-  background-position: top left;
-  background-repeat: no-repeat;
+  background: url("img/logo.png");
+  height: 150px;
+  width: 293px;
+  float: left;
+  line-height: 57px;
+  letter-spacing: 1px;
+  color: #333;
   text-indent: -999em;
+  direction: ltr;
 }
 .tools {
-  padding: 20px 0 10px 30px;
+  padding: 10px 0 10px 30px;
   display: flex;
   align-content: flex-start;
   justify-content: flex-end;
@@ -53,7 +69,7 @@
   margin: 0 0 0 10px;
 }
 .lang a {
-  color: #000000;
+  color: #004d00;
   text-decoration: none;
 }
 .contact-band span {
@@ -64,7 +80,7 @@
   padding-right: 5px;
 }
 .contact-band a {
-  color: #000000;
+  color: #004d00;
 }
 .topnav {
   padding: 0;
@@ -73,26 +89,15 @@
 .root {
   padding: 0;
 }
-.open a:after {
-  content: '\25bc';
-  font-size: 12px;
-}
-.topmenu {
-  border-bottom: 2px solid #3caefa;
-}
 .topmenu .navitem {
   display: inline-block;
 }
 .topmenu .navitem a {
   padding: 5px 5px 3px;
-  border: 2px solid transparent;
 }
 .topmenu .navitem a:hover {
-  border: 2px solid #3caefa;
-  border-bottom: none;
   text-decoration: none;
-  color: #337ab7;
-  background: #cee5f9;
+  color: #00b300;
 }
 .topmenu .navitem:hover > .subnav {
   visibility: visible;
@@ -110,10 +115,8 @@
   position: absolute;
   width: auto;
   min-width: 100%;
-  margin-top: 2px;
-  background: #cee5f9;
-  border: 2px solid #3caefa;
-  border-top: none;
+  background: #dbf0db;
+  border: 2px solid #8b4727;
   white-space: nowrap;
 }
 .subnav .navitem {
@@ -137,7 +140,6 @@
 }
 .navitem {
   position: relative;
-  margin: 0 10px 0 0;
   font-size: 16px;
   font-weight: 500;
   letter-spacing: 1px;
@@ -145,11 +147,17 @@
 }
 .navitem a {
   padding: 5px 15px 4px;
-  color: #282828;
+  color: #004d00;
 }
 .navitem a:hover {
   text-decoration: none;
-  color: #337ab7;
+  color: #00b300;
+}
+.current {
+  border-bottom: 2px solid #8b4727;
+}
+.current2 {
+  background: #b3d1ff;
 }
 .sidenav {
   width: 25%;
@@ -160,7 +168,6 @@
 }
 .sidenav .navitem {
   display: block;
-  padding: 0;
   color: #444c57;
   margin: 0;
   padding: 0 10px 15px;
@@ -173,7 +180,8 @@
 }
 .title {
   width: 100%;
-  margin: 20px 0;
+  margin: 15px 0 20px 0;
+  text-indent: 25%;
 }
 .content {
   width: 75%;
@@ -192,7 +200,32 @@
   width: 100%;
   z-index: 9999;
 }
+@media (min-width: 768px) {
+  .open a:after {
+    content: '\25bc';
+    font-size: 12px;
+  }
+}
+@media (max-width: 1200px) {
+  .navitem {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    line-height: 1.4;
+  }
+  .subnav .navitem {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    line-height: 1.6;
+  }
+}
 @media (max-width: 768px) {
+  .logo {
+    background: url("img/logo-small.png");
+    height: 95px;
+    width: 186px;
+  }
   .banner {
     display: flex;
     flex-wrap: wrap-reverse;
@@ -205,31 +238,23 @@
     justify-content: flex-start;
   }
   .lang {
-    margin: 0;
+    margin: 0 10px 0;
   }
-  /*Display 'show menu' link*/
   .show-menu {
     display: block;
   }
   .topnav {
-    /*position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;*/
     background-color: transparent;
     width: 100%;
   }
-  .rootnav {
+  .topmenu {
     display: none;
     background-color: #000000;
     width: 100%;
     padding: 0;
     margin: 0;
   }
-  .rootnav .navitem {
+  .topmenu .navitem {
     display: block;
     margin-bottom: 1px;
     border-bottom: 1px solid #ffffff;
@@ -237,6 +262,8 @@
   }
   .subnav {
     display: block;
+    visibility: visible;
+    opacity: 1;
     position: relative;
     background-color: #000000;
     top: 0;

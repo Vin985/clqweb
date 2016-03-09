@@ -6,3 +6,19 @@
   letter-spacing: @spacing;
   line-height: @height;
 }
+
+.gradient(@col1; @col2){
+  background: @col1;
+  /* For Firefox 3.6 to 15 */
+  background: -moz-linear-gradient(@col1, @col2);
+  /* For Safari 4+ and Chrome */
+  background: -webkit-gradient(@col1, @col2);
+  /* For Safari 5.1 to 6.0 */
+  background: -webkit-linear-gradient(@col1, @col2);
+  /* For Opera 11.1 to 12.0 */
+  background: -o-linear-gradient(@col1, @col2);
+  /* For IE10+ */
+  background: -ms-linear-gradient(@col1, @col2);
+  /* Standard syntax */
+  background: linear-gradient(@col1, @col2);
+}
