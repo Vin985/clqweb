@@ -10,21 +10,21 @@ Author URI: http://mvlcek.bplaced.net
 # get correct id for plugin
 $thisfile = basename(__FILE__, ".php");
 
-define('I18N_GALLERY_DIR', 'i18n_gallery/'); 
+define('I18N_GALLERY_DIR', 'i18n_gallery/');
 define('I18N_GALLERY_DEFAULT_TYPE', 'prettyphoto');
 define('I18N_GALLERY_DEFAULT_THUMB_WIDTH', 160);
 define('I18N_GALLERY_DEFAULT_THUMB_HEIGHT', 120);
 
 # register plugin
 register_plugin(
-	$thisfile, 
-	'I18N Gallery', 	
-	'2.2.1', 		
+	$thisfile,
+	'I18N Gallery',
+	'2.2.1',
 	'Martin Vlcek',
-	'http://mvlcek.bplaced.net', 
+	'http://mvlcek.bplaced.net',
 	'Display image galleries (I18N enabled)',
 	'i18n_gallery',
-	'i18n_gallery_main'  
+	'i18n_gallery_main'
 );
 
 # load i18n texts
@@ -156,7 +156,7 @@ function i18n_gallery_replace_link($match) {
 function get_i18n_gallery_link($name, $params = null) {
   require_once(GSPLUGINPATH.'i18n_gallery/gallery.class.php');
   require_once(GSPLUGINPATH.'i18n_gallery/frontend.class.php');
-  if (is_array($name)) $params = $name; 
+  if (is_array($name)) $params = $name;
   else if (!@$params) $params = array('name' => $name);
   else $params['name'] = $name;
   $gallery = I18nGallery::getGalleryFromParams($params, true);
@@ -166,7 +166,7 @@ function get_i18n_gallery_link($name, $params = null) {
 function get_i18n_gallery_header($name, $params = null) {
   require_once(GSPLUGINPATH.'i18n_gallery/gallery.class.php');
   include_once(GSPLUGINPATH.'i18n_gallery/helper.php');
-  if (is_array($name)) $params = $name; 
+  if (is_array($name)) $params = $name;
   else if (!@$params) $params = array('name' => $name);
   else $params['name'] = $name;
   $gallery = I18nGallery::getGalleryFromParams($params, true);
@@ -194,7 +194,7 @@ function get_i18n_gallery_header_from_content($content) {
 
 function get_i18n_gallery($name, $params = null) {
   require_once(GSPLUGINPATH.'i18n_gallery/gallery.class.php');
-  if (is_array($name)) $params = $name; 
+  if (is_array($name)) $params = $name;
   else if (!@$params) $params = array('name' => $name);
   else $params['name'] = $name;
   $gallery = I18nGallery::getGalleryFromParams($params);

@@ -1,0 +1,68 @@
+[09-Mar-2016 19:30:48 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:30:49 America/New_York] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 13
+[09-Mar-2016 19:31:31 America/New_York] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 13
+[09-Mar-2016 19:31:35 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:32:50 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:32:52 America/New_York] PHP Notice:  Undefined variable: var in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 13
+[09-Mar-2016 19:33:23 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:33:29 America/New_York] PHP Warning:  require(): http:// wrapper is disabled in the server configuration by allow_url_include=0 in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:33:29 America/New_York] PHP Warning:  require(http://localhost/clqweb/theme/clq/tarifs.php): failed to open stream: no suitable wrapper could be found in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:33:29 America/New_York] PHP Fatal error:  require(): Failed opening required 'http://localhost/clqweb/theme/clq/tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:36:40 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:36:42 America/New_York] PHP Warning:  require(tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:36:42 America/New_York] PHP Fatal error:  require(): Failed opening required 'tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:38:01 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:38:04 America/New_York] PHP Warning:  require(tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:38:04 America/New_York] PHP Fatal error:  require(): Failed opening required 'tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:38:49 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:38:50 America/New_York] PHP Warning:  require(tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 5
+[09-Mar-2016 19:38:50 America/New_York] PHP Fatal error:  require(): Failed opening required 'tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 5
+[09-Mar-2016 19:39:20 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:39:22 America/New_York] PHP Notice:  Undefined index: PATH_TRANSLATED in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 3
+[09-Mar-2016 19:39:22 America/New_York] PHP Warning:  require(tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 5
+[09-Mar-2016 19:39:22 America/New_York] PHP Fatal error:  require(): Failed opening required 'tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 5
+[09-Mar-2016 19:43:55 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:43:56 America/New_York] PHP Notice:  Undefined index: PATH_INFO in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 3
+[09-Mar-2016 19:43:56 America/New_York] PHP Warning:  require(tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 5
+[09-Mar-2016 19:43:56 America/New_York] PHP Fatal error:  require(): Failed opening required 'tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 5
+[09-Mar-2016 19:44:44 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:44:46 America/New_York] PHP Notice:  Undefined index: PATH_INFO in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 3
+[09-Mar-2016 19:44:46 America/New_York] PHP Notice:  Use of undefined constant __DIRNAME__ - assumed '__DIRNAME__' in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 5
+[09-Mar-2016 19:44:46 America/New_York] PHP Warning:  require(tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 7
+[09-Mar-2016 19:44:46 America/New_York] PHP Fatal error:  require(): Failed opening required 'tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 7
+[09-Mar-2016 19:45:48 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:45:50 America/New_York] PHP Warning:  require(tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 7
+[09-Mar-2016 19:45:50 America/New_York] PHP Fatal error:  require(): Failed opening required 'tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 7
+[09-Mar-2016 19:47:39 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:47:40 America/New_York] PHP Parse error:  syntax error, unexpected '.' in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 7
+[09-Mar-2016 19:47:52 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:47:53 America/New_York] PHP Warning:  require(C:/dev/wwwtheme/tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 8
+[09-Mar-2016 19:47:53 America/New_York] PHP Fatal error:  require(): Failed opening required 'C:/dev/wwwtheme/tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 8
+[09-Mar-2016 19:48:54 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:48:56 America/New_York] PHP Warning:  require(C:/dev/wwwtheme/tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 8
+[09-Mar-2016 19:48:56 America/New_York] PHP Fatal error:  require(): Failed opening required 'C:/dev/wwwtheme/tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 8
+[09-Mar-2016 19:50:49 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:50:50 America/New_York] PHP Notice:  Undefined variable: TEMPLATE in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 3
+[09-Mar-2016 19:50:50 America/New_York] PHP Warning:  require(C:/dev/wwwclqweb/theme/clq/tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 7
+[09-Mar-2016 19:50:50 America/New_York] PHP Fatal error:  require(): Failed opening required 'C:/dev/wwwclqweb/theme/clq/tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 7
+[09-Mar-2016 19:51:09 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:51:56 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:51:57 America/New_York] PHP Notice:  Undefined variable: get_site_name in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 2
+[09-Mar-2016 19:51:57 America/New_York] PHP Fatal error:  Function name must be a string in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 2
+[09-Mar-2016 19:52:20 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:56:11 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:57:08 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:57:29 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:57:30 America/New_York] PHP Warning:  require(C:\dev\www\clqweb//clqweb/theme/clq/tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:57:30 America/New_York] PHP Fatal error:  require(): Failed opening required 'C:\dev\www\clqweb//clqweb/theme/clq/tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:57:43 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:57:45 America/New_York] PHP Warning:  require(C:\dev\www\clqweb/clqweb/theme/clq/tarifs.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:57:45 America/New_York] PHP Fatal error:  require(): Failed opening required 'C:\dev\www\clqweb/clqweb/theme/clq/tarifs.php' (include_path='.;C:\php\pear') in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 4
+[09-Mar-2016 19:57:55 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:59:32 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 19:59:35 America/New_York] PHP Notice:  Use of undefined constant GSTHEMEPATH - assumed 'GSTHEMEPATH' in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 2
+[09-Mar-2016 20:00:15 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 20:00:40 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 20:01:00 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[09-Mar-2016 20:02:21 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
+[11-Mar-2016 19:18:02 America/New_York] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'rates_main' not found or invalid function name in C:\dev\www\clqweb\admin\load.php on line 39

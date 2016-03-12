@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item><pubDate>Wed, 09 Mar 2016 12:48:35 -0500</pubDate><title><![CDATA[Jeux]]></title><url><![CDATA[jeux]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Jeux]]></menu><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[photos]]></parent><content><![CDATA[&lt;p&gt;(% gallery name=jeux %)&lt;/p&gt;
+]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author><menuOrder><![CDATA[5]]></menuOrder></item>

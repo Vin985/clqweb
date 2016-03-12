@@ -8,6 +8,9 @@
 *****************************************************/
 ?>
 
+<!-- foot-banner -->
+<div class="foot-banner"></div>
+
 <!--footer -->
 <footer class="footer bg-color-lightblack contrast" >
 

@@ -61,11 +61,7 @@
 	<!-- HEADER -->
 	<?php include('header.inc.php'); ?>
 
-
-
 	<!-- SITE CONTENT -->
-
-
 		<h2 class="title"><?php get_page_title(); ?></h2>
 		<?php  ?>
 		<nav class="sidenav">

@@ -1,7 +1,7 @@
 <?php
 
 class I18nGalleryFrontend {
-  
+
   public static function outputLink($gallery) {
     include_once(GSPLUGINPATH.'i18n_gallery/helper.php');
     $url = @$gallery['url'] ? $gallery['url'] : 'index';
@@ -22,11 +22,14 @@ class I18nGalleryFrontend {
     if (isset($thumb)) {
       $item = @$gallery['items'][$thumb];
       if (!$item) $item = $gallery['items'][0];
+      echo '<div class="gallery-link">';
       echo '<a href="'.htmlspecialchars($link).'" class="gallery-thumb-link">';
       echo '<img src="';
       i18n_gallery_thumb_link($gallery,$item);
       echo '" alt="'.htmlspecialchars($title).'" title="'.htmlspecialchars($title).'"/>';
-      echo '</a>';  
+      echo '</a>';
+      echo '<span class="gallery-title">'.htmlspecialchars($title).'</span>';
+      echo '</div>';
     } else {
       echo '<a href="'.htmlspecialchars($link).'" class="gallery-title-link">';
       echo htmlspecialchars($title);
@@ -39,9 +42,9 @@ class I18nGalleryFrontend {
     include_once(GSPLUGINPATH.'i18n_gallery/helper.php');
     if (function_exists('i18n_load_texts')) {
       i18n_load_texts('i18n_gallery');
-    } else {  
+    } else {
       i18n_merge('i18n_gallery', substr($LANG,0,2)) || i18n_merge('i18n_gallery', 'en');
-    }  
+    }
     $pic = @$gallery['pic'];
     if (!$ignoreQuery && isset($_GET['pic']) && !$i18n_gallery_pic_used) {
       if (strpos($_GET['pic'],':') === false) {

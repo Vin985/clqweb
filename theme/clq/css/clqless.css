@@ -117,13 +117,21 @@
   min-width: 100%;
   background: #dbf0db;
   border: 2px solid #8b4727;
+  border-radius: 0 0 3px 3px;
   white-space: nowrap;
+}
+.subnav .current {
+  border-bottom: none;
+}
+.subnav .current a {
+  background: #b3d1ff;
+  border-radius: 3px;
 }
 .subnav .navitem {
   padding: 0;
   margin: 0 12px 15px;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 1px;
   line-height: 1.4;
   display: block;
@@ -162,7 +170,7 @@
 .sidenav {
   width: 25%;
 }
-.sidenav .rootnav {
+.sidenav .root {
   margin: 0;
   list-style-type: none;
 }
@@ -170,10 +178,19 @@
   display: block;
   color: #444c57;
   margin: 0;
-  padding: 0 10px 15px;
+  padding: 0 10px 10px 0;
 }
 .sidenav .navitem a {
-  padding: 0;
+  display: inline-block;
+  min-width: 85%;
+  padding: 5px;
+}
+.sidenav .current {
+  border-bottom: none;
+}
+.sidenav .current a {
+  background: #b3d1ff;
+  border-radius: 3px;
 }
 .container {
   padding: 0;
@@ -192,6 +209,27 @@
 .photo {
   margin: 10px;
 }
+.important {
+  list-style-image: url('img/exclmtn.png');
+  color: #ff0000;
+  font-weight: bold;
+  font-size: 18px;
+}
+.gallery-link {
+  display: inline-block;
+  padding: 0 15px 15px 0;
+}
+.gallery-thumb-link {
+  display: table-cell;
+  width: 160px;
+  height: 120px;
+  vertical-align: middle;
+}
+.gallery-title {
+  width: 100%;
+  text-align: center;
+  display: block;
+}
 .foot-banner {
   background-image: url("img/front-fleur.png");
   background-repeat: no-repeat;
@@ -199,6 +237,7 @@
   height: 260px;
   width: 100%;
   z-index: 9999;
+  margin: 50px 0 0 0;
 }
 @media (min-width: 768px) {
   .open a:after {
