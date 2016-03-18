@@ -10,6 +10,8 @@ Author URI: http://www.campinglequebecois.qc.ca
 # get correct id for plugin
 $thisfile = basename(__FILE__, ".php");
 
+define('RATES_DIR', 'rates/');
+define('RATES_FILENAME', 'rates.xml');
 
 # register plugin
 register_plugin(
@@ -30,13 +32,19 @@ if (basename($_SERVER['PHP_SELF']) != 'index.php') { // back end only
 }
 
 # activate filter
-add_action('header', 'i18n_gallery_header');
+add_action('header', 'rates_header');
 add_action('nav-tab', 'createNavTab', array('tarifs', $thisfile, i18n_r('rates/TAB'), 'overview'));
 add_action('rates-sidebar', 'createSideMenu', array($thisfile, i18n_r('rates/VIEW'), 'overview'));
 add_action('rates-sidebar', 'createSideMenu', array($thisfile, i18n_r('rates/EDIT'), 'edit'));
 
 
 # ===== BACKEND PAGES =====
+
+function rates_register($type, $name, $description, $edit_function, $header_function, $content_function)
+{
+    require_once(GSPLUGINPATH.'i18n_gallery/gallery.class.php');
+    return I18nGallery::registerPlugin($type, $name, $description, $edit_function, $header_function, $content_function);
+}
 
 function rates_main()
 {
@@ -49,4 +57,11 @@ function rates_main()
     } elseif (isset($_GET['configure'])) {
         include(GSPLUGINPATH.'rates/configure.php');
     }
+}
+
+# ===== BACKEND HOOKS =====
+
+function rates_header()
+{
+    include(GSPLUGINPATH.'rates/header.php');
 }

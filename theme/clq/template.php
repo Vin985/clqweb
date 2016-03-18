@@ -40,8 +40,6 @@
 
   <!-- SCRIPTS-->
   <!-- JavaScript -->
-  <script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery.min.js"></script>
-  <script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="<?php get_theme_url(); ?>/js/doubletaptogo.js"></script>
   <script>
     $(function() {

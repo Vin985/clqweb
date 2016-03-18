@@ -66,3 +66,68 @@
 [09-Mar-2016 20:01:00 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
 [09-Mar-2016 20:02:21 America/New_York] PHP Notice:  Undefined index: id in C:\dev\www\clqweb\plugins\events.php on line 171
 [11-Mar-2016 19:18:02 America/New_York] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'rates_main' not found or invalid function name in C:\dev\www\clqweb\admin\load.php on line 39
+[13-Mar-2016 16:56:48 America/New_York] PHP Fatal error:  Class 'Rates' not found in C:\dev\www\clqweb\plugins\rates\overview.php on line 6
+[13-Mar-2016 16:58:17 America/New_York] PHP Fatal error:  Class 'Rates' not found in C:\dev\www\clqweb\plugins\rates\overview.php on line 6
+[13-Mar-2016 17:23:46 America/New_York] PHP Fatal error:  Class 'I18nGallery' not found in C:\dev\www\clqweb\plugins\rates\edit.php on line 49
+[13-Mar-2016 17:46:09 America/New_York] PHP Parse error:  syntax error, unexpected 'array' (T_ARRAY), expecting variable (T_VARIABLE) in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 8
+[13-Mar-2016 17:47:29 America/New_York] PHP Fatal error:  Class 'Rates' not found in C:\dev\www\clqweb\plugins\rates\edit.php on line 6
+[13-Mar-2016 17:52:35 America/New_York] PHP Warning:  The use statement with non-compound name 'Clq' has no effect in C:\dev\www\clqweb\plugins\rates\edit.php on line 2
+[13-Mar-2016 17:52:35 America/New_York] PHP Fatal error:  Class 'Rates' not found in C:\dev\www\clqweb\plugins\rates\edit.php on line 8
+[13-Mar-2016 17:52:50 America/New_York] PHP Warning:  The use statement with non-compound name 'Clq' has no effect in C:\dev\www\clqweb\plugins\rates\edit.php on line 3
+[13-Mar-2016 17:52:50 America/New_York] PHP Fatal error:  Class 'Rates' not found in C:\dev\www\clqweb\plugins\rates\edit.php on line 7
+[13-Mar-2016 17:53:02 America/New_York] PHP Warning:  The use statement with non-compound name 'Clq' has no effect in C:\dev\www\clqweb\plugins\rates\edit.php on line 3
+[13-Mar-2016 17:53:02 America/New_York] PHP Fatal error:  Class 'Rates' not found in C:\dev\www\clqweb\plugins\rates\edit.php on line 7
+[13-Mar-2016 17:55:48 America/New_York] PHP Fatal error:  Call to private Clq\Rates::__construct() from invalid context in C:\dev\www\clqweb\plugins\rates\edit.php on line 9
+[13-Mar-2016 17:56:21 America/New_York] PHP Fatal error:  Call to undefined function Clq\loadRates() in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 13
+[13-Mar-2016 17:58:52 America/New_York] PHP Notice:  Array to string conversion in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 32
+[14-Mar-2016 14:56:39 America/New_York] PHP Parse error:  syntax error, unexpected '}' in C:\dev\www\clqweb\plugins\rates\edit.php on line 14
+[14-Mar-2016 15:04:35 America/New_York] PHP Fatal error:  Class 'Clq\SimpleXMLExtended' not found in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 63
+[14-Mar-2016 15:43:52 America/New_York] PHP Catchable fatal error:  Object of class Clq\Rates could not be converted to string in C:\dev\www\clqweb\plugins\rates\edit.php on line 20
+[14-Mar-2016 15:44:32 America/New_York] PHP Fatal error:  Using $this when not in object context in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 62
+[14-Mar-2016 15:44:49 America/New_York] PHP Notice:  Array to string conversion in C:\dev\www\clqweb\plugins\rates\edit.php on line 20
+[14-Mar-2016 15:45:39 America/New_York] PHP Parse error:  syntax error, unexpected 'in' (T_STRING) in C:\dev\www\clqweb\plugins\rates\edit.php on line 20
+[14-Mar-2016 16:23:51 America/New_York] PHP Parse error:  syntax error, unexpected ',' in C:\dev\www\clqweb\plugins\rates\edit.php on line 46
+[14-Mar-2016 16:24:25 America/New_York] PHP Parse error:  syntax error, unexpected ')', expecting ';' in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 76
+[14-Mar-2016 16:24:45 America/New_York] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 87
+[14-Mar-2016 16:25:23 America/New_York] PHP Notice:  Undefined index: name in C:\dev\www\clqweb\plugins\rates\edit.php on line 38
+[14-Mar-2016 16:25:23 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\edit.php on line 38
+[14-Mar-2016 17:36:22 America/New_York] PHP Fatal error:  Call to undefined function Clq\extractCategory() in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 30
+[14-Mar-2016 17:42:59 America/New_York] PHP Parse error:  syntax error, unexpected '(' in C:\dev\www\clqweb\plugins\rates\edit.php on line 53
+[14-Mar-2016 17:48:54 America/New_York] PHP Parse error:  syntax error, unexpected '(' in C:\dev\www\clqweb\plugins\rates\edit.php on line 53
+[14-Mar-2016 17:56:43 America/New_York] PHP Notice:  Undefined index: label in C:\dev\www\clqweb\plugins\rates\edit.php on line 58
+[14-Mar-2016 17:56:43 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 62
+[14-Mar-2016 17:56:43 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\edit.php on line 62
+[14-Mar-2016 17:57:40 America/New_York] PHP Notice:  Undefined index: label in C:\dev\www\clqweb\plugins\rates\edit.php on line 58
+[14-Mar-2016 17:57:40 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 62
+[14-Mar-2016 17:57:40 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\edit.php on line 62
+[14-Mar-2016 18:02:46 America/New_York] PHP Notice:  Undefined index: label in C:\dev\www\clqweb\plugins\rates\edit.php on line 58
+[14-Mar-2016 18:02:46 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 62
+[14-Mar-2016 18:02:46 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\edit.php on line 62
+[14-Mar-2016 18:49:59 America/New_York] PHP Warning:  require_once(C:\dev\www\clqweb/plugins/rates/category.class.php): failed to open stream: No such file or directory in C:\dev\www\clqweb\plugins\rates\edit.php on line 5
+[14-Mar-2016 18:49:59 America/New_York] PHP Fatal error:  require_once(): Failed opening required 'C:\dev\www\clqweb/plugins/rates/category.class.php' (include_path='.;C:\dev\pear\pear') in C:\dev\www\clqweb\plugins\rates\edit.php on line 5
+[14-Mar-2016 19:08:19 America/New_York] PHP Notice:  Undefined variable: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 27
+[14-Mar-2016 19:08:19 America/New_York] PHP Fatal error:  Call to a member function saveRates() on null in C:\dev\www\clqweb\plugins\rates\edit.php on line 27
+[18-Mar-2016 13:06:50 America/New_York] PHP Fatal error:  Call to undefined function i18n_gallery_site_link() in C:\dev\www\clqweb\plugins\rates\header.php on line 1
+[18-Mar-2016 13:18:28 America/New_York] PHP Fatal error:  Call to undefined function i18n_gallery_site_link() in C:\dev\www\clqweb\plugins\rates\header.php on line 1
+[18-Mar-2016 13:58:50 America/New_York] PHP Fatal error:  Call to undefined function Clq\add_row_rate() in C:\dev\www\clqweb\plugins\rates\edit.php on line 66
+[18-Mar-2016 14:12:46 America/New_York] PHP Parse error:  syntax error, unexpected '$text' (T_VARIABLE) in C:\dev\www\clqweb\plugins\rates\helper.php on line 11
+[18-Mar-2016 15:06:45 America/New_York] PHP Warning:  Missing argument 4 for Clq\add_row_rate(), called in C:\dev\www\clqweb\plugins\rates\edit.php on line 60 and defined in C:\dev\www\clqweb\plugins\rates\helper.php on line 19
+[18-Mar-2016 15:06:45 America/New_York] PHP Warning:  Missing argument 1 for Clq\add_tools_cell(), called in C:\dev\www\clqweb\plugins\rates\helper.php on line 36 and defined in C:\dev\www\clqweb\plugins\rates\helper.php on line 41
+[18-Mar-2016 15:06:45 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 44
+[18-Mar-2016 15:06:45 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 46
+[18-Mar-2016 15:06:45 America/New_York] PHP Warning:  Missing argument 4 for Clq\add_row_rate(), called in C:\dev\www\clqweb\plugins\rates\edit.php on line 60 and defined in C:\dev\www\clqweb\plugins\rates\helper.php on line 19
+[18-Mar-2016 15:06:45 America/New_York] PHP Warning:  Missing argument 1 for Clq\add_tools_cell(), called in C:\dev\www\clqweb\plugins\rates\helper.php on line 36 and defined in C:\dev\www\clqweb\plugins\rates\helper.php on line 41
+[18-Mar-2016 15:06:45 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 44
+[18-Mar-2016 15:06:45 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 46
+[18-Mar-2016 15:06:45 America/New_York] PHP Warning:  Missing argument 1 for Clq\add_tools_cell(), called in C:\dev\www\clqweb\plugins\rates\helper.php on line 36 and defined in C:\dev\www\clqweb\plugins\rates\helper.php on line 41
+[18-Mar-2016 15:06:45 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 44
+[18-Mar-2016 15:06:45 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 46
+[18-Mar-2016 15:07:16 America/New_York] PHP Warning:  Missing argument 1 for Clq\add_tools_cell(), called in C:\dev\www\clqweb\plugins\rates\helper.php on line 36 and defined in C:\dev\www\clqweb\plugins\rates\helper.php on line 41
+[18-Mar-2016 15:07:16 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 44
+[18-Mar-2016 15:07:16 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 46
+[18-Mar-2016 15:07:16 America/New_York] PHP Warning:  Missing argument 1 for Clq\add_tools_cell(), called in C:\dev\www\clqweb\plugins\rates\helper.php on line 36 and defined in C:\dev\www\clqweb\plugins\rates\helper.php on line 41
+[18-Mar-2016 15:07:16 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 44
+[18-Mar-2016 15:07:16 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 46
+[18-Mar-2016 15:07:16 America/New_York] PHP Warning:  Missing argument 1 for Clq\add_tools_cell(), called in C:\dev\www\clqweb\plugins\rates\helper.php on line 36 and defined in C:\dev\www\clqweb\plugins\rates\helper.php on line 41
+[18-Mar-2016 15:07:16 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 44
+[18-Mar-2016 15:07:16 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 46
