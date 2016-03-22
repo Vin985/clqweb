@@ -52,23 +52,22 @@ $categories = $rates->getRates();
   <form method="post" id="ratesForm" action="load.php?id=rates&amp;edit"
   accept-charset="utf-8">
 
-    <table>
         <?php
+        $ncat = count($categories);
         foreach ($categories as $category) {
-            add_row_category($catId, $category['label']);
+            $lastCat = !(--$ncat);
+            add_row_category($catId, $category['label'], $lastCat);
+            $nrates = count($category["rates"]);
             foreach ($category["rates"] as $rate) {
-                add_row_rate($catId, $rateId, $rate['name'], $rate['value']);
+                $lastRate = !(--$nrates);
+                add_row_rate($catId, $rateId, $rate['name'], $rate['value'], $lastRate);
                 $rateId++;
             }
             //add_row_rate($catId, $rateId, "", "");
             $catId++;
         }
-        add_row_category($catId, "");
     ?>
-      <tr>
-        <td colspan="2">
-          <input type="submit" name="save" value="<?php i18n('rates/SAVE_RATES'); ?>" class="submit" />
-        </td>
-      </tr>
-    </table>
+    <div class="submit" style="width:100%">
+      <input type="submit" name="save" value="<?php i18n('rates/SAVE_RATES'); ?>" class="submit" />
+    </div>
   </form>

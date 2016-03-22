@@ -131,3 +131,6 @@
 [18-Mar-2016 15:07:16 America/New_York] PHP Warning:  Missing argument 1 for Clq\add_tools_cell(), called in C:\dev\www\clqweb\plugins\rates\helper.php on line 36 and defined in C:\dev\www\clqweb\plugins\rates\helper.php on line 41
 [18-Mar-2016 15:07:16 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 44
 [18-Mar-2016 15:07:16 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 46
+[21-Mar-2016 12:27:06 America/New_York] PHP Notice:  Use of undefined constant last - assumed 'last' in C:\dev\www\clqweb\plugins\rates\helper.php on line 54
+[21-Mar-2016 12:27:06 America/New_York] PHP Notice:  Use of undefined constant last - assumed 'last' in C:\dev\www\clqweb\plugins\rates\helper.php on line 54
+[21-Mar-2016 19:11:51 America/New_York] PHP Notice:  Undefined variable: category in C:\dev\www\clqweb\plugins\rates\edit.php on line 56

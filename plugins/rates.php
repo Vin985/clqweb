@@ -33,9 +33,7 @@ if (basename($_SERVER['PHP_SELF']) != 'index.php') { // back end only
 
 # activate filter
 add_action('header', 'rates_header');
-add_action('nav-tab', 'createNavTab', array('tarifs', $thisfile, i18n_r('rates/TAB'), 'overview'));
-add_action('rates-sidebar', 'createSideMenu', array($thisfile, i18n_r('rates/VIEW'), 'overview'));
-add_action('rates-sidebar', 'createSideMenu', array($thisfile, i18n_r('rates/EDIT'), 'edit'));
+add_action('nav-tab', 'createNavTab', array('tarifs', $thisfile, i18n_r('rates/TAB'), 'edit'));
 
 
 # ===== BACKEND PAGES =====
