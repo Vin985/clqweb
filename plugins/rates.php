@@ -33,7 +33,10 @@ if (basename($_SERVER['PHP_SELF']) != 'index.php') { // back end only
 
 # activate filter
 add_action('header', 'rates_header');
+add_action('footer', 'rates_footer');
 add_action('nav-tab', 'createNavTab', array('tarifs', $thisfile, i18n_r('rates/TAB'), 'edit'));
+add_action('rates-sidebar', 'createSideMenu', array($thisfile, i18n_r('rates/VIEW'), 'edit'));
+add_action('rates-sidebar', 'createSideMenu', array($thisfile, i18n_r('rates/TRANSLATIONS'), 'translation'));
 
 
 # ===== BACKEND PAGES =====
@@ -46,14 +49,10 @@ function rates_register($type, $name, $description, $edit_function, $header_func
 
 function rates_main()
 {
-    if (isset($_GET['overview'])) {
-        include(GSPLUGINPATH.'rates/overview.php');
-    } elseif (isset($_GET['create'])) {
+    if (isset($_GET['edit'])) {
         include(GSPLUGINPATH.'rates/edit.php');
-    } elseif (isset($_GET['edit'])) {
-        include(GSPLUGINPATH.'rates/edit.php');
-    } elseif (isset($_GET['configure'])) {
-        include(GSPLUGINPATH.'rates/configure.php');
+    } elseif (isset($_GET['translation'])) {
+        include(GSPLUGINPATH.'rates/translation.php');
     }
 }
 
@@ -62,4 +61,9 @@ function rates_main()
 function rates_header()
 {
     include(GSPLUGINPATH.'rates/header.php');
+}
+
+function rates_footer()
+{
+    include(GSPLUGINPATH.'rates/footer.php');
 }

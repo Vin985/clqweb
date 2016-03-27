@@ -134,3 +134,4 @@
 [21-Mar-2016 12:27:06 America/New_York] PHP Notice:  Use of undefined constant last - assumed 'last' in C:\dev\www\clqweb\plugins\rates\helper.php on line 54
 [21-Mar-2016 12:27:06 America/New_York] PHP Notice:  Use of undefined constant last - assumed 'last' in C:\dev\www\clqweb\plugins\rates\helper.php on line 54
 [21-Mar-2016 19:11:51 America/New_York] PHP Notice:  Undefined variable: category in C:\dev\www\clqweb\plugins\rates\edit.php on line 56
+[22-Mar-2016 15:11:12 America/New_York] PHP Fatal error:  Cannot redeclare i18n_merge_impl() (previously declared in C:\dev\www\clqweb\admin\inc\basic.php:647) in C:\dev\www\clqweb\plugins\rates\translation.php on line 39

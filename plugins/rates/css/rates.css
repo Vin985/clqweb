@@ -1,0 +1,59 @@
+.rates_form .tools {
+  display: flex;
+  justify-content: space-between;
+}
+.rates_form table {
+  border: none;
+}
+.rates_form table tr {
+  border: none;
+}
+.rates_form table tr td {
+  border: none;
+  display: table-cell;
+  vertical-align: middle;
+}
+.cat_title {
+  background-color: #e6e6e6;
+}
+.cat_title tr td {
+  height: 0;
+}
+.cat_title input[type="text"] {
+  background-color: #e6e6e6;
+  display: block;
+  margin: 0;
+  width: 80%;
+  font-family: sans-serif;
+  font-size: 18px;
+  box-shadow: none;
+  padding: 5px 0 5px 5px;
+  border: solid 0 #dcdcdc;
+  transition: box-shadow 0.3s, border 0.3s;
+}
+.cat_title input[type="text"]:focus {
+  outline: none;
+  background-color: #f0eebc;
+  border: solid 1px #707070;
+  box-shadow: 0 0 5px 1px #969696;
+}
+.button-img {
+  height: 24px;
+  width: 24px;
+  line-height: 0;
+  border: 0;
+  vertical-align: middle;
+  margin: auto;
+}
+.delete {
+  background: url("img/delete.png");
+}
+.add {
+  background: url("img/add.png");
+}
+.up {
+  background: url("img/up.png");
+}
+.down {
+  background: url("img/down.png");
+}

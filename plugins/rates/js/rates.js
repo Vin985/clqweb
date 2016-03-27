@@ -11,8 +11,29 @@ function add_category(element) {
 
   element.after(newTable);
 
-  element.nextAll('table').each(update_cat_up);
+  element.nextAll('table[id^=category_]').each(function() {
+    update_ids($(this), 1, 0, 'c');
+  });
 
+  return true;
+}
+
+function delete_category(element) {
+  var tmp = element.attr('id').split('_');
+  var catId = parseInt(tmp[1]);
+
+  var first = (catId == 0);
+  var last = !element.next('table[id^=category_]').length;
+
+  if (first && last) {
+    // Only one category, just empty it
+    element.find('tr[id^=rate_]:gt(0)').remove();
+    element.find('input[type=text]').val('');
+    element.find('button.down').css('visibility', 'hidden');
+  } else {
+    element.nextAll('table[id^=category_]').each(update_cat_down);
+    element.remove();
+  }
   return true;
 }
 
@@ -22,7 +43,7 @@ function add_rate(element) {
   var rateId = parseInt(tmp[2]);
 
   var first = (rateId == 0);
-  var last = !element.next('tr[id^=rate_').length;
+  var last = !element.next('tr[id^=rate_]').length;
 
   var newRow = element.clone();
   newRow.find('input[type=text]').val('');
@@ -45,12 +66,11 @@ function delete_rate(element) {
   var rateId = parseInt(tmp[2]);
 
   var first = (rateId == 0);
-  var last = !element.next('tr[id^=rate_').length;
+  var last = !element.next('tr[id^=rate_]').length;
 
   if (first && last) {
     // Only one rate, just empty it
-    element.find('input[id^=name_').val('');
-    element.find('input[id^=value_').val('');
+    element.find('input[type=text]').val('');
   } else {
     if (first) {
       element.next().find('button.up').css('visibility', 'hidden');
@@ -93,7 +113,7 @@ function update_cat_down() {
 }
 
 function update_cat_up() {
-  update_ids($(this), 1, 0, 'c');
+
 }
 
 function update_rate_cat_down() {
@@ -124,7 +144,7 @@ function update_ids(element, coff, roff, type) {
   } else {
     element.attr('id', 'category_' + catId);
     update_input(element, 'name', 'catname_', type, catId, rateId);
-    element.find('tr[id^=rate_').each(coff > 0 ?
+    element.find('tr[id^=rate_]').each(coff > 0 ?
       update_rate_cat_up : update_rate_cat_down);
   }
 }

@@ -50,7 +50,7 @@ $categories = $rates->getRates();
 ?>
 
   <form method="post" id="ratesForm" action="load.php?id=rates&amp;edit"
-  accept-charset="utf-8">
+  class="rates_form" accept-charset="utf-8">
 
         <?php
         $ncat = count($categories);
