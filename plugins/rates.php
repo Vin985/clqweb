@@ -1,4 +1,5 @@
 <?php
+
 /*
 Plugin Name: Rates
 Description: Change rates for the camping
@@ -43,8 +44,8 @@ add_action('rates-sidebar', 'createSideMenu', array($thisfile, i18n_r('rates/TRA
 
 function rates_register($type, $name, $description, $edit_function, $header_function, $content_function)
 {
-    require_once(GSPLUGINPATH.'i18n_gallery/gallery.class.php');
-    return I18nGallery::registerPlugin($type, $name, $description, $edit_function, $header_function, $content_function);
+    require_once(GSPLUGINPATH.'rates/rates.class.php');
+    return Rates::registerPlugin($type, $name, $description, $edit_function, $header_function, $content_function);
 }
 
 function rates_main()
@@ -66,4 +67,10 @@ function rates_header()
 function rates_footer()
 {
     include(GSPLUGINPATH.'rates/footer.php');
+}
+
+function display_rates()
+{
+    require_once(GSPLUGINPATH.'rates/frontend.class.php');
+    return \Clq\RatesFrontend::displayRates();
 }

@@ -59,7 +59,7 @@ function nm_admin_panel() {
           </a>
         </td>
         <td style="text-align: right;">
-          <?php 
+          <?php
             if (strtotime($post->date) > time())
               echo '<span style="color:#aaa">',$date,'</span>';
             else
@@ -132,7 +132,7 @@ function nm_admin_panel() {
               + this + "'))").parent().hide();
         });
       });
-      // confirm delete 
+      // confirm delete
       $('.nm_delconfirm').on('click', function () {
         return confirm($(this).attr("title"));
       });

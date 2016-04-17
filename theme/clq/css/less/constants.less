@@ -1,44 +1,41 @@
 // main: clq.less
-
 @img-logo: url("img/logo3.png");
 @img-logo-small: url("img/logo-small.png");
 @img-fleur: url("img/front-fleur.png");
 @img-warning: url('img/exclmtn.png');
-
-
 // colors
-@blue-sky: hsl(203, 92%, 93%);// #ddecf6;
+@blue-sky: hsl(203, 92%, 93%); // #ddecf6;
 @blue-bg-sel: hsl(216, 100%, 85%);
 @blue-sel: #CEE5F9;
 @green-txt: hsl(120, 100%, 15%);
 @green-txt-sel: hsl(120, 100%, 35%);
 @green-bg-sel: hsl(120, 40%, 90%);
 @brown-border: hsl(19, 56%, 35%);
-@red-warning: red;//#660000;
+@red-warning: red; //#660000;
+
+/* Top Menu */
+@topnav-bg: transparent; //#fff;
+@topnav-txt: @green-txt; //#282828;
+@topnav-txt-sel: @green-txt-sel;
+@topnav-bg-sel: @blue-bg-sel; //@green-bg-sel;
+@topnav-border: transparent; //@brown-border;
+/* Dropdown submenu */
+@subnav-drop-txt: #444c57;
+@subnav-bg: @green-bg-sel; //#fff;
+@subnav-border: @brown-border; //#eee;
+@sidenav-txt: #444c57;
+@topnav-resp-bg: #000;
+@topnav-resp-txt: #fff;
+
+/* Rates */
+@dark-green: hsl(120, 75%, 18%);
+@rate-odd: hsl(120, 100%, 95%);
+@rate-even: hsl(120, 30%, 75%);
 
 // old colors : for reference
 @black-sel: #3caefa;
 @black-txt: #282828;
 @black-txt-sel: #337ab7;
 @black-drop-txt: #444c57;
-
-
 @default-txt: @green-txt;
-@bg-sky: @blue-sky;  //ddf0fe;
-
-/* Top Menu */
-@topnav-bg: transparent; //#fff;
-@topnav-txt: @green-txt; //#282828;
-@topnav-txt-sel: @green-txt-sel;
-@topnav-bg-sel: @blue-bg-sel;//@green-bg-sel;
-@topnav-border: transparent;//@brown-border;
-
-/* Dropdown submenu */
-@subnav-drop-txt: #444c57;
-@subnav-bg: @green-bg-sel; //#fff;
-@subnav-border: @brown-border; //#eee;
-
-@sidenav-txt: #444c57;
-
-@topnav-resp-bg: #000;
-@topnav-resp-txt : #fff;
+@bg-sky: @blue-sky;

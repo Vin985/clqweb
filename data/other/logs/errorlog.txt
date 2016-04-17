@@ -135,3 +135,84 @@
 [21-Mar-2016 12:27:06 America/New_York] PHP Notice:  Use of undefined constant last - assumed 'last' in C:\dev\www\clqweb\plugins\rates\helper.php on line 54
 [21-Mar-2016 19:11:51 America/New_York] PHP Notice:  Undefined variable: category in C:\dev\www\clqweb\plugins\rates\edit.php on line 56
 [22-Mar-2016 15:11:12 America/New_York] PHP Fatal error:  Cannot redeclare i18n_merge_impl() (previously declared in C:\dev\www\clqweb\admin\inc\basic.php:647) in C:\dev\www\clqweb\plugins\rates\translation.php on line 39
+[14-Apr-2016 15:25:17 America/New_York] PHP Fatal error:  Class 'Rates' not found in C:\dev\www\clqweb\plugins\rates.php on line 74
+[14-Apr-2016 15:26:51 America/New_York] PHP Fatal error:  Call to undefined function display_rates() in C:\dev\www\clqweb\plugins\i18n_base\frontend.class.php(127) : eval()'d code on line 2
+[14-Apr-2016 15:36:44 America/New_York] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in C:\dev\www\clqweb\plugins\rates\frontend.php on line 9
+[14-Apr-2016 16:44:08 America/New_York] PHP Notice:  Undefined variable: categories in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 14
+[14-Apr-2016 16:44:08 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 14
+[14-Apr-2016 16:44:38 America/New_York] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 14
+[14-Apr-2016 16:44:58 America/New_York] PHP Fatal error:  Call to undefined function Clq\add_category() in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 16
+[14-Apr-2016 16:46:35 America/New_York] PHP Fatal error:  Using $this when not in object context in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 16
+[14-Apr-2016 16:46:52 America/New_York] PHP Fatal error:  Using $this when not in object context in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 16
+[16-Apr-2016 21:38:53 Europe/Paris] PHP Parse error:  syntax error, unexpected '%' in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 21
+[16-Apr-2016 17:27:32 America/New_York] PHP Notice:  Undefined index: rate in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[16-Apr-2016 17:27:32 America/New_York] PHP Notice:  Undefined index: rate in C:\dev\www\clqweb\plugins\rates\edit.php on line 61
+[16-Apr-2016 17:27:32 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\edit.php on line 61
+[16-Apr-2016 21:45:35 America/New_York] PHP Notice:  Undefined index: prices in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 48
+[16-Apr-2016 21:46:08 America/New_York] PHP Notice:  Undefined index: prices in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 48
+[16-Apr-2016 21:46:36 America/New_York] PHP Notice:  Undefined index: prices in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 48
+[16-Apr-2016 21:47:06 America/New_York] PHP Notice:  Undefined index: prices in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 48
+[16-Apr-2016 21:57:50 America/New_York] PHP Notice:  Use of undefined constant pos - assumed 'pos' in C:\dev\www\clqweb\plugins\rates\helper.php on line 23
+[16-Apr-2016 21:57:50 America/New_York] PHP Notice:  Undefined index: pos in C:\dev\www\clqweb\plugins\rates\helper.php on line 23
+[16-Apr-2016 21:57:50 America/New_York] PHP Notice:  Use of undefined constant pos - assumed 'pos' in C:\dev\www\clqweb\plugins\rates\helper.php on line 23
+[16-Apr-2016 21:57:50 America/New_York] PHP Notice:  Undefined index: pos in C:\dev\www\clqweb\plugins\rates\helper.php on line 23
+[16-Apr-2016 21:57:50 America/New_York] PHP Notice:  Undefined index: prices in C:\dev\www\clqweb\plugins\rates\helper.php on line 22
+[16-Apr-2016 21:58:16 America/New_York] PHP Notice:  Undefined index: prices in C:\dev\www\clqweb\plugins\rates\helper.php on line 22
+[16-Apr-2016 21:58:30 America/New_York] PHP Notice:  Undefined index: prices in C:\dev\www\clqweb\plugins\rates\helper.php on line 22
+[16-Apr-2016 23:01:25 America/New_York] PHP Parse error:  syntax error, unexpected ':' in C:\dev\www\clqweb\plugins\rates\helper.php on line 22
+[16-Apr-2016 23:02:33 America/New_York] PHP Parse error:  syntax error, unexpected ')', expecting ';' in C:\dev\www\clqweb\plugins\rates\helper.php on line 23
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 20
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: text in C:\dev\www\clqweb\plugins\rates\helper.php on line 93
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: text in C:\dev\www\clqweb\plugins\rates\helper.php on line 93
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 20
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: text in C:\dev\www\clqweb\plugins\rates\helper.php on line 93
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: text in C:\dev\www\clqweb\plugins\rates\helper.php on line 93
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: text in C:\dev\www\clqweb\plugins\rates\helper.php on line 93
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: text in C:\dev\www\clqweb\plugins\rates\helper.php on line 93
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: text in C:\dev\www\clqweb\plugins\rates\helper.php on line 93
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: text in C:\dev\www\clqweb\plugins\rates\helper.php on line 93
+[17-Apr-2016 00:30:54 America/New_York] PHP Notice:  Undefined variable: text in C:\dev\www\clqweb\plugins\rates\helper.php on line 93
+[17-Apr-2016 00:32:04 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 20
+[17-Apr-2016 00:32:04 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 20
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined index: name in C:\dev\www\clqweb\plugins\rates\helper.php on line 102
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 90
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: catId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:10:29 America/New_York] PHP Notice:  Undefined variable: rateId in C:\dev\www\clqweb\plugins\rates\helper.php on line 91
+[17-Apr-2016 01:11:03 America/New_York] PHP Notice:  Undefined index: name in C:\dev\www\clqweb\plugins\rates\helper.php on line 102
+[17-Apr-2016 01:12:56 America/New_York] PHP Notice:  Undefined index: name in C:\dev\www\clqweb\plugins\rates\helper.php on line 103
+[17-Apr-2016 01:14:40 America/New_York] PHP Notice:  Undefined index: name in C:\dev\www\clqweb\plugins\rates\helper.php on line 108
+[17-Apr-2016 01:16:11 America/New_York] PHP Notice:  Undefined index: name in C:\dev\www\clqweb\plugins\rates\helper.php on line 108
+[17-Apr-2016 01:16:33 America/New_York] PHP Notice:  Undefined index: name in C:\dev\www\clqweb\plugins\rates\helper.php on line 108

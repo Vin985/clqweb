@@ -319,7 +319,7 @@ function nm_create_excerpt($content, $url=false, $forcereadmore=false) {
 function nm_make_excerpt($content, $len=200, $ellipsis='', $break=false) {
   $content = preg_replace('/\(%.*?%\)/', '', $content); // remove (% ... %)
   $content = preg_replace('/\{%.*?%\}/', '', $content); // remove {% ... %}
-  
+
   # Remove HTML tags, including invisible text such as style and
   # script code, and embedded objects.  Add line breaks around
   # block-level tags to prevent word joining after tag removal.

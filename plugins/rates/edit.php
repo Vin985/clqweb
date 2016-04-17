@@ -44,7 +44,6 @@ if (isset($_GET['undo']) && !isset($_POST['save'])) {
 //print_r($rates->getRates());
 
 $catId = 0;
-$rateId = 0;
 $categories = $rates->getRates();
 
 ?>
@@ -56,11 +55,12 @@ $categories = $rates->getRates();
         $ncat = count($categories);
         foreach ($categories as $category) {
             $lastCat = !(--$ncat);
-            add_row_category($catId, $category['label'], $lastCat);
+            add_row($category, 'category', $catId, ($catId==0), $lastCat);
             $nrates = count($category["rates"]);
+            $rateId = 0;
             foreach ($category["rates"] as $rate) {
                 $lastRate = !(--$nrates);
-                add_row_rate($catId, $rateId, $rate['name'], $rate['value'], $lastRate);
+                add_row($rate, 'rate', $catId .'_'. $rateId, ($rateId==0), $lastRate);
                 $rateId++;
             }
             //add_row_rate($catId, $rateId, "", "");

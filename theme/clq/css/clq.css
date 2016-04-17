@@ -2,7 +2,6 @@
 * Theme's Stylesheet - Modify/Add your own stylesheet + Your Copyright
 */
 
-
 body, input, select, textarea {
   color: #6e6e6e;
   font-family: 'Roboto', sans-serif;
@@ -16,7 +15,6 @@ body, input, select, textarea {
 .title {
   width: 100%;
 }
-
 
 /*Style 'show menu' label button and hide it by default*/
 
@@ -42,8 +40,6 @@ input[type=checkbox] {
 input[type=checkbox]:checked ~ #navmenu {
   display: block;
 }
-
-
 footer .container {
   padding: 5px 7.5% 0;
   width: 100%;
@@ -63,14 +59,9 @@ footer a, footer a:active, footer a:focus {
 
 /* Tidying Logo and mobile menu behaviour */
 
-
 .header-wrapper {
   height: auto;
 }
-
-
-
-
 .content {
   max-width: 100%;
 }
@@ -83,7 +74,7 @@ body.stickybody {
 .header-wrapper .sticky {
   position: fixed;
   border-bottom: 1px solid #eee;
-color:  #3caefa;
+  color: #3caefa;
   top: 0;
 }
 

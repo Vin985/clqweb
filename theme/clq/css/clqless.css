@@ -1,5 +1,6 @@
 /* Top Menu */
 /* Dropdown submenu */
+/* Rates */
 .hw-auto {
   height: auto;
   width: auto;
@@ -45,7 +46,7 @@
   width: 100%;
 }
 .header-wrapper {
-  margin: 5px 0 0 0;
+  margin: 5px 0 0;
   background-color: transparent;
 }
 .logo {
@@ -168,7 +169,7 @@
   background: #b3d1ff;
 }
 .sidenav {
-  width: 25%;
+  width: 20%;
 }
 .sidenav .root {
   margin: 0;
@@ -197,8 +198,8 @@
 }
 .title {
   width: 100%;
-  margin: 15px 0 20px 0;
-  text-indent: 25%;
+  margin: 15px 0 20px;
+  text-indent: 20%;
 }
 .content {
   width: 75%;
@@ -237,7 +238,41 @@
   height: 260px;
   width: 100%;
   z-index: 9999;
-  margin: 50px 0 0 0;
+  margin: 50px 0 0;
+}
+.rates {
+  width: 100%;
+  font-weight: 500;
+}
+.rates .category {
+  width: 100%;
+}
+.rates tbody:before {
+  line-height: 5px;
+  content: ".";
+  color: #ddf1fe;
+  display: block;
+}
+.rates .odd {
+  background: #e5ffe5;
+}
+.rates .even {
+  background: #acd2ac;
+}
+.rate td {
+  padding: 3px 0 3px 5px;
+}
+.cat_title {
+  background: #0b500b;
+  color: white;
+}
+.cat_title td {
+  padding: 3px 0 3px 10px;
+  font-size: 18px;
+  border-radius: 3px;
+}
+.rate_name {
+  width: 80%;
 }
 @media (min-width: 768px) {
   .open a:after {
@@ -277,7 +312,7 @@
     justify-content: flex-start;
   }
   .lang {
-    margin: 0 10px 0;
+    margin: 0 10px;
   }
   .show-menu {
     display: block;

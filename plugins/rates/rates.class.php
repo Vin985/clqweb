@@ -37,20 +37,26 @@ class Rates
     {
         $category = array();
         foreach ($data as $key => $value) {
-            if ($key == "label") {
-                $category["label"] = (string) $value;
+            if ($key == "name") {
+                $category["name"] = (string) $value;
             } elseif ($key == "rate") {
-                $category["rates"][] = $this->extractRate($value);
+                $category["rates"][] = $this->extractRates($value);
+            } elseif ($key == "price") {
+                $category["prices"][] = (string) $value;
             }
         }
         return $category;
     }
 
-    private function extractRate($data)
+    private function extractRates($data)
     {
         $rate = array();
         foreach ($data as $key => $value) {
-            $rate[$key] = (string) $value;
+            if ($key == "price") {
+                $rate["prices"][] = (string) $value;
+            } else {
+                $rate[$key] = (string) $value;
+            }
         }
         return $rate;
     }
@@ -108,13 +114,12 @@ class Rates
     public function saveRates()
     {
         $data = new \SimpleXMLExtended('<?xml version="1.0" encoding="UTF-8"?><rates></rates>');
-
-        for ($catId = 0; isset($_POST['cat_name_'.$catId]); $catId++) {
-            if (empty($_POST['cat_name_'.$catId])) {
+        for ($catId = 0; isset($_POST['catname_'.$catId]); $catId++) {
+            if (empty($_POST['catname_'.$catId])) {
                 continue;
             }
             $category = $data->addChild("category");
-            $category->addChild("label", $_POST['cat_name_'.$catId]);
+            $category->addChild("label", $_POST['catname_'.$catId]);
             for ($rateId = 0; isset($_POST['name_'.$catId ."_" .$rateId]); $rateId++) {
                 if (empty($_POST['name_'.$catId ."_" .$rateId])) {
                     continue;
@@ -126,8 +131,8 @@ class Rates
             if (!XMLsave($data, GSDATAPATH.RATES_DIR.RATES_FILENAME)) {
                 return false;
             }
-            return true;
         }
+        return true;
     }
 
     public function saveUndo($name, $newname)

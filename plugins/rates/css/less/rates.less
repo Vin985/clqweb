@@ -1,67 +1,123 @@
 // out: ../rates.css
 .category {}
+.row {
+    display: flex;
+}
+.tools {
+    width: 20%;
+    height: auto;
+}
+.name {
+    min-width: 30%;
+    padding:3px 5px;
+}
+.value {
+    padding:3px 5px;
+    min-width: 10%;
+    text-align: center;
+}
+input[type="text"] {
+    margin: 0;
+    width: 100%;
+}
+.currency {
+    font-size: 12px;
+    font-weight: bold;
+    font-family: arial, helvetica, sans-serif;
+    padding: 0 5px;
+}
 .rates_form {
-  .tools{
-    display:flex;
-    justify-content: space-between;
-  }
-  table {
-    border: none;
-    tr {
-      border: none;
-      td {
-        border: none;
-        display: table-cell;
-        vertical-align: middle;
-      }
+    .rate {
+        label {
+            min-width: 10%;
+            max-width: 20%;
+            padding-right: 5px;
+        }
+        td {
+            padding: 5px 0 5px 4px;
+            border: none;
+            display: table-cell;
+            vertical-align: middle;
+            input[type="text"] {
+                margin: 0;
+                width: 70%;
+                font-family: sans-serif;
+                font-size: 14px;
+                box-shadow: none;
+                padding: 3px 0 3px 3px;
+                border: solid 1px #aaa3a3;
+                transition: box-shadow 0.3s, border 0.3s;
+                &:focus {
+                    outline: none;
+                    background-color: hsl(58, 63%, 84%);
+                    border: solid 1px #707070;
+                    box-shadow: 0 0 5px 1px #969696;
+                }
+                &::-webkit-input-placeholder {
+                    padding-top: 2px;
+                    font-size: 12px;
+                }
+                &::-moz-placeholder {
+                    padding-top: 2px;
+                    font-size: 12px;
+                }
+                &:-moz-placeholder {
+                    padding-top: 2px;
+                    font-size: 12px;
+                }
+            }
+        }
     }
-  }
 }
 .cat_title {
-  background-color: hsl(120, 0%, 90%);
-  tr {
-    td {
-      //padding: 0 0 10px 0;
-      height: 0;
-    }
-  }
-  input[type="text"] {
     background-color: hsl(120, 0%, 90%);
-    display: block;
-    margin: 0;
-    width: 80%;
-    font-family: sans-serif;
-    font-size: 18px;
-    box-shadow: none;
-    padding: 5px 0 5px 5px;
-    border: solid 0 #dcdcdc;
-    transition: box-shadow 0.3s, border 0.3s;
-    &:focus {
-      outline: none;
-      background-color: hsl(58, 63%, 84%);
-      border: solid 1px #707070;
-      box-shadow: 0 0 5px 1px #969696;
+    border-radius: 3px;
+    tr {
+        td {
+            //padding: 0 0 10px 0;
+            height: 0;
+        }
     }
-  }
+    input[type="text"] {
+        background-color: hsl(120, 0%, 90%);
+        margin: 0;
+        width: 70%;
+        font-family: sans-serif;
+        font-size: 14px;
+        box-shadow: none;
+        padding: 5px 0 5px 5px;
+        border: solid 1px #aaa3a3;
+        transition: box-shadow 0.3s, border 0.3s;
+        &:focus {
+            outline: none;
+            background-color: hsl(58, 63%, 84%);
+            border: solid 1px #707070;
+            box-shadow: 0 0 5px 1px #969696;
+        }
+    }
 }
-
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .button-img {
-  height: 24px;
-  width: 24px;
-  line-height: 0;
-  border: 0;
-  vertical-align: middle;
-  margin:auto;
+    height: 24px;
+    width: 24px;
+    line-height: 0;
+    border: 0;
+    vertical-align: middle;
+    margin: auto;
 }
 .delete {
-  background: url("img/delete.png");
+    background: url("img/delete.png");
 }
 .add {
-  background: url("img/add.png");
+    background: url("img/add.png");
 }
 .up {
-  background: url("img/up.png");
+    background: url("img/up.png");
 }
 .down {
-  background: url("img/down.png");
+    background: url("img/down.png");
 }
