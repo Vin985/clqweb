@@ -4,6 +4,8 @@ $i18n = array(
     'CONFIRM_DEL_CATEGORY' => "\u00cates vous s\u00fbr de vouloir supprimer cette cat\u00e9gorie?\\n" .
     "Tous les tarifs contenus dedans seront effac\u00e9s.",
     'CONFIRM_DEL_RATE' => "\u00cates vous s\u00fbr de vouloir supprimer ce tarif?",
+    'CONFIRM_DEL_PRICE_COLUMN' => "\u00cates vous s\u00fbr de vouloir supprimer cette colonne?\\n" .
+    "Tous les tarifs contenus dedans seront effac\u00e9s.",
     'EDIT' => "Modifier les tarifs",
     'FORM_TITLE_CATEGORY_NAME' => "Catégorie",
     'FORM_TITLE_RATE_NAME' => "Type",

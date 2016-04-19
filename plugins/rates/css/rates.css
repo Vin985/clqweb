@@ -1,5 +1,13 @@
-.row {
+.flex {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.start {
+  justify-content: flex-start;
+}
+.row {
+  margin: 5px 0;
 }
 .tools {
   width: 20%;
@@ -9,10 +17,8 @@
   min-width: 30%;
   padding: 3px 5px;
 }
-.value {
-  padding: 3px 5px;
-  min-width: 10%;
-  text-align: center;
+.spacer {
+  height: 15px;
 }
 input[type="text"] {
   margin: 0;
@@ -24,20 +30,19 @@ input[type="text"] {
   font-family: arial, helvetica, sans-serif;
   padding: 0 5px;
 }
-.rates_form .rate label {
-  min-width: 10%;
-  max-width: 20%;
-  padding-right: 5px;
-}
-.rates_form .rate td {
-  padding: 5px 0 5px 4px;
+.price {
+  max-width: 15%;
+  padding: 0 5px;
   border: none;
-  display: table-cell;
-  vertical-align: middle;
+  background: none;
+  font-size: 16px;
+  font-weight: 600;
 }
-.rates_form .rate td input[type="text"] {
-  margin: 0;
-  width: 70%;
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+.rate input[type="text"] {
   font-family: sans-serif;
   font-size: 14px;
   box-shadow: none;
@@ -45,21 +50,21 @@ input[type="text"] {
   border: solid 1px #aaa3a3;
   transition: box-shadow 0.3s, border 0.3s;
 }
-.rates_form .rate td input[type="text"]:focus {
+.rate input[type="text"]:focus {
   outline: none;
   background-color: #f0eebc;
   border: solid 1px #707070;
   box-shadow: 0 0 5px 1px #969696;
 }
-.rates_form .rate td input[type="text"]::-webkit-input-placeholder {
+.rate input[type="text"]::-webkit-input-placeholder {
   padding-top: 2px;
   font-size: 12px;
 }
-.rates_form .rate td input[type="text"]::-moz-placeholder {
+.rate input[type="text"]::-moz-placeholder {
   padding-top: 2px;
   font-size: 12px;
 }
-.rates_form .rate td input[type="text"]:-moz-placeholder {
+.rate input[type="text"]:-moz-placeholder {
   padding-top: 2px;
   font-size: 12px;
 }
@@ -67,13 +72,8 @@ input[type="text"] {
   background-color: #e6e6e6;
   border-radius: 3px;
 }
-.cat_title tr td {
-  height: 0;
-}
 .cat_title input[type="text"] {
   background-color: #e6e6e6;
-  margin: 0;
-  width: 70%;
   font-family: sans-serif;
   font-size: 14px;
   box-shadow: none;
@@ -86,11 +86,6 @@ input[type="text"] {
   background-color: #f0eebc;
   border: solid 1px #707070;
   box-shadow: 0 0 5px 1px #969696;
-}
-.flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 .button-img {
   height: 24px;

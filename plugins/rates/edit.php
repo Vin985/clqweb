@@ -50,23 +50,23 @@ $categories = $rates->getRates();
 
   <form method="post" id="ratesForm" action="load.php?id=rates&amp;edit"
   class="rates_form" accept-charset="utf-8">
-
         <?php
         $ncat = count($categories);
         foreach ($categories as $category) {
             $lastCat = !(--$ncat);
-            add_row($category, 'category', $catId, ($catId==0), $lastCat);
+            add_row($category, TYPE_CATEGORY, $catId, ($catId==0), $lastCat);
             $nrates = count($category["rates"]);
             $rateId = 0;
             foreach ($category["rates"] as $rate) {
                 $lastRate = !(--$nrates);
-                add_row($rate, 'rate', $catId .'_'. $rateId, ($rateId==0), $lastRate);
+                add_row($rate, TYPE_RATE, $catId .'_'. $rateId, ($rateId==0), $lastRate);
                 $rateId++;
             }
             //add_row_rate($catId, $rateId, "", "");
             $catId++;
         }
     ?>
+    <input id="ncat" type="hidden" name="ncat" value="<?php echo count($categories) ?>" />
     <div class="submit" style="width:100%">
       <input type="submit" name="save" value="<?php i18n('rates/SAVE_RATES'); ?>" class="submit" />
     </div>

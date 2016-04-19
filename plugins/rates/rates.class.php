@@ -5,6 +5,11 @@ namespace Clq;
 class Rates
 {
 
+    const CATEGORY_NAME = 'category_name_';
+    const CATEGORY_PRICE = 'category_price_';
+    const RATE_NAME = 'rate_name_';
+    const RATE_PRICE = 'rate_price_';
+
     private $rates;
     //private static $rates;
 
@@ -114,23 +119,39 @@ class Rates
     public function saveRates()
     {
         $data = new \SimpleXMLExtended('<?xml version="1.0" encoding="UTF-8"?><rates></rates>');
-        for ($catId = 0; isset($_POST['catname_'.$catId]); $catId++) {
-            if (empty($_POST['catname_'.$catId])) {
+        $ncat = isset($_POST['ncat']) ? $_POST['ncat'] : 0;
+        for ($catId = 0; $catId < $ncat; $catId++) {
+            $catname = self::CATEGORY_NAME . $catId;
+            if (!isset($_POST[$catname]) || empty($_POST[$catname])) {
                 continue;
             }
             $category = $data->addChild("category");
-            $category->addChild("label", $_POST['catname_'.$catId]);
-            for ($rateId = 0; isset($_POST['name_'.$catId ."_" .$rateId]); $rateId++) {
-                if (empty($_POST['name_'.$catId ."_" .$rateId])) {
+            // Add category name
+            $category->addChild("name", $_POST[$catname]);
+
+            // Iterate on category prices
+            for ($pos = 0; isset($_POST[self::CATEGORY_PRICE . $catId . "_" . $pos]); $pos++) {
+                $category->addChild("price", $_POST[self::CATEGORY_PRICE . $catId . "_" . $pos]);
+            }
+
+            // Iterate on rates
+            $nrate = isset($_POST['nrate_' . $catId]) ? $_POST['nrate_' . $catId] : 0;
+            for ($rateId = 0; $rateId < $nrate; $rateId++) {
+                $ratename = self::RATE_NAME . $catId . "_" . $rateId;
+                if (!isset($_POST[$ratename]) || empty($_POST[$ratename])) {
                     continue;
                 }
                 $rate = $category->addChild("rate");
-                $rate->addChild("name", $_POST['name_'.$catId ."_" .$rateId]);
-                $rate->addChild("value", $_POST['value_'.$catId ."_" .$rateId]);
+                $rate->addChild("name", $_POST[$ratename]);
+
+                // Iterate on category prices
+                for ($pos = 0; isset($_POST[self::RATE_PRICE . $catId . '_' . $rateId . '_' . $pos]); $pos++) {
+                    $rate->addChild("price", $_POST[self::RATE_PRICE . $catId . '_' . $rateId . '_' . $pos]);
+                }
             }
-            if (!XMLsave($data, GSDATAPATH.RATES_DIR.RATES_FILENAME)) {
-                return false;
-            }
+        }
+        if (!XMLsave($data, GSDATAPATH.RATES_DIR.RATES_FILENAME)) {
+            return false;
         }
         return true;
     }

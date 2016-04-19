@@ -216,3 +216,42 @@
 [17-Apr-2016 01:14:40 America/New_York] PHP Notice:  Undefined index: name in C:\dev\www\clqweb\plugins\rates\helper.php on line 108
 [17-Apr-2016 01:16:11 America/New_York] PHP Notice:  Undefined index: name in C:\dev\www\clqweb\plugins\rates\helper.php on line 108
 [17-Apr-2016 01:16:33 America/New_York] PHP Notice:  Undefined index: name in C:\dev\www\clqweb\plugins\rates\helper.php on line 108
+[18-Apr-2016 09:36:18 America/New_York] PHP Notice:  Use of undefined constant TYPE_RATE - assumed 'TYPE_RATE' in C:\dev\www\clqweb\plugins\rates\helper.php on line 5
+[18-Apr-2016 09:36:18 America/New_York] PHP Notice:  Use of undefined constant TYPE_CATEGORY - assumed 'TYPE_CATEGORY' in C:\dev\www\clqweb\plugins\rates\helper.php on line 6
+[18-Apr-2016 21:04:45 America/New_York] PHP Notice:  Use of undefined constant CATEGORY_NAME - assumed 'CATEGORY_NAME' in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 124
+[18-Apr-2016 21:04:45 America/New_York] PHP Notice:  Use of undefined constant CATEGORY_NAME - assumed 'CATEGORY_NAME' in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 124
+[18-Apr-2016 23:03:30 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 58
+[18-Apr-2016 23:03:30 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:03:30 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:03:59 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 58
+[18-Apr-2016 23:03:59 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:03:59 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:04:06 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 58
+[18-Apr-2016 23:04:06 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:04:06 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:06:13 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 58
+[18-Apr-2016 23:06:13 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:06:13 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:07:41 America/New_York] PHP Notice:  Undefined index: category_price_0_1 in C:\dev\www\clqweb\plugins\rates\rates.class.php on line 136
+[18-Apr-2016 23:07:41 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 58
+[18-Apr-2016 23:07:41 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:07:41 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:08:56 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 58
+[18-Apr-2016 23:08:56 America/New_York] PHP Notice:  Undefined index: rates in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:08:56 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in C:\dev\www\clqweb\plugins\rates\edit.php on line 60
+[18-Apr-2016 23:36:23 America/New_York] PHP Notice:  Undefined index: label in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 17
+[18-Apr-2016 23:36:23 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:23 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:23 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:23 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:23 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:23 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:26 America/New_York] PHP Notice:  Undefined index: label in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 17
+[18-Apr-2016 23:36:26 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:26 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:26 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:26 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:26 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:36:26 America/New_York] PHP Notice:  Undefined index: value in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 22
+[18-Apr-2016 23:48:37 America/New_York] PHP Notice:  Undefined variable: name in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 34
+[18-Apr-2016 23:48:37 America/New_York] PHP Notice:  Undefined variable: name in C:\dev\www\clqweb\plugins\rates\frontend.class.php on line 36

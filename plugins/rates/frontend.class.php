@@ -14,12 +14,12 @@ class RatesFrontend
         $rates = new Rates();
         $categories = $rates->getRates();
         foreach ($categories as $category) {
-            $text .= self::add_category($category['label']);
+            $text .= self::addCategory($category);
             $nrates = count($category["rates"]);
             foreach ($category["rates"] as $rate) {
                 $lastRate = !(--$nrates);
                 $odd = ($nrates % 2 == 0);
-                $text .= self::add_rate($rate['name'], $rate['value'], $lastRate, $odd);
+                $text .= self::addRate($rate, $lastRate, $odd);
             }
         }
         $text .= '</div>';
@@ -27,34 +27,34 @@ class RatesFrontend
     }
 
 
-    private static function add_category($label)
+    private static function addCategory($category)
     {
-        $text = '<table class="category">';
-        $text .= '<thead class="cat_title">';
-        $text .= '<tr>';
-        $text .= '<td colspan="2">';
-        $text .= '<span class="title">'. $label . '</span>';
-        $text .= '</td>';
-        $text .= '</tr>';
-        $text .= '</thead>';
-        $text .= '<tbody>';
+        $text = '<div class="category">';
+        $text .= '<div class="row cat_title flex">';
+        $text .= '<div class="name">'. $category['name'] . '</div>';
+        foreach ($category['prices'] as $price) {
+            $text .= '<div class="price">'. $price . '</div>';
+        }
+        $text .= '</div>';
         return $text;
     }
 
 
-    private static function add_rate($name, $value, $last, $odd)
+    private static function addRate($rate, $last, $odd)
     {
-        $text = '<tr class="rate' . ($odd ? ' odd' : ' even') . '">';
-        $text .= '<td class="rate_name">';
-        $text .= '<span>'. $name . '</span>';
-        $text .= '</td>';
-        $text .= '<td class="rate_value">';
-        $text .= '<span>'. $value . ' $</span>';
-        $text .= '</td>';
-        $text .= '</tr>';
+        $text = '<div class="row rate flex' . ($odd ? ' odd' : ' even') . '">';
+        $text .= '<div class="name">'. $rate['name'] . '</div>';
+        foreach ($rate['prices'] as $price) {
+            $text .= '<div class="price">'. $price;
+            if (!empty($price)) {
+                $text .= ' $';
+            }
+            $text .= '</div>';
+        }
+        $text .= '</div>';
         if ($last) {
-            $text .=  '</tbody>';
-            $text .= '</table>';
+            $text .=  '</div>';
+            $text .= '<div class="spacer"></div>';
         }
         return $text;
     }

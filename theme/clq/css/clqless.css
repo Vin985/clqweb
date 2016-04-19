@@ -240,24 +240,36 @@
   z-index: 9999;
   margin: 50px 0 0;
 }
+.flex {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.category {
+  width: 100%;
+}
+.name {
+  min-width: 45%;
+  padding: 3px 5px;
+}
+.price {
+  width: 15%;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
 .rates {
   width: 100%;
   font-weight: 500;
-}
-.rates .category {
-  width: 100%;
-}
-.rates tbody:before {
-  line-height: 5px;
-  content: ".";
-  color: #ddf1fe;
-  display: block;
 }
 .rates .odd {
   background: #e5ffe5;
 }
 .rates .even {
   background: #acd2ac;
+}
+.spacer {
+  height: 15px;
 }
 .rate td {
   padding: 3px 0 3px 5px;
@@ -270,9 +282,6 @@
   padding: 3px 0 3px 10px;
   font-size: 18px;
   border-radius: 3px;
-}
-.rate_name {
-  width: 80%;
 }
 @media (min-width: 768px) {
   .open a:after {
