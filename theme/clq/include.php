@@ -44,8 +44,8 @@
 			<![endif]-->
 
 	<!-- JavaScript -->
-	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery.min.js"></script>
-	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery-migrate-1.2.1.min.js"></script>
+	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery.min.js" async></script>
+	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery-migrate-1.2.1.min.js" defer></script>
 
 	<?php function_exists('get_i18n_header') ? get_i18n_header() : get_header(); ?>
 </head>

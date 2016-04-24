@@ -1,5 +1,9 @@
-Changer code pretty photo pour mobile
-Ajouter plugin tarif?
-Voir calendrier
-Contacts et formulaire
-Lien bois
+
+* Changer code pretty photo pour mobile
+** Voir calendrier
+** Contacts et formulaire
+*** Lien bois
+
+Tarifs :
+  Ajouter un champ pour l'annee
+  Changer le texte pour l'annee

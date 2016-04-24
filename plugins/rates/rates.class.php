@@ -11,20 +11,26 @@ class Rates
     const RATE_PRICE = 'rate_price_';
 
     private $rates;
+    private $cur_lang;
     //private static $rates;
 
     public function __construct()
     {
+        $this->cur_lang = return_i18n_languages()[0];
         if (!$this->checkPrerequisites()) {
             throw new \Exception(i18n_r('rates/MISSING_DIR'));
         }
     }
 
-    private function loadRates()
+    private function loadRates($lang)
     {
         $this->rates = array();
         $data = array();
-        $filename = GSDATAPATH.RATES_DIR.RATES_FILENAME;
+
+        $filename = GSDATAPATH.RATES_DIR.RATES_FILENAME.'_'.$lang.'.xml';
+        if (!file_exists($filename)) {
+            $filename = GSDATAPATH.RATES_DIR.RATES_FILENAME.'.xml';
+        }
         if (file_exists($filename)) {
             $data = getXML($filename);
             if ($data) {
@@ -108,10 +114,19 @@ class Rates
         );
     }
 
+    public function getCurrentLanguage()
+    {
+        return $this->cur_lang;
+    }
+
     public function getRates()
     {
-        if (empty($this->rates)) {
-            $this->loadRates();
+        $lang = isset($_POST['lang']) ? $_POST['lang'] : $this->cur_lang;
+        if (empty($this->rates) || $lang != $this->cur_lang) {
+            $this->loadRates($lang);
+            if ($lang != $this->cur_lang) {
+                $this->cur_lang = $lang;
+            }
         }
         return $this->rates;
     }
@@ -119,6 +134,7 @@ class Rates
     public function saveRates()
     {
         $data = new \SimpleXMLExtended('<?xml version="1.0" encoding="UTF-8"?><rates></rates>');
+
         $ncat = isset($_POST['ncat']) ? $_POST['ncat'] : 0;
         for ($catId = 0; $catId < $ncat; $catId++) {
             $catname = self::CATEGORY_NAME . $catId;
@@ -150,19 +166,14 @@ class Rates
                 }
             }
         }
-        if (!XMLsave($data, GSDATAPATH.RATES_DIR.RATES_FILENAME)) {
-            return false;
-        }
-        return true;
-    }
 
-    public function saveUndo($name, $newname)
-    {
-        if ($name != $newname && !unlink(GSDATAPATH.I18N_GALLERY_DIR.$newname.'.xml')) {
+        $lang = isset($_POST['lang']) ? $_POST['lang'] : return_i18n_default_language();
+
+        if (!XMLsave($data, GSDATAPATH.RATES_DIR.RATES_FILENAME.'_'.$lang.'.xml')) {
             return false;
         }
-        if (!copy(GSBACKUPSPATH.I18N_GALLERY_DIR.$name.'.xml', GSDATAPATH.I18N_GALLERY_DIR.$name.'.xml')) {
-            return false;
+        if ($lang != $this->cur_lang) {
+            $this->cur_lang = $lang;
         }
         return true;
     }

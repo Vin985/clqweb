@@ -20,26 +20,32 @@ try {
 
 $success = false;
 $name = @$_GET['name'];
-if (isset($_GET['undo']) && !isset($_POST['save'])) {
-    $newname = @$_GET['new'] ? $_GET['new'] : $name;
-    if (i18n_gallery_save_undo($name, $newname)) {
-        $msg = i18n_r('rates/UNDO_SUCCESS');
-        $success = true;
-    } else {
-        $msg = i18n_r('rates/UNDO_FAILURE');
-    }
-    $gallery = return_i18n_gallery(@$_GET['name']);
-} elseif (isset($_POST['save'])) {
+if (isset($_POST['save'])) {
     if ($rates->saveRates()) {
         $msg = i18n_r('rates/SAVE_SUCCESS');
         $success = true;
     } else {
         $msg = i18n_r('rates/SAVE_FAILURE');
     }
+} elseif (isset($_POST['load'])) {
+    if ($rates->getRates()) {
+        $success = true;
+    }
 }
 
-
-
+if (count($languages) != 0) {
+    $sel = '';
+    $langs = '';
+    foreach ($languages as $lang) {
+        if ($lang == $rates->getCurrentLanguage()) {
+            $sel="selected";
+        }
+        $langs .= '<option '.$sel.' value="'.$lang.'" >'.$lang.'</option>';
+        $sel = '';
+    }
+} else {
+    $langs = '<option value="" selected="selected" >-- '.i18n_r('NONE').' --</option>';
+}
 
 //print_r($rates->getRates());
 
@@ -50,6 +56,16 @@ $categories = $rates->getRates();
 
   <form method="post" id="ratesForm" action="load.php?id=rates&amp;edit"
   class="rates_form" accept-charset="utf-8">
+
+      <div class="language">
+        <label for="lang" ><?php i18n('LANGUAGE');?>:</label>
+          <select name="lang" id="lang" class="text">
+                <?php echo $langs; ?>
+          </select>
+          <div class="submit" style="display: inline-block">
+            <input type="submit" name="load" value="<?php i18n('rates/CHANGE_LANGUAGE'); ?>" class="submit" />
+          </div>
+      </div>
         <?php
         $ncat = count($categories);
         foreach ($categories as $category) {

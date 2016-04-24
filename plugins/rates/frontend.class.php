@@ -1,15 +1,12 @@
 <?php
 
-
 namespace Clq;
-
-require_once(GSPLUGINPATH . 'rates/rates.class.php');
 
 class RatesFrontend
 {
-
     public static function displayRates()
     {
+        require_once(GSPLUGINPATH . 'rates/rates.class.php');
         $text = '<div class="rates">';
         $rates = new Rates();
         $categories = $rates->getRates();
@@ -46,7 +43,7 @@ class RatesFrontend
         $text .= '<div class="name">'. $rate['name'] . '</div>';
         foreach ($rate['prices'] as $price) {
             $text .= '<div class="price">'. $price;
-            if (!empty($price)) {
+            if (!empty($price) && is_numeric($price)) {
                 $text .= ' $';
             }
             $text .= '</div>';

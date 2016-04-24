@@ -12,7 +12,7 @@ Author URI: http://www.campinglequebecois.qc.ca
 $thisfile = basename(__FILE__, ".php");
 
 define('RATES_DIR', 'rates/');
-define('RATES_FILENAME', 'rates.xml');
+define('RATES_FILENAME', 'rates');
 
 # register plugin
 register_plugin(
@@ -36,8 +36,6 @@ if (basename($_SERVER['PHP_SELF']) != 'index.php') { // back end only
 add_action('header', 'rates_header');
 add_action('footer', 'rates_footer');
 add_action('nav-tab', 'createNavTab', array('tarifs', $thisfile, i18n_r('rates/TAB'), 'edit'));
-add_action('rates-sidebar', 'createSideMenu', array($thisfile, i18n_r('rates/VIEW'), 'edit'));
-add_action('rates-sidebar', 'createSideMenu', array($thisfile, i18n_r('rates/TRANSLATIONS'), 'translation'));
 
 
 # ===== BACKEND PAGES =====
@@ -52,8 +50,6 @@ function rates_main()
 {
     if (isset($_GET['edit'])) {
         include(GSPLUGINPATH.'rates/edit.php');
-    } elseif (isset($_GET['translation'])) {
-        include(GSPLUGINPATH.'rates/translation.php');
     }
 }
 

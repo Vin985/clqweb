@@ -1,6 +1,7 @@
 <?php
 $i18n = array(
     'TAB' => "Tarifs",
+    'CHANGE_LANGUAGE' => "Changer la langue",
     'CONFIRM_DEL_CATEGORY' => "\u00cates vous s\u00fbr de vouloir supprimer cette cat\u00e9gorie?\\n" .
     "Tous les tarifs contenus dedans seront effac\u00e9s.",
     'CONFIRM_DEL_RATE' => "\u00cates vous s\u00fbr de vouloir supprimer ce tarif?",
