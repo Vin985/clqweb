@@ -1,29 +1,47 @@
-#calendar {
-    margin: 0 0 0 -15px;
-    color: black;
-    background-color: #dddddd;
-    border: 0px;
+.schedule .flex {
+  align-items: baseline;
 }
-#calendar th {
-    color: #404040;
-    min-width: 88px;
-    border: 0px;
+.schedule .tools {
+  width: 15%;
+  height: auto;
 }
-#calendar td {
-    padding: 0 0 25px 5px;
-    background: #bebebe;
-    height: 45px;
-    border: 1px white;
+.schedule .tools .delete {
+  background: url("images/delete.png");
 }
-#calendar td:hover {
-    background: #979797;
+.schedule .tools .edit {
+  background: url("images/edit.png");
 }
-#calendar td.none {
-    background: none;
+.day {
+  padding: 5px;
+  font-family: sans-serif;
+  font-size: 14px;
 }
-#calendar td.today {
-    background: #9d9d9d;
+.day .date {
+  width: 10%;
 }
-#calendar th.sunday {
-    color: #ff1e1e;
+.events {
+  width: 80%;
+}
+.event {
+  width: auto;
+  padding: 5px 0;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+.button-img {
+  height: 24px;
+  width: 24px;
+  line-height: 0;
+  border: 0;
+  vertical-align: middle;
+  margin: auto;
+}
+.language {
+  margin: 5px 0 20px;
+}
+.language select.text {
+  width: 10%;
+  padding: 4px 5px;
 }

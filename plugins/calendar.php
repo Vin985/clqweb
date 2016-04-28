@@ -29,7 +29,7 @@ if (basename($_SERVER['PHP_SELF']) != 'index.php') { // back end only
 # activate filter
 add_action('header', 'calendar_header');
 add_action('footer', 'calendar_footer');
-add_action('nav-tab', 'createNavTab', array('calendar', $thisfile, i18n_r('calendar/calendar'), 'calendar'));
+add_action('nav-tab', 'createNavTab', array('calendar', $thisfile, i18n_r('calendar/calendar'), 'events'));
 
 
 /*

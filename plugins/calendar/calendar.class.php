@@ -5,7 +5,7 @@ namespace Clq;
 class Calendar
 {
 
-    private $rates;
+    private $schedule;
     private $cur_lang;
     //private static $rates;
 
@@ -13,15 +13,16 @@ class Calendar
     {
         $this->cur_lang = return_i18n_languages()[0];
         if (!$this->checkPrerequisites()) {
-            throw new \Exception(i18n_r('rates/MISSING_DIR'));
+            throw new \Exception(i18n_r('calendar/MISSING_DIR'));
         }
+        $this->schedule = $this->loadSchedule();
     }
 
 
     public static function checkPrerequisites()
     {
         $success = true;
-        $gdir = GSDATAPATH . CALENDAR_DIR;
+        $gdir = GSDATAOTHERPATH . CALENDAR_DIR;
         if (!file_exists($gdir)) {
             $success = mkdir(substr($gdir, 0, strlen($gdir)-1), 0777) && $success;
             $fp = fopen($gdir . '.htaccess', 'w');
@@ -65,62 +66,103 @@ class Calendar
         return $this->cur_lang;
     }
 
-    public function getRates()
+
+    public function loadSchedule()
     {
-        $lang = isset($_POST['lang']) ? $_POST['lang'] : $this->cur_lang;
-        if (empty($this->rates) || $lang != $this->cur_lang) {
-            $this->loadRates($lang);
-            if ($lang != $this->cur_lang) {
-                $this->cur_lang = $lang;
-            }
+        if (file_exists(GSDATAOTHERPATH.CALENDAR_DIR.'schedule.json')) {
+            return json_decode(file_get_contents(GSDATAOTHERPATH.CALENDAR_DIR.'schedule.json'));
         }
-        return $this->rates;
+          return new \StdClass();
     }
 
-    public function saveRates()
+    public function getSchedule()
     {
-        $data = new \SimpleXMLExtended('<?xml version="1.0" encoding="UTF-8"?><rates></rates>');
+        return $this->schedule;
+    }
 
-        $ncat = isset($_POST['ncat']) ? $_POST['ncat'] : 0;
-        for ($catId = 0; $catId < $ncat; $catId++) {
-            $catname = self::CATEGORY_NAME . $catId;
-            if (!isset($_POST[$catname]) || empty($_POST[$catname])) {
-                continue;
+    public function findDate($day)
+    {
+        foreach ($this->schedule->dates as $date) {
+            if ($date->date > $day) {
+                break;
             }
-            $category = $data->addChild("category");
-            // Add category name
-            $category->addChild("name", $_POST[$catname]);
-
-            // Iterate on category prices
-            for ($pos = 0; isset($_POST[self::CATEGORY_PRICE . $catId . "_" . $pos]); $pos++) {
-                $category->addChild("price", $_POST[self::CATEGORY_PRICE . $catId . "_" . $pos]);
+            if ($date->date == $day) {
+                return $date;
             }
+        }
+        return '';
+    }
 
-            // Iterate on rates
-            $nrate = isset($_POST['nrate_' . $catId]) ? $_POST['nrate_' . $catId] : 0;
-            for ($rateId = 0; $rateId < $nrate; $rateId++) {
-                $ratename = self::RATE_NAME . $catId . "_" . $rateId;
-                if (!isset($_POST[$ratename]) || empty($_POST[$ratename])) {
-                    continue;
+    public function saveEvent()
+    {
+        $day = strtotime($_POST['date']);
+        $edit = $_POST['edit'];
+
+        $event = new \StdClass();
+        $event->description = $_POST['post-content'];
+
+        $found = false;
+        $idx = 0;
+        // Schedule is not empty
+        if (!empty($this->schedule) && isset($this->schedule->dates)) {
+            $dates = $this->schedule->dates;
+            // Iterate on dates
+            foreach ($dates as $date) {
+                // Dates should be ordered. If greater, we got too far
+                if ($date->date > $day) {
+                    break;
                 }
-                $rate = $category->addChild("rate");
-                $rate->addChild("name", $_POST[$ratename]);
-
-                // Iterate on category prices
-                for ($pos = 0; isset($_POST[self::RATE_PRICE . $catId . '_' . $rateId . '_' . $pos]); $pos++) {
-                    $rate->addChild("price", $_POST[self::RATE_PRICE . $catId . '_' . $rateId . '_' . $pos]);
+                // Date already exists
+                if ($date->date == $day) {
+                    // If we edit, just change contents
+                    if ($edit && $_POST['pos'] != '') {
+                        $date->events[$_POST['pos']]->description = $_POST['post-content'];
+                    } else {
+                      // else add new event
+                        $date->events[] = $event;
+                    }
+                    $found = true;
                 }
+                $idx++;
             }
         }
-
-        $lang = isset($_POST['lang']) ? $_POST['lang'] : return_i18n_default_language();
-
-        if (!XMLsave($data, GSDATAPATH.RATES_DIR.RATES_FILENAME.'_'.$lang.'.xml')) {
-            return false;
+        // day was not found, create new date and add it to collection
+        if (!$found) {
+            $date = new \StdClass();
+            $date->date = $day;
+            $date->events[] = $event;
+            if (!empty($dates)) {
+                $start = array_slice($dates, 0, $idx);
+                $end = array_slice($dates, $idx, (count($this->schedule) - $idx));
+                $start[] = $date;
+                $dates = array_merge($start, $end);
+            } else {
+                $dates[] = $date;
+            }
         }
-        if ($lang != $this->cur_lang) {
-            $this->cur_lang = $lang;
+        $this->schedule->dates = $dates;
+
+        file_put_contents(GSDATAOTHERPATH.CALENDAR_DIR.'schedule.json', json_encode($this->schedule));
+    }
+
+    public function deleteEvent()
+    {
+        $day = $_GET['date'];
+        $pos = $_GET['pos'];
+        $idx = 0;
+        foreach ($this->schedule->dates as &$date) {
+            if ($date->date == $day) {
+                // date has only one event, remove date
+                if (count($date->events) == 1) {
+                    array_splice($this->schedule->dates, $idx, 1);
+                } else {
+                    array_splice($date->events, $pos, 1);
+                }
+                file_put_contents(GSDATAOTHERPATH.CALENDAR_DIR.'schedule.json', json_encode($this->schedule));
+                return true;
+            }
+            $idx++;
         }
-        return true;
+        return false;
     }
 }

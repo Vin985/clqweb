@@ -37,7 +37,7 @@ define('GSDONOTPING', 1);
 #define('GSNOCSRF', TRUE);
 
 # Set override CHMOD mode
-#define('GSCHMOD', 0755);
+define('GSCHMOD', 0775);
 
 # Enable Canonical Redirects?
 #define('GSCANONICAL', 1);

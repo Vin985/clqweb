@@ -81,6 +81,7 @@ class Rates
             $fp = fopen($gdir . '.htaccess', 'w');
             fputs($fp, 'Deny from all');
             fclose($fp);
+
         }
         $gdir = GSBACKUPSPATH . RATES_DIR;
       // create directory if necessary
