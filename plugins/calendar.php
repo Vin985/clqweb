@@ -21,10 +21,8 @@ register_plugin(
 
 # language
 # load i18n texts
-if (basename($_SERVER['PHP_SELF']) != 'index.php') { // back end only
-    i18n_merge('calendar', 'fr_FR');
-    i18n_merge('calendar', 'en_US');
-}
+load_languages();
+
 
 # activate filter
 add_action('header', 'calendar_header');

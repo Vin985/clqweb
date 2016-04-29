@@ -44,8 +44,20 @@
 			<![endif]-->
 
 	<!-- JavaScript -->
-	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery.min.js" async></script>
+	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery.min.js" defer></script>
 	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/jquery-migrate-1.2.1.min.js" defer></script>
+	<script type="text/javascript" src="<?php get_theme_url(); ?>/js/doubletaptogo.js" defer></script>
+	<script type="text/javascript" defer>
+	function defer() {
+    if (window.jQuery)
+			$(window).bind("load", function() {
+				$('#navmenu li:has(ul)').doubleTapToGo();
+			});
+    else
+        setTimeout(function() { defer() }, 50);
+		}
+		defer();
+	</script>
 
 	<?php function_exists('get_i18n_header') ? get_i18n_header() : get_header(); ?>
 </head>

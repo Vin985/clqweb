@@ -12,18 +12,19 @@ try {
 $date = date('d-m-Y');
 $contents = '';
 // edition
-if (!empty($_GET['date'])) {
-    $day = $calendar->findDate($_GET['date']);
+if (isset($_POST['date']) && isset($_POST['pos'])) {
+    $day = $calendar->findDate($_POST['date']);
     if (!empty($day)) {
-        $date = date('d-m-Y', $day->date);
-        $contents = $day->events[$_GET['pos']]->description;
+        $date = ($day->date != '') ? date('d-m-Y', $day->date) : '';
+        $contents = $day->events[$_POST['pos']]->description;
     }
 }
 
 ?>
-<form action="load.php?id=calendar&amp;events" method="POST">
-    <input type="hidden" name="edit" value="<?php echo empty($_GET['date']) ? 'false' : 'true' ?>" />
-    <input type="hidden" name="pos" value="<?php echo isset($_GET['pos']) ? $_GET['pos'] : '' ?>" />
+<form action="load.php?id=calendar" class="schedule" method="POST">
+    <input type="hidden" name="edit" value="<?php echo empty($_POST['date']) ? 'false' : 'true' ?>" />
+    <input type="hidden" name="pos" value="<?php echo isset($_POST['pos']) ? $_POST['pos'] : '' ?>" />
+    <input type="hidden" name="action" value="save" />
     <p>
         <label><?php i18n('calendar/date'); ?>:</label>
             <link type="text/css" href="../plugins/calendar/css/jquery-ui-1.8.17.custom.css" rel="stylesheet" />
@@ -52,6 +53,4 @@ if (!empty($_GET['date'])) {
         <textarea name="post-content" id="post-content"><?php echo $contents; ?></textarea>
     </p>
     <input type="submit" class="submit" name='save' value="<?php i18n('calendar/save'); ?>" />
-		<?php i18n('calendar/or'); ?>
-		<a class="cancel" href="load.php?id=calendar&amp;delete=<?php echo $_GET['edit']; ?>" title="<?php i18n('calendar/event_delete'); ?>: <?php echo $_GET['edit']; ?>"><?php i18n('calendar/delete'); ?></a>
 </form>

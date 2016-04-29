@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<channel><item><title><![CDATA[Navbar]]></title><slug>navbar</slug><value><![CDATA[&lt;li class=&quot;navitem &lt;?php echo $item-&gt;classes; ?&gt;&quot;&gt;
+<channel><item><title><![CDATA[calendar]]></title><slug>calendar</slug><value><![CDATA[&lt;?php 
+display_calendar();
+?&gt;]]></value></item><item><title><![CDATA[Navbar]]></title><slug>navbar</slug><value><![CDATA[&lt;div class=&quot;navitem &lt;?php echo $item-&gt;classes; ?&gt;&quot;&gt;
   &lt;a href=&quot;&lt;?php echo htmlspecialchars($item-&gt;link); ?&gt;&quot; &gt;
     &lt;?php echo htmlspecialchars($item-&gt;text); ?&gt;
+ &lt;?php if ($item-&gt;isOpen) { 
+  if ($item-&gt; level == 0){ ?&gt;
+&lt;span class=&quot;nav-arrow&quot;&gt;&amp;#x25BC;&lt;/span&gt;
+&lt;?php } else if ($item-&gt; level == 1){ ?&gt;
+&lt;span class=&quot;nav-arrow&quot;&gt;&amp;#x25B6;&lt;/span&gt;
+&lt;?php } 
+}?&gt;
   &lt;/a&gt;
+
+
   &lt;?php if ($item-&gt;isOpen) { ?&gt;
-    &lt;ul class=&quot;subnav&quot;&gt;&lt;?php $item-&gt;outputChildren(); ?&gt;&lt;/ul&gt;
+    &lt;div class=&quot;subnav level&lt;?php echo ($item-&gt;level + 1) ?&gt;&quot;&gt;&lt;?php $item-&gt;outputChildren(); ?&gt;&lt;/div&gt;
   &lt;?php } ?&gt;
-&lt;/li&gt;
+&lt;/div&gt;
 
 
 	

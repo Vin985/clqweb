@@ -1,9 +1,17 @@
-
+Ajouter des photos!!!
+Navigation 2 niveaux
 * Changer code pretty photo pour mobile
-** Voir calendrier
 ** Contacts et formulaire
 *** Lien bois
 
 Tarifs :
   Ajouter un champ pour l'annee
   Changer le texte pour l'annee
+  Messages succes/erreur
+
+Calendrier:
+  up/down event
+  changer langue
+  choix heure
+
+Nouvelles!

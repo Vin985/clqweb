@@ -23,9 +23,9 @@
     <!-- SITE CONTENT -->
     <h2 class="title"><?php get_page_title(); ?></h2>
     <nav class="sidenav">
-      <ul class="sidemenu root">
+      <div class="sidemenu root">
         <?php get_i18n_navigation(return_page_slug(), 1, 1, I18N_SHOW_MENU, "navbar"); ?>
-      </ul>
+      </div>
     </nav>
     <?php  ?>
     <div class="content">
@@ -36,16 +36,11 @@
   </div>
   <!-- FOOTER -->
 
-  <?php include('footer.inc.php'); ?>
+    <?php include('footer.inc.php'); ?>
 
   <!-- SCRIPTS-->
   <!-- JavaScript -->
-  <script type="text/javascript" src="<?php get_theme_url(); ?>/js/doubletaptogo.js"></script>
-  <script>
-    $(function() {
-      $('#navmenu li:has(ul)').doubleTapToGo();
-    });
-  </script>
+
 
 </body>
 

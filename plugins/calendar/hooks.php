@@ -11,6 +11,14 @@ function calendar_register($type, $name, $description, $edit_function, $header_f
     return Calendar::registerPlugin($type, $name, $description, $edit_function, $header_function, $content_function);
 }
 
+function load_languages()
+{
+    global $LANG;
+    if (basename($_SERVER['PHP_SELF']) != 'index.php') {
+        i18n_merge('calendar', substr($LANG, 0, 2)) || i18n_merge('calendar', 'en');
+    }
+}
+
 function calendar_main()
 {
     require_once('calendar.class.php');
@@ -27,11 +35,11 @@ function calendar_header()
 
 function calendar_footer()
 {
-    include('footer.php');
+    //include('footer.php');
 }
 
 function display_calendar()
 {
     require_once('frontend.class.php');
-    return \Clq\CalendarFrontend::displayCalendar();
+    return \Clq\CalendarFrontend::displayEvents();
 }

@@ -19,7 +19,7 @@ Public functions:
       returns the URL to the current page in the given $language (if null, the default language is used)
       (you should use htmlspecialchars when outputting in a href to convert & to &amp;)
   return_i18n_setlang_url($language)
-      returns the URL to the current page which also sets the preferred $language. If the current URL does not have a 
+      returns the URL to the current page which also sets the preferred $language. If the current URL does not have a
       parameter lang then this causes the page to be displayed in the given $language (if it exists).
       (you should use htmlspecialchars when outputting in a href to convert & to &amp;)
   get_i18n_page_url($echo=false)
@@ -53,7 +53,7 @@ Ignore user language:
       if you don't want to display the multi-language comment and default page on the pages view
       and you really only have one language, add the following to gsconfig.php:
         define('I18N_SINGLE_LANGUAGE', true);
-                  
+
 Fancy URLs:
       You can include a placeholder %language% in the fancy URL - then the language will be always included
       in the URL, e.g. %language%/%parent%/%slug%/ --> en/products/notebook1/
@@ -87,19 +87,19 @@ i18n_load_texts('i18n_base');
 
 # register plugin
 register_plugin(
-	$thisfile, 
-	'I18N Base', 	
-	'3.2.9', 		
+	$thisfile,
+	'I18N Base',
+	'3.2.9',
 	'Martin Vlcek',
-	'http://mvlcek.bplaced.net', 
+	'http://mvlcek.bplaced.net',
 	i18n_r('i18n_base/PLUGIN_DESCRIPTION'),
 	$i18n_base_tab,
-	'i18n_main'  
+	'i18n_main'
 );
 
 # activate filter
 add_action('index-pretemplate', 'i18n_init');
-add_action('edit-extras', 'i18n_base_edit'); 
+add_action('edit-extras', 'i18n_base_edit');
 add_action('pages-sidebar', 'i18n_base_sidebar_item', array($thisfile, i18n_r('i18n_base/PAGES')));
 add_action('admin-pre-header', 'i18n_base_admin_pre_header'); // 3.1+ only
 add_action('header', 'i18n_base_admin_header'); // 3.0+
@@ -124,7 +124,7 @@ add_action('sitemap-aftersave', 'i18n_base_sitemap_aftersave'); // GetSimple 3.3
 
 function i18n_base_sidebar_item($id, $txt, $action=null, $always=true) {
   $is31 = function_exists('generate_sitemap'); # GetSimple 3.1+
-  if ($is31) { 
+  if ($is31) {
     createSideMenu($id, $txt, $action, $always);
   } else {
     $current = false;
@@ -190,7 +190,7 @@ function i18n_load_texts($plugin) {
   if (basename($_SERVER['PHP_SELF']) == 'index.php') {
     // frontend language with I18N plugin is always two characters long
     i18n_merge($plugin, $language) ||
-    i18n_merge($plugin, return_i18n_default_language()) || 
+    i18n_merge($plugin, return_i18n_default_language()) ||
     i18n_merge($plugin, 'en');
   } else {
     i18n_merge($plugin, $LANG) ||
@@ -227,14 +227,14 @@ function get_i18n_content($slug, $force=false) {
 
 function return_i18n_component($id) {
   require_once(GSPLUGINPATH.'i18n_base/frontend.class.php');
-  return I18nFrontend::getComponent($id);  
+  return I18nFrontend::getComponent($id);
 }
 
 function get_i18n_component($id, $param1=null, $param2=null) {
   global $args;
   require_once(GSPLUGINPATH.'i18n_base/frontend.class.php');
-  if (func_num_args() > 1) { 
-    $a = func_get_args(); array_shift($a); 
+  if (func_num_args() > 1) {
+    $a = func_get_args(); array_shift($a);
   } else if (isset($args)) {
     $a = $args;
   } else {
@@ -269,7 +269,7 @@ function return_i18n_setlang_url($language) {
 
 function get_i18n_link($slug) {
   require_once(GSPLUGINPATH.'i18n_base/frontend.class.php');
-  return I18nFrontend::outputLinkTo($slug);  
+  return I18nFrontend::outputLinkTo($slug);
 }
 
 function get_i18n_header($full=true, $omit=null) {
@@ -287,7 +287,3 @@ function i18n_main() {
     include(GSPLUGINPATH.'i18n_base/pages.php');
   }
 }
-
-
-
-

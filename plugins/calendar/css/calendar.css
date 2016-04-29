@@ -11,6 +11,12 @@
 .schedule .tools .edit {
   background: url("images/edit.png");
 }
+.schedule textarea {
+  height: 150px;
+}
+.description {
+  width: 80%;
+}
 .day {
   padding: 5px;
   font-family: sans-serif;

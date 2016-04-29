@@ -83,19 +83,22 @@ class Calendar
     public function findDate($day)
     {
         foreach ($this->schedule->dates as $date) {
-            if ($date->date > $day) {
+            if ($day != '' && $date->date > $day) {
                 break;
             }
             if ($date->date == $day) {
                 return $date;
             }
         }
-        return '';
+        return -1;
     }
 
     public function saveEvent()
     {
-        $day = strtotime($_POST['date']);
+        $day = '';
+        if ($_POST['date'] != '') {
+            $day = strtotime($_POST['date']);
+        }
         $edit = $_POST['edit'];
 
         $event = new \StdClass();
@@ -109,7 +112,7 @@ class Calendar
             // Iterate on dates
             foreach ($dates as $date) {
                 // Dates should be ordered. If greater, we got too far
-                if ($date->date > $day) {
+                if ($day != '' && $date->date > $day) {
                     break;
                 }
                 // Date already exists
@@ -132,8 +135,11 @@ class Calendar
             $date->date = $day;
             $date->events[] = $event;
             if (!empty($dates)) {
+                if ($day == '') {
+                    $idx = 0;
+                }
                 $start = array_slice($dates, 0, $idx);
-                $end = array_slice($dates, $idx, (count($this->schedule) - $idx));
+                $end = array_slice($dates, $idx, (count($dates) - $idx));
                 $start[] = $date;
                 $dates = array_merge($start, $end);
             } else {
@@ -147,8 +153,8 @@ class Calendar
 
     public function deleteEvent()
     {
-        $day = $_GET['date'];
-        $pos = $_GET['pos'];
+        $day = $_POST['date'];
+        $pos = $_POST['pos'];
         $idx = 0;
         foreach ($this->schedule->dates as &$date) {
             if ($date->date == $day) {

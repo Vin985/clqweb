@@ -1,3 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<item><pubDate>Sat, 23 Apr 2016 14:18:34 -0400</pubDate><title><![CDATA[Calendrier]]></title><url><![CDATA[calendrier]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Calendrier]]></menu><menuOrder><![CDATA[0]]></menuOrder><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[calendrier.php]]></template><parent><![CDATA[news]]></parent><content><![CDATA[&lt;p&gt;evenements a venir&lt;/p&gt;
+<item><pubDate>Thu, 28 Apr 2016 10:01:47 -0400</pubDate><title><![CDATA[Calendrier]]></title><url><![CDATA[calendrier]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Calendrier]]></menu><menuOrder><![CDATA[0]]></menuOrder><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[news]]></parent><content><![CDATA[&lt;p&gt;{% calendar %}&lt;/p&gt;
 ]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author></item>

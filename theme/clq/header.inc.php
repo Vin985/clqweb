@@ -30,17 +30,17 @@
       <div class="lang">
         <?php
         $languages = return_i18n_languages();
-        if(count($languages) > 1){
-          $other_lang = $languages[1];
+        if (count($languages) > 1) {
+            $other_lang = $languages[1];
         } else {
-          $other_lang = $languages[0];
+            $other_lang = $languages[0];
         }
 
         $txt = "English";
-        if ($other_lang != "en"){
-          $txt = "Fran&ccedil;ais";
+        if ($other_lang != "en") {
+            $txt = "Fran&ccedil;ais";
         }
-         ?>
+            ?>
          <a href="<?php echo return_i18n_setlang_url($other_lang); ?>"><?php echo $txt; ?> </a>
       </div>
 	</div>
@@ -48,8 +48,8 @@
 	<nav class="topnav hw-auto center right upper">
 		<label for="show-menu" class="show-menu">Menu</label>
 		<input id="show-menu" type="checkbox"  role="button">
-		<ul id="navmenu" class="topmenu root">
-			<?php get_i18n_navigation(return_page_slug(), 0, 1, I18N_SHOW_MENU, 'navbar'); ?>
-		</ul>
+		<div id="navmenu" class="topmenu root">
+			<?php get_i18n_navigation(return_page_slug(), 0, 2, I18N_SHOW_MENU, 'navbar'); ?>
+		</div>
 	</nav>
 </div>
