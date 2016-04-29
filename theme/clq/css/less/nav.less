@@ -1,0 +1,210 @@
+// main: clq.less
+@import "functions";
+.topnav {
+    padding: 0;
+    background-color: @topnav-bg;
+}
+.root {
+    padding: 0;
+    margin: 20px 0;
+}
+.topmenu {
+    //border-bottom: 2px solid @subnav-border;
+    .navitem {
+        display: inline-block;
+        a {
+            padding: 5px 5px 3px;
+        }
+        &:hover > .subnav {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+}
+.subnav {
+    visibility: hidden;
+    opacity: 0;
+    .drop-transition();
+    padding: 15px 0 0;
+    position: absolute;
+    width: auto;
+    min-width: 100%;
+    background: @subnav-bg;
+    border: 2px solid @subnav-border;
+    border-radius: 0 0 3px 3px;
+    white-space: nowrap;
+    .current {
+        border-bottom: none;
+        >a {
+            background: @topnav-bg-sel;
+            border-radius: 3px;
+        }
+    }
+    .navitem {
+        padding: 0;
+        margin: 0 12px 15px;
+        .text-params(@size:14px; @height: 1.4);
+        display: block;
+        a {
+            border: none;
+            &:hover {
+                border: none;
+            }
+            color: @subnav-drop-txt;
+        }
+    }
+}
+
+.level1 {
+    .navitem {
+        &:hover > .level2 {
+            display: block;
+            opacity: 1;
+        }
+    }
+}
+.level2 {
+    display: none;
+    display: inline-block;
+    padding: 10px 0 0;
+    margin: -12px 0px 0px 17px;
+    min-width:auto;
+}
+.navitem {
+    position: relative;
+    //margin: 0 10px 0 0;
+    .text-params();
+    a {
+        padding: 5px 15px 4px;
+        color: @topnav-txt;
+        &:hover {
+            text-decoration: none;
+            color: @topnav-txt-sel;
+        }
+    }
+}
+.current {
+    border-bottom: 2px solid @subnav-border;
+}
+.current2 {
+    //border-bottom: 2px solid @subnav-border;
+    background: @topnav-bg-sel;
+    //border-radius: 5px 5px 0 0;
+}
+.sidenav {
+    width: 20%;
+    .root {
+        margin: 0;
+        list-style-type: none;
+    }
+    .navitem {
+        display: block;
+        color: @sidenav-txt;
+        margin: 0;
+        padding: 0 10px 10px 0;
+        a {
+            display: inline-block;
+            min-width: 85%;
+            padding: 5px;
+        }
+    }
+    .current {
+        border-bottom: none;
+        >a {
+            background: @topnav-bg-sel;
+            border-radius: 3px;
+        }
+    }
+}
+.nav-arrow{
+  vertical-align: 15%;
+  font-size: 10px;
+}
+@media (min-width:768px) {
+  /*.root {
+    .open > a {
+        &:after {
+            content: '\25bc';
+            font-size: 12px;
+        }
+    }
+  }
+  .level1 {
+    .open > a {
+        &:after {
+            content: '\25b6';
+            font-size: 12px;
+        }
+    }
+  }*/
+}
+@media (max-width:1200px) {
+    .navitem {
+        .text-params(@size:14px; @height: 1.4; @weigth: 400);
+    }
+    .subnav {
+        .navitem {
+            .text-params(@size:12px;@height: 1.6);
+        }
+    }
+}
+@media (max-width:768px) {
+    .nav-arrow {
+      display:none;
+    }
+    .level2 {
+      margin: 0;
+    }
+    .show-menu {
+        display: block;
+    }
+    .topnav {
+        background-color: transparent;
+        width: 100%;
+    }
+    .topmenu {
+        display: none;
+        background-color: @topnav-resp-bg;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        .navitem {
+            display: block;
+            margin-bottom: 1px;
+            border-bottom: 1px solid @topnav-resp-txt;
+            padding: 5px 0;
+        }
+    }
+    .subnav {
+        display: block;
+        visibility: visible;
+        opacity: 1;
+        position: relative;
+        background-color: @topnav-resp-bg;
+        top: 0;
+        padding: 0 0 0 10px;
+        border: none;
+        .navitem {
+            padding: 0;
+            margin: 5px 12px 5px 0;
+            border: none;
+            a {
+                color: @topnav-resp-txt;
+                &:before {
+                    content: '-';
+                    margin-right: 5px;
+                }
+            }
+        }
+    }
+    .navitem {
+        width: 100%;
+        a {
+            font-size: 12px;
+            color: @topnav-resp-txt;
+        }
+    }
+    .sidenav {
+        display: none;
+    }
+}

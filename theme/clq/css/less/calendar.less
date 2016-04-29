@@ -1,0 +1,48 @@
+// main: clq.less
+.schedule {
+    width: 100%;
+    .flex {
+        align-items: baseline;
+    }
+    .row {
+        margin: 0;
+        padding: 0 5px;
+    }
+    .odd {
+        background: @rate-odd;
+    }
+    .even {
+        background: @rate-even;
+    }
+}
+.day {
+    padding: 5px;
+    font-family: sans-serif;
+    .date {
+        width: 15%;
+        font-weight: 600;
+        margin: 5px 10px;
+    }
+    font-weight: 500;
+    margin-top: 15px;
+}
+.events {
+    width: 80%;
+}
+.event {
+    width: auto;
+    padding: 5px 0;
+}
+.stack {
+    display: flex;
+    flex-direction: column;
+}
+.cal_title {
+  background: @dark-green;
+  color: white;
+  font-weight: 600;
+  padding: 5px;
+}
+.spacer{
+  height: 10px;
+}
