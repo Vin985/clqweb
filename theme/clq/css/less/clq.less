@@ -1,9 +1,22 @@
 // out: ../clqless.css, compress: true
 @import "functions";
 @import "constants";
+body,
+input,
+select,
+textarea {
+    color: @global-text-color;
+    font-family: @global-font-family;
+    font-size: @global-font-size;
+    font-weight: @global-font-weight;
+    line-height: @global-line-height;
+}
 .hw-auto {
     height: auto;
     width: auto;
+}
+.fullwidth {
+    width: 100%;
 }
 .right {
     float: right;
@@ -20,13 +33,6 @@
 .upper {
     text-transform: uppercase;
 }
-.drop-transition {
-    -webkit-transition: all 0.25s ease;
-    -moz-transition: all 0.25s ease;
-    -ms-transition: all 0.25s ease;
-    -o-transition: all 0.25s ease;
-    transition: all 0.25s ease;
-}
 .clq {
     .gradient(@bg-sky; white);
 }
@@ -34,18 +40,22 @@
     padding: 0;
 }
 .page-text {
-    font-weight: 400;
+    .change(font-weight; @default);
 }
 .title {
     width: 100%;
     margin: 15px 0 20px;
-    text-indent: 20%;
+    text-indent: 17%;
 }
 .content {
-    width: 75%;
+    flex: 1 1 auto;
+    padding: 0 2%;
     p {
         margin: 0;
     }
+}
+.side {
+    flex: 0 0 15%;
 }
 .photo {
     margin: 10px;
@@ -53,8 +63,8 @@
 .important {
     list-style-image: @img-warning;
     color: @red-warning;
-    font-weight: bold;
-    font-size: 18px;
+    .change(font-weight; @up; 2);
+    .change(font-size; @up);
 }
 .gallery-link {
     display: inline-block;
@@ -74,7 +84,11 @@
 .flex {
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+}
+@media (min-width: 1200px) {
+  .container {
+      width: 80%;
+  }
 }
 @media (max-width:768px) {
     .container {
@@ -86,7 +100,7 @@
 }
 @media (max-width:400px) {
     body {
-        font-size: 12px;
+        .change(font-size; @down);
     }
 }
 @import "banner";

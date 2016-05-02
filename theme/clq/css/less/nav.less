@@ -1,12 +1,16 @@
 // main: clq.less
 @import "functions";
+@import "constants";
+
+/** Top Navbar **/
 .topnav {
     padding: 0;
     background-color: @topnav-bg;
+    margin: 45px 0 0 0;
 }
 .root {
     padding: 0;
-    margin: 20px 0;
+
 }
 .topmenu {
     //border-bottom: 2px solid @subnav-border;
@@ -17,9 +21,25 @@
         }
         &:hover > .subnav {
             visibility: visible;
-            opacity: 1;
+            opacity: .9;
         }
     }
+}
+.navitem {
+    position: relative;
+    //margin: 0 10px 0 0;
+    .change(font-size; @default);
+    .change(line-height; @default);
+    .change(font-weight; @up; 2);
+    a {
+        padding: 5px 15px 4px;
+        color: @topnav-txt;
+        &:hover {
+            text-decoration: none;
+            color: @topnav-txt-sel;
+        }
+    }
+
 }
 .subnav {
     visibility: hidden;
@@ -43,7 +63,8 @@
     .navitem {
         padding: 0;
         margin: 0 12px 15px;
-        .text-params(@size:14px; @height: 1.4);
+        .change(font-size, @down);
+        .change(line-height, @down);
         display: block;
         a {
             border: none;
@@ -70,29 +91,18 @@
     margin: -12px 0px 0px 17px;
     min-width:auto;
 }
-.navitem {
-    position: relative;
-    //margin: 0 10px 0 0;
-    .text-params();
-    a {
-        padding: 5px 15px 4px;
-        color: @topnav-txt;
-        &:hover {
-            text-decoration: none;
-            color: @topnav-txt-sel;
-        }
-    }
-}
+
 .current {
     border-bottom: 2px solid @subnav-border;
 }
-.current2 {
-    //border-bottom: 2px solid @subnav-border;
-    background: @topnav-bg-sel;
-    //border-radius: 5px 5px 0 0;
+.drop-transition {
+    -webkit-transition: @dropdown-transition;
+    -moz-transition: @dropdown-transition;
+    -ms-transition: @dropdown-transition;
+    -o-transition: @dropdown-transition;
+    transition: @dropdown-transition;
 }
 .sidenav {
-    width: 20%;
     .root {
         margin: 0;
         list-style-type: none;
@@ -102,6 +112,7 @@
         color: @sidenav-txt;
         margin: 0;
         padding: 0 10px 10px 0;
+        .change(font-size; @down);
         a {
             display: inline-block;
             min-width: 85%;
@@ -118,7 +129,7 @@
 }
 .nav-arrow{
   vertical-align: 15%;
-  font-size: 10px;
+  .change(font-size; @down; 2);
 }
 @media (min-width:768px) {
   /*.root {
@@ -140,11 +151,14 @@
 }
 @media (max-width:1200px) {
     .navitem {
-        .text-params(@size:14px; @height: 1.4; @weigth: 400);
+        .change(font-size; @down);
+        .change(line-height; @down);
+        .change(font-weight; @down);
     }
     .subnav {
         .navitem {
-            .text-params(@size:12px;@height: 1.6);
+            .change(font-size; @down);
+            .change(line-height; @down; 0);
         }
     }
 }
@@ -200,7 +214,7 @@
     .navitem {
         width: 100%;
         a {
-            font-size: 12px;
+            .change(font-size, @down, 2);
             color: @topnav-resp-txt;
         }
     }

@@ -98,13 +98,13 @@ input[type="text"] {
 .rates_form .delete {
   background: url("img/delete.png");
 }
-.add {
+.rates_form .add {
   background: url("img/add.png");
 }
-.up {
+.rates_form .up {
   background: url("img/up.png");
 }
-.down {
+.rates_form .down {
   background: url("img/down.png");
 }
 .language {

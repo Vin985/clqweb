@@ -415,7 +415,7 @@ class I18nNavigationItem
     private $deflang = null;
     private $data = array();
 
-    public function I18nNavigationItem($item, $classes, $text, $title, $showTitles, $component)
+    public function __construct($item, $classes, $text, $title, $showTitles, $component)
     {
         $this->item = $item;
         $this->classes = $classes;

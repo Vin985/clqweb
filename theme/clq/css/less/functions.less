@@ -1,11 +1,16 @@
 // main: clq.less
 
-.text-params(@size:16px; @weigth:500; @spacing: 1px; @height: 1.6) {
+@up : 1;
+@down : -1;
+@default: 0;
+
+.text-params(@size:16px; @weight:500; @spacing: 1px; @height: 1.6) {
   font-size: @size;
-  font-weight: @weigth;
+  font-weight: @weight;
   letter-spacing: @spacing;
   line-height: @height;
 }
+
 
 .gradient(@col1; @col2){
   background: @col1;
@@ -21,4 +26,11 @@
   background: -ms-linear-gradient(@col1, @col2);
   /* Standard syntax */
   background: linear-gradient(@col1, @col2);
+}
+
+
+.change(@param; @dir; @power: 1){
+  @global: "global-@{param}";
+  @change: "change-@{param}";
+  @{param}: @@global + @dir * @power * @@change;
 }
