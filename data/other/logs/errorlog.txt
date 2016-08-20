@@ -2496,3 +2496,34 @@ Stack trace:
 [01-May-2016 23:19:11 America/New_York] PHP Warning:  chmod(): Operation not permitted in /home/vin/dev/www/clqweb/admin/inc/basic.php on line 320
 [01-May-2016 23:19:11 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
 [01-May-2016 23:19:11 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[03-May-2016 19:19:44 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[03-May-2016 19:19:44 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:19:27 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:19:27 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:19:31 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:19:31 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:19:43 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:19:43 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:19:53 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:19:53 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:19:56 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:19:56 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:20:07 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:20:07 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:20:36 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:20:36 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:20:42 America/New_York] PHP Warning:  copy(/home/vin/dev/www/clqweb/backups/pages/attraits.bak.xml): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/admin/changedata.php on line 136
+[05-Aug-2016 22:20:42 America/New_York] PHP Warning:  chmod(): Operation not permitted in /home/vin/dev/www/clqweb/admin/inc/basic.php on line 320
+[05-Aug-2016 22:20:42 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[05-Aug-2016 22:20:42 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[17-Aug-2016 08:18:37 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_i18n_menu_data() in /home/vin/dev/www/clqweb/theme/clq/elm.php:20
+Stack trace:
+#0 /home/vin/dev/www/clqweb/index.php(134): include()
+#1 {main}
+  thrown in /home/vin/dev/www/clqweb/theme/clq/elm.php on line 20
+[17-Aug-2016 08:19:16 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_i18n_menu_data() in /home/vin/dev/www/clqweb/theme/clq/template.php:22
+Stack trace:
+#0 /home/vin/dev/www/clqweb/index.php(134): include()
+#1 {main}
+  thrown in /home/vin/dev/www/clqweb/theme/clq/template.php on line 22
+[17-Aug-2016 08:19:35 America/New_York] PHP Notice:  Array to string conversion in /home/vin/dev/www/clqweb/theme/clq/template.php on line 22

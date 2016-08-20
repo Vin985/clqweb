@@ -1,0 +1,6 @@
+{
+    "timeout": 5000,
+    "commands" : [
+        "src/**/*.elm : /home/vin/.npm-packages/bin/elm-make src/Main.elm --output=./theme/clq/js/elm.js"
+    ]
+}
