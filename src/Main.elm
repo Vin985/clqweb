@@ -10,14 +10,15 @@ import Html.App as App
 import Html exposing (..)
 import Html.Attributes exposing (href, class, style, src)
 import Material
-import Material.Button as Button
 import Material.Options exposing (css)
 import Material.Layout as Layout
 import Material.Color as Color
 import Material.Icon as Icon
-import Material.Options as Options exposing (css, when)
-import Json.Decode exposing (..)
-import Debug
+import Material.Options as Options exposing (css, when, cs)
+import Json.Decode exposing (Value)
+import JsonDecoder exposing (extractTabs, Tab, defaultTab)
+import Http
+import Task
 
 
 -- MODEL
@@ -27,11 +28,11 @@ import Debug
 
 type alias Model =
     { count : Int
-    , mdl :
-        Material.Model
-        -- Boilerplate: model store for any and all Mdl components you use.
+    , mdl : Material.Model
     , selectedTab : Int
     , tabs : List Tab
+    , siteurl : String
+    , lang : String
     }
 
 
@@ -47,6 +48,8 @@ model =
         -- Boilerplate: Always use this initial Mdl model store.
     , selectedTab = 0
     , tabs = [ defaultTab ]
+    , siteurl = ""
+    , lang = "fr"
     }
 
 
@@ -57,12 +60,21 @@ model =
 
 
 type Msg
-    = Increase
-    | Reset
-    | Mdl (Material.Msg Msg)
+    = Mdl (Material.Msg Msg)
     | SelectTab Int
     | Nop
     | NavTabs Json.Decode.Value
+    | FetchFail Http.Error
+    | FetchSucceed String
+
+
+getData : String -> Cmd Msg
+getData siteurl =
+    let
+        url =
+            siteurl ++ "index.php?id=fetchdata"
+    in
+        Task.perform FetchFail FetchSucceed (Http.getString url)
 
 
 
@@ -72,16 +84,6 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Increase ->
-            ( { model | count = model.count + 1 }
-            , Cmd.none
-            )
-
-        Reset ->
-            ( { model | count = 0 }
-            , Cmd.none
-            )
-
         -- When the `Mdl` messages come through, update appropriately.
         Mdl msg' ->
             Material.update msg' model
@@ -93,6 +95,19 @@ update msg model =
             ( model, Cmd.none )
 
         NavTabs value ->
+            ( model, Cmd.none )
+
+        FetchSucceed lang' ->
+            let
+                one =
+                    Debug.log "lang" lang'
+
+                two =
+                    Debug.log "siteurl" model.siteurl
+            in
+                ( { model | lang = lang' }, Cmd.none )
+
+        FetchFail _ ->
             ( model, Cmd.none )
 
 
@@ -116,11 +131,16 @@ view model =
         { header = header model
         , drawer = []
         , tabs =
-            ( List.map (\x -> text x.title) model.tabs
-            , [ css "justify-content" "flex-end"
-              , css "font-weight" "bold"
-              ]
-            )
+            if not (model.mdl.layout.tabScrollState.canScrollRight || model.mdl.layout.tabScrollState.canScrollLeft) then
+                ( List.map (\x -> text x.title) model.tabs
+                , [ css "justify-content" "flex-end"
+                  , css "font-weight" "bold"
+                  , cs "no_scroll"
+                  , Color.background (Color.color Color.LightGreen Color.S300)
+                  ]
+                )
+            else
+                ( [], [] )
         , main = [ viewBody model ]
         }
 
@@ -128,10 +148,10 @@ view model =
 header : Model -> List (Html Msg)
 header model =
     [ Layout.row
-        [ css "height" "170px"
+        [ css "height" "120px"
         , Color.background (Color.color Color.LightBlue Color.S50)
         ]
-        [ Layout.title [] [ img [ src "theme/clq/css/img/logo.png" ] [] ]
+        [ Layout.title [] [ img [ src "theme/clq/css/img/logo-simple.png" ] [] ]
         , Layout.spacer
         , Layout.navigation []
             [ Layout.link [ Layout.onClick Nop ]
@@ -142,6 +162,8 @@ header model =
                 [ Icon.i "email"
                 , text "info@campinglequebecois.qc.ca"
                 ]
+            , Layout.link [ Layout.href (model.siteurl ++ "?setlang=" ++ model.lang) ]
+                [ text "Francais" ]
             ]
         ]
     ]
@@ -151,7 +173,7 @@ viewBody : Model -> Html Msg
 viewBody model =
     case model.selectedTab of
         0 ->
-            viewCounter model
+            text "something"
 
         1 ->
             text "something else"
@@ -160,6 +182,8 @@ viewBody model =
             text "404"
 
 
+
+{--
 viewCounter : Model -> Html Msg
 viewCounter model =
     div [ style [ ( "padding", "2rem" ) ] ]
@@ -194,88 +218,27 @@ viewCounter model =
             model.mdl
             [ Button.onClick Reset ]
             [ text "Reset" ]
+        , text ("right: " ++ toString (model.mdl.layout.tabScrollState.canScrollRight))
+        , text (" left: " ++ toString (model.mdl.layout.tabScrollState.canScrollLeft))
         ]
-
-
-type alias Tab =
-    { current : Bool
-    , url : String
-    , parent : String
-    , title : String
-    }
-
-
-defaultTab : Tab
-defaultTab =
-    { current = False
-    , url = ""
-    , parent = ""
-    , title = "prout"
-    }
-
-
-port getNav : String -> Cmd msg
-
-
-port nav : (Json.Decode.Value -> msg) -> Sub msg
-
-
-navSub : Model -> Sub Msg
-navSub model =
-    nav NavTabs
-
-
-
--- Load Google Mdl CSS. You'll likely want to do that not in code as we
--- do here, but rather in your master .html file. See the documentation
--- for the `Material` module for details.
+--}
 
 
 type alias Flags =
     { tabs : Json.Decode.Value
+    , siteurl : String
     }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { model
-        | mdl = Layout.setTabsWidth 1000 model.mdl
-        , tabs = extractTabs flags
+        | mdl = Layout.setTabsWidth 800 model.mdl
+        , tabs = extractTabs flags.tabs
+        , siteurl = flags.siteurl
       }
-    , Layout.sub0 Mdl
+    , Cmd.batch [ Material.init Mdl, getData flags.siteurl ]
     )
-
-
-extractTabs : Flags -> List Tab
-extractTabs flags =
-    let
-        one =
-            Debug.log "flags" flags
-    in
-        case Json.Decode.decodeValue decodeTabs flags.tabs of
-            Err msg ->
-                let
-                    two =
-                        Debug.log "err" msg
-                in
-                    [ { defaultTab | title = "error" } ]
-
-            Ok tabs ->
-                tabs
-
-
-decodeTabs : Decoder (List Tab)
-decodeTabs =
-    at [] (list decodeTab)
-
-
-decodeTab : Decoder Tab
-decodeTab =
-    Json.Decode.object4 Tab
-        ("current" := bool)
-        ("url" := string)
-        ("parent" := string)
-        ("title" := string)
 
 
 main : Program Flags
@@ -283,6 +246,6 @@ main =
     App.programWithFlags
         { init = init
         , view = view
-        , subscriptions = .mdl >> Layout.subs Mdl
+        , subscriptions = Material.subscriptions Mdl
         , update = update
         }

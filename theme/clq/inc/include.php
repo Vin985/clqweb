@@ -1,4 +1,6 @@
-<?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }
+<?php if (!defined('IN_GS')) {
+    die('you cannot load this page directly.');
+}
 /****************************************************
 *
 * @File: 		template.php
@@ -20,12 +22,14 @@
 	<link rel="icon" href="<?php get_theme_url(); ?>/images/favicon.ico">
 
 	<title>
-		<?php if (function_exists('get_custom_title_tag')){
-					echo(get_custom_title_tag());
-				} else {
-					get_page_clean_title(); echo"&nbsp;&mdash;&nbsp;"; get_site_name();
-				}
-				?>
+		<?php if (function_exists('get_custom_title_tag')) {
+                    echo(get_custom_title_tag());
+} else {
+    get_page_clean_title();
+    echo"&nbsp;&mdash;&nbsp;";
+    get_site_name();
+}
+                ?>
 	</title>
 
 	<link href="http://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic" rel="stylesheet" type="text/css">

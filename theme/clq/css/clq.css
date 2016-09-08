@@ -2,6 +2,10 @@
 * Theme's Stylesheet - Modify/Add your own stylesheet + Your Copyright
 */
 
+.no_scroll.mdl-layout__tab-bar-button{
+  display: none;
+}
+
 body, input, select, textarea {
   color: #6e6e6e;
   font-family: 'Roboto', sans-serif;
