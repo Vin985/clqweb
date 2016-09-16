@@ -2586,3 +2586,59 @@ Stack trace:
 [07-Sep-2016 22:51:31 America/New_York] PHP Warning:  chmod(): Operation not permitted in /home/vin/dev/www/clqweb/admin/inc/basic.php on line 320
 [07-Sep-2016 22:51:31 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
 [07-Sep-2016 22:51:31 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[09-Sep-2016 11:55:25 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[09-Sep-2016 11:55:25 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[09-Sep-2016 11:55:30 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[09-Sep-2016 11:55:30 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[09-Sep-2016 11:55:45 America/New_York] PHP Warning:  copy(/home/vin/dev/www/clqweb/backups/pages/fetchdata.bak.xml): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/admin/changedata.php on line 136
+[09-Sep-2016 11:55:45 America/New_York] PHP Warning:  chmod(): Operation not permitted in /home/vin/dev/www/clqweb/admin/inc/basic.php on line 320
+[09-Sep-2016 11:55:45 America/New_York] PHP Warning:  include(/home/vin/dev/www/clqweb/plugins/rates/footer.php): failed to open stream: No such file or directory in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[09-Sep-2016 11:55:45 America/New_York] PHP Warning:  include(): Failed opening '/home/vin/dev/www/clqweb/plugins/rates/footer.php' for inclusion (include_path='.:/usr/share/php') in /home/vin/dev/www/clqweb/plugins/rates.php on line 65
+[09-Sep-2016 11:55:51 America/New_York] PHP Notice:  Undefined index: page in /home/vin/dev/www/clqweb/theme/clq/data.php on line 3
+[09-Sep-2016 11:56:24 America/New_York] PHP Notice:  Undefined index: page in /home/vin/dev/www/clqweb/theme/clq/data.php on line 3
+[09-Sep-2016 11:56:26 America/New_York] PHP Notice:  Undefined index: page in /home/vin/dev/www/clqweb/theme/clq/data.php on line 3
+[09-Sep-2016 11:56:35 America/New_York] PHP Notice:  Undefined index: page in /home/vin/dev/www/clqweb/theme/clq/data.php on line 3
+[09-Sep-2016 11:56:55 America/New_York] PHP Notice:  Undefined index: page in /home/vin/dev/www/clqweb/theme/clq/data.php on line 3
+[09-Sep-2016 11:58:34 America/New_York] PHP Notice:  Undefined index: page in /home/vin/dev/www/clqweb/theme/clq/data.php on line 3
+[09-Sep-2016 11:58:37 America/New_York] PHP Notice:  Undefined index: page in /home/vin/dev/www/clqweb/theme/clq/data.php on line 3
+[09-Sep-2016 11:59:13 America/New_York] PHP Notice:  Undefined index: page in /home/vin/dev/www/clqweb/theme/clq/data.php on line 3
+[09-Sep-2016 12:04:20 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_content() in /home/vin/dev/www/clqweb/theme/clq/data.php:19
+Stack trace:
+#0 /home/vin/dev/www/clqweb/index.php(134): include()
+#1 {main}
+  thrown in /home/vin/dev/www/clqweb/theme/clq/data.php on line 19
+[11-Sep-2016 16:28:58 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_content() in /home/vin/dev/www/clqweb/theme/clq/data.php:19
+Stack trace:
+#0 /home/vin/dev/www/clqweb/index.php(134): include()
+#1 {main}
+  thrown in /home/vin/dev/www/clqweb/theme/clq/data.php on line 19
+[11-Sep-2016 16:30:19 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_content() in /home/vin/dev/www/clqweb/theme/clq/data.php:19
+Stack trace:
+#0 /home/vin/dev/www/clqweb/index.php(134): include()
+#1 {main}
+  thrown in /home/vin/dev/www/clqweb/theme/clq/data.php on line 19
+[11-Sep-2016 18:04:45 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_content() in /home/vin/dev/www/clqweb/theme/clq/data.php:19
+Stack trace:
+#0 /home/vin/dev/www/clqweb/index.php(134): include()
+#1 {main}
+  thrown in /home/vin/dev/www/clqweb/theme/clq/data.php on line 19
+[11-Sep-2016 19:55:29 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_content() in /home/vin/dev/www/clqweb/theme/clq/data.php:19
+Stack trace:
+#0 /home/vin/dev/www/clqweb/index.php(134): include()
+#1 {main}
+  thrown in /home/vin/dev/www/clqweb/theme/clq/data.php on line 19
+[11-Sep-2016 20:48:29 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_content() in /home/vin/dev/www/clqweb/theme/clq/data.php:19
+Stack trace:
+#0 /home/vin/dev/www/clqweb/index.php(134): include()
+#1 {main}
+  thrown in /home/vin/dev/www/clqweb/theme/clq/data.php on line 19
+[11-Sep-2016 21:19:57 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_content() in /home/vin/dev/www/clqweb/theme/clq/data.php:19
+Stack trace:
+#0 /home/vin/dev/www/clqweb/index.php(134): include()
+#1 {main}
+  thrown in /home/vin/dev/www/clqweb/theme/clq/data.php on line 19
+[11-Sep-2016 22:54:02 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_content() in /home/vin/dev/www/clqweb/theme/clq/data.php:20
+Stack trace:
+#0 /home/vin/dev/www/clqweb/index.php(134): include()
+#1 {main}
+  thrown in /home/vin/dev/www/clqweb/theme/clq/data.php on line 20

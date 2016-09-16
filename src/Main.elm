@@ -13,12 +13,14 @@ import Material
 import Material.Options exposing (css)
 import Material.Layout as Layout
 import Material.Color as Color
+import Material.Menu as Menu
 import Material.Icon as Icon
 import Material.Options as Options exposing (css, when, cs)
-import Json.Decode exposing (Value)
-import JsonDecoder exposing (extractTabs, Tab, defaultTab)
+import Json.Decode as Json exposing (Value)
+import JsonDecoder exposing (extractTabs, Tab, defaultTab, BackendData, decodeData)
 import Http
 import Task
+import Constants exposing (constants)
 
 
 -- MODEL
@@ -33,6 +35,7 @@ type alias Model =
     , tabs : List Tab
     , siteurl : String
     , lang : String
+    , content : String
     }
 
 
@@ -50,6 +53,7 @@ model =
     , tabs = [ defaultTab ]
     , siteurl = ""
     , lang = "fr"
+    , content = "Nothing"
     }
 
 
@@ -63,21 +67,27 @@ type Msg
     = Mdl (Material.Msg Msg)
     | SelectTab Int
     | Nop
-    | NavTabs Json.Decode.Value
+    | NavTabs Json.Value
     | FetchFail Http.Error
-    | FetchSucceed String
+    | FetchSucceed BackendData
 
 
-getData : String -> Cmd Msg
-getData siteurl =
+getData : String -> String -> Json.Decoder BackendData -> Cmd Msg
+getData siteurl page decoder =
     let
         url =
-            siteurl ++ "index.php?id=fetchdata"
+            Http.url (siteurl ++ "index.php") [ ( "id", "fetchdata" ), ( "page", page ) ]
     in
-        Task.perform FetchFail FetchSucceed (Http.getString url)
+        Task.perform FetchFail FetchSucceed (Http.get decoder url)
+
+
+getInit : String -> Cmd Msg
+getInit siteurl =
+    getData siteurl "init" decodeData
 
 
 
+{- getInit : String -> String -> Decoder -> Cmd Msg -}
 -- Boilerplate: Msg clause for internal Mdl messages.
 
 
@@ -97,15 +107,31 @@ update msg model =
         NavTabs value ->
             ( model, Cmd.none )
 
-        FetchSucceed lang' ->
+        FetchSucceed data ->
             let
+                lang' =
+                    case data.lang of
+                        Nothing ->
+                            "fr"
+
+                        Just lang ->
+                            lang
+
+                tabs' =
+                    case data.tabs of
+                        Nothing ->
+                            []
+
+                        Just tabs ->
+                            tabs
+
                 one =
-                    Debug.log "lang" lang'
+                    Debug.log "lang" data.lang
 
                 two =
-                    Debug.log "siteurl" model.siteurl
+                    Debug.log "siteurl" data.tabs
             in
-                ( { model | lang = lang' }, Cmd.none )
+                ( { model | lang = lang', tabs = tabs', content = data.content }, Cmd.none )
 
         FetchFail _ ->
             ( model, Cmd.none )
@@ -153,18 +179,19 @@ header model =
         ]
         [ Layout.title [] [ img [ src "theme/clq/css/img/logo-simple.png" ] [] ]
         , Layout.spacer
-        , Layout.navigation []
-            [ Layout.link [ Layout.onClick Nop ]
-                [ Icon.i "phone"
-                , text "(450) 788-2680"
-                ]
-            , Layout.link [ Layout.href "mailto:info@campinglequebecois.qc.ca" ]
-                [ Icon.i "email"
-                , text "info@campinglequebecois.qc.ca"
-                ]
-            , Layout.link [ Layout.href (model.siteurl ++ "?setlang=" ++ model.lang) ]
-                [ text "Francais" ]
-            ]
+        , Layout.navigation [] (viewNavlinks model)
+          {- [ Layout.link [ Layout.onClick Nop ]
+                 [ Icon.i "phone"
+                 , text constants.email
+                 ]
+             , Layout.link [ Layout.href "mailto:info@campinglequebecois.qc.ca" ]
+                 [ Icon.i "email"
+                 , text constants.phone
+                 ]
+             , Layout.link [ Layout.href (Http.url model.siteurl [ ( "setlang", model.lang ) ]) ]
+                 [ text "Francais" ]
+             ]
+          -}
         ]
     ]
 
@@ -173,7 +200,7 @@ viewBody : Model -> Html Msg
 viewBody model =
     case model.selectedTab of
         0 ->
-            text "something"
+            text model.content
 
         1 ->
             text "something else"
@@ -182,50 +209,34 @@ viewBody model =
             text "404"
 
 
+viewNavlinks : Model -> List (Html Msg)
+viewNavlinks model =
+    List.map viewNavlink model.tabs
+        ++ [ Menu.render Mdl
+                [ 0 ]
+                model.mdl
+                [ Menu.bottomRight ]
+                [ Menu.item [ Menu.onSelect Nop ]
+                    [ Icon.i "phone"
+                    , text constants.phone
+                    ]
+                , Menu.item [ Menu.onSelect Nop ]
+                    [ Icon.i "email"
+                    , text constants.email
+                    ]
+                ]
+           ]
 
-{--
-viewCounter : Model -> Html Msg
-viewCounter model =
-    div [ style [ ( "padding", "2rem" ) ] ]
-        [ text ("Current count: " ++ toString model.count)
-          {- We construct the instances of the Button component that we need, one
-             for the increase button, one for the reset button. First, the increase
-             button. The first three arguments are:
 
-               - A Msg constructor (`Mdl`), lifting Mdl messages to the Msg type.
-               - An instance id (the `[0]`). Every component that uses the same model
-                 collection (model.mdl in this file) must have a distinct instance id.
-               - A reference to the elm-mdl model collection (`model.mdl`).
-
-             Notice that we do not have to add fields for the increase and reset buttons
-             separately to our model; and we did not have to add to our update messages
-             to handle their internal events.
-
-             Mdl components are configured with `Options`, similar to `Html.Attributes`.
-             The `Button.onClick Increase` option instructs the button to send the `Increase`
-             message when clicked. The `css ...` option adds CSS styling to the button.
-             See `Material.Options` for details on options.
-          -}
-        , Button.render Mdl
-            [ 0 ]
-            model.mdl
-            [ Button.onClick Increase
-            , css "margin" "0 24px"
-            ]
-            [ text "Increase" ]
-        , Button.render Mdl
-            [ 1 ]
-            model.mdl
-            [ Button.onClick Reset ]
-            [ text "Reset" ]
-        , text ("right: " ++ toString (model.mdl.layout.tabScrollState.canScrollRight))
-        , text (" left: " ++ toString (model.mdl.layout.tabScrollState.canScrollLeft))
+viewNavlink : Tab -> Html Msg
+viewNavlink tab =
+    Layout.link [ Layout.onClick Nop ]
+        [ text tab.title
         ]
---}
 
 
 type alias Flags =
-    { tabs : Json.Decode.Value
+    { tabs : Json.Value
     , siteurl : String
     }
 
@@ -233,11 +244,10 @@ type alias Flags =
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { model
-        | mdl = Layout.setTabsWidth 800 model.mdl
-        , tabs = extractTabs flags.tabs
+        | mdl = Layout.setTabsWidth 800 model.mdl {- , tabs = extractTabs flags.tabs -}
         , siteurl = flags.siteurl
       }
-    , Cmd.batch [ Material.init Mdl, getData flags.siteurl ]
+    , Cmd.batch [ Material.init Mdl, getInit flags.siteurl ]
     )
 
 

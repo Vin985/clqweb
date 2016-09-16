@@ -13,7 +13,7 @@
     -->
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500|Roboto+Mono|Roboto+Condensed:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.light_blue-light_green.min.css" />
+    <link rel="stylesheet" href="<?php get_theme_url(); ?>/css/material.min.css" />
     <link rel="stylesheet" href="<?php get_theme_url(); ?>/css/clq.css" type="text/css">
 
   </head>

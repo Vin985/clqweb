@@ -13937,7 +13937,18 @@ var _evancz$elm_http$Http$post = F3(
 			A2(_evancz$elm_http$Http$send, _evancz$elm_http$Http$defaultSettings, request));
 	});
 
+var _user$project$Constants$constants = {email: 'info@campinglequebecois.qc.ca', phone: '(450) 788-2680'};
+
+var _user$project$JsonDecoder$decodeInit = A2(
+	_elm_lang$core$Json_Decode$at,
+	_elm_lang$core$Native_List.fromArray(
+		['lang']),
+	_elm_lang$core$Json_Decode$string);
 var _user$project$JsonDecoder$defaultTab = {current: false, url: '', parent: '', title: 'prout'};
+var _user$project$JsonDecoder$BackendData = F3(
+	function (a, b, c) {
+		return {lang: a, tabs: b, content: c};
+	});
 var _user$project$JsonDecoder$Tab = F4(
 	function (a, b, c, d) {
 		return {current: a, url: b, parent: c, title: d};
@@ -13968,12 +13979,20 @@ var _user$project$JsonDecoder$extractTabs = function (tabs) {
 		return _p0._0;
 	}
 };
+var _user$project$JsonDecoder$decodeData = A4(
+	_elm_lang$core$Json_Decode$object3,
+	_user$project$JsonDecoder$BackendData,
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_elm_lang$core$Json_Decode_ops[':='], 'lang', _elm_lang$core$Json_Decode$string)),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_elm_lang$core$Json_Decode_ops[':='], 'tabs', _user$project$JsonDecoder$decodeTabs)),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'content', _elm_lang$core$Json_Decode$string));
 
 var _user$project$Main$viewBody = function (model) {
 	var _p0 = model.selectedTab;
 	switch (_p0) {
 		case 0:
-			return _elm_lang$html$Html$text('something');
+			return _elm_lang$html$Html$text(model.content);
 		case 1:
 			return _elm_lang$html$Html$text('something else');
 		default:
@@ -13999,14 +14018,31 @@ var _user$project$Main$update = F2(
 			case 'NavTabs':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'FetchSucceed':
-				var _p2 = _p1._0;
-				var two = A2(_elm_lang$core$Debug$log, 'siteurl', model.siteurl);
-				var one = A2(_elm_lang$core$Debug$log, 'lang', _p2);
+				var _p4 = _p1._0;
+				var two = A2(_elm_lang$core$Debug$log, 'siteurl', _p4.tabs);
+				var one = A2(_elm_lang$core$Debug$log, 'lang', _p4.lang);
+				var tabs$ = function () {
+					var _p2 = _p4.tabs;
+					if (_p2.ctor === 'Nothing') {
+						return _elm_lang$core$Native_List.fromArray(
+							[]);
+					} else {
+						return _p2._0;
+					}
+				}();
+				var lang$ = function () {
+					var _p3 = _p4.lang;
+					if (_p3.ctor === 'Nothing') {
+						return 'fr';
+					} else {
+						return _p3._0;
+					}
+				}();
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{lang: _p2}),
+						{lang: lang$, tabs: tabs$, content: _p4.content}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
@@ -14020,11 +14056,12 @@ var _user$project$Main$model = {
 	tabs: _elm_lang$core$Native_List.fromArray(
 		[_user$project$JsonDecoder$defaultTab]),
 	siteurl: '',
-	lang: 'fr'
+	lang: 'fr',
+	content: 'Nothing'
 };
-var _user$project$Main$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {count: a, mdl: b, selectedTab: c, tabs: d, siteurl: e, lang: f};
+var _user$project$Main$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {count: a, mdl: b, selectedTab: c, tabs: d, siteurl: e, lang: f, content: g};
 	});
 var _user$project$Main$Flags = F2(
 	function (a, b) {
@@ -14036,18 +14073,88 @@ var _user$project$Main$FetchSucceed = function (a) {
 var _user$project$Main$FetchFail = function (a) {
 	return {ctor: 'FetchFail', _0: a};
 };
-var _user$project$Main$getData = function (siteurl) {
-	var url = A2(_elm_lang$core$Basics_ops['++'], siteurl, 'index.php?id=fetchdata');
-	return A3(
-		_elm_lang$core$Task$perform,
-		_user$project$Main$FetchFail,
-		_user$project$Main$FetchSucceed,
-		_evancz$elm_http$Http$getString(url));
+var _user$project$Main$getData = F3(
+	function (siteurl, page, decoder) {
+		var url = A2(
+			_evancz$elm_http$Http$url,
+			A2(_elm_lang$core$Basics_ops['++'], siteurl, 'index.php'),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					{ctor: '_Tuple2', _0: 'id', _1: 'fetchdata'},
+					{ctor: '_Tuple2', _0: 'page', _1: page}
+				]));
+		return A3(
+			_elm_lang$core$Task$perform,
+			_user$project$Main$FetchFail,
+			_user$project$Main$FetchSucceed,
+			A2(_evancz$elm_http$Http$get, decoder, url));
+	});
+var _user$project$Main$getInit = function (siteurl) {
+	return A3(_user$project$Main$getData, siteurl, 'init', _user$project$JsonDecoder$decodeData);
 };
 var _user$project$Main$NavTabs = function (a) {
 	return {ctor: 'NavTabs', _0: a};
 };
 var _user$project$Main$Nop = {ctor: 'Nop'};
+var _user$project$Main$viewNavlink = function (tab) {
+	return A2(
+		_debois$elm_mdl$Material_Layout$link,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_debois$elm_mdl$Material_Layout$onClick(_user$project$Main$Nop)
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html$text(tab.title)
+			]));
+};
+var _user$project$Main$SelectTab = function (a) {
+	return {ctor: 'SelectTab', _0: a};
+};
+var _user$project$Main$Mdl = function (a) {
+	return {ctor: 'Mdl', _0: a};
+};
+var _user$project$Main$viewNavlinks = function (model) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		A2(_elm_lang$core$List$map, _user$project$Main$viewNavlink, model.tabs),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A5(
+				_debois$elm_mdl$Material_Menu$render,
+				_user$project$Main$Mdl,
+				_elm_lang$core$Native_List.fromArray(
+					[0]),
+				model.mdl,
+				_elm_lang$core$Native_List.fromArray(
+					[_debois$elm_mdl$Material_Menu$bottomRight]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_debois$elm_mdl$Material_Menu$item,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_debois$elm_mdl$Material_Menu$onSelect(_user$project$Main$Nop)
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_debois$elm_mdl$Material_Icon$i('phone'),
+								_elm_lang$html$Html$text(_user$project$Constants$constants.phone)
+							])),
+						A2(
+						_debois$elm_mdl$Material_Menu$item,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_debois$elm_mdl$Material_Menu$onSelect(_user$project$Main$Nop)
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_debois$elm_mdl$Material_Icon$i('email'),
+								_elm_lang$html$Html$text(_user$project$Constants$constants.email)
+							]))
+					]))
+			]));
+};
 var _user$project$Main$header = function (model) {
 	return _elm_lang$core$Native_List.fromArray(
 		[
@@ -14081,53 +14188,9 @@ var _user$project$Main$header = function (model) {
 					_debois$elm_mdl$Material_Layout$navigation,
 					_elm_lang$core$Native_List.fromArray(
 						[]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(
-							_debois$elm_mdl$Material_Layout$link,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_debois$elm_mdl$Material_Layout$onClick(_user$project$Main$Nop)
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_debois$elm_mdl$Material_Icon$i('phone'),
-									_elm_lang$html$Html$text('(450) 788-2680')
-								])),
-							A2(
-							_debois$elm_mdl$Material_Layout$link,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_debois$elm_mdl$Material_Layout$href('mailto:info@campinglequebecois.qc.ca')
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_debois$elm_mdl$Material_Icon$i('email'),
-									_elm_lang$html$Html$text('info@campinglequebecois.qc.ca')
-								])),
-							A2(
-							_debois$elm_mdl$Material_Layout$link,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_debois$elm_mdl$Material_Layout$href(
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										model.siteurl,
-										A2(_elm_lang$core$Basics_ops['++'], '?setlang=', model.lang)))
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html$text('Francais')
-								]))
-						]))
+					_user$project$Main$viewNavlinks(model))
 				]))
 		]);
-};
-var _user$project$Main$SelectTab = function (a) {
-	return {ctor: 'SelectTab', _0: a};
-};
-var _user$project$Main$Mdl = function (a) {
-	return {ctor: 'Mdl', _0: a};
 };
 var _user$project$Main$view = function (model) {
 	return A4(
@@ -14186,14 +14249,13 @@ var _user$project$Main$init = function (flags) {
 			_user$project$Main$model,
 			{
 				mdl: A2(_debois$elm_mdl$Material_Layout$setTabsWidth, 800, _user$project$Main$model.mdl),
-				tabs: _user$project$JsonDecoder$extractTabs(flags.tabs),
 				siteurl: flags.siteurl
 			}),
 		_1: _elm_lang$core$Platform_Cmd$batch(
 			_elm_lang$core$Native_List.fromArray(
 				[
 					_debois$elm_mdl$Material$init(_user$project$Main$Mdl),
-					_user$project$Main$getData(flags.siteurl)
+					_user$project$Main$getInit(flags.siteurl)
 				]))
 	};
 };
