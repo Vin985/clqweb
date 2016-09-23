@@ -8,19 +8,19 @@ port module Main exposing (..)
 
 import Html.App as App
 import Html exposing (..)
+import Html.Lazy
 import Html.Attributes exposing (href, class, style, src)
 import Material
 import Material.Options exposing (css)
+import Material.Grid exposing (..)
 import Material.Layout as Layout
 import Material.Color as Color
-import Material.Menu as Menu
-import Material.Icon as Icon
 import Material.Options as Options exposing (css, when, cs)
 import Json.Decode as Json exposing (Value)
-import JsonDecoder exposing (extractTabs, Tab, defaultTab, BackendData, decodeData)
+import JsonDecoder exposing (extractTabs, BackendData, decodeData)
 import Http
 import Task
-import Constants exposing (constants)
+import Tabs exposing (Tab)
 
 
 -- MODEL
@@ -28,14 +28,26 @@ import Constants exposing (constants)
 -- This is referred to as the "model container"
 
 
+type alias Page =
+    { title : String
+    , url : String
+    , content : String
+    }
+
+
+type alias Languages =
+    { currentLang : String
+    , otherLang : List String
+    }
+
+
 type alias Model =
-    { count : Int
-    , mdl : Material.Model
-    , selectedTab : Int
-    , tabs : List Tab
+    { mdl : Material.Model
+    , tabs : Tabs.Model
     , siteurl : String
     , lang : String
     , content : String
+    , current : String
     }
 
 
@@ -45,15 +57,14 @@ type alias Model =
 
 model : Model
 model =
-    { count = 0
-    , mdl =
+    { mdl =
         Material.model
         -- Boilerplate: Always use this initial Mdl model store.
-    , selectedTab = 0
-    , tabs = [ defaultTab ]
+    , tabs = Tabs.model []
     , siteurl = ""
     , lang = "fr"
     , content = "Nothing"
+    , current = ""
     }
 
 
@@ -65,11 +76,11 @@ model =
 
 type Msg
     = Mdl (Material.Msg Msg)
-    | SelectTab Int
     | Nop
     | NavTabs Json.Value
     | FetchFail Http.Error
     | FetchSucceed BackendData
+    | TabMsg Tabs.Msg
 
 
 getData : String -> String -> Json.Decoder BackendData -> Cmd Msg
@@ -98,11 +109,15 @@ update msg model =
         Mdl msg' ->
             Material.update msg' model
 
-        SelectTab num ->
-            { model | selectedTab = num } ! []
-
         Nop ->
             ( model, Cmd.none )
+
+        TabMsg msg' ->
+            let
+                ( tabs', cmd', url ) =
+                    Tabs.update msg' model.tabs
+            in
+                ( { model | tabs = tabs', current = url }, Cmd.none )
 
         NavTabs value ->
             ( model, Cmd.none )
@@ -131,7 +146,7 @@ update msg model =
                 two =
                     Debug.log "siteurl" data.tabs
             in
-                ( { model | lang = lang', tabs = tabs', content = data.content }, Cmd.none )
+                ( { model | lang = lang', tabs = Tabs.model tabs', content = data.content }, Cmd.none )
 
         FetchFail _ ->
             ( model, Cmd.none )
@@ -146,27 +161,19 @@ type alias Mdl =
 
 
 view : Model -> Html Msg
-view model =
+view =
+    Html.Lazy.lazy view'
+
+
+view' : Model -> Html Msg
+view' model =
     Layout.render Mdl
         model.mdl
         [ Layout.fixedHeader
-        , Layout.selectedTab model.selectedTab
-        , Layout.onSelectTab SelectTab
-        , Options.set (\config -> { config | rippleTabs = False })
         ]
         { header = header model
         , drawer = []
-        , tabs =
-            if not (model.mdl.layout.tabScrollState.canScrollRight || model.mdl.layout.tabScrollState.canScrollLeft) then
-                ( List.map (\x -> text x.title) model.tabs
-                , [ css "justify-content" "flex-end"
-                  , css "font-weight" "bold"
-                  , cs "no_scroll"
-                  , Color.background (Color.color Color.LightGreen Color.S300)
-                  ]
-                )
-            else
-                ( [], [] )
+        , tabs = ( [], [] )
         , main = [ viewBody model ]
         }
 
@@ -177,9 +184,9 @@ header model =
         [ css "height" "120px"
         , Color.background (Color.color Color.LightBlue Color.S50)
         ]
-        [ Layout.title [] [ img [ src "theme/clq/css/img/logo-simple.png" ] [] ]
+        [ Layout.title [] [ img [ src "theme/clq/css/img/logo3-simple.png" ] [] ]
         , Layout.spacer
-        , Layout.navigation [] (viewNavlinks model)
+        , Layout.navigation [] (List.map (App.map TabMsg) (Tabs.view model.tabs))
           {- [ Layout.link [ Layout.onClick Nop ]
                  [ Icon.i "phone"
                  , text constants.email
@@ -196,48 +203,25 @@ header model =
     ]
 
 
+boxed : List (Options.Property a b)
+boxed =
+    [ css "margin" "auto"
+    , css "padding-left" "8%"
+    , css "padding-right" "8%"
+    ]
+
+
 viewBody : Model -> Html Msg
 viewBody model =
-    case model.selectedTab of
-        0 ->
-            text model.content
-
-        1 ->
-            text "something else"
-
-        _ ->
-            text "404"
-
-
-viewNavlinks : Model -> List (Html Msg)
-viewNavlinks model =
-    List.map viewNavlink model.tabs
-        ++ [ Menu.render Mdl
-                [ 0 ]
-                model.mdl
-                [ Menu.bottomRight ]
-                [ Menu.item [ Menu.onSelect Nop ]
-                    [ Icon.i "phone"
-                    , text constants.phone
-                    ]
-                , Menu.item [ Menu.onSelect Nop ]
-                    [ Icon.i "email"
-                    , text constants.email
-                    ]
-                ]
-           ]
-
-
-viewNavlink : Tab -> Html Msg
-viewNavlink tab =
-    Layout.link [ Layout.onClick Nop ]
-        [ text tab.title
+    Options.div boxed
+        [ grid [ noSpacing ]
+            [ cell [ size All 12 ] [ text model.current ]
+            ]
         ]
 
 
 type alias Flags =
-    { tabs : Json.Value
-    , siteurl : String
+    { siteurl : String
     }
 
 

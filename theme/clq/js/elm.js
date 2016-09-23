@@ -13579,6 +13579,164 @@ var _debois$elm_mdl$Material_Color$primaryContrast = _debois$elm_mdl$Material_Co
 var _debois$elm_mdl$Material_Color$accent = _debois$elm_mdl$Material_Color$C('accent');
 var _debois$elm_mdl$Material_Color$accentContrast = _debois$elm_mdl$Material_Color$C('accent-contrast');
 
+var _debois$elm_mdl$Material_Grid$clip = F3(
+	function (lower, upper, k) {
+		return A2(
+			_elm_lang$core$Basics$max,
+			lower,
+			A2(_elm_lang$core$Basics$min, k, upper));
+	});
+var _debois$elm_mdl$Material_Grid$stretch = _debois$elm_mdl$Material_Options$cs('mdl-cell--stretch');
+var _debois$elm_mdl$Material_Grid$align = function (a) {
+	var _p0 = a;
+	switch (_p0.ctor) {
+		case 'Top':
+			return _debois$elm_mdl$Material_Options$cs('mdl-cell--top');
+		case 'Middle':
+			return _debois$elm_mdl$Material_Options$cs('mdl-cell--middle');
+		default:
+			return _debois$elm_mdl$Material_Options$cs('mdl-cell--bottom');
+	}
+};
+var _debois$elm_mdl$Material_Grid$suffix = function (device) {
+	var _p1 = device;
+	switch (_p1.ctor) {
+		case 'All':
+			return '';
+		case 'Desktop':
+			return '-desktop';
+		case 'Tablet':
+			return '-tablet';
+		default:
+			return '-phone';
+	}
+};
+var _debois$elm_mdl$Material_Grid$size = F2(
+	function (device, k) {
+		var c = function () {
+			var _p2 = device;
+			switch (_p2.ctor) {
+				case 'All':
+					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 12, k);
+				case 'Desktop':
+					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 12, k);
+				case 'Tablet':
+					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 8, k);
+				default:
+					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 4, k);
+			}
+		}();
+		return _debois$elm_mdl$Material_Options$cs(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'mdl-cell--',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString(c),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'-col',
+						_debois$elm_mdl$Material_Grid$suffix(device)))));
+	});
+var _debois$elm_mdl$Material_Grid$offset = F2(
+	function (device, k) {
+		var c = function () {
+			var _p3 = device;
+			switch (_p3.ctor) {
+				case 'All':
+					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 11, k);
+				case 'Desktop':
+					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 11, k);
+				case 'Tablet':
+					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 7, k);
+				default:
+					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 3, k);
+			}
+		}();
+		return _debois$elm_mdl$Material_Options$cs(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'mdl-cell--',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString(c),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'-offset',
+						_debois$elm_mdl$Material_Grid$suffix(device)))));
+	});
+var _debois$elm_mdl$Material_Grid$hide = function (device) {
+	return _debois$elm_mdl$Material_Options$cs(
+		function () {
+			var _p4 = device;
+			if (_p4.ctor === 'All') {
+				return '';
+			} else {
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					'mdl-cell--hide-',
+					_debois$elm_mdl$Material_Grid$suffix(device));
+			}
+		}());
+};
+var _debois$elm_mdl$Material_Grid$order = F2(
+	function (device, n) {
+		return _debois$elm_mdl$Material_Options$cs(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'mdl-cell--order-',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString(
+						A3(_debois$elm_mdl$Material_Grid$clip, 1, 12, n)),
+					_debois$elm_mdl$Material_Grid$suffix(device))));
+	});
+var _debois$elm_mdl$Material_Grid$grid = F2(
+	function (styling, cells) {
+		return A2(
+			_debois$elm_mdl$Material_Options$div,
+			A2(
+				_elm_lang$core$List_ops['::'],
+				_debois$elm_mdl$Material_Options$cs('mdl-grid'),
+				styling),
+			A2(
+				_elm_lang$core$List$map,
+				function (_p5) {
+					var _p6 = _p5;
+					return _p6._0;
+				},
+				cells));
+	});
+var _debois$elm_mdl$Material_Grid$maxWidth = function (w) {
+	return A2(_debois$elm_mdl$Material_Options$css, 'max-width', w);
+};
+var _debois$elm_mdl$Material_Grid$noSpacing = _debois$elm_mdl$Material_Options$cs('mdl-grid--no-spacing');
+var _debois$elm_mdl$Material_Grid$Phone = {ctor: 'Phone'};
+var _debois$elm_mdl$Material_Grid$Tablet = {ctor: 'Tablet'};
+var _debois$elm_mdl$Material_Grid$Desktop = {ctor: 'Desktop'};
+var _debois$elm_mdl$Material_Grid$All = {ctor: 'All'};
+var _debois$elm_mdl$Material_Grid$Cell = function (a) {
+	return {ctor: 'Cell', _0: a};
+};
+var _debois$elm_mdl$Material_Grid$cell = F2(
+	function (styling, elms) {
+		return _debois$elm_mdl$Material_Grid$Cell(
+			A2(
+				_debois$elm_mdl$Material_Options$div,
+				A2(
+					_elm_lang$core$List_ops['::'],
+					_debois$elm_mdl$Material_Options$cs('mdl-cell'),
+					styling),
+				elms));
+	});
+var _debois$elm_mdl$Material_Grid$Bottom = {ctor: 'Bottom'};
+var _debois$elm_mdl$Material_Grid$Middle = {ctor: 'Middle'};
+var _debois$elm_mdl$Material_Grid$Top = {ctor: 'Top'};
+
+var _elm_lang$html$Html_Lazy$lazy3 = _elm_lang$virtual_dom$VirtualDom$lazy3;
+var _elm_lang$html$Html_Lazy$lazy2 = _elm_lang$virtual_dom$VirtualDom$lazy2;
+var _elm_lang$html$Html_Lazy$lazy = _elm_lang$virtual_dom$VirtualDom$lazy;
+
 //import Dict, List, Maybe, Native.Scheduler //
 
 var _evancz$elm_http$Native_Http = function() {
@@ -13939,24 +14097,147 @@ var _evancz$elm_http$Http$post = F3(
 
 var _user$project$Constants$constants = {email: 'info@campinglequebecois.qc.ca', phone: '(450) 788-2680'};
 
+var _user$project$Tabs$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'Mdl':
+				var _p1 = A2(_debois$elm_mdl$Material$update, _p0._0, model);
+				var updated = _p1._0;
+				var cmd = _p1._1;
+				return {ctor: '_Tuple3', _0: updated, _1: cmd, _2: ''};
+			case 'Nop':
+				return {ctor: '_Tuple3', _0: model, _1: _elm_lang$core$Platform_Cmd$none, _2: ''};
+			default:
+				var _p2 = _p0._0;
+				return {
+					ctor: '_Tuple3',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{current: _p2}),
+					_1: _elm_lang$core$Platform_Cmd$none,
+					_2: _p2
+				};
+		}
+	});
+var _user$project$Tabs$defaultTab = {url: '', parent: '', title: 'prout'};
+var _user$project$Tabs$model = function (tabs$) {
+	return {current: 'news', tabs: tabs$, mdl: _debois$elm_mdl$Material$model};
+};
+var _user$project$Tabs$Model = F3(
+	function (a, b, c) {
+		return {current: a, tabs: b, mdl: c};
+	});
+var _user$project$Tabs$Tab = F3(
+	function (a, b, c) {
+		return {url: a, parent: b, title: c};
+	});
+var _user$project$Tabs$ChangePage = function (a) {
+	return {ctor: 'ChangePage', _0: a};
+};
+var _user$project$Tabs$viewTab = F2(
+	function (current, tab) {
+		var fontStyle = _elm_lang$core$Native_List.fromArray(
+			[
+				_debois$elm_mdl$Material_Options$cs('mdl-layout__tab'),
+				A2(_debois$elm_mdl$Material_Options$css, 'font-weight', '500'),
+				A2(_debois$elm_mdl$Material_Options$css, 'padding', '0 20px'),
+				A2(_debois$elm_mdl$Material_Options$css, 'line-height', '48px'),
+				A2(_debois$elm_mdl$Material_Options$css, 'outline', 'none'),
+				A2(_debois$elm_mdl$Material_Options$css, 'cursor', 'default')
+			]);
+		return A2(
+			_debois$elm_mdl$Material_Layout$link,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_debois$elm_mdl$Material_Layout$onClick(
+						_user$project$Tabs$ChangePage(tab.url)),
+						A2(
+						_debois$elm_mdl$Material_Options$when,
+						_debois$elm_mdl$Material_Options$cs('is-active'),
+						_elm_lang$core$Native_Utils.eq(tab.url, current))
+					]),
+				fontStyle),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html$text(
+					_elm_lang$core$String$toUpper(tab.title))
+				]));
+	});
+var _user$project$Tabs$Nop = {ctor: 'Nop'};
+var _user$project$Tabs$Mdl = function (a) {
+	return {ctor: 'Mdl', _0: a};
+};
+var _user$project$Tabs$view = function (model) {
+	var padding = A2(_debois$elm_mdl$Material_Options$css, 'padding-right', '24px');
+	var i = function (name) {
+		return A2(
+			_debois$elm_mdl$Material_Icon$view,
+			name,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(_debois$elm_mdl$Material_Options$css, 'width', '40px')
+				]));
+	};
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		A2(
+			_elm_lang$core$List$map,
+			_user$project$Tabs$viewTab(model.current),
+			model.tabs),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A5(
+				_debois$elm_mdl$Material_Menu$render,
+				_user$project$Tabs$Mdl,
+				_elm_lang$core$Native_List.fromArray(
+					[0]),
+				model.mdl,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_debois$elm_mdl$Material_Menu$bottomRight,
+						_debois$elm_mdl$Material_Menu$icon('contact_phone')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_debois$elm_mdl$Material_Menu$item,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_debois$elm_mdl$Material_Menu$onSelect(_user$project$Tabs$Nop),
+								padding
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								i('phone'),
+								_elm_lang$html$Html$text(_user$project$Constants$constants.phone)
+							])),
+						A2(
+						_debois$elm_mdl$Material_Menu$item,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_debois$elm_mdl$Material_Menu$onSelect(_user$project$Tabs$Nop),
+								padding
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								i('email'),
+								_elm_lang$html$Html$text(_user$project$Constants$constants.email)
+							]))
+					]))
+			]));
+};
+
 var _user$project$JsonDecoder$decodeInit = A2(
 	_elm_lang$core$Json_Decode$at,
 	_elm_lang$core$Native_List.fromArray(
 		['lang']),
 	_elm_lang$core$Json_Decode$string);
-var _user$project$JsonDecoder$defaultTab = {current: false, url: '', parent: '', title: 'prout'};
-var _user$project$JsonDecoder$BackendData = F3(
-	function (a, b, c) {
-		return {lang: a, tabs: b, content: c};
-	});
-var _user$project$JsonDecoder$Tab = F4(
-	function (a, b, c, d) {
-		return {current: a, url: b, parent: c, title: d};
-	});
-var _user$project$JsonDecoder$decodeTab = A5(
-	_elm_lang$core$Json_Decode$object4,
-	_user$project$JsonDecoder$Tab,
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'current', _elm_lang$core$Json_Decode$bool),
+var _user$project$JsonDecoder$decodeTab = A4(
+	_elm_lang$core$Json_Decode$object3,
+	_user$project$Tabs$Tab,
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'parent', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'title', _elm_lang$core$Json_Decode$string));
@@ -13968,17 +14249,22 @@ var _user$project$JsonDecoder$decodeTabs = A2(
 var _user$project$JsonDecoder$extractTabs = function (tabs) {
 	var _p0 = A2(_elm_lang$core$Json_Decode$decodeValue, _user$project$JsonDecoder$decodeTabs, tabs);
 	if (_p0.ctor === 'Err') {
+		var $default = _user$project$Tabs$defaultTab;
 		var two = A2(_elm_lang$core$Debug$log, 'err', _p0._0);
 		return _elm_lang$core$Native_List.fromArray(
 			[
 				_elm_lang$core$Native_Utils.update(
-				_user$project$JsonDecoder$defaultTab,
+				$default,
 				{title: 'error'})
 			]);
 	} else {
 		return _p0._0;
 	}
 };
+var _user$project$JsonDecoder$BackendData = F3(
+	function (a, b, c) {
+		return {lang: a, tabs: b, content: c};
+	});
 var _user$project$JsonDecoder$decodeData = A4(
 	_elm_lang$core$Json_Decode$object3,
 	_user$project$JsonDecoder$BackendData,
@@ -13988,37 +14274,61 @@ var _user$project$JsonDecoder$decodeData = A4(
 		A2(_elm_lang$core$Json_Decode_ops[':='], 'tabs', _user$project$JsonDecoder$decodeTabs)),
 	A2(_elm_lang$core$Json_Decode_ops[':='], 'content', _elm_lang$core$Json_Decode$string));
 
+var _user$project$Main$boxed = _elm_lang$core$Native_List.fromArray(
+	[
+		A2(_debois$elm_mdl$Material_Options$css, 'margin', 'auto'),
+		A2(_debois$elm_mdl$Material_Options$css, 'padding-left', '8%'),
+		A2(_debois$elm_mdl$Material_Options$css, 'padding-right', '8%')
+	]);
 var _user$project$Main$viewBody = function (model) {
-	var _p0 = model.selectedTab;
-	switch (_p0) {
-		case 0:
-			return _elm_lang$html$Html$text(model.content);
-		case 1:
-			return _elm_lang$html$Html$text('something else');
-		default:
-			return _elm_lang$html$Html$text('404');
-	}
+	return A2(
+		_debois$elm_mdl$Material_Options$div,
+		_user$project$Main$boxed,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_debois$elm_mdl$Material_Grid$grid,
+				_elm_lang$core$Native_List.fromArray(
+					[_debois$elm_mdl$Material_Grid$noSpacing]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_debois$elm_mdl$Material_Grid$cell,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12)
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text(model.current)
+							]))
+					]))
+			]));
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
 			case 'Mdl':
-				return A2(_debois$elm_mdl$Material$update, _p1._0, model);
-			case 'SelectTab':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{selectedTab: _p1._0}),
-					_elm_lang$core$Native_List.fromArray(
-						[]));
+				return A2(_debois$elm_mdl$Material$update, _p0._0, model);
 			case 'Nop':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'TabMsg':
+				var _p1 = A2(_user$project$Tabs$update, _p0._0, model.tabs);
+				var tabs$ = _p1._0;
+				var cmd$ = _p1._1;
+				var url = _p1._2;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{tabs: tabs$, current: url}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'NavTabs':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'FetchSucceed':
-				var _p4 = _p1._0;
+				var _p4 = _p0._0;
 				var two = A2(_elm_lang$core$Debug$log, 'siteurl', _p4.tabs);
 				var one = A2(_elm_lang$core$Debug$log, 'lang', _p4.lang);
 				var tabs$ = function () {
@@ -14042,7 +14352,11 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{lang: lang$, tabs: tabs$, content: _p4.content}),
+						{
+							lang: lang$,
+							tabs: _user$project$Tabs$model(tabs$),
+							content: _p4.content
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
@@ -14050,23 +14364,73 @@ var _user$project$Main$update = F2(
 		}
 	});
 var _user$project$Main$model = {
-	count: 0,
 	mdl: _debois$elm_mdl$Material$model,
-	selectedTab: 0,
-	tabs: _elm_lang$core$Native_List.fromArray(
-		[_user$project$JsonDecoder$defaultTab]),
+	tabs: _user$project$Tabs$model(
+		_elm_lang$core$Native_List.fromArray(
+			[])),
 	siteurl: '',
 	lang: 'fr',
-	content: 'Nothing'
+	content: 'Nothing',
+	current: ''
 };
-var _user$project$Main$Model = F7(
-	function (a, b, c, d, e, f, g) {
-		return {count: a, mdl: b, selectedTab: c, tabs: d, siteurl: e, lang: f, content: g};
+var _user$project$Main$Page = F3(
+	function (a, b, c) {
+		return {title: a, url: b, content: c};
 	});
-var _user$project$Main$Flags = F2(
+var _user$project$Main$Languages = F2(
 	function (a, b) {
-		return {tabs: a, siteurl: b};
+		return {currentLang: a, otherLang: b};
 	});
+var _user$project$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {mdl: a, tabs: b, siteurl: c, lang: d, content: e, current: f};
+	});
+var _user$project$Main$Flags = function (a) {
+	return {siteurl: a};
+};
+var _user$project$Main$TabMsg = function (a) {
+	return {ctor: 'TabMsg', _0: a};
+};
+var _user$project$Main$header = function (model) {
+	return _elm_lang$core$Native_List.fromArray(
+		[
+			A2(
+			_debois$elm_mdl$Material_Layout$row,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(_debois$elm_mdl$Material_Options$css, 'height', '120px'),
+					_debois$elm_mdl$Material_Color$background(
+					A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$LightBlue, _debois$elm_mdl$Material_Color$S50))
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_debois$elm_mdl$Material_Layout$title,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							A2(
+							_elm_lang$html$Html$img,
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$html$Html_Attributes$src('theme/clq/css/img/logo3-simple.png')
+								]),
+							_elm_lang$core$Native_List.fromArray(
+								[]))
+						])),
+					_debois$elm_mdl$Material_Layout$spacer,
+					A2(
+					_debois$elm_mdl$Material_Layout$navigation,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					A2(
+						_elm_lang$core$List$map,
+						_elm_lang$html$Html_App$map(_user$project$Main$TabMsg),
+						_user$project$Tabs$view(model.tabs)))
+				]))
+		]);
+};
 var _user$project$Main$FetchSucceed = function (a) {
 	return {ctor: 'FetchSucceed', _0: a};
 };
@@ -14096,140 +14460,21 @@ var _user$project$Main$NavTabs = function (a) {
 	return {ctor: 'NavTabs', _0: a};
 };
 var _user$project$Main$Nop = {ctor: 'Nop'};
-var _user$project$Main$viewNavlink = function (tab) {
-	return A2(
-		_debois$elm_mdl$Material_Layout$link,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_debois$elm_mdl$Material_Layout$onClick(_user$project$Main$Nop)
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html$text(tab.title)
-			]));
-};
-var _user$project$Main$SelectTab = function (a) {
-	return {ctor: 'SelectTab', _0: a};
-};
 var _user$project$Main$Mdl = function (a) {
 	return {ctor: 'Mdl', _0: a};
 };
-var _user$project$Main$viewNavlinks = function (model) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		A2(_elm_lang$core$List$map, _user$project$Main$viewNavlink, model.tabs),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A5(
-				_debois$elm_mdl$Material_Menu$render,
-				_user$project$Main$Mdl,
-				_elm_lang$core$Native_List.fromArray(
-					[0]),
-				model.mdl,
-				_elm_lang$core$Native_List.fromArray(
-					[_debois$elm_mdl$Material_Menu$bottomRight]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_debois$elm_mdl$Material_Menu$item,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_debois$elm_mdl$Material_Menu$onSelect(_user$project$Main$Nop)
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_debois$elm_mdl$Material_Icon$i('phone'),
-								_elm_lang$html$Html$text(_user$project$Constants$constants.phone)
-							])),
-						A2(
-						_debois$elm_mdl$Material_Menu$item,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_debois$elm_mdl$Material_Menu$onSelect(_user$project$Main$Nop)
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_debois$elm_mdl$Material_Icon$i('email'),
-								_elm_lang$html$Html$text(_user$project$Constants$constants.email)
-							]))
-					]))
-			]));
-};
-var _user$project$Main$header = function (model) {
-	return _elm_lang$core$Native_List.fromArray(
-		[
-			A2(
-			_debois$elm_mdl$Material_Layout$row,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(_debois$elm_mdl$Material_Options$css, 'height', '120px'),
-					_debois$elm_mdl$Material_Color$background(
-					A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$LightBlue, _debois$elm_mdl$Material_Color$S50))
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_debois$elm_mdl$Material_Layout$title,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(
-							_elm_lang$html$Html$img,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html_Attributes$src('theme/clq/css/img/logo-simple.png')
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[]))
-						])),
-					_debois$elm_mdl$Material_Layout$spacer,
-					A2(
-					_debois$elm_mdl$Material_Layout$navigation,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
-					_user$project$Main$viewNavlinks(model))
-				]))
-		]);
-};
-var _user$project$Main$view = function (model) {
+var _user$project$Main$view$ = function (model) {
 	return A4(
 		_debois$elm_mdl$Material_Layout$render,
 		_user$project$Main$Mdl,
 		model.mdl,
 		_elm_lang$core$Native_List.fromArray(
-			[
-				_debois$elm_mdl$Material_Layout$fixedHeader,
-				_debois$elm_mdl$Material_Layout$selectedTab(model.selectedTab),
-				_debois$elm_mdl$Material_Layout$onSelectTab(_user$project$Main$SelectTab),
-				_debois$elm_mdl$Material_Options$set(
-				function (config) {
-					return _elm_lang$core$Native_Utils.update(
-						config,
-						{rippleTabs: false});
-				})
-			]),
+			[_debois$elm_mdl$Material_Layout$fixedHeader]),
 		{
 			header: _user$project$Main$header(model),
 			drawer: _elm_lang$core$Native_List.fromArray(
 				[]),
-			tabs: _elm_lang$core$Basics$not(model.mdl.layout.tabScrollState.canScrollRight || model.mdl.layout.tabScrollState.canScrollLeft) ? {
-				ctor: '_Tuple2',
-				_0: A2(
-					_elm_lang$core$List$map,
-					function (x) {
-						return _elm_lang$html$Html$text(x.title);
-					},
-					model.tabs),
-				_1: _elm_lang$core$Native_List.fromArray(
-					[
-						A2(_debois$elm_mdl$Material_Options$css, 'justify-content', 'flex-end'),
-						A2(_debois$elm_mdl$Material_Options$css, 'font-weight', 'bold'),
-						_debois$elm_mdl$Material_Options$cs('no_scroll'),
-						_debois$elm_mdl$Material_Color$background(
-						A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$LightGreen, _debois$elm_mdl$Material_Color$S300))
-					])
-			} : {
+			tabs: {
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_List.fromArray(
 					[]),
@@ -14242,6 +14487,7 @@ var _user$project$Main$view = function (model) {
 				])
 		});
 };
+var _user$project$Main$view = _elm_lang$html$Html_Lazy$lazy(_user$project$Main$view$);
 var _user$project$Main$init = function (flags) {
 	return {
 		ctor: '_Tuple2',
@@ -14271,13 +14517,8 @@ var _user$project$Main$main = {
 		_elm_lang$core$Json_Decode$andThen,
 		A2(_elm_lang$core$Json_Decode_ops[':='], 'siteurl', _elm_lang$core$Json_Decode$string),
 		function (siteurl) {
-			return A2(
-				_elm_lang$core$Json_Decode$andThen,
-				A2(_elm_lang$core$Json_Decode_ops[':='], 'tabs', _elm_lang$core$Json_Decode$value),
-				function (tabs) {
-					return _elm_lang$core$Json_Decode$succeed(
-						{siteurl: siteurl, tabs: tabs});
-				});
+			return _elm_lang$core$Json_Decode$succeed(
+				{siteurl: siteurl});
 		})
 };
 

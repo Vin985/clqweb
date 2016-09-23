@@ -1,29 +1,13 @@
-module JsonDecoder exposing (extractTabs, Tab, defaultTab, decodeData, BackendData)
+module JsonDecoder exposing (extractTabs, decodeData, BackendData)
 
 import Json.Decode as Json exposing ((:=))
+import Tabs exposing (Tab)
 
 
 type alias BackendData =
     { lang : Maybe String
     , tabs : Maybe (List Tab)
     , content : String
-    }
-
-
-type alias Tab =
-    { current : Bool
-    , url : String
-    , parent : String
-    , title : String
-    }
-
-
-defaultTab : Tab
-defaultTab =
-    { current = False
-    , url = ""
-    , parent = ""
-    , title = "prout"
     }
 
 
@@ -38,8 +22,11 @@ extractTabs tabs =
             let
                 two =
                     Debug.log "err" msg
+
+                default =
+                    Tabs.defaultTab
             in
-                [ { defaultTab | title = "error" } ]
+                [ { default | title = "error" } ]
 
         Ok tabs ->
             tabs
@@ -52,8 +39,7 @@ decodeTabs =
 
 decodeTab : Json.Decoder Tab
 decodeTab =
-    Json.object4 Tab
-        ("current" := Json.bool)
+    Json.object3 Tab
         ("url" := Json.string)
         ("parent" := Json.string)
         ("title" := Json.string)

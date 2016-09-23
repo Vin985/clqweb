@@ -5,7 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>The elm-mdl library</title>
+    <title>
+      <?php if (function_exists('get_custom_title_tag')) {
+                    echo(get_custom_title_tag());
+} else {
+    get_page_clean_title();
+    echo"&nbsp;&mdash;&nbsp;";
+    get_site_name();
+}?>
+    </title>
 
     <!-- MDL
       The library relies on Google's Material Design fonts, icons, and the CSS
@@ -21,8 +29,7 @@
     <!-- elm -->
     <script src="<?php get_theme_url(); ?>/js/elm.js"></script>
     <script>
-      var nav = JSON.parse('<?php echo json_encode(return_i18n_menu_data(return_page_slug(), 0, 0, I18N_SHOW_MENU)); ?>');
-      var app = Elm.Main.fullscreen({"tabs": nav, "siteurl" : '<?php get_site_url(); ?>'});
+      var app = Elm.Main.fullscreen({"siteurl" : '<?php get_site_url(); ?>'});
     /*  app.ports.getSlug.subscribe(function (test) {
         console.log(test);
       setTimeout(function(){ app.ports.slug.send("<?php get_page_title(); ?>"); }, 0);
