@@ -9,7 +9,7 @@ port module Main exposing (..)
 import Html.App as App
 import Html exposing (..)
 import Html.Lazy
-import Html.Attributes exposing (href, class, style, src)
+import Html.Attributes exposing (href, class, style, src, attribute)
 import Material
 import Material.Options exposing (css)
 import Material.Grid exposing (..)
@@ -21,6 +21,7 @@ import JsonDecoder exposing (extractTabs, BackendData, decodeData)
 import Http
 import Task
 import Tabs exposing (Tab)
+import HtmlParser
 
 
 -- MODEL
@@ -35,6 +36,14 @@ type alias Page =
     }
 
 
+defaultPage : Page
+defaultPage =
+    { title = ""
+    , url = "index"
+    , content = ""
+    }
+
+
 type alias Languages =
     { currentLang : String
     , otherLang : List String
@@ -46,8 +55,7 @@ type alias Model =
     , tabs : Tabs.Model
     , siteurl : String
     , lang : String
-    , content : String
-    , current : String
+    , current : Page
     }
 
 
@@ -63,8 +71,7 @@ model =
     , tabs = Tabs.model []
     , siteurl = ""
     , lang = "fr"
-    , content = "Nothing"
-    , current = ""
+    , current = defaultPage
     }
 
 
@@ -116,8 +123,14 @@ update msg model =
             let
                 ( tabs', cmd', url ) =
                     Tabs.update msg' model.tabs
+
+                cmd =
+                    if url /= "" then
+                        getData model.siteurl url decodeData
+                    else
+                        Cmd.none
             in
-                ( { model | tabs = tabs', current = url }, Cmd.none )
+                ( { model | tabs = tabs' }, Cmd.batch [ Cmd.map TabMsg cmd', cmd ] )
 
         NavTabs value ->
             ( model, Cmd.none )
@@ -135,10 +148,17 @@ update msg model =
                 tabs' =
                     case data.tabs of
                         Nothing ->
-                            []
+                            {- TODO : add isEmpty to Tabs model -}
+                            if not <| List.isEmpty model.tabs.tabs then
+                                model.tabs
+                            else
+                                Tabs.model []
 
                         Just tabs ->
-                            tabs
+                            Tabs.model tabs
+
+                page =
+                    { url = data.url, content = data.content, title = data.title }
 
                 one =
                     Debug.log "lang" data.lang
@@ -146,10 +166,14 @@ update msg model =
                 two =
                     Debug.log "siteurl" data.tabs
             in
-                ( { model | lang = lang', tabs = Tabs.model tabs', content = data.content }, Cmd.none )
+                ( { model | lang = lang', tabs = tabs', current = page }, Cmd.none )
 
-        FetchFail _ ->
-            ( model, Cmd.none )
+        FetchFail err ->
+            let
+                one =
+                    Debug.log "err" err
+            in
+                ( model, Cmd.none )
 
 
 
@@ -174,7 +198,7 @@ view' model =
         { header = header model
         , drawer = []
         , tabs = ( [], [] )
-        , main = [ viewBody model ]
+        , main = [ viewBody model.current ]
         }
 
 
@@ -187,18 +211,6 @@ header model =
         [ Layout.title [] [ img [ src "theme/clq/css/img/logo3-simple.png" ] [] ]
         , Layout.spacer
         , Layout.navigation [] (List.map (App.map TabMsg) (Tabs.view model.tabs))
-          {- [ Layout.link [ Layout.onClick Nop ]
-                 [ Icon.i "phone"
-                 , text constants.email
-                 ]
-             , Layout.link [ Layout.href "mailto:info@campinglequebecois.qc.ca" ]
-                 [ Icon.i "email"
-                 , text constants.phone
-                 ]
-             , Layout.link [ Layout.href (Http.url model.siteurl [ ( "setlang", model.lang ) ]) ]
-                 [ text "Francais" ]
-             ]
-          -}
         ]
     ]
 
@@ -211,13 +223,48 @@ boxed =
     ]
 
 
-viewBody : Model -> Html Msg
-viewBody model =
-    Options.div boxed
-        [ grid [ noSpacing ]
-            [ cell [ size All 12 ] [ text model.current ]
+viewBody : Page -> Html Msg
+viewBody page =
+    let
+        htmlContent =
+            HtmlParser.parse page.content |> htmlNodesToElm
+    in
+        Options.div boxed
+            [ grid [ noSpacing ]
+                [ cell [ size All 12 ]
+                    ([ h3 [] [ text page.title ] ] ++ htmlContent)
+                ]
             ]
-        ]
+
+
+htmlNodesToElm : List HtmlParser.Node -> List (Html Msg)
+htmlNodesToElm htmlList =
+    List.map htmlNodeToElm htmlList
+
+
+htmlNodeToElm : HtmlParser.Node -> Html Msg
+htmlNodeToElm node =
+    case node of
+        HtmlParser.Text htmlText ->
+            Html.text htmlText
+
+        HtmlParser.Element element attributes children ->
+            let
+                attrs =
+                    htmlAttributesToElm attributes
+
+                children' =
+                    htmlNodesToElm children
+            in
+                Html.node element attrs children'
+
+        HtmlParser.Comment comment ->
+            Html.text ""
+
+
+htmlAttributesToElm : HtmlParser.Attributes -> List (Html.Attribute Msg)
+htmlAttributesToElm attrs =
+    List.map (\( x, y ) -> Html.Attributes.attribute x y) attrs
 
 
 type alias Flags =

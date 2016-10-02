@@ -8,6 +8,8 @@ type alias BackendData =
     { lang : Maybe String
     , tabs : Maybe (List Tab)
     , content : String
+    , title : String
+    , url : String
     }
 
 
@@ -52,7 +54,9 @@ decodeInit =
 
 decodeData : Json.Decoder BackendData
 decodeData =
-    Json.object3 BackendData
+    Json.object5 BackendData
         (Json.maybe ("lang" := Json.string))
         (Json.maybe ("tabs" := decodeTabs))
         ("content" := Json.string)
+        ("title" := Json.string)
+        ("url" := Json.string)

@@ -2729,6 +2729,1466 @@ var _elm_lang$core$Platform_Sub$none = _elm_lang$core$Platform_Sub$batch(
 var _elm_lang$core$Platform_Sub$map = _elm_lang$core$Native_Platform.map;
 var _elm_lang$core$Platform_Sub$Sub = {ctor: 'Sub'};
 
+var _elm_lang$lazy$Native_Lazy = function() {
+
+function memoize(thunk)
+{
+    var value;
+    var isForced = false;
+    return function(tuple0) {
+        if (!isForced) {
+            value = thunk(tuple0);
+            isForced = true;
+        }
+        return value;
+    };
+}
+
+return {
+    memoize: memoize
+};
+
+}();
+
+var _elm_lang$lazy$Lazy$force = function (_p0) {
+	var _p1 = _p0;
+	return _p1._0(
+		{ctor: '_Tuple0'});
+};
+var _elm_lang$lazy$Lazy$Lazy = function (a) {
+	return {ctor: 'Lazy', _0: a};
+};
+var _elm_lang$lazy$Lazy$lazy = function (thunk) {
+	return _elm_lang$lazy$Lazy$Lazy(
+		_elm_lang$lazy$Native_Lazy.memoize(thunk));
+};
+var _elm_lang$lazy$Lazy$map = F2(
+	function (f, a) {
+		return _elm_lang$lazy$Lazy$lazy(
+			function (_p2) {
+				var _p3 = _p2;
+				return f(
+					_elm_lang$lazy$Lazy$force(a));
+			});
+	});
+var _elm_lang$lazy$Lazy$map2 = F3(
+	function (f, a, b) {
+		return _elm_lang$lazy$Lazy$lazy(
+			function (_p4) {
+				var _p5 = _p4;
+				return A2(
+					f,
+					_elm_lang$lazy$Lazy$force(a),
+					_elm_lang$lazy$Lazy$force(b));
+			});
+	});
+var _elm_lang$lazy$Lazy$map3 = F4(
+	function (f, a, b, c) {
+		return _elm_lang$lazy$Lazy$lazy(
+			function (_p6) {
+				var _p7 = _p6;
+				return A3(
+					f,
+					_elm_lang$lazy$Lazy$force(a),
+					_elm_lang$lazy$Lazy$force(b),
+					_elm_lang$lazy$Lazy$force(c));
+			});
+	});
+var _elm_lang$lazy$Lazy$map4 = F5(
+	function (f, a, b, c, d) {
+		return _elm_lang$lazy$Lazy$lazy(
+			function (_p8) {
+				var _p9 = _p8;
+				return A4(
+					f,
+					_elm_lang$lazy$Lazy$force(a),
+					_elm_lang$lazy$Lazy$force(b),
+					_elm_lang$lazy$Lazy$force(c),
+					_elm_lang$lazy$Lazy$force(d));
+			});
+	});
+var _elm_lang$lazy$Lazy$map5 = F6(
+	function (f, a, b, c, d, e) {
+		return _elm_lang$lazy$Lazy$lazy(
+			function (_p10) {
+				var _p11 = _p10;
+				return A5(
+					f,
+					_elm_lang$lazy$Lazy$force(a),
+					_elm_lang$lazy$Lazy$force(b),
+					_elm_lang$lazy$Lazy$force(c),
+					_elm_lang$lazy$Lazy$force(d),
+					_elm_lang$lazy$Lazy$force(e));
+			});
+	});
+var _elm_lang$lazy$Lazy$apply = F2(
+	function (f, x) {
+		return _elm_lang$lazy$Lazy$lazy(
+			function (_p12) {
+				var _p13 = _p12;
+				return A2(
+					_elm_lang$lazy$Lazy$force,
+					f,
+					_elm_lang$lazy$Lazy$force(x));
+			});
+	});
+var _elm_lang$lazy$Lazy$andThen = F2(
+	function (a, callback) {
+		return _elm_lang$lazy$Lazy$lazy(
+			function (_p14) {
+				var _p15 = _p14;
+				return _elm_lang$lazy$Lazy$force(
+					callback(
+						_elm_lang$lazy$Lazy$force(a)));
+			});
+	});
+
+//import Maybe, Native.List, Native.Utils, Result //
+
+var _elm_lang$core$Native_String = function() {
+
+function isEmpty(str)
+{
+	return str.length === 0;
+}
+function cons(chr, str)
+{
+	return chr + str;
+}
+function uncons(str)
+{
+	var hd = str[0];
+	if (hd)
+	{
+		return _elm_lang$core$Maybe$Just(_elm_lang$core$Native_Utils.Tuple2(_elm_lang$core$Native_Utils.chr(hd), str.slice(1)));
+	}
+	return _elm_lang$core$Maybe$Nothing;
+}
+function append(a, b)
+{
+	return a + b;
+}
+function concat(strs)
+{
+	return _elm_lang$core$Native_List.toArray(strs).join('');
+}
+function length(str)
+{
+	return str.length;
+}
+function map(f, str)
+{
+	var out = str.split('');
+	for (var i = out.length; i--; )
+	{
+		out[i] = f(_elm_lang$core$Native_Utils.chr(out[i]));
+	}
+	return out.join('');
+}
+function filter(pred, str)
+{
+	return str.split('').map(_elm_lang$core$Native_Utils.chr).filter(pred).join('');
+}
+function reverse(str)
+{
+	return str.split('').reverse().join('');
+}
+function foldl(f, b, str)
+{
+	var len = str.length;
+	for (var i = 0; i < len; ++i)
+	{
+		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
+	}
+	return b;
+}
+function foldr(f, b, str)
+{
+	for (var i = str.length; i--; )
+	{
+		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
+	}
+	return b;
+}
+function split(sep, str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.split(sep));
+}
+function join(sep, strs)
+{
+	return _elm_lang$core$Native_List.toArray(strs).join(sep);
+}
+function repeat(n, str)
+{
+	var result = '';
+	while (n > 0)
+	{
+		if (n & 1)
+		{
+			result += str;
+		}
+		n >>= 1, str += str;
+	}
+	return result;
+}
+function slice(start, end, str)
+{
+	return str.slice(start, end);
+}
+function left(n, str)
+{
+	return n < 1 ? '' : str.slice(0, n);
+}
+function right(n, str)
+{
+	return n < 1 ? '' : str.slice(-n);
+}
+function dropLeft(n, str)
+{
+	return n < 1 ? str : str.slice(n);
+}
+function dropRight(n, str)
+{
+	return n < 1 ? str : str.slice(0, -n);
+}
+function pad(n, chr, str)
+{
+	var half = (n - str.length) / 2;
+	return repeat(Math.ceil(half), chr) + str + repeat(half | 0, chr);
+}
+function padRight(n, chr, str)
+{
+	return str + repeat(n - str.length, chr);
+}
+function padLeft(n, chr, str)
+{
+	return repeat(n - str.length, chr) + str;
+}
+
+function trim(str)
+{
+	return str.trim();
+}
+function trimLeft(str)
+{
+	return str.replace(/^\s+/, '');
+}
+function trimRight(str)
+{
+	return str.replace(/\s+$/, '');
+}
+
+function words(str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.trim().split(/\s+/g));
+}
+function lines(str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.split(/\r\n|\r|\n/g));
+}
+
+function toUpper(str)
+{
+	return str.toUpperCase();
+}
+function toLower(str)
+{
+	return str.toLowerCase();
+}
+
+function any(pred, str)
+{
+	for (var i = str.length; i--; )
+	{
+		if (pred(_elm_lang$core$Native_Utils.chr(str[i])))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+function all(pred, str)
+{
+	for (var i = str.length; i--; )
+	{
+		if (!pred(_elm_lang$core$Native_Utils.chr(str[i])))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+function contains(sub, str)
+{
+	return str.indexOf(sub) > -1;
+}
+function startsWith(sub, str)
+{
+	return str.indexOf(sub) === 0;
+}
+function endsWith(sub, str)
+{
+	return str.length >= sub.length &&
+		str.lastIndexOf(sub) === str.length - sub.length;
+}
+function indexes(sub, str)
+{
+	var subLen = sub.length;
+	
+	if (subLen < 1)
+	{
+		return _elm_lang$core$Native_List.Nil;
+	}
+
+	var i = 0;
+	var is = [];
+
+	while ((i = str.indexOf(sub, i)) > -1)
+	{
+		is.push(i);
+		i = i + subLen;
+	}	
+	
+	return _elm_lang$core$Native_List.fromArray(is);
+}
+
+function toInt(s)
+{
+	var len = s.length;
+	if (len === 0)
+	{
+		return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int" );
+	}
+	var start = 0;
+	if (s[0] === '-')
+	{
+		if (len === 1)
+		{
+			return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int" );
+		}
+		start = 1;
+	}
+	for (var i = start; i < len; ++i)
+	{
+		var c = s[i];
+		if (c < '0' || '9' < c)
+		{
+			return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int" );
+		}
+	}
+	return _elm_lang$core$Result$Ok(parseInt(s, 10));
+}
+
+function toFloat(s)
+{
+	var len = s.length;
+	if (len === 0)
+	{
+		return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float" );
+	}
+	var start = 0;
+	if (s[0] === '-')
+	{
+		if (len === 1)
+		{
+			return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float" );
+		}
+		start = 1;
+	}
+	var dotCount = 0;
+	for (var i = start; i < len; ++i)
+	{
+		var c = s[i];
+		if ('0' <= c && c <= '9')
+		{
+			continue;
+		}
+		if (c === '.')
+		{
+			dotCount += 1;
+			if (dotCount <= 1)
+			{
+				continue;
+			}
+		}
+		return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float" );
+	}
+	return _elm_lang$core$Result$Ok(parseFloat(s));
+}
+
+function toList(str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.split('').map(_elm_lang$core$Native_Utils.chr));
+}
+function fromList(chars)
+{
+	return _elm_lang$core$Native_List.toArray(chars).join('');
+}
+
+return {
+	isEmpty: isEmpty,
+	cons: F2(cons),
+	uncons: uncons,
+	append: F2(append),
+	concat: concat,
+	length: length,
+	map: F2(map),
+	filter: F2(filter),
+	reverse: reverse,
+	foldl: F3(foldl),
+	foldr: F3(foldr),
+
+	split: F2(split),
+	join: F2(join),
+	repeat: F2(repeat),
+
+	slice: F3(slice),
+	left: F2(left),
+	right: F2(right),
+	dropLeft: F2(dropLeft),
+	dropRight: F2(dropRight),
+
+	pad: F3(pad),
+	padLeft: F3(padLeft),
+	padRight: F3(padRight),
+
+	trim: trim,
+	trimLeft: trimLeft,
+	trimRight: trimRight,
+
+	words: words,
+	lines: lines,
+
+	toUpper: toUpper,
+	toLower: toLower,
+
+	any: F2(any),
+	all: F2(all),
+
+	contains: F2(contains),
+	startsWith: F2(startsWith),
+	endsWith: F2(endsWith),
+	indexes: F2(indexes),
+
+	toInt: toInt,
+	toFloat: toFloat,
+	toList: toList,
+	fromList: fromList
+};
+
+}();
+
+//import Native.Utils //
+
+var _elm_lang$core$Native_Char = function() {
+
+return {
+	fromCode: function(c) { return _elm_lang$core$Native_Utils.chr(String.fromCharCode(c)); },
+	toCode: function(c) { return c.charCodeAt(0); },
+	toUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toUpperCase()); },
+	toLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLowerCase()); },
+	toLocaleUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleUpperCase()); },
+	toLocaleLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleLowerCase()); }
+};
+
+}();
+var _elm_lang$core$Char$fromCode = _elm_lang$core$Native_Char.fromCode;
+var _elm_lang$core$Char$toCode = _elm_lang$core$Native_Char.toCode;
+var _elm_lang$core$Char$toLocaleLower = _elm_lang$core$Native_Char.toLocaleLower;
+var _elm_lang$core$Char$toLocaleUpper = _elm_lang$core$Native_Char.toLocaleUpper;
+var _elm_lang$core$Char$toLower = _elm_lang$core$Native_Char.toLower;
+var _elm_lang$core$Char$toUpper = _elm_lang$core$Native_Char.toUpper;
+var _elm_lang$core$Char$isBetween = F3(
+	function (low, high, $char) {
+		var code = _elm_lang$core$Char$toCode($char);
+		return (_elm_lang$core$Native_Utils.cmp(
+			code,
+			_elm_lang$core$Char$toCode(low)) > -1) && (_elm_lang$core$Native_Utils.cmp(
+			code,
+			_elm_lang$core$Char$toCode(high)) < 1);
+	});
+var _elm_lang$core$Char$isUpper = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('A'),
+	_elm_lang$core$Native_Utils.chr('Z'));
+var _elm_lang$core$Char$isLower = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('a'),
+	_elm_lang$core$Native_Utils.chr('z'));
+var _elm_lang$core$Char$isDigit = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('0'),
+	_elm_lang$core$Native_Utils.chr('9'));
+var _elm_lang$core$Char$isOctDigit = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('0'),
+	_elm_lang$core$Native_Utils.chr('7'));
+var _elm_lang$core$Char$isHexDigit = function ($char) {
+	return _elm_lang$core$Char$isDigit($char) || (A3(
+		_elm_lang$core$Char$isBetween,
+		_elm_lang$core$Native_Utils.chr('a'),
+		_elm_lang$core$Native_Utils.chr('f'),
+		$char) || A3(
+		_elm_lang$core$Char$isBetween,
+		_elm_lang$core$Native_Utils.chr('A'),
+		_elm_lang$core$Native_Utils.chr('F'),
+		$char));
+};
+
+var _elm_lang$core$String$fromList = _elm_lang$core$Native_String.fromList;
+var _elm_lang$core$String$toList = _elm_lang$core$Native_String.toList;
+var _elm_lang$core$String$toFloat = _elm_lang$core$Native_String.toFloat;
+var _elm_lang$core$String$toInt = _elm_lang$core$Native_String.toInt;
+var _elm_lang$core$String$indices = _elm_lang$core$Native_String.indexes;
+var _elm_lang$core$String$indexes = _elm_lang$core$Native_String.indexes;
+var _elm_lang$core$String$endsWith = _elm_lang$core$Native_String.endsWith;
+var _elm_lang$core$String$startsWith = _elm_lang$core$Native_String.startsWith;
+var _elm_lang$core$String$contains = _elm_lang$core$Native_String.contains;
+var _elm_lang$core$String$all = _elm_lang$core$Native_String.all;
+var _elm_lang$core$String$any = _elm_lang$core$Native_String.any;
+var _elm_lang$core$String$toLower = _elm_lang$core$Native_String.toLower;
+var _elm_lang$core$String$toUpper = _elm_lang$core$Native_String.toUpper;
+var _elm_lang$core$String$lines = _elm_lang$core$Native_String.lines;
+var _elm_lang$core$String$words = _elm_lang$core$Native_String.words;
+var _elm_lang$core$String$trimRight = _elm_lang$core$Native_String.trimRight;
+var _elm_lang$core$String$trimLeft = _elm_lang$core$Native_String.trimLeft;
+var _elm_lang$core$String$trim = _elm_lang$core$Native_String.trim;
+var _elm_lang$core$String$padRight = _elm_lang$core$Native_String.padRight;
+var _elm_lang$core$String$padLeft = _elm_lang$core$Native_String.padLeft;
+var _elm_lang$core$String$pad = _elm_lang$core$Native_String.pad;
+var _elm_lang$core$String$dropRight = _elm_lang$core$Native_String.dropRight;
+var _elm_lang$core$String$dropLeft = _elm_lang$core$Native_String.dropLeft;
+var _elm_lang$core$String$right = _elm_lang$core$Native_String.right;
+var _elm_lang$core$String$left = _elm_lang$core$Native_String.left;
+var _elm_lang$core$String$slice = _elm_lang$core$Native_String.slice;
+var _elm_lang$core$String$repeat = _elm_lang$core$Native_String.repeat;
+var _elm_lang$core$String$join = _elm_lang$core$Native_String.join;
+var _elm_lang$core$String$split = _elm_lang$core$Native_String.split;
+var _elm_lang$core$String$foldr = _elm_lang$core$Native_String.foldr;
+var _elm_lang$core$String$foldl = _elm_lang$core$Native_String.foldl;
+var _elm_lang$core$String$reverse = _elm_lang$core$Native_String.reverse;
+var _elm_lang$core$String$filter = _elm_lang$core$Native_String.filter;
+var _elm_lang$core$String$map = _elm_lang$core$Native_String.map;
+var _elm_lang$core$String$length = _elm_lang$core$Native_String.length;
+var _elm_lang$core$String$concat = _elm_lang$core$Native_String.concat;
+var _elm_lang$core$String$append = _elm_lang$core$Native_String.append;
+var _elm_lang$core$String$uncons = _elm_lang$core$Native_String.uncons;
+var _elm_lang$core$String$cons = _elm_lang$core$Native_String.cons;
+var _elm_lang$core$String$fromChar = function ($char) {
+	return A2(_elm_lang$core$String$cons, $char, '');
+};
+var _elm_lang$core$String$isEmpty = _elm_lang$core$Native_String.isEmpty;
+
+//import Maybe, Native.List //
+
+var _elm_lang$core$Native_Regex = function() {
+
+function escape(str)
+{
+	return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+function caseInsensitive(re)
+{
+	return new RegExp(re.source, 'gi');
+}
+function regex(raw)
+{
+	return new RegExp(raw, 'g');
+}
+
+function contains(re, string)
+{
+	return string.match(re) !== null;
+}
+
+function find(n, re, str)
+{
+	n = n.ctor === 'All' ? Infinity : n._0;
+	var out = [];
+	var number = 0;
+	var string = str;
+	var lastIndex = re.lastIndex;
+	var prevLastIndex = -1;
+	var result;
+	while (number++ < n && (result = re.exec(string)))
+	{
+		if (prevLastIndex === re.lastIndex) break;
+		var i = result.length - 1;
+		var subs = new Array(i);
+		while (i > 0)
+		{
+			var submatch = result[i];
+			subs[--i] = submatch === undefined
+				? _elm_lang$core$Maybe$Nothing
+				: _elm_lang$core$Maybe$Just(submatch);
+		}
+		out.push({
+			match: result[0],
+			submatches: _elm_lang$core$Native_List.fromArray(subs),
+			index: result.index,
+			number: number
+		});
+		prevLastIndex = re.lastIndex;
+	}
+	re.lastIndex = lastIndex;
+	return _elm_lang$core$Native_List.fromArray(out);
+}
+
+function replace(n, re, replacer, string)
+{
+	n = n.ctor === 'All' ? Infinity : n._0;
+	var count = 0;
+	function jsReplacer(match)
+	{
+		if (count++ >= n)
+		{
+			return match;
+		}
+		var i = arguments.length - 3;
+		var submatches = new Array(i);
+		while (i > 0)
+		{
+			var submatch = arguments[i];
+			submatches[--i] = submatch === undefined
+				? _elm_lang$core$Maybe$Nothing
+				: _elm_lang$core$Maybe$Just(submatch);
+		}
+		return replacer({
+			match: match,
+			submatches: _elm_lang$core$Native_List.fromArray(submatches),
+			index: arguments[i - 1],
+			number: count
+		});
+	}
+	return string.replace(re, jsReplacer);
+}
+
+function split(n, re, str)
+{
+	n = n.ctor === 'All' ? Infinity : n._0;
+	if (n === Infinity)
+	{
+		return _elm_lang$core$Native_List.fromArray(str.split(re));
+	}
+	var string = str;
+	var result;
+	var out = [];
+	var start = re.lastIndex;
+	while (n--)
+	{
+		if (!(result = re.exec(string))) break;
+		out.push(string.slice(start, result.index));
+		start = re.lastIndex;
+	}
+	out.push(string.slice(start));
+	return _elm_lang$core$Native_List.fromArray(out);
+}
+
+return {
+	regex: regex,
+	caseInsensitive: caseInsensitive,
+	escape: escape,
+
+	contains: F2(contains),
+	find: F3(find),
+	replace: F4(replace),
+	split: F3(split)
+};
+
+}();
+
+var _elm_lang$core$Regex$split = _elm_lang$core$Native_Regex.split;
+var _elm_lang$core$Regex$replace = _elm_lang$core$Native_Regex.replace;
+var _elm_lang$core$Regex$find = _elm_lang$core$Native_Regex.find;
+var _elm_lang$core$Regex$contains = _elm_lang$core$Native_Regex.contains;
+var _elm_lang$core$Regex$caseInsensitive = _elm_lang$core$Native_Regex.caseInsensitive;
+var _elm_lang$core$Regex$regex = _elm_lang$core$Native_Regex.regex;
+var _elm_lang$core$Regex$escape = _elm_lang$core$Native_Regex.escape;
+var _elm_lang$core$Regex$Match = F4(
+	function (a, b, c, d) {
+		return {match: a, submatches: b, index: c, number: d};
+	});
+var _elm_lang$core$Regex$Regex = {ctor: 'Regex'};
+var _elm_lang$core$Regex$AtMost = function (a) {
+	return {ctor: 'AtMost', _0: a};
+};
+var _elm_lang$core$Regex$All = {ctor: 'All'};
+
+var _Bogdanp$elm_combine$Combine$app = function (p) {
+	var _p0 = p;
+	if (_p0.ctor === 'Parser') {
+		return _p0._0;
+	} else {
+		return _elm_lang$lazy$Lazy$force(_p0._0);
+	}
+};
+var _Bogdanp$elm_combine$Combine$parse = F2(
+	function (p, input) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$app,
+			p,
+			{input: input, position: 0});
+	});
+var _Bogdanp$elm_combine$Combine$Context = F2(
+	function (a, b) {
+		return {input: a, position: b};
+	});
+var _Bogdanp$elm_combine$Combine$RecursiveParser = function (a) {
+	return {ctor: 'RecursiveParser', _0: a};
+};
+var _Bogdanp$elm_combine$Combine$rec = function (t) {
+	return _Bogdanp$elm_combine$Combine$RecursiveParser(
+		_elm_lang$lazy$Lazy$lazy(
+			function (_p1) {
+				var _p2 = _p1;
+				return _Bogdanp$elm_combine$Combine$app(
+					t(
+						{ctor: '_Tuple0'}));
+			}));
+};
+var _Bogdanp$elm_combine$Combine$Parser = function (a) {
+	return {ctor: 'Parser', _0: a};
+};
+var _Bogdanp$elm_combine$Combine$primitive = _Bogdanp$elm_combine$Combine$Parser;
+var _Bogdanp$elm_combine$Combine$bimap = F3(
+	function (fok, ferr, p) {
+		return _Bogdanp$elm_combine$Combine$Parser(
+			function (cx) {
+				var _p3 = A2(_Bogdanp$elm_combine$Combine$app, p, cx);
+				if (_p3._0.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Result$Ok(
+							fok(_p3._0._0)),
+						_1: _p3._1
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Result$Err(
+							ferr(_p3._0._0)),
+						_1: _p3._1
+					};
+				}
+			});
+	});
+var _Bogdanp$elm_combine$Combine$map = F2(
+	function (f, p) {
+		return A3(_Bogdanp$elm_combine$Combine$bimap, f, _elm_lang$core$Basics$identity, p);
+	});
+var _Bogdanp$elm_combine$Combine$mapError = _Bogdanp$elm_combine$Combine$bimap(_elm_lang$core$Basics$identity);
+var _Bogdanp$elm_combine$Combine$andThen = F2(
+	function (p, f) {
+		return _Bogdanp$elm_combine$Combine$Parser(
+			function (cx) {
+				var _p4 = A2(_Bogdanp$elm_combine$Combine$app, p, cx);
+				if (_p4._0.ctor === 'Ok') {
+					return A2(
+						_Bogdanp$elm_combine$Combine$app,
+						f(_p4._0._0),
+						_p4._1);
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Result$Err(_p4._0._0),
+						_1: _p4._1
+					};
+				}
+			});
+	});
+var _Bogdanp$elm_combine$Combine$sequence = function (ps) {
+	var accumulate = F3(
+		function (acc, ps, cx) {
+			accumulate:
+			while (true) {
+				var _p5 = ps;
+				if (_p5.ctor === '[]') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Result$Ok(
+							_elm_lang$core$List$reverse(acc)),
+						_1: cx
+					};
+				} else {
+					var _p6 = A2(_Bogdanp$elm_combine$Combine$app, _p5._0, cx);
+					if (_p6._0.ctor === 'Ok') {
+						var _v6 = A2(_elm_lang$core$List_ops['::'], _p6._0._0, acc),
+							_v7 = _p5._1,
+							_v8 = _p6._1;
+						acc = _v6;
+						ps = _v7;
+						cx = _v8;
+						continue accumulate;
+					} else {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Result$Err(_p6._0._0),
+							_1: _p6._1
+						};
+					}
+				}
+			}
+		});
+	return _Bogdanp$elm_combine$Combine$Parser(
+		function (cx) {
+			return A3(
+				accumulate,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				ps,
+				cx);
+		});
+};
+var _Bogdanp$elm_combine$Combine$fail = function (ms) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		function (cx) {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Result$Err(ms),
+				_1: cx
+			};
+		});
+};
+var _Bogdanp$elm_combine$Combine$succeed = function (r) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		function (cx) {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Result$Ok(r),
+				_1: cx
+			};
+		});
+};
+var _Bogdanp$elm_combine$Combine$andMap = F2(
+	function (lp, rp) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$andThen,
+			lp,
+			function (f) {
+				return A2(
+					_Bogdanp$elm_combine$Combine$andThen,
+					rp,
+					function (x) {
+						return _Bogdanp$elm_combine$Combine$succeed(
+							f(x));
+					});
+			});
+	});
+var _Bogdanp$elm_combine$Combine$between = F3(
+	function (lp, rp, p) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			A2(
+				_Bogdanp$elm_combine$Combine$andMap,
+				A2(
+					_Bogdanp$elm_combine$Combine$map,
+					_elm_lang$core$Basics$flip(
+						function (_p7) {
+							return _elm_lang$core$Basics$always(
+								_elm_lang$core$Basics$always(_p7));
+						}),
+					lp),
+				p),
+			rp);
+	});
+var _Bogdanp$elm_combine$Combine$skip = function (p) {
+	return A2(
+		_Bogdanp$elm_combine$Combine$andThen,
+		p,
+		_elm_lang$core$Basics$always(
+			_Bogdanp$elm_combine$Combine$succeed(
+				{ctor: '_Tuple0'})));
+};
+var _Bogdanp$elm_combine$Combine$count = F2(
+	function (n, p) {
+		var accumulate = F2(
+			function (x, acc) {
+				return (_elm_lang$core$Native_Utils.cmp(x, 0) < 1) ? _Bogdanp$elm_combine$Combine$succeed(
+					_elm_lang$core$List$reverse(acc)) : A2(
+					_Bogdanp$elm_combine$Combine$andThen,
+					p,
+					function (res) {
+						return A2(
+							accumulate,
+							x - 1,
+							A2(_elm_lang$core$List_ops['::'], res, acc));
+					});
+			});
+		return A2(
+			accumulate,
+			n,
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	});
+var _Bogdanp$elm_combine$Combine$string = function (s) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		function (cx) {
+			if (A2(_elm_lang$core$String$startsWith, s, cx.input)) {
+				var len = _elm_lang$core$String$length(s);
+				var rem = A2(_elm_lang$core$String$dropLeft, len, cx.input);
+				var pos = cx.position + len;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Result$Ok(s),
+					_1: _elm_lang$core$Native_Utils.update(
+						cx,
+						{input: rem, position: pos})
+				};
+			} else {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Result$Err(
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(
+								_elm_lang$core$Basics_ops['++'],
+								'expected ',
+								_elm_lang$core$Basics$toString(s))
+							])),
+					_1: cx
+				};
+			}
+		});
+};
+var _Bogdanp$elm_combine$Combine$parens = A2(
+	_Bogdanp$elm_combine$Combine$between,
+	_Bogdanp$elm_combine$Combine$string('('),
+	_Bogdanp$elm_combine$Combine$string(')'));
+var _Bogdanp$elm_combine$Combine$braces = A2(
+	_Bogdanp$elm_combine$Combine$between,
+	_Bogdanp$elm_combine$Combine$string('{'),
+	_Bogdanp$elm_combine$Combine$string('}'));
+var _Bogdanp$elm_combine$Combine$brackets = A2(
+	_Bogdanp$elm_combine$Combine$between,
+	_Bogdanp$elm_combine$Combine$string('['),
+	_Bogdanp$elm_combine$Combine$string(']'));
+var _Bogdanp$elm_combine$Combine$regex = function (pattern) {
+	var pattern$ = A2(_elm_lang$core$String$startsWith, '^', pattern) ? pattern : A2(_elm_lang$core$Basics_ops['++'], '^', pattern);
+	return _Bogdanp$elm_combine$Combine$Parser(
+		function (cx) {
+			var _p8 = A3(
+				_elm_lang$core$Regex$find,
+				_elm_lang$core$Regex$AtMost(1),
+				_elm_lang$core$Regex$regex(pattern$),
+				cx.input);
+			if ((_p8.ctor === '::') && (_p8._1.ctor === '[]')) {
+				var _p9 = _p8._0;
+				var len = _elm_lang$core$String$length(_p9.match);
+				var rem = A2(_elm_lang$core$String$dropLeft, len, cx.input);
+				var pos = cx.position + len;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Result$Ok(_p9.match),
+					_1: _elm_lang$core$Native_Utils.update(
+						cx,
+						{input: rem, position: pos})
+				};
+			} else {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Result$Err(
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(
+								_elm_lang$core$Basics_ops['++'],
+								'expected input matching Regexp /',
+								A2(_elm_lang$core$Basics_ops['++'], pattern$, '/'))
+							])),
+					_1: cx
+				};
+			}
+		});
+};
+var _Bogdanp$elm_combine$Combine$while = function (pred) {
+	var accumulate = F2(
+		function (acc, cx) {
+			accumulate:
+			while (true) {
+				var _p10 = _elm_lang$core$String$uncons(cx.input);
+				if (_p10.ctor === 'Just') {
+					var _p11 = _p10._0._0;
+					if (pred(_p11)) {
+						var pos = cx.position + 1;
+						var c = A2(_elm_lang$core$String$cons, _p11, '');
+						var _v11 = A2(_elm_lang$core$Basics_ops['++'], acc, c),
+							_v12 = _elm_lang$core$Native_Utils.update(
+							cx,
+							{input: _p10._0._1, position: pos});
+						acc = _v11;
+						cx = _v12;
+						continue accumulate;
+					} else {
+						return {ctor: '_Tuple2', _0: acc, _1: cx};
+					}
+				} else {
+					return {ctor: '_Tuple2', _0: acc, _1: cx};
+				}
+			}
+		});
+	return _Bogdanp$elm_combine$Combine$Parser(
+		function (cx) {
+			var _p12 = A2(accumulate, '', cx);
+			var res = _p12._0;
+			var cx$ = _p12._1;
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Result$Ok(res),
+				_1: cx$
+			};
+		});
+};
+var _Bogdanp$elm_combine$Combine$end = _Bogdanp$elm_combine$Combine$Parser(
+	function (cx) {
+		return _elm_lang$core$Native_Utils.eq(cx.input, '') ? {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Result$Ok(
+				{ctor: '_Tuple0'}),
+			_1: cx
+		} : {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Result$Err(
+				_elm_lang$core$Native_List.fromArray(
+					['expected end of input'])),
+			_1: cx
+		};
+	});
+var _Bogdanp$elm_combine$Combine$or = F2(
+	function (lp, rp) {
+		return _Bogdanp$elm_combine$Combine$Parser(
+			function (cx) {
+				var res = A2(_Bogdanp$elm_combine$Combine$app, lp, cx);
+				var _p13 = res;
+				if (_p13._0.ctor === 'Ok') {
+					return res;
+				} else {
+					var res$ = A2(_Bogdanp$elm_combine$Combine$app, rp, cx);
+					var _p14 = res$;
+					if (_p14._0.ctor === 'Ok') {
+						return res$;
+					} else {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Result$Err(
+								A2(_elm_lang$core$Basics_ops['++'], _p13._0._0, _p14._0._0)),
+							_1: cx
+						};
+					}
+				}
+			});
+	});
+var _Bogdanp$elm_combine$Combine$choice = function (xs) {
+	return A3(
+		_elm_lang$core$List$foldr,
+		_Bogdanp$elm_combine$Combine$or,
+		_Bogdanp$elm_combine$Combine$fail(
+			_elm_lang$core$Native_List.fromArray(
+				[])),
+		xs);
+};
+var _Bogdanp$elm_combine$Combine$optional = F2(
+	function (res, p) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$or,
+			p,
+			_Bogdanp$elm_combine$Combine$succeed(res));
+	});
+var _Bogdanp$elm_combine$Combine$chainl = F2(
+	function (p, op) {
+		var accumulate = function (x) {
+			return A2(
+				_Bogdanp$elm_combine$Combine$or,
+				A2(
+					_Bogdanp$elm_combine$Combine$andThen,
+					op,
+					function (f) {
+						return A2(
+							_Bogdanp$elm_combine$Combine$andThen,
+							p,
+							function (y) {
+								return accumulate(
+									A2(f, x, y));
+							});
+					}),
+				_Bogdanp$elm_combine$Combine$succeed(x));
+		};
+		return A2(_Bogdanp$elm_combine$Combine$andThen, p, accumulate);
+	});
+var _Bogdanp$elm_combine$Combine$chainr = F2(
+	function (p, op) {
+		var accumulate = function (x) {
+			return A2(
+				_Bogdanp$elm_combine$Combine$or,
+				A2(
+					_Bogdanp$elm_combine$Combine$andThen,
+					op,
+					function (f) {
+						return A2(
+							_Bogdanp$elm_combine$Combine$andThen,
+							A2(_Bogdanp$elm_combine$Combine$andThen, p, accumulate),
+							function (y) {
+								return _Bogdanp$elm_combine$Combine$succeed(
+									A2(f, x, y));
+							});
+					}),
+				_Bogdanp$elm_combine$Combine$succeed(x));
+		};
+		return A2(_Bogdanp$elm_combine$Combine$andThen, p, accumulate);
+	});
+var _Bogdanp$elm_combine$Combine$maybe = function (p) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		function (cx) {
+			var _p15 = A2(_Bogdanp$elm_combine$Combine$app, p, cx);
+			if ((_p15.ctor === '_Tuple2') && (_p15._0.ctor === 'Ok')) {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Result$Ok(
+						_elm_lang$core$Maybe$Just(_p15._0._0)),
+					_1: _p15._1
+				};
+			} else {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Result$Ok(_elm_lang$core$Maybe$Nothing),
+					_1: cx
+				};
+			}
+		});
+};
+var _Bogdanp$elm_combine$Combine$many = function (p) {
+	var accumulate = F2(
+		function (acc, cx) {
+			accumulate:
+			while (true) {
+				var _p16 = A2(_Bogdanp$elm_combine$Combine$app, p, cx);
+				if ((_p16.ctor === '_Tuple2') && (_p16._0.ctor === 'Ok')) {
+					var _p17 = _p16._1;
+					if (_elm_lang$core$Native_Utils.eq(cx, _p17)) {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$List$reverse(acc),
+							_1: cx
+						};
+					} else {
+						var _v17 = A2(_elm_lang$core$List_ops['::'], _p16._0._0, acc),
+							_v18 = _p17;
+						acc = _v17;
+						cx = _v18;
+						continue accumulate;
+					}
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$List$reverse(acc),
+						_1: cx
+					};
+				}
+			}
+		});
+	return _Bogdanp$elm_combine$Combine$Parser(
+		function (cx) {
+			var _p18 = A2(
+				accumulate,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				cx);
+			var res = _p18._0;
+			var cx$ = _p18._1;
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Result$Ok(res),
+				_1: cx$
+			};
+		});
+};
+var _Bogdanp$elm_combine$Combine$many1 = function (p) {
+	return A2(
+		_Bogdanp$elm_combine$Combine$andMap,
+		A2(
+			_Bogdanp$elm_combine$Combine$map,
+			F2(
+				function (x, y) {
+					return A2(_elm_lang$core$List_ops['::'], x, y);
+				}),
+			p),
+		_Bogdanp$elm_combine$Combine$many(p));
+};
+var _Bogdanp$elm_combine$Combine$skipMany1 = function (p) {
+	return A2(
+		_Bogdanp$elm_combine$Combine$andThen,
+		_Bogdanp$elm_combine$Combine$many1(
+			_Bogdanp$elm_combine$Combine$skip(p)),
+		_elm_lang$core$Basics$always(
+			_Bogdanp$elm_combine$Combine$succeed(
+				{ctor: '_Tuple0'})));
+};
+var _Bogdanp$elm_combine$Combine$sepBy1 = F2(
+	function (sep, p) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			A2(
+				_Bogdanp$elm_combine$Combine$map,
+				F2(
+					function (x, y) {
+						return A2(_elm_lang$core$List_ops['::'], x, y);
+					}),
+				p),
+			_Bogdanp$elm_combine$Combine$many(
+				A2(
+					_Bogdanp$elm_combine$Combine$andMap,
+					A2(
+						_Bogdanp$elm_combine$Combine$map,
+						_elm_lang$core$Basics$flip(_elm_lang$core$Basics$always),
+						sep),
+					p)));
+	});
+var _Bogdanp$elm_combine$Combine$sepBy = F2(
+	function (sep, p) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$or,
+			A2(_Bogdanp$elm_combine$Combine$sepBy1, sep, p),
+			_Bogdanp$elm_combine$Combine$succeed(
+				_elm_lang$core$Native_List.fromArray(
+					[])));
+	});
+var _Bogdanp$elm_combine$Combine$sepEndBy1 = F2(
+	function (sep, p) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			A2(
+				_Bogdanp$elm_combine$Combine$map,
+				_elm_lang$core$Basics$always,
+				A2(_Bogdanp$elm_combine$Combine$sepBy1, sep, p)),
+			_Bogdanp$elm_combine$Combine$maybe(sep));
+	});
+var _Bogdanp$elm_combine$Combine$sepEndBy = F2(
+	function (sep, p) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$or,
+			A2(_Bogdanp$elm_combine$Combine$sepEndBy1, sep, p),
+			_Bogdanp$elm_combine$Combine$succeed(
+				_elm_lang$core$Native_List.fromArray(
+					[])));
+	});
+var _Bogdanp$elm_combine$Combine$skipMany = function (p) {
+	return A2(
+		_Bogdanp$elm_combine$Combine$andThen,
+		_Bogdanp$elm_combine$Combine$many(
+			_Bogdanp$elm_combine$Combine$skip(p)),
+		_elm_lang$core$Basics$always(
+			_Bogdanp$elm_combine$Combine$succeed(
+				{ctor: '_Tuple0'})));
+};
+var _Bogdanp$elm_combine$Combine$manyTill = F2(
+	function (p, end) {
+		var accumulate = F2(
+			function (acc, cx) {
+				accumulate:
+				while (true) {
+					var _p19 = A2(_Bogdanp$elm_combine$Combine$app, end, cx);
+					if (_p19._0.ctor === 'Ok') {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Result$Ok(
+								_elm_lang$core$List$reverse(acc)),
+							_1: _p19._1
+						};
+					} else {
+						var _p20 = A2(_Bogdanp$elm_combine$Combine$app, p, cx);
+						if ((_p20.ctor === '_Tuple2') && (_p20._0.ctor === 'Ok')) {
+							var _v21 = A2(_elm_lang$core$List_ops['::'], _p20._0._0, acc),
+								_v22 = _p20._1;
+							acc = _v21;
+							cx = _v22;
+							continue accumulate;
+						} else {
+							return {
+								ctor: '_Tuple2',
+								_0: _elm_lang$core$Result$Err(_p19._0._0),
+								_1: _p19._1
+							};
+						}
+					}
+				}
+			});
+		return _Bogdanp$elm_combine$Combine$Parser(
+			accumulate(
+				_elm_lang$core$Native_List.fromArray(
+					[])));
+	});
+
+var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
+_Bogdanp$elm_combine$Combine_Infix_ops['<|>'] = _Bogdanp$elm_combine$Combine$or;
+var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
+_Bogdanp$elm_combine$Combine_Infix_ops['*>'] = F2(
+	function (lp, rp) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			A2(
+				_Bogdanp$elm_combine$Combine$map,
+				_elm_lang$core$Basics$flip(_elm_lang$core$Basics$always),
+				lp),
+			rp);
+	});
+var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
+_Bogdanp$elm_combine$Combine_Infix_ops['<*'] = F2(
+	function (lp, rp) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			A2(_Bogdanp$elm_combine$Combine$map, _elm_lang$core$Basics$always, lp),
+			rp);
+	});
+var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
+_Bogdanp$elm_combine$Combine_Infix_ops['<?>'] = F2(
+	function (p, m) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$mapError,
+			function (_p0) {
+				return _elm_lang$core$Native_List.fromArray(
+					[m]);
+			},
+			p);
+	});
+var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
+_Bogdanp$elm_combine$Combine_Infix_ops['<$'] = function (res) {
+	return _Bogdanp$elm_combine$Combine$map(
+		function (_p1) {
+			return res;
+		});
+};
+var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
+_Bogdanp$elm_combine$Combine_Infix_ops['<*>'] = _Bogdanp$elm_combine$Combine$andMap;
+var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
+_Bogdanp$elm_combine$Combine_Infix_ops['<$>'] = _Bogdanp$elm_combine$Combine$map;
+
+var _Bogdanp$elm_combine$Combine_Char$crlf = A2(
+	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	A2(
+		_Bogdanp$elm_combine$Combine_Infix_ops['<$'],
+		_elm_lang$core$Native_Utils.chr('\n'),
+		_Bogdanp$elm_combine$Combine$regex('\r\n')),
+	'expected crlf');
+var _Bogdanp$elm_combine$Combine_Char$satisfy = function (pred) {
+	return _Bogdanp$elm_combine$Combine$primitive(
+		function (cx) {
+			var message = 'could not satisfy predicate';
+			var _p0 = _elm_lang$core$String$uncons(cx.input);
+			if (_p0.ctor === 'Just') {
+				var _p1 = _p0._0._0;
+				return pred(_p1) ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Result$Ok(_p1),
+					_1: _elm_lang$core$Native_Utils.update(
+						cx,
+						{input: _p0._0._1, position: cx.position + 1})
+				} : {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Result$Err(
+						_elm_lang$core$Native_List.fromArray(
+							[message])),
+					_1: cx
+				};
+			} else {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Result$Err(
+						_elm_lang$core$Native_List.fromArray(
+							[message])),
+					_1: cx
+				};
+			}
+		});
+};
+var _Bogdanp$elm_combine$Combine_Char$char = function (c) {
+	return A2(
+		_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+		_Bogdanp$elm_combine$Combine_Char$satisfy(
+			F2(
+				function (x, y) {
+					return _elm_lang$core$Native_Utils.eq(x, y);
+				})(c)),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'expected ',
+			_elm_lang$core$Basics$toString(c)));
+};
+var _Bogdanp$elm_combine$Combine_Char$anyChar = A2(
+	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_Char$satisfy(
+		_elm_lang$core$Basics$always(true)),
+	'expected any character');
+var _Bogdanp$elm_combine$Combine_Char$oneOf = function (cs) {
+	return A2(
+		_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+		_Bogdanp$elm_combine$Combine_Char$satisfy(
+			A2(_elm_lang$core$Basics$flip, _elm_lang$core$List$member, cs)),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'expected one of ',
+			_elm_lang$core$Basics$toString(cs)));
+};
+var _Bogdanp$elm_combine$Combine_Char$noneOf = function (cs) {
+	return A2(
+		_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+		_Bogdanp$elm_combine$Combine_Char$satisfy(
+			function (_p2) {
+				return _elm_lang$core$Basics$not(
+					A3(_elm_lang$core$Basics$flip, _elm_lang$core$List$member, cs, _p2));
+			}),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'expected none of ',
+			_elm_lang$core$Basics$toString(cs)));
+};
+var _Bogdanp$elm_combine$Combine_Char$space = A2(
+	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_Char$satisfy(
+		F2(
+			function (x, y) {
+				return _elm_lang$core$Native_Utils.eq(x, y);
+			})(
+			_elm_lang$core$Native_Utils.chr(' '))),
+	'expected space');
+var _Bogdanp$elm_combine$Combine_Char$tab = A2(
+	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_Char$satisfy(
+		F2(
+			function (x, y) {
+				return _elm_lang$core$Native_Utils.eq(x, y);
+			})(
+			_elm_lang$core$Native_Utils.chr('\t'))),
+	'expected tab');
+var _Bogdanp$elm_combine$Combine_Char$newline = A2(
+	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_Char$satisfy(
+		F2(
+			function (x, y) {
+				return _elm_lang$core$Native_Utils.eq(x, y);
+			})(
+			_elm_lang$core$Native_Utils.chr('\n'))),
+	'expected newline');
+var _Bogdanp$elm_combine$Combine_Char$eol = A2(_Bogdanp$elm_combine$Combine_Infix_ops['<|>'], _Bogdanp$elm_combine$Combine_Char$newline, _Bogdanp$elm_combine$Combine_Char$crlf);
+var _Bogdanp$elm_combine$Combine_Char$lower = A2(
+	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_Char$satisfy(_elm_lang$core$Char$isLower),
+	'expected a lowercase character');
+var _Bogdanp$elm_combine$Combine_Char$upper = A2(
+	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_Char$satisfy(_elm_lang$core$Char$isUpper),
+	'expected an uppercase character');
+var _Bogdanp$elm_combine$Combine_Char$digit = A2(
+	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_Char$satisfy(_elm_lang$core$Char$isDigit),
+	'expected a digit');
+var _Bogdanp$elm_combine$Combine_Char$octDigit = A2(
+	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_Char$satisfy(_elm_lang$core$Char$isOctDigit),
+	'expected an octal digit');
+var _Bogdanp$elm_combine$Combine_Char$hexDigit = A2(
+	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_Char$satisfy(_elm_lang$core$Char$isHexDigit),
+	'expected a hexadecimal digit');
+
 //import Native.List //
 
 var _elm_lang$core$Native_Array = function() {
@@ -3749,443 +5209,6 @@ var _elm_lang$core$Array$repeat = F2(
 			_elm_lang$core$Basics$always(e));
 	});
 var _elm_lang$core$Array$Array = {ctor: 'Array'};
-
-//import Maybe, Native.List, Native.Utils, Result //
-
-var _elm_lang$core$Native_String = function() {
-
-function isEmpty(str)
-{
-	return str.length === 0;
-}
-function cons(chr, str)
-{
-	return chr + str;
-}
-function uncons(str)
-{
-	var hd = str[0];
-	if (hd)
-	{
-		return _elm_lang$core$Maybe$Just(_elm_lang$core$Native_Utils.Tuple2(_elm_lang$core$Native_Utils.chr(hd), str.slice(1)));
-	}
-	return _elm_lang$core$Maybe$Nothing;
-}
-function append(a, b)
-{
-	return a + b;
-}
-function concat(strs)
-{
-	return _elm_lang$core$Native_List.toArray(strs).join('');
-}
-function length(str)
-{
-	return str.length;
-}
-function map(f, str)
-{
-	var out = str.split('');
-	for (var i = out.length; i--; )
-	{
-		out[i] = f(_elm_lang$core$Native_Utils.chr(out[i]));
-	}
-	return out.join('');
-}
-function filter(pred, str)
-{
-	return str.split('').map(_elm_lang$core$Native_Utils.chr).filter(pred).join('');
-}
-function reverse(str)
-{
-	return str.split('').reverse().join('');
-}
-function foldl(f, b, str)
-{
-	var len = str.length;
-	for (var i = 0; i < len; ++i)
-	{
-		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
-	}
-	return b;
-}
-function foldr(f, b, str)
-{
-	for (var i = str.length; i--; )
-	{
-		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
-	}
-	return b;
-}
-function split(sep, str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split(sep));
-}
-function join(sep, strs)
-{
-	return _elm_lang$core$Native_List.toArray(strs).join(sep);
-}
-function repeat(n, str)
-{
-	var result = '';
-	while (n > 0)
-	{
-		if (n & 1)
-		{
-			result += str;
-		}
-		n >>= 1, str += str;
-	}
-	return result;
-}
-function slice(start, end, str)
-{
-	return str.slice(start, end);
-}
-function left(n, str)
-{
-	return n < 1 ? '' : str.slice(0, n);
-}
-function right(n, str)
-{
-	return n < 1 ? '' : str.slice(-n);
-}
-function dropLeft(n, str)
-{
-	return n < 1 ? str : str.slice(n);
-}
-function dropRight(n, str)
-{
-	return n < 1 ? str : str.slice(0, -n);
-}
-function pad(n, chr, str)
-{
-	var half = (n - str.length) / 2;
-	return repeat(Math.ceil(half), chr) + str + repeat(half | 0, chr);
-}
-function padRight(n, chr, str)
-{
-	return str + repeat(n - str.length, chr);
-}
-function padLeft(n, chr, str)
-{
-	return repeat(n - str.length, chr) + str;
-}
-
-function trim(str)
-{
-	return str.trim();
-}
-function trimLeft(str)
-{
-	return str.replace(/^\s+/, '');
-}
-function trimRight(str)
-{
-	return str.replace(/\s+$/, '');
-}
-
-function words(str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.trim().split(/\s+/g));
-}
-function lines(str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split(/\r\n|\r|\n/g));
-}
-
-function toUpper(str)
-{
-	return str.toUpperCase();
-}
-function toLower(str)
-{
-	return str.toLowerCase();
-}
-
-function any(pred, str)
-{
-	for (var i = str.length; i--; )
-	{
-		if (pred(_elm_lang$core$Native_Utils.chr(str[i])))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-function all(pred, str)
-{
-	for (var i = str.length; i--; )
-	{
-		if (!pred(_elm_lang$core$Native_Utils.chr(str[i])))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-function contains(sub, str)
-{
-	return str.indexOf(sub) > -1;
-}
-function startsWith(sub, str)
-{
-	return str.indexOf(sub) === 0;
-}
-function endsWith(sub, str)
-{
-	return str.length >= sub.length &&
-		str.lastIndexOf(sub) === str.length - sub.length;
-}
-function indexes(sub, str)
-{
-	var subLen = sub.length;
-	
-	if (subLen < 1)
-	{
-		return _elm_lang$core$Native_List.Nil;
-	}
-
-	var i = 0;
-	var is = [];
-
-	while ((i = str.indexOf(sub, i)) > -1)
-	{
-		is.push(i);
-		i = i + subLen;
-	}	
-	
-	return _elm_lang$core$Native_List.fromArray(is);
-}
-
-function toInt(s)
-{
-	var len = s.length;
-	if (len === 0)
-	{
-		return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int" );
-	}
-	var start = 0;
-	if (s[0] === '-')
-	{
-		if (len === 1)
-		{
-			return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int" );
-		}
-		start = 1;
-	}
-	for (var i = start; i < len; ++i)
-	{
-		var c = s[i];
-		if (c < '0' || '9' < c)
-		{
-			return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int" );
-		}
-	}
-	return _elm_lang$core$Result$Ok(parseInt(s, 10));
-}
-
-function toFloat(s)
-{
-	var len = s.length;
-	if (len === 0)
-	{
-		return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float" );
-	}
-	var start = 0;
-	if (s[0] === '-')
-	{
-		if (len === 1)
-		{
-			return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float" );
-		}
-		start = 1;
-	}
-	var dotCount = 0;
-	for (var i = start; i < len; ++i)
-	{
-		var c = s[i];
-		if ('0' <= c && c <= '9')
-		{
-			continue;
-		}
-		if (c === '.')
-		{
-			dotCount += 1;
-			if (dotCount <= 1)
-			{
-				continue;
-			}
-		}
-		return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float" );
-	}
-	return _elm_lang$core$Result$Ok(parseFloat(s));
-}
-
-function toList(str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split('').map(_elm_lang$core$Native_Utils.chr));
-}
-function fromList(chars)
-{
-	return _elm_lang$core$Native_List.toArray(chars).join('');
-}
-
-return {
-	isEmpty: isEmpty,
-	cons: F2(cons),
-	uncons: uncons,
-	append: F2(append),
-	concat: concat,
-	length: length,
-	map: F2(map),
-	filter: F2(filter),
-	reverse: reverse,
-	foldl: F3(foldl),
-	foldr: F3(foldr),
-
-	split: F2(split),
-	join: F2(join),
-	repeat: F2(repeat),
-
-	slice: F3(slice),
-	left: F2(left),
-	right: F2(right),
-	dropLeft: F2(dropLeft),
-	dropRight: F2(dropRight),
-
-	pad: F3(pad),
-	padLeft: F3(padLeft),
-	padRight: F3(padRight),
-
-	trim: trim,
-	trimLeft: trimLeft,
-	trimRight: trimRight,
-
-	words: words,
-	lines: lines,
-
-	toUpper: toUpper,
-	toLower: toLower,
-
-	any: F2(any),
-	all: F2(all),
-
-	contains: F2(contains),
-	startsWith: F2(startsWith),
-	endsWith: F2(endsWith),
-	indexes: F2(indexes),
-
-	toInt: toInt,
-	toFloat: toFloat,
-	toList: toList,
-	fromList: fromList
-};
-
-}();
-
-//import Native.Utils //
-
-var _elm_lang$core$Native_Char = function() {
-
-return {
-	fromCode: function(c) { return _elm_lang$core$Native_Utils.chr(String.fromCharCode(c)); },
-	toCode: function(c) { return c.charCodeAt(0); },
-	toUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toUpperCase()); },
-	toLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLowerCase()); },
-	toLocaleUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleUpperCase()); },
-	toLocaleLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleLowerCase()); }
-};
-
-}();
-var _elm_lang$core$Char$fromCode = _elm_lang$core$Native_Char.fromCode;
-var _elm_lang$core$Char$toCode = _elm_lang$core$Native_Char.toCode;
-var _elm_lang$core$Char$toLocaleLower = _elm_lang$core$Native_Char.toLocaleLower;
-var _elm_lang$core$Char$toLocaleUpper = _elm_lang$core$Native_Char.toLocaleUpper;
-var _elm_lang$core$Char$toLower = _elm_lang$core$Native_Char.toLower;
-var _elm_lang$core$Char$toUpper = _elm_lang$core$Native_Char.toUpper;
-var _elm_lang$core$Char$isBetween = F3(
-	function (low, high, $char) {
-		var code = _elm_lang$core$Char$toCode($char);
-		return (_elm_lang$core$Native_Utils.cmp(
-			code,
-			_elm_lang$core$Char$toCode(low)) > -1) && (_elm_lang$core$Native_Utils.cmp(
-			code,
-			_elm_lang$core$Char$toCode(high)) < 1);
-	});
-var _elm_lang$core$Char$isUpper = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('A'),
-	_elm_lang$core$Native_Utils.chr('Z'));
-var _elm_lang$core$Char$isLower = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('a'),
-	_elm_lang$core$Native_Utils.chr('z'));
-var _elm_lang$core$Char$isDigit = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('0'),
-	_elm_lang$core$Native_Utils.chr('9'));
-var _elm_lang$core$Char$isOctDigit = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('0'),
-	_elm_lang$core$Native_Utils.chr('7'));
-var _elm_lang$core$Char$isHexDigit = function ($char) {
-	return _elm_lang$core$Char$isDigit($char) || (A3(
-		_elm_lang$core$Char$isBetween,
-		_elm_lang$core$Native_Utils.chr('a'),
-		_elm_lang$core$Native_Utils.chr('f'),
-		$char) || A3(
-		_elm_lang$core$Char$isBetween,
-		_elm_lang$core$Native_Utils.chr('A'),
-		_elm_lang$core$Native_Utils.chr('F'),
-		$char));
-};
-
-var _elm_lang$core$String$fromList = _elm_lang$core$Native_String.fromList;
-var _elm_lang$core$String$toList = _elm_lang$core$Native_String.toList;
-var _elm_lang$core$String$toFloat = _elm_lang$core$Native_String.toFloat;
-var _elm_lang$core$String$toInt = _elm_lang$core$Native_String.toInt;
-var _elm_lang$core$String$indices = _elm_lang$core$Native_String.indexes;
-var _elm_lang$core$String$indexes = _elm_lang$core$Native_String.indexes;
-var _elm_lang$core$String$endsWith = _elm_lang$core$Native_String.endsWith;
-var _elm_lang$core$String$startsWith = _elm_lang$core$Native_String.startsWith;
-var _elm_lang$core$String$contains = _elm_lang$core$Native_String.contains;
-var _elm_lang$core$String$all = _elm_lang$core$Native_String.all;
-var _elm_lang$core$String$any = _elm_lang$core$Native_String.any;
-var _elm_lang$core$String$toLower = _elm_lang$core$Native_String.toLower;
-var _elm_lang$core$String$toUpper = _elm_lang$core$Native_String.toUpper;
-var _elm_lang$core$String$lines = _elm_lang$core$Native_String.lines;
-var _elm_lang$core$String$words = _elm_lang$core$Native_String.words;
-var _elm_lang$core$String$trimRight = _elm_lang$core$Native_String.trimRight;
-var _elm_lang$core$String$trimLeft = _elm_lang$core$Native_String.trimLeft;
-var _elm_lang$core$String$trim = _elm_lang$core$Native_String.trim;
-var _elm_lang$core$String$padRight = _elm_lang$core$Native_String.padRight;
-var _elm_lang$core$String$padLeft = _elm_lang$core$Native_String.padLeft;
-var _elm_lang$core$String$pad = _elm_lang$core$Native_String.pad;
-var _elm_lang$core$String$dropRight = _elm_lang$core$Native_String.dropRight;
-var _elm_lang$core$String$dropLeft = _elm_lang$core$Native_String.dropLeft;
-var _elm_lang$core$String$right = _elm_lang$core$Native_String.right;
-var _elm_lang$core$String$left = _elm_lang$core$Native_String.left;
-var _elm_lang$core$String$slice = _elm_lang$core$Native_String.slice;
-var _elm_lang$core$String$repeat = _elm_lang$core$Native_String.repeat;
-var _elm_lang$core$String$join = _elm_lang$core$Native_String.join;
-var _elm_lang$core$String$split = _elm_lang$core$Native_String.split;
-var _elm_lang$core$String$foldr = _elm_lang$core$Native_String.foldr;
-var _elm_lang$core$String$foldl = _elm_lang$core$Native_String.foldl;
-var _elm_lang$core$String$reverse = _elm_lang$core$Native_String.reverse;
-var _elm_lang$core$String$filter = _elm_lang$core$Native_String.filter;
-var _elm_lang$core$String$map = _elm_lang$core$Native_String.map;
-var _elm_lang$core$String$length = _elm_lang$core$Native_String.length;
-var _elm_lang$core$String$concat = _elm_lang$core$Native_String.concat;
-var _elm_lang$core$String$append = _elm_lang$core$Native_String.append;
-var _elm_lang$core$String$uncons = _elm_lang$core$Native_String.uncons;
-var _elm_lang$core$String$cons = _elm_lang$core$Native_String.cons;
-var _elm_lang$core$String$fromChar = function ($char) {
-	return A2(_elm_lang$core$String$cons, $char, '');
-};
-var _elm_lang$core$String$isEmpty = _elm_lang$core$Native_String.isEmpty;
 
 var _elm_lang$core$Dict$foldr = F3(
 	function (f, acc, t) {
@@ -13733,6 +14756,137 @@ var _debois$elm_mdl$Material_Grid$Bottom = {ctor: 'Bottom'};
 var _debois$elm_mdl$Material_Grid$Middle = {ctor: 'Middle'};
 var _debois$elm_mdl$Material_Grid$Top = {ctor: 'Top'};
 
+var _elm_lang$core$Set$foldr = F3(
+	function (f, b, _p0) {
+		var _p1 = _p0;
+		return A3(
+			_elm_lang$core$Dict$foldr,
+			F3(
+				function (k, _p2, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p1._0);
+	});
+var _elm_lang$core$Set$foldl = F3(
+	function (f, b, _p3) {
+		var _p4 = _p3;
+		return A3(
+			_elm_lang$core$Dict$foldl,
+			F3(
+				function (k, _p5, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p4._0);
+	});
+var _elm_lang$core$Set$toList = function (_p6) {
+	var _p7 = _p6;
+	return _elm_lang$core$Dict$keys(_p7._0);
+};
+var _elm_lang$core$Set$size = function (_p8) {
+	var _p9 = _p8;
+	return _elm_lang$core$Dict$size(_p9._0);
+};
+var _elm_lang$core$Set$member = F2(
+	function (k, _p10) {
+		var _p11 = _p10;
+		return A2(_elm_lang$core$Dict$member, k, _p11._0);
+	});
+var _elm_lang$core$Set$isEmpty = function (_p12) {
+	var _p13 = _p12;
+	return _elm_lang$core$Dict$isEmpty(_p13._0);
+};
+var _elm_lang$core$Set$Set_elm_builtin = function (a) {
+	return {ctor: 'Set_elm_builtin', _0: a};
+};
+var _elm_lang$core$Set$empty = _elm_lang$core$Set$Set_elm_builtin(_elm_lang$core$Dict$empty);
+var _elm_lang$core$Set$singleton = function (k) {
+	return _elm_lang$core$Set$Set_elm_builtin(
+		A2(
+			_elm_lang$core$Dict$singleton,
+			k,
+			{ctor: '_Tuple0'}));
+};
+var _elm_lang$core$Set$insert = F2(
+	function (k, _p14) {
+		var _p15 = _p14;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A3(
+				_elm_lang$core$Dict$insert,
+				k,
+				{ctor: '_Tuple0'},
+				_p15._0));
+	});
+var _elm_lang$core$Set$fromList = function (xs) {
+	return A3(_elm_lang$core$List$foldl, _elm_lang$core$Set$insert, _elm_lang$core$Set$empty, xs);
+};
+var _elm_lang$core$Set$map = F2(
+	function (f, s) {
+		return _elm_lang$core$Set$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				f,
+				_elm_lang$core$Set$toList(s)));
+	});
+var _elm_lang$core$Set$remove = F2(
+	function (k, _p16) {
+		var _p17 = _p16;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$remove, k, _p17._0));
+	});
+var _elm_lang$core$Set$union = F2(
+	function (_p19, _p18) {
+		var _p20 = _p19;
+		var _p21 = _p18;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$union, _p20._0, _p21._0));
+	});
+var _elm_lang$core$Set$intersect = F2(
+	function (_p23, _p22) {
+		var _p24 = _p23;
+		var _p25 = _p22;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$intersect, _p24._0, _p25._0));
+	});
+var _elm_lang$core$Set$diff = F2(
+	function (_p27, _p26) {
+		var _p28 = _p27;
+		var _p29 = _p26;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$diff, _p28._0, _p29._0));
+	});
+var _elm_lang$core$Set$filter = F2(
+	function (p, _p30) {
+		var _p31 = _p30;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(
+				_elm_lang$core$Dict$filter,
+				F2(
+					function (k, _p32) {
+						return p(k);
+					}),
+				_p31._0));
+	});
+var _elm_lang$core$Set$partition = F2(
+	function (p, _p33) {
+		var _p34 = _p33;
+		var _p35 = A2(
+			_elm_lang$core$Dict$partition,
+			F2(
+				function (k, _p36) {
+					return p(k);
+				}),
+			_p34._0);
+		var p1 = _p35._0;
+		var p2 = _p35._1;
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Set$Set_elm_builtin(p1),
+			_1: _elm_lang$core$Set$Set_elm_builtin(p2)
+		};
+	});
+
 var _elm_lang$html$Html_Lazy$lazy3 = _elm_lang$virtual_dom$VirtualDom$lazy3;
 var _elm_lang$html$Html_Lazy$lazy2 = _elm_lang$virtual_dom$VirtualDom$lazy2;
 var _elm_lang$html$Html_Lazy$lazy = _elm_lang$virtual_dom$VirtualDom$lazy;
@@ -14095,6 +15249,1247 @@ var _evancz$elm_http$Http$post = F3(
 			A2(_evancz$elm_http$Http$send, _evancz$elm_http$Http$defaultSettings, request));
 	});
 
+var _jinjor$elm_html_parser$Escape$dict = _elm_lang$core$Dict$fromList(
+	_elm_lang$core$Native_List.fromArray(
+		[
+			{ctor: '_Tuple2', _0: '&#8482;', _1: '™'},
+			{ctor: '_Tuple2', _0: '&#32;', _1: ' '},
+			{ctor: '_Tuple2', _0: '&#33;', _1: '!'},
+			{ctor: '_Tuple2', _0: '&#34;', _1: '\"'},
+			{ctor: '_Tuple2', _0: '&#35;', _1: '#'},
+			{ctor: '_Tuple2', _0: '&#36;', _1: '$'},
+			{ctor: '_Tuple2', _0: '&#37;', _1: '%'},
+			{ctor: '_Tuple2', _0: '&#38;', _1: '&'},
+			{ctor: '_Tuple2', _0: '&#39;', _1: '\''},
+			{ctor: '_Tuple2', _0: '&#40;', _1: '('},
+			{ctor: '_Tuple2', _0: '&#41;', _1: ')'},
+			{ctor: '_Tuple2', _0: '&#42;', _1: '*'},
+			{ctor: '_Tuple2', _0: '&#43;', _1: '+'},
+			{ctor: '_Tuple2', _0: '&#44;', _1: ','},
+			{ctor: '_Tuple2', _0: '&#45;', _1: '-'},
+			{ctor: '_Tuple2', _0: '&#46;', _1: '.'},
+			{ctor: '_Tuple2', _0: '&#47;', _1: '/'},
+			{ctor: '_Tuple2', _0: '&#48;', _1: '0'},
+			{ctor: '_Tuple2', _0: '&#49;', _1: '1'},
+			{ctor: '_Tuple2', _0: '&#50;', _1: '2'},
+			{ctor: '_Tuple2', _0: '&#51;', _1: '3'},
+			{ctor: '_Tuple2', _0: '&#52;', _1: '4'},
+			{ctor: '_Tuple2', _0: '&#53;', _1: '5'},
+			{ctor: '_Tuple2', _0: '&#54;', _1: '6'},
+			{ctor: '_Tuple2', _0: '&#55;', _1: '7'},
+			{ctor: '_Tuple2', _0: '&#56;', _1: '8'},
+			{ctor: '_Tuple2', _0: '&#57;', _1: '9'},
+			{ctor: '_Tuple2', _0: '&#58;', _1: ':'},
+			{ctor: '_Tuple2', _0: '&#59;', _1: ';'},
+			{ctor: '_Tuple2', _0: '&#60;', _1: '<'},
+			{ctor: '_Tuple2', _0: '&#61;', _1: '='},
+			{ctor: '_Tuple2', _0: '&#62;', _1: '>'},
+			{ctor: '_Tuple2', _0: '&#63;', _1: '?'},
+			{ctor: '_Tuple2', _0: '&#64;', _1: '@'},
+			{ctor: '_Tuple2', _0: '&#65;', _1: 'A'},
+			{ctor: '_Tuple2', _0: '&#66;', _1: 'B'},
+			{ctor: '_Tuple2', _0: '&#67;', _1: 'C'},
+			{ctor: '_Tuple2', _0: '&#68;', _1: 'D'},
+			{ctor: '_Tuple2', _0: '&#69;', _1: 'E'},
+			{ctor: '_Tuple2', _0: '&#70;', _1: 'F'},
+			{ctor: '_Tuple2', _0: '&#71;', _1: 'G'},
+			{ctor: '_Tuple2', _0: '&#72;', _1: 'H'},
+			{ctor: '_Tuple2', _0: '&#73;', _1: 'I'},
+			{ctor: '_Tuple2', _0: '&#74;', _1: 'J'},
+			{ctor: '_Tuple2', _0: '&#75;', _1: 'K'},
+			{ctor: '_Tuple2', _0: '&#76;', _1: 'L'},
+			{ctor: '_Tuple2', _0: '&#77;', _1: 'M'},
+			{ctor: '_Tuple2', _0: '&#78;', _1: 'N'},
+			{ctor: '_Tuple2', _0: '&#79;', _1: 'O'},
+			{ctor: '_Tuple2', _0: '&#80;', _1: 'P'},
+			{ctor: '_Tuple2', _0: '&#81;', _1: 'Q'},
+			{ctor: '_Tuple2', _0: '&#82;', _1: 'R'},
+			{ctor: '_Tuple2', _0: '&#83;', _1: 'S'},
+			{ctor: '_Tuple2', _0: '&#84;', _1: 'T'},
+			{ctor: '_Tuple2', _0: '&#85;', _1: 'U'},
+			{ctor: '_Tuple2', _0: '&#86;', _1: 'V'},
+			{ctor: '_Tuple2', _0: '&#87;', _1: 'W'},
+			{ctor: '_Tuple2', _0: '&#88;', _1: 'X'},
+			{ctor: '_Tuple2', _0: '&#89;', _1: 'Y'},
+			{ctor: '_Tuple2', _0: '&#90;', _1: 'Z'},
+			{ctor: '_Tuple2', _0: '&#91;', _1: '['},
+			{ctor: '_Tuple2', _0: '&#92;', _1: '\\'},
+			{ctor: '_Tuple2', _0: '&#93;', _1: ']'},
+			{ctor: '_Tuple2', _0: '&#94;', _1: '^'},
+			{ctor: '_Tuple2', _0: '&#95;', _1: '_'},
+			{ctor: '_Tuple2', _0: '&#96;', _1: '`'},
+			{ctor: '_Tuple2', _0: '&#97;', _1: 'a'},
+			{ctor: '_Tuple2', _0: '&#98;', _1: 'b'},
+			{ctor: '_Tuple2', _0: '&#99;', _1: 'c'},
+			{ctor: '_Tuple2', _0: '&#100;', _1: 'd'},
+			{ctor: '_Tuple2', _0: '&#101;', _1: 'e'},
+			{ctor: '_Tuple2', _0: '&#102;', _1: 'f'},
+			{ctor: '_Tuple2', _0: '&#103;', _1: 'g'},
+			{ctor: '_Tuple2', _0: '&#104;', _1: 'h'},
+			{ctor: '_Tuple2', _0: '&#105;', _1: 'i'},
+			{ctor: '_Tuple2', _0: '&#106;', _1: 'j'},
+			{ctor: '_Tuple2', _0: '&#107;', _1: 'k'},
+			{ctor: '_Tuple2', _0: '&#108;', _1: 'l'},
+			{ctor: '_Tuple2', _0: '&#109;', _1: 'm'},
+			{ctor: '_Tuple2', _0: '&#110;', _1: 'n'},
+			{ctor: '_Tuple2', _0: '&#111;', _1: 'o'},
+			{ctor: '_Tuple2', _0: '&#112;', _1: 'p'},
+			{ctor: '_Tuple2', _0: '&#113;', _1: 'q'},
+			{ctor: '_Tuple2', _0: '&#114;', _1: 'r'},
+			{ctor: '_Tuple2', _0: '&#115;', _1: 's'},
+			{ctor: '_Tuple2', _0: '&#116;', _1: 't'},
+			{ctor: '_Tuple2', _0: '&#117;', _1: 'u'},
+			{ctor: '_Tuple2', _0: '&#118;', _1: 'v'},
+			{ctor: '_Tuple2', _0: '&#119;', _1: 'w'},
+			{ctor: '_Tuple2', _0: '&#120;', _1: 'x'},
+			{ctor: '_Tuple2', _0: '&#121;', _1: 'y'},
+			{ctor: '_Tuple2', _0: '&#122;', _1: 'z'},
+			{ctor: '_Tuple2', _0: '&#123;', _1: '{'},
+			{ctor: '_Tuple2', _0: '&#124;', _1: '|'},
+			{ctor: '_Tuple2', _0: '&#125;', _1: '}'},
+			{ctor: '_Tuple2', _0: '&#126;', _1: '~'},
+			{ctor: '_Tuple2', _0: '&#160;', _1: ' '},
+			{ctor: '_Tuple2', _0: '&#161;', _1: '¡'},
+			{ctor: '_Tuple2', _0: '&#162;', _1: '¢'},
+			{ctor: '_Tuple2', _0: '&#163;', _1: '£'},
+			{ctor: '_Tuple2', _0: '&#164;', _1: '¤'},
+			{ctor: '_Tuple2', _0: '&#165;', _1: '¥'},
+			{ctor: '_Tuple2', _0: '&#166;', _1: '¦'},
+			{ctor: '_Tuple2', _0: '&#167;', _1: '§'},
+			{ctor: '_Tuple2', _0: '&#168;', _1: '¨'},
+			{ctor: '_Tuple2', _0: '&#169;', _1: '©'},
+			{ctor: '_Tuple2', _0: '&#170;', _1: 'ª'},
+			{ctor: '_Tuple2', _0: '&#171;', _1: '«'},
+			{ctor: '_Tuple2', _0: '&#172;', _1: '¬'},
+			{ctor: '_Tuple2', _0: '&#173;', _1: ''},
+			{ctor: '_Tuple2', _0: '&#174;', _1: '®'},
+			{ctor: '_Tuple2', _0: '&#175;', _1: '¯'},
+			{ctor: '_Tuple2', _0: '&#176;', _1: '°'},
+			{ctor: '_Tuple2', _0: '&#177;', _1: '±'},
+			{ctor: '_Tuple2', _0: '&#178;', _1: '²'},
+			{ctor: '_Tuple2', _0: '&#179;', _1: '³'},
+			{ctor: '_Tuple2', _0: '&#180;', _1: '´'},
+			{ctor: '_Tuple2', _0: '&#181;', _1: 'µ'},
+			{ctor: '_Tuple2', _0: '&#182;', _1: '¶'},
+			{ctor: '_Tuple2', _0: '&#183;', _1: '·'},
+			{ctor: '_Tuple2', _0: '&#184;', _1: '¸'},
+			{ctor: '_Tuple2', _0: '&#185;', _1: '¹'},
+			{ctor: '_Tuple2', _0: '&#186;', _1: 'º'},
+			{ctor: '_Tuple2', _0: '&#187;', _1: '»'},
+			{ctor: '_Tuple2', _0: '&#188;', _1: '¼'},
+			{ctor: '_Tuple2', _0: '&#189;', _1: '½'},
+			{ctor: '_Tuple2', _0: '&#190;', _1: '¾'},
+			{ctor: '_Tuple2', _0: '&#191;', _1: '¿'},
+			{ctor: '_Tuple2', _0: '&#192;', _1: 'À'},
+			{ctor: '_Tuple2', _0: '&#193;', _1: 'Á'},
+			{ctor: '_Tuple2', _0: '&#194;', _1: 'Â'},
+			{ctor: '_Tuple2', _0: '&#195;', _1: 'Ã'},
+			{ctor: '_Tuple2', _0: '&#196;', _1: 'Ä'},
+			{ctor: '_Tuple2', _0: '&#197', _1: 'Å'},
+			{ctor: '_Tuple2', _0: '&#198;', _1: 'Æ'},
+			{ctor: '_Tuple2', _0: '&#199;', _1: 'Ç'},
+			{ctor: '_Tuple2', _0: '&#200;', _1: 'È'},
+			{ctor: '_Tuple2', _0: '&#201;', _1: 'É'},
+			{ctor: '_Tuple2', _0: '&#202;', _1: 'Ê'},
+			{ctor: '_Tuple2', _0: '&#203;', _1: 'Ë'},
+			{ctor: '_Tuple2', _0: '&#204;', _1: 'Ì'},
+			{ctor: '_Tuple2', _0: '&#205;', _1: 'Í'},
+			{ctor: '_Tuple2', _0: '&#206;', _1: 'Î'},
+			{ctor: '_Tuple2', _0: '&#207;', _1: 'Ï'},
+			{ctor: '_Tuple2', _0: '&#208;', _1: 'Ð'},
+			{ctor: '_Tuple2', _0: '&#209;', _1: 'Ñ'},
+			{ctor: '_Tuple2', _0: '&#210;', _1: 'Ò'},
+			{ctor: '_Tuple2', _0: '&#211;', _1: 'Ó'},
+			{ctor: '_Tuple2', _0: '&#212;', _1: 'Ô'},
+			{ctor: '_Tuple2', _0: '&#213;', _1: 'Õ'},
+			{ctor: '_Tuple2', _0: '&#214;', _1: 'Ö'},
+			{ctor: '_Tuple2', _0: '&#215;', _1: '×'},
+			{ctor: '_Tuple2', _0: '&#216;', _1: 'Ø'},
+			{ctor: '_Tuple2', _0: '&#217;', _1: 'Ù'},
+			{ctor: '_Tuple2', _0: '&#218;', _1: 'Ú'},
+			{ctor: '_Tuple2', _0: '&#219;', _1: 'Û'},
+			{ctor: '_Tuple2', _0: '&#220;', _1: 'Ü'},
+			{ctor: '_Tuple2', _0: '&#221;', _1: 'Ý'},
+			{ctor: '_Tuple2', _0: '&#222;', _1: 'Þ'},
+			{ctor: '_Tuple2', _0: '&#223;', _1: 'ß'},
+			{ctor: '_Tuple2', _0: '&#224;', _1: 'à'},
+			{ctor: '_Tuple2', _0: '&#225;', _1: 'á'},
+			{ctor: '_Tuple2', _0: '&#226;', _1: 'â'},
+			{ctor: '_Tuple2', _0: '&#227;', _1: 'ã'},
+			{ctor: '_Tuple2', _0: '&#228;', _1: 'ä'},
+			{ctor: '_Tuple2', _0: '&#229;', _1: 'å'},
+			{ctor: '_Tuple2', _0: '&#230;', _1: 'æ'},
+			{ctor: '_Tuple2', _0: '&#231;', _1: 'ç'},
+			{ctor: '_Tuple2', _0: '&#232;', _1: 'è'},
+			{ctor: '_Tuple2', _0: '&#233;', _1: 'é'},
+			{ctor: '_Tuple2', _0: '&#234;', _1: 'ê'},
+			{ctor: '_Tuple2', _0: '&#235;', _1: 'ë'},
+			{ctor: '_Tuple2', _0: '&#236;', _1: 'ì'},
+			{ctor: '_Tuple2', _0: '&#237', _1: 'í'},
+			{ctor: '_Tuple2', _0: '&#238;', _1: 'î'},
+			{ctor: '_Tuple2', _0: '&#239;', _1: 'ï'},
+			{ctor: '_Tuple2', _0: '&#240;', _1: 'ð'},
+			{ctor: '_Tuple2', _0: '&#241;', _1: 'ñ'},
+			{ctor: '_Tuple2', _0: '&#242;', _1: 'ò'},
+			{ctor: '_Tuple2', _0: '&#243;', _1: 'ó'},
+			{ctor: '_Tuple2', _0: '&#244;', _1: 'ô'},
+			{ctor: '_Tuple2', _0: '&#245;', _1: 'õ'},
+			{ctor: '_Tuple2', _0: '&#246;', _1: 'ö'},
+			{ctor: '_Tuple2', _0: '&#247;', _1: '÷'},
+			{ctor: '_Tuple2', _0: '&#248;', _1: 'ø'},
+			{ctor: '_Tuple2', _0: '&#249;', _1: 'ù'},
+			{ctor: '_Tuple2', _0: '&#250;', _1: 'ú'},
+			{ctor: '_Tuple2', _0: '&#251;', _1: 'û'},
+			{ctor: '_Tuple2', _0: '&#252;', _1: 'ü'},
+			{ctor: '_Tuple2', _0: '&#253;', _1: 'ý'},
+			{ctor: '_Tuple2', _0: '&#254;', _1: 'þ'},
+			{ctor: '_Tuple2', _0: '&#255;', _1: 'ÿ'},
+			{ctor: '_Tuple2', _0: '&#256;', _1: 'Ā'},
+			{ctor: '_Tuple2', _0: '&#257;', _1: 'ā'},
+			{ctor: '_Tuple2', _0: '&#258;', _1: 'Ă'},
+			{ctor: '_Tuple2', _0: '&#259;', _1: 'ă'},
+			{ctor: '_Tuple2', _0: '&#260;', _1: 'Ą'},
+			{ctor: '_Tuple2', _0: '&#261;', _1: 'ą'},
+			{ctor: '_Tuple2', _0: '&#262;', _1: 'Ć'},
+			{ctor: '_Tuple2', _0: '&#263;', _1: 'ć'},
+			{ctor: '_Tuple2', _0: '&#264;', _1: 'Ĉ'},
+			{ctor: '_Tuple2', _0: '&#265;', _1: 'ĉ'},
+			{ctor: '_Tuple2', _0: '&#266;', _1: 'Ċ'},
+			{ctor: '_Tuple2', _0: '&#267;', _1: 'ċ'},
+			{ctor: '_Tuple2', _0: '&#268;', _1: 'Č'},
+			{ctor: '_Tuple2', _0: '&#269;', _1: 'č'},
+			{ctor: '_Tuple2', _0: '&#270;', _1: 'Ď'},
+			{ctor: '_Tuple2', _0: '&#271;', _1: 'ď'},
+			{ctor: '_Tuple2', _0: '&#272;', _1: 'Đ'},
+			{ctor: '_Tuple2', _0: '&#273;', _1: 'đ'},
+			{ctor: '_Tuple2', _0: '&#274;', _1: 'Ē'},
+			{ctor: '_Tuple2', _0: '&#275;', _1: 'ē'},
+			{ctor: '_Tuple2', _0: '&#276;', _1: 'Ĕ'},
+			{ctor: '_Tuple2', _0: '&#277', _1: 'ĕ'},
+			{ctor: '_Tuple2', _0: '&#278;', _1: 'Ė'},
+			{ctor: '_Tuple2', _0: '&#279;', _1: 'ė'},
+			{ctor: '_Tuple2', _0: '&#280;', _1: 'Ę'},
+			{ctor: '_Tuple2', _0: '&#281;', _1: 'ę'},
+			{ctor: '_Tuple2', _0: '&#282;', _1: 'Ě'},
+			{ctor: '_Tuple2', _0: '&#283;', _1: 'ě'},
+			{ctor: '_Tuple2', _0: '&#284;', _1: 'Ĝ'},
+			{ctor: '_Tuple2', _0: '&#285;', _1: 'ĝ'},
+			{ctor: '_Tuple2', _0: '&#286;', _1: 'Ğ'},
+			{ctor: '_Tuple2', _0: '&#287;', _1: 'ğ'},
+			{ctor: '_Tuple2', _0: '&#288;', _1: 'Ġ'},
+			{ctor: '_Tuple2', _0: '&#289;', _1: 'ġ'},
+			{ctor: '_Tuple2', _0: '&#290;', _1: 'Ģ'},
+			{ctor: '_Tuple2', _0: '&#291;', _1: 'ģ'},
+			{ctor: '_Tuple2', _0: '&#292;', _1: 'Ĥ'},
+			{ctor: '_Tuple2', _0: '&#293;', _1: 'ĥ'},
+			{ctor: '_Tuple2', _0: '&#294;', _1: 'Ħ'},
+			{ctor: '_Tuple2', _0: '&#295;', _1: 'ħ'},
+			{ctor: '_Tuple2', _0: '&#296;', _1: 'Ĩ'},
+			{ctor: '_Tuple2', _0: '&#297;', _1: 'ĩ'},
+			{ctor: '_Tuple2', _0: '&#298;', _1: 'Ī'},
+			{ctor: '_Tuple2', _0: '&#299;', _1: 'ī'},
+			{ctor: '_Tuple2', _0: '&#300;', _1: 'Ĭ'},
+			{ctor: '_Tuple2', _0: '&#301;', _1: 'ĭ'},
+			{ctor: '_Tuple2', _0: '&#302;', _1: 'Į'},
+			{ctor: '_Tuple2', _0: '&#303;', _1: 'į'},
+			{ctor: '_Tuple2', _0: '&#304;', _1: 'İ'},
+			{ctor: '_Tuple2', _0: '&#305;', _1: 'ı'},
+			{ctor: '_Tuple2', _0: '&#306;', _1: 'Ĳ'},
+			{ctor: '_Tuple2', _0: '&#307;', _1: 'ĳ'},
+			{ctor: '_Tuple2', _0: '&#308;', _1: 'Ĵ'},
+			{ctor: '_Tuple2', _0: '&#309;', _1: 'ĵ'},
+			{ctor: '_Tuple2', _0: '&#310;', _1: 'Ķ'},
+			{ctor: '_Tuple2', _0: '&#311;', _1: 'ķ'},
+			{ctor: '_Tuple2', _0: '&#312;', _1: 'ĸ'},
+			{ctor: '_Tuple2', _0: '&#313;', _1: 'Ĺ'},
+			{ctor: '_Tuple2', _0: '&#314;', _1: 'ĺ'},
+			{ctor: '_Tuple2', _0: '&#315;', _1: 'Ļ'},
+			{ctor: '_Tuple2', _0: '&#316;', _1: 'ļ'},
+			{ctor: '_Tuple2', _0: '&#317', _1: 'Ľ'},
+			{ctor: '_Tuple2', _0: '&#318;', _1: 'ľ'},
+			{ctor: '_Tuple2', _0: '&#319;', _1: 'Ŀ'},
+			{ctor: '_Tuple2', _0: '&#320;', _1: 'ŀ'},
+			{ctor: '_Tuple2', _0: '&#321;', _1: 'Ł'},
+			{ctor: '_Tuple2', _0: '&#322;', _1: 'ł'},
+			{ctor: '_Tuple2', _0: '&#323;', _1: 'Ń'},
+			{ctor: '_Tuple2', _0: '&#324;', _1: 'ń'},
+			{ctor: '_Tuple2', _0: '&#325;', _1: 'Ņ'},
+			{ctor: '_Tuple2', _0: '&#326;', _1: 'ņ'},
+			{ctor: '_Tuple2', _0: '&#327;', _1: 'Ň'},
+			{ctor: '_Tuple2', _0: '&#328;', _1: 'ň'},
+			{ctor: '_Tuple2', _0: '&#329;', _1: 'ŉ'},
+			{ctor: '_Tuple2', _0: '&#330;', _1: 'Ŋ'},
+			{ctor: '_Tuple2', _0: '&#331;', _1: 'ŋ'},
+			{ctor: '_Tuple2', _0: '&#332;', _1: 'Ō'},
+			{ctor: '_Tuple2', _0: '&#333;', _1: 'ō'},
+			{ctor: '_Tuple2', _0: '&#334;', _1: 'Ŏ'},
+			{ctor: '_Tuple2', _0: '&#335;', _1: 'ŏ'},
+			{ctor: '_Tuple2', _0: '&#336;', _1: 'Ő'},
+			{ctor: '_Tuple2', _0: '&#337;', _1: 'ő'},
+			{ctor: '_Tuple2', _0: '&#338;', _1: 'Œ'},
+			{ctor: '_Tuple2', _0: '&#339;', _1: 'œ'},
+			{ctor: '_Tuple2', _0: '&#340;', _1: 'Ŕ'},
+			{ctor: '_Tuple2', _0: '&#341;', _1: 'ŕ'},
+			{ctor: '_Tuple2', _0: '&#342;', _1: 'Ŗ'},
+			{ctor: '_Tuple2', _0: '&#343;', _1: 'ŗ'},
+			{ctor: '_Tuple2', _0: '&#344;', _1: 'Ř'},
+			{ctor: '_Tuple2', _0: '&#345;', _1: 'ř'},
+			{ctor: '_Tuple2', _0: '&#346;', _1: 'Ś'},
+			{ctor: '_Tuple2', _0: '&#347;', _1: 'ś'},
+			{ctor: '_Tuple2', _0: '&#348;', _1: 'Ŝ'},
+			{ctor: '_Tuple2', _0: '&#349;', _1: 'ŝ'},
+			{ctor: '_Tuple2', _0: '&#350;', _1: 'Ş'},
+			{ctor: '_Tuple2', _0: '&#351;', _1: 'ş'},
+			{ctor: '_Tuple2', _0: '&#352;', _1: 'Š'},
+			{ctor: '_Tuple2', _0: '&#353;', _1: 'š'},
+			{ctor: '_Tuple2', _0: '&#354;', _1: 'Ţ'},
+			{ctor: '_Tuple2', _0: '&#355;', _1: 'ţ'},
+			{ctor: '_Tuple2', _0: '&#356;', _1: 'Ť'},
+			{ctor: '_Tuple2', _0: '&#357', _1: 'ť'},
+			{ctor: '_Tuple2', _0: '&#358;', _1: 'Ŧ'},
+			{ctor: '_Tuple2', _0: '&#359;', _1: 'ŧ'},
+			{ctor: '_Tuple2', _0: '&#360;', _1: 'Ũ'},
+			{ctor: '_Tuple2', _0: '&#361;', _1: 'ũ'},
+			{ctor: '_Tuple2', _0: '&#362;', _1: 'Ū'},
+			{ctor: '_Tuple2', _0: '&#363;', _1: 'ū'},
+			{ctor: '_Tuple2', _0: '&#364;', _1: 'Ŭ'},
+			{ctor: '_Tuple2', _0: '&#365;', _1: 'ŭ'},
+			{ctor: '_Tuple2', _0: '&#366;', _1: 'Ů'},
+			{ctor: '_Tuple2', _0: '&#367;', _1: 'ů'},
+			{ctor: '_Tuple2', _0: '&#368;', _1: 'Ű'},
+			{ctor: '_Tuple2', _0: '&#369;', _1: 'ű'},
+			{ctor: '_Tuple2', _0: '&#370;', _1: 'Ų'},
+			{ctor: '_Tuple2', _0: '&#371;', _1: 'ų'},
+			{ctor: '_Tuple2', _0: '&#372;', _1: 'Ŵ'},
+			{ctor: '_Tuple2', _0: '&#373;', _1: 'ŵ'},
+			{ctor: '_Tuple2', _0: '&#374;', _1: 'Ŷ'},
+			{ctor: '_Tuple2', _0: '&#375;', _1: 'ŷ'},
+			{ctor: '_Tuple2', _0: '&#376;', _1: 'Ÿ'},
+			{ctor: '_Tuple2', _0: '&#377;', _1: 'Ź'},
+			{ctor: '_Tuple2', _0: '&#378;', _1: 'ź'},
+			{ctor: '_Tuple2', _0: '&#379;', _1: 'Ż'},
+			{ctor: '_Tuple2', _0: '&#380;', _1: 'ż'},
+			{ctor: '_Tuple2', _0: '&#381;', _1: 'Ž'},
+			{ctor: '_Tuple2', _0: '&#382;', _1: 'ž'},
+			{ctor: '_Tuple2', _0: '&#383;', _1: 'ſ'},
+			{ctor: '_Tuple2', _0: '&#340;', _1: 'Ŕ'},
+			{ctor: '_Tuple2', _0: '&#341;', _1: 'ŕ'},
+			{ctor: '_Tuple2', _0: '&#342;', _1: 'Ŗ'},
+			{ctor: '_Tuple2', _0: '&#343;', _1: 'ŗ'},
+			{ctor: '_Tuple2', _0: '&#344;', _1: 'Ř'},
+			{ctor: '_Tuple2', _0: '&#345;', _1: 'ř'},
+			{ctor: '_Tuple2', _0: '&#346;', _1: 'Ś'},
+			{ctor: '_Tuple2', _0: '&#347;', _1: 'ś'},
+			{ctor: '_Tuple2', _0: '&#348;', _1: 'Ŝ'},
+			{ctor: '_Tuple2', _0: '&#349;', _1: 'ŝ'},
+			{ctor: '_Tuple2', _0: '&#350;', _1: 'Ş'},
+			{ctor: '_Tuple2', _0: '&#351;', _1: 'ş'},
+			{ctor: '_Tuple2', _0: '&#352;', _1: 'Š'},
+			{ctor: '_Tuple2', _0: '&#353;', _1: 'š'},
+			{ctor: '_Tuple2', _0: '&#354;', _1: 'Ţ'},
+			{ctor: '_Tuple2', _0: '&#355;', _1: 'ţ'},
+			{ctor: '_Tuple2', _0: '&#356;', _1: 'Ť'},
+			{ctor: '_Tuple2', _0: '&#577;', _1: 'ť'},
+			{ctor: '_Tuple2', _0: '&#358;', _1: 'Ŧ'},
+			{ctor: '_Tuple2', _0: '&#359;', _1: 'ŧ'},
+			{ctor: '_Tuple2', _0: '&#360;', _1: 'Ũ'},
+			{ctor: '_Tuple2', _0: '&#361;', _1: 'ũ'},
+			{ctor: '_Tuple2', _0: '&#362;', _1: 'Ū'},
+			{ctor: '_Tuple2', _0: '&#363;', _1: 'ū'},
+			{ctor: '_Tuple2', _0: '&#364;', _1: 'Ŭ'},
+			{ctor: '_Tuple2', _0: '&#365;', _1: 'ŭ'},
+			{ctor: '_Tuple2', _0: '&#366;', _1: 'Ů'},
+			{ctor: '_Tuple2', _0: '&#367;', _1: 'ů'},
+			{ctor: '_Tuple2', _0: '&#368;', _1: 'Ű'},
+			{ctor: '_Tuple2', _0: '&#369;', _1: 'ű'},
+			{ctor: '_Tuple2', _0: '&#370;', _1: 'Ų'},
+			{ctor: '_Tuple2', _0: '&#371;', _1: 'ų'},
+			{ctor: '_Tuple2', _0: '&#372;', _1: 'Ŵ'},
+			{ctor: '_Tuple2', _0: '&#373;', _1: 'ŵ'},
+			{ctor: '_Tuple2', _0: '&#374;', _1: 'Ŷ'},
+			{ctor: '_Tuple2', _0: '&#375;', _1: 'ŷ'},
+			{ctor: '_Tuple2', _0: '&#376;', _1: 'Ÿ'},
+			{ctor: '_Tuple2', _0: '&#377', _1: 'Ź'},
+			{ctor: '_Tuple2', _0: '&#378;', _1: 'ź'},
+			{ctor: '_Tuple2', _0: '&#379;', _1: 'Ż'},
+			{ctor: '_Tuple2', _0: '&#380;', _1: 'ż'},
+			{ctor: '_Tuple2', _0: '&#381;', _1: 'Ž'},
+			{ctor: '_Tuple2', _0: '&#382;', _1: 'ž'},
+			{ctor: '_Tuple2', _0: '&#383;', _1: 'ſ'},
+			{ctor: '_Tuple2', _0: '&#x2122;', _1: '™'},
+			{ctor: '_Tuple2', _0: '&#x20;', _1: ' '},
+			{ctor: '_Tuple2', _0: '&#x21;', _1: '!'},
+			{ctor: '_Tuple2', _0: '&#x22;', _1: '\"'},
+			{ctor: '_Tuple2', _0: '&#x23;', _1: '#'},
+			{ctor: '_Tuple2', _0: '&#x24;', _1: '$'},
+			{ctor: '_Tuple2', _0: '&#x25;', _1: '%'},
+			{ctor: '_Tuple2', _0: '&#x26;', _1: '&'},
+			{ctor: '_Tuple2', _0: '&#x27;', _1: '\''},
+			{ctor: '_Tuple2', _0: '&#x28;', _1: '('},
+			{ctor: '_Tuple2', _0: '&#x29;', _1: ')'},
+			{ctor: '_Tuple2', _0: '&#x2A;', _1: '*'},
+			{ctor: '_Tuple2', _0: '&#x2B;', _1: '+'},
+			{ctor: '_Tuple2', _0: '&#x2C;', _1: ','},
+			{ctor: '_Tuple2', _0: '&#x2D;', _1: '-'},
+			{ctor: '_Tuple2', _0: '&#x2E;', _1: '.'},
+			{ctor: '_Tuple2', _0: '&#x2F;', _1: '/'},
+			{ctor: '_Tuple2', _0: '&#x30;', _1: '0'},
+			{ctor: '_Tuple2', _0: '&#x31;', _1: '1'},
+			{ctor: '_Tuple2', _0: '&#x32;', _1: '2'},
+			{ctor: '_Tuple2', _0: '&#x33;', _1: '3'},
+			{ctor: '_Tuple2', _0: '&#x34;', _1: '4'},
+			{ctor: '_Tuple2', _0: '&#x35;', _1: '5'},
+			{ctor: '_Tuple2', _0: '&#x36;', _1: '6'},
+			{ctor: '_Tuple2', _0: '&#x37;', _1: '7'},
+			{ctor: '_Tuple2', _0: '&#x38;', _1: '8'},
+			{ctor: '_Tuple2', _0: '&#x39;', _1: '9'},
+			{ctor: '_Tuple2', _0: '&#x3A;', _1: ':'},
+			{ctor: '_Tuple2', _0: '&#x3B;', _1: ';'},
+			{ctor: '_Tuple2', _0: '&#x3C;', _1: '<'},
+			{ctor: '_Tuple2', _0: '&#x3D;', _1: '='},
+			{ctor: '_Tuple2', _0: '&#x3E;', _1: '>'},
+			{ctor: '_Tuple2', _0: '&#x3F;', _1: '?'},
+			{ctor: '_Tuple2', _0: '&#x40;', _1: '@'},
+			{ctor: '_Tuple2', _0: '&#x41;', _1: 'A'},
+			{ctor: '_Tuple2', _0: '&#x42;', _1: 'B'},
+			{ctor: '_Tuple2', _0: '&#x43;', _1: 'C'},
+			{ctor: '_Tuple2', _0: '&#x44;', _1: 'D'},
+			{ctor: '_Tuple2', _0: '&#x45;', _1: 'E'},
+			{ctor: '_Tuple2', _0: '&#x46;', _1: 'F'},
+			{ctor: '_Tuple2', _0: '&#x47;', _1: 'G'},
+			{ctor: '_Tuple2', _0: '&#x48;', _1: 'H'},
+			{ctor: '_Tuple2', _0: '&#x49;', _1: 'I'},
+			{ctor: '_Tuple2', _0: '&#x4A;', _1: 'J'},
+			{ctor: '_Tuple2', _0: '&#x4B;', _1: 'K'},
+			{ctor: '_Tuple2', _0: '&#x4C;', _1: 'L'},
+			{ctor: '_Tuple2', _0: '&#x4D;', _1: 'M'},
+			{ctor: '_Tuple2', _0: '&#x4E;', _1: 'N'},
+			{ctor: '_Tuple2', _0: '&#x4F;', _1: 'O'},
+			{ctor: '_Tuple2', _0: '&#x50;', _1: 'P'},
+			{ctor: '_Tuple2', _0: '&#x51;', _1: 'Q'},
+			{ctor: '_Tuple2', _0: '&#x52;', _1: 'R'},
+			{ctor: '_Tuple2', _0: '&#x53;', _1: 'S'},
+			{ctor: '_Tuple2', _0: '&#x54;', _1: 'T'},
+			{ctor: '_Tuple2', _0: '&#x55;', _1: 'U'},
+			{ctor: '_Tuple2', _0: '&#x56;', _1: 'V'},
+			{ctor: '_Tuple2', _0: '&#x57;', _1: 'W'},
+			{ctor: '_Tuple2', _0: '&#x58;', _1: 'X'},
+			{ctor: '_Tuple2', _0: '&#x59;', _1: 'Y'},
+			{ctor: '_Tuple2', _0: '&#x5A;', _1: 'Z'},
+			{ctor: '_Tuple2', _0: '&#x5B;', _1: '['},
+			{ctor: '_Tuple2', _0: '&#x5C;', _1: '\\'},
+			{ctor: '_Tuple2', _0: '&#x5D;', _1: ']'},
+			{ctor: '_Tuple2', _0: '&#x5E;', _1: '^'},
+			{ctor: '_Tuple2', _0: '&#x5F;', _1: '_'},
+			{ctor: '_Tuple2', _0: '&#x60;', _1: '`'},
+			{ctor: '_Tuple2', _0: '&#x61;', _1: 'a'},
+			{ctor: '_Tuple2', _0: '&#x62;', _1: 'b'},
+			{ctor: '_Tuple2', _0: '&#x63;', _1: 'c'},
+			{ctor: '_Tuple2', _0: '&#x64;', _1: 'd'},
+			{ctor: '_Tuple2', _0: '&#x65;', _1: 'e'},
+			{ctor: '_Tuple2', _0: '&#x66;', _1: 'f'},
+			{ctor: '_Tuple2', _0: '&#x67;', _1: 'g'},
+			{ctor: '_Tuple2', _0: '&#x68;', _1: 'h'},
+			{ctor: '_Tuple2', _0: '&#x69;', _1: 'i'},
+			{ctor: '_Tuple2', _0: '&#x6A;', _1: 'j'},
+			{ctor: '_Tuple2', _0: '&#x6B;', _1: 'k'},
+			{ctor: '_Tuple2', _0: '&#x6C;', _1: 'l'},
+			{ctor: '_Tuple2', _0: '&#x6D;', _1: 'm'},
+			{ctor: '_Tuple2', _0: '&#x6E;', _1: 'n'},
+			{ctor: '_Tuple2', _0: '&#x6F;', _1: 'o'},
+			{ctor: '_Tuple2', _0: '&#x70;', _1: 'p'},
+			{ctor: '_Tuple2', _0: '&#x71;', _1: 'q'},
+			{ctor: '_Tuple2', _0: '&#x72;', _1: 'r'},
+			{ctor: '_Tuple2', _0: '&#x73;', _1: 's'},
+			{ctor: '_Tuple2', _0: '&#x74;', _1: 't'},
+			{ctor: '_Tuple2', _0: '&#x75;', _1: 'u'},
+			{ctor: '_Tuple2', _0: '&#x76;', _1: 'v'},
+			{ctor: '_Tuple2', _0: '&#x77;', _1: 'w'},
+			{ctor: '_Tuple2', _0: '&#x78;', _1: 'x'},
+			{ctor: '_Tuple2', _0: '&#x79;', _1: 'y'},
+			{ctor: '_Tuple2', _0: '&#x7A;', _1: 'z'},
+			{ctor: '_Tuple2', _0: '&#x7B;', _1: '{'},
+			{ctor: '_Tuple2', _0: '&#x7C;', _1: '|'},
+			{ctor: '_Tuple2', _0: '&#x7D;', _1: '}'},
+			{ctor: '_Tuple2', _0: '&#x7E;', _1: '~'},
+			{ctor: '_Tuple2', _0: '&#xA0;', _1: ' '},
+			{ctor: '_Tuple2', _0: '&#xA1;', _1: '¡'},
+			{ctor: '_Tuple2', _0: '&#xA2;', _1: '¢'},
+			{ctor: '_Tuple2', _0: '&#xA3;', _1: '£'},
+			{ctor: '_Tuple2', _0: '&#xA4;', _1: '¤'},
+			{ctor: '_Tuple2', _0: '&#xA5;', _1: '¥'},
+			{ctor: '_Tuple2', _0: '&#xA6;', _1: '¦'},
+			{ctor: '_Tuple2', _0: '&#xA7;', _1: '§'},
+			{ctor: '_Tuple2', _0: '&#xA8;', _1: '¨'},
+			{ctor: '_Tuple2', _0: '&#xA9;', _1: '©'},
+			{ctor: '_Tuple2', _0: '&#xAA;', _1: 'ª'},
+			{ctor: '_Tuple2', _0: '&#xAB;', _1: '«'},
+			{ctor: '_Tuple2', _0: '&#xAC;', _1: '¬'},
+			{ctor: '_Tuple2', _0: '&#xAD;', _1: ''},
+			{ctor: '_Tuple2', _0: '&#xAE;', _1: '®'},
+			{ctor: '_Tuple2', _0: '&#xAF;', _1: '¯'},
+			{ctor: '_Tuple2', _0: '&#xB0;', _1: '°'},
+			{ctor: '_Tuple2', _0: '&#xB1;', _1: '±'},
+			{ctor: '_Tuple2', _0: '&#xB2;', _1: '²'},
+			{ctor: '_Tuple2', _0: '&#xB3;', _1: '³'},
+			{ctor: '_Tuple2', _0: '&#xB4;', _1: '´'},
+			{ctor: '_Tuple2', _0: '&#xB5;', _1: 'µ'},
+			{ctor: '_Tuple2', _0: '&#xB6;', _1: '¶'},
+			{ctor: '_Tuple2', _0: '&#xB7;', _1: '·'},
+			{ctor: '_Tuple2', _0: '&#xB8;', _1: '¸'},
+			{ctor: '_Tuple2', _0: '&#xB9;', _1: '¹'},
+			{ctor: '_Tuple2', _0: '&#xBA;', _1: 'º'},
+			{ctor: '_Tuple2', _0: '&#xBB;', _1: '»'},
+			{ctor: '_Tuple2', _0: '&#xBC;', _1: '¼'},
+			{ctor: '_Tuple2', _0: '&#xBD;', _1: '½'},
+			{ctor: '_Tuple2', _0: '&#xBE;', _1: '¾'},
+			{ctor: '_Tuple2', _0: '&#xBF;', _1: '¿'},
+			{ctor: '_Tuple2', _0: '&#xC0;', _1: 'À'},
+			{ctor: '_Tuple2', _0: '&#xC1;', _1: 'Á'},
+			{ctor: '_Tuple2', _0: '&#xC2;', _1: 'Â'},
+			{ctor: '_Tuple2', _0: '&#xC3;', _1: 'Ã'},
+			{ctor: '_Tuple2', _0: '&#xC4;', _1: 'Ä'},
+			{ctor: '_Tuple2', _0: '&#xC5;', _1: 'Å'},
+			{ctor: '_Tuple2', _0: '&#xC6;', _1: 'Æ'},
+			{ctor: '_Tuple2', _0: '&#xC7;', _1: 'Ç'},
+			{ctor: '_Tuple2', _0: '&#xC8;', _1: 'È'},
+			{ctor: '_Tuple2', _0: '&#xC9;', _1: 'É'},
+			{ctor: '_Tuple2', _0: '&#xCA;', _1: 'Ê'},
+			{ctor: '_Tuple2', _0: '&#xCB;', _1: 'Ë'},
+			{ctor: '_Tuple2', _0: '&#xCC;', _1: 'Ì'},
+			{ctor: '_Tuple2', _0: '&#xCD;', _1: 'Í'},
+			{ctor: '_Tuple2', _0: '&#xCE;', _1: 'Î'},
+			{ctor: '_Tuple2', _0: '&#xCF;', _1: 'Ï'},
+			{ctor: '_Tuple2', _0: '&#xD0;', _1: 'Ð'},
+			{ctor: '_Tuple2', _0: '&#xD1;', _1: 'Ñ'},
+			{ctor: '_Tuple2', _0: '&#xD2;', _1: 'Ò'},
+			{ctor: '_Tuple2', _0: '&#xD3;', _1: 'Ó'},
+			{ctor: '_Tuple2', _0: '&#xD4;', _1: 'Ô'},
+			{ctor: '_Tuple2', _0: '&#xD5;', _1: 'Õ'},
+			{ctor: '_Tuple2', _0: '&#xD6;', _1: 'Ö'},
+			{ctor: '_Tuple2', _0: '&#xD7;', _1: '×'},
+			{ctor: '_Tuple2', _0: '&#xD8;', _1: 'Ø'},
+			{ctor: '_Tuple2', _0: '&#xD9;', _1: 'Ù'},
+			{ctor: '_Tuple2', _0: '&#xDA;', _1: 'Ú'},
+			{ctor: '_Tuple2', _0: '&#xDB;', _1: 'Û'},
+			{ctor: '_Tuple2', _0: '&#xDC;', _1: 'Ü'},
+			{ctor: '_Tuple2', _0: '&#xDD;', _1: 'Ý'},
+			{ctor: '_Tuple2', _0: '&#xDE;', _1: 'Þ'},
+			{ctor: '_Tuple2', _0: '&#xDF;', _1: 'ß'},
+			{ctor: '_Tuple2', _0: '&#xE0;', _1: 'à'},
+			{ctor: '_Tuple2', _0: '&#xE1;', _1: 'á'},
+			{ctor: '_Tuple2', _0: '&#xE2;', _1: 'â'},
+			{ctor: '_Tuple2', _0: '&#xE3;', _1: 'ã'},
+			{ctor: '_Tuple2', _0: '&#xE4;', _1: 'ä'},
+			{ctor: '_Tuple2', _0: '&#xE5;', _1: 'å'},
+			{ctor: '_Tuple2', _0: '&#xE6;', _1: 'æ'},
+			{ctor: '_Tuple2', _0: '&#xE7;', _1: 'ç'},
+			{ctor: '_Tuple2', _0: '&#xE8;', _1: 'è'},
+			{ctor: '_Tuple2', _0: '&#xE9;', _1: 'é'},
+			{ctor: '_Tuple2', _0: '&#xEA;', _1: 'ê'},
+			{ctor: '_Tuple2', _0: '&#xEB;', _1: 'ë'},
+			{ctor: '_Tuple2', _0: '&#xEC;', _1: 'ì'},
+			{ctor: '_Tuple2', _0: '&#xED;', _1: 'í'},
+			{ctor: '_Tuple2', _0: '&#xEE;', _1: 'î'},
+			{ctor: '_Tuple2', _0: '&#xEF;', _1: 'ï'},
+			{ctor: '_Tuple2', _0: '&#xF0;', _1: 'ð'},
+			{ctor: '_Tuple2', _0: '&#xF1;', _1: 'ñ'},
+			{ctor: '_Tuple2', _0: '&#xF2;', _1: 'ò'},
+			{ctor: '_Tuple2', _0: '&#xF3;', _1: 'ó'},
+			{ctor: '_Tuple2', _0: '&#xF4;', _1: 'ô'},
+			{ctor: '_Tuple2', _0: '&#xF5;', _1: 'õ'},
+			{ctor: '_Tuple2', _0: '&#xF6;', _1: 'ö'},
+			{ctor: '_Tuple2', _0: '&#xF7;', _1: '÷'},
+			{ctor: '_Tuple2', _0: '&#xF8;', _1: 'ø'},
+			{ctor: '_Tuple2', _0: '&#xF9;', _1: 'ù'},
+			{ctor: '_Tuple2', _0: '&#xFA;', _1: 'ú'},
+			{ctor: '_Tuple2', _0: '&#xFB;', _1: 'û'},
+			{ctor: '_Tuple2', _0: '&#xFC;', _1: 'ü'},
+			{ctor: '_Tuple2', _0: '&#xFD;', _1: 'ý'},
+			{ctor: '_Tuple2', _0: '&#xFE;', _1: 'þ'},
+			{ctor: '_Tuple2', _0: '&#xFF;', _1: 'ÿ'},
+			{ctor: '_Tuple2', _0: '&#x100;', _1: 'Ā'},
+			{ctor: '_Tuple2', _0: '&#x101;', _1: 'ā'},
+			{ctor: '_Tuple2', _0: '&#x102;', _1: 'Ă'},
+			{ctor: '_Tuple2', _0: '&#x103;', _1: 'ă'},
+			{ctor: '_Tuple2', _0: '&#x104;', _1: 'Ą'},
+			{ctor: '_Tuple2', _0: '&#x105;', _1: 'ą'},
+			{ctor: '_Tuple2', _0: '&#x106;', _1: 'Ć'},
+			{ctor: '_Tuple2', _0: '&#x107;', _1: 'ć'},
+			{ctor: '_Tuple2', _0: '&#x108;', _1: 'Ĉ'},
+			{ctor: '_Tuple2', _0: '&#x109;', _1: 'ĉ'},
+			{ctor: '_Tuple2', _0: '&#x10A;', _1: 'Ċ'},
+			{ctor: '_Tuple2', _0: '&#x10B;', _1: 'ċ'},
+			{ctor: '_Tuple2', _0: '&#x10C;', _1: 'Č'},
+			{ctor: '_Tuple2', _0: '&#x10D;', _1: 'č'},
+			{ctor: '_Tuple2', _0: '&#x10E;', _1: 'Ď'},
+			{ctor: '_Tuple2', _0: '&#x10F;', _1: 'ď'},
+			{ctor: '_Tuple2', _0: '&#x110;', _1: 'Đ'},
+			{ctor: '_Tuple2', _0: '&#x111;', _1: 'đ'},
+			{ctor: '_Tuple2', _0: '&#x112;', _1: 'Ē'},
+			{ctor: '_Tuple2', _0: '&#x113;', _1: 'ē'},
+			{ctor: '_Tuple2', _0: '&#x114;', _1: 'Ĕ'},
+			{ctor: '_Tuple2', _0: '&#x115;', _1: 'ĕ'},
+			{ctor: '_Tuple2', _0: '&#x116;', _1: 'Ė'},
+			{ctor: '_Tuple2', _0: '&#x117;', _1: 'ė'},
+			{ctor: '_Tuple2', _0: '&#x118;', _1: 'Ę'},
+			{ctor: '_Tuple2', _0: '&#x119;', _1: 'ę'},
+			{ctor: '_Tuple2', _0: '&#x11A;', _1: 'Ě'},
+			{ctor: '_Tuple2', _0: '&#x11B;', _1: 'ě'},
+			{ctor: '_Tuple2', _0: '&#x11C;', _1: 'Ĝ'},
+			{ctor: '_Tuple2', _0: '&#x11D;', _1: 'ĝ'},
+			{ctor: '_Tuple2', _0: '&#x11E;', _1: 'Ğ'},
+			{ctor: '_Tuple2', _0: '&#x11F;', _1: 'ğ'},
+			{ctor: '_Tuple2', _0: '&#x120;', _1: 'Ġ'},
+			{ctor: '_Tuple2', _0: '&#x121;', _1: 'ġ'},
+			{ctor: '_Tuple2', _0: '&#x122;', _1: 'Ģ'},
+			{ctor: '_Tuple2', _0: '&#x123;', _1: 'ģ'},
+			{ctor: '_Tuple2', _0: '&#x124;', _1: 'Ĥ'},
+			{ctor: '_Tuple2', _0: '&#x125;', _1: 'ĥ'},
+			{ctor: '_Tuple2', _0: '&#x126;', _1: 'Ħ'},
+			{ctor: '_Tuple2', _0: '&#x127;', _1: 'ħ'},
+			{ctor: '_Tuple2', _0: '&#x128;', _1: 'Ĩ'},
+			{ctor: '_Tuple2', _0: '&#x129;', _1: 'ĩ'},
+			{ctor: '_Tuple2', _0: '&#x12A;', _1: 'Ī'},
+			{ctor: '_Tuple2', _0: '&#x12B;', _1: 'ī'},
+			{ctor: '_Tuple2', _0: '&#x12C;', _1: 'Ĭ'},
+			{ctor: '_Tuple2', _0: '&#x12D;', _1: 'ĭ'},
+			{ctor: '_Tuple2', _0: '&#x12E;', _1: 'Į'},
+			{ctor: '_Tuple2', _0: '&#x12F;', _1: 'į'},
+			{ctor: '_Tuple2', _0: '&#x130;', _1: 'İ'},
+			{ctor: '_Tuple2', _0: '&#x131;', _1: 'ı'},
+			{ctor: '_Tuple2', _0: '&#x132;', _1: 'Ĳ'},
+			{ctor: '_Tuple2', _0: '&#x133;', _1: 'ĳ'},
+			{ctor: '_Tuple2', _0: '&#x134;', _1: 'Ĵ'},
+			{ctor: '_Tuple2', _0: '&#x135;', _1: 'ĵ'},
+			{ctor: '_Tuple2', _0: '&#x136;', _1: 'Ķ'},
+			{ctor: '_Tuple2', _0: '&#x137;', _1: 'ķ'},
+			{ctor: '_Tuple2', _0: '&#x138;', _1: 'ĸ'},
+			{ctor: '_Tuple2', _0: '&#x139;', _1: 'Ĺ'},
+			{ctor: '_Tuple2', _0: '&#x13A;', _1: 'ĺ'},
+			{ctor: '_Tuple2', _0: '&#x13B;', _1: 'Ļ'},
+			{ctor: '_Tuple2', _0: '&#x13C;', _1: 'ļ'},
+			{ctor: '_Tuple2', _0: '&#x13D;', _1: 'Ľ'},
+			{ctor: '_Tuple2', _0: '&#x13E;', _1: 'ľ'},
+			{ctor: '_Tuple2', _0: '&#x13F;', _1: 'Ŀ'},
+			{ctor: '_Tuple2', _0: '&#x140;', _1: 'ŀ'},
+			{ctor: '_Tuple2', _0: '&#x141;', _1: 'Ł'},
+			{ctor: '_Tuple2', _0: '&#x142;', _1: 'ł'},
+			{ctor: '_Tuple2', _0: '&#x143;', _1: 'Ń'},
+			{ctor: '_Tuple2', _0: '&#x144;', _1: 'ń'},
+			{ctor: '_Tuple2', _0: '&#x145;', _1: 'Ņ'},
+			{ctor: '_Tuple2', _0: '&#x146;', _1: 'ņ'},
+			{ctor: '_Tuple2', _0: '&#x147;', _1: 'Ň'},
+			{ctor: '_Tuple2', _0: '&#x148;', _1: 'ň'},
+			{ctor: '_Tuple2', _0: '&#x149;', _1: 'ŉ'},
+			{ctor: '_Tuple2', _0: '&#x14A;', _1: 'Ŋ'},
+			{ctor: '_Tuple2', _0: '&#x14B;', _1: 'ŋ'},
+			{ctor: '_Tuple2', _0: '&#x14C;', _1: 'Ō'},
+			{ctor: '_Tuple2', _0: '&#x14D;', _1: 'ō'},
+			{ctor: '_Tuple2', _0: '&#x14E;', _1: 'Ŏ'},
+			{ctor: '_Tuple2', _0: '&#x14F;', _1: 'ŏ'},
+			{ctor: '_Tuple2', _0: '&#x150;', _1: 'Ő'},
+			{ctor: '_Tuple2', _0: '&#x151;', _1: 'ő'},
+			{ctor: '_Tuple2', _0: '&#x152;', _1: 'Œ'},
+			{ctor: '_Tuple2', _0: '&#x153;', _1: 'œ'},
+			{ctor: '_Tuple2', _0: '&#x154;', _1: 'Ŕ'},
+			{ctor: '_Tuple2', _0: '&#x155;', _1: 'ŕ'},
+			{ctor: '_Tuple2', _0: '&#x156;', _1: 'Ŗ'},
+			{ctor: '_Tuple2', _0: '&#x157;', _1: 'ŗ'},
+			{ctor: '_Tuple2', _0: '&#x158;', _1: 'Ř'},
+			{ctor: '_Tuple2', _0: '&#x159;', _1: 'ř'},
+			{ctor: '_Tuple2', _0: '&#x15A;', _1: 'Ś'},
+			{ctor: '_Tuple2', _0: '&#x15B;', _1: 'ś'},
+			{ctor: '_Tuple2', _0: '&#x15C;', _1: 'Ŝ'},
+			{ctor: '_Tuple2', _0: '&#x15D;', _1: 'ŝ'},
+			{ctor: '_Tuple2', _0: '&#x15E;', _1: 'Ş'},
+			{ctor: '_Tuple2', _0: '&#x15F;', _1: 'ş'},
+			{ctor: '_Tuple2', _0: '&#x160;', _1: 'Š'},
+			{ctor: '_Tuple2', _0: '&#x161;', _1: 'š'},
+			{ctor: '_Tuple2', _0: '&#x162;', _1: 'Ţ'},
+			{ctor: '_Tuple2', _0: '&#x163;', _1: 'ţ'},
+			{ctor: '_Tuple2', _0: '&#x164;', _1: 'Ť'},
+			{ctor: '_Tuple2', _0: '&#x165;', _1: 'ť'},
+			{ctor: '_Tuple2', _0: '&#x166;', _1: 'Ŧ'},
+			{ctor: '_Tuple2', _0: '&#x167;', _1: 'ŧ'},
+			{ctor: '_Tuple2', _0: '&#x168;', _1: 'Ũ'},
+			{ctor: '_Tuple2', _0: '&#x169;', _1: 'ũ'},
+			{ctor: '_Tuple2', _0: '&#x16A;', _1: 'Ū'},
+			{ctor: '_Tuple2', _0: '&#x16B;', _1: 'ū'},
+			{ctor: '_Tuple2', _0: '&#x16C;', _1: 'Ŭ'},
+			{ctor: '_Tuple2', _0: '&#x16D;', _1: 'ŭ'},
+			{ctor: '_Tuple2', _0: '&#x16E;', _1: 'Ů'},
+			{ctor: '_Tuple2', _0: '&#x16F;', _1: 'ů'},
+			{ctor: '_Tuple2', _0: '&#x170;', _1: 'Ű'},
+			{ctor: '_Tuple2', _0: '&#x171;', _1: 'ű'},
+			{ctor: '_Tuple2', _0: '&#x172;', _1: 'Ų'},
+			{ctor: '_Tuple2', _0: '&#x173;', _1: 'ų'},
+			{ctor: '_Tuple2', _0: '&#x174;', _1: 'Ŵ'},
+			{ctor: '_Tuple2', _0: '&#x175;', _1: 'ŵ'},
+			{ctor: '_Tuple2', _0: '&#x176;', _1: 'Ŷ'},
+			{ctor: '_Tuple2', _0: '&#x177;', _1: 'ŷ'},
+			{ctor: '_Tuple2', _0: '&#x178;', _1: 'Ÿ'},
+			{ctor: '_Tuple2', _0: '&#x179;', _1: 'Ź'},
+			{ctor: '_Tuple2', _0: '&#x17A;', _1: 'ź'},
+			{ctor: '_Tuple2', _0: '&#x17B;', _1: 'Ż'},
+			{ctor: '_Tuple2', _0: '&#x17C;', _1: 'ż'},
+			{ctor: '_Tuple2', _0: '&#x17D;', _1: 'Ž'},
+			{ctor: '_Tuple2', _0: '&#x17E;', _1: 'ž'},
+			{ctor: '_Tuple2', _0: '&#x17F;', _1: 'ſ'},
+			{ctor: '_Tuple2', _0: '&#x154;', _1: 'Ŕ'},
+			{ctor: '_Tuple2', _0: '&#x155;', _1: 'ŕ'},
+			{ctor: '_Tuple2', _0: '&#x156;', _1: 'Ŗ'},
+			{ctor: '_Tuple2', _0: '&#x157;', _1: 'ŗ'},
+			{ctor: '_Tuple2', _0: '&#x158;', _1: 'Ř'},
+			{ctor: '_Tuple2', _0: '&#x159;', _1: 'ř'},
+			{ctor: '_Tuple2', _0: '&#x15A;', _1: 'Ś'},
+			{ctor: '_Tuple2', _0: '&#x15B;', _1: 'ś'},
+			{ctor: '_Tuple2', _0: '&#x15C;', _1: 'Ŝ'},
+			{ctor: '_Tuple2', _0: '&#x15D;', _1: 'ŝ'},
+			{ctor: '_Tuple2', _0: '&#x15E;', _1: 'Ş'},
+			{ctor: '_Tuple2', _0: '&#x15F;', _1: 'ş'},
+			{ctor: '_Tuple2', _0: '&#x160;', _1: 'Š'},
+			{ctor: '_Tuple2', _0: '&#x161;', _1: 'š'},
+			{ctor: '_Tuple2', _0: '&#x162;', _1: 'Ţ'},
+			{ctor: '_Tuple2', _0: '&#x163;', _1: 'ţ'},
+			{ctor: '_Tuple2', _0: '&#x164;', _1: 'Ť'},
+			{ctor: '_Tuple2', _0: '&#x241;', _1: 'ť'},
+			{ctor: '_Tuple2', _0: '&#x166;', _1: 'Ŧ'},
+			{ctor: '_Tuple2', _0: '&#x167;', _1: 'ŧ'},
+			{ctor: '_Tuple2', _0: '&#x168;', _1: 'Ũ'},
+			{ctor: '_Tuple2', _0: '&#x169;', _1: 'ũ'},
+			{ctor: '_Tuple2', _0: '&#x16A;', _1: 'Ū'},
+			{ctor: '_Tuple2', _0: '&#x16B;', _1: 'ū'},
+			{ctor: '_Tuple2', _0: '&#x16C;', _1: 'Ŭ'},
+			{ctor: '_Tuple2', _0: '&#x16D;', _1: 'ŭ'},
+			{ctor: '_Tuple2', _0: '&#x16E;', _1: 'Ů'},
+			{ctor: '_Tuple2', _0: '&#x16F;', _1: 'ů'},
+			{ctor: '_Tuple2', _0: '&#x170;', _1: 'Ű'},
+			{ctor: '_Tuple2', _0: '&#x171;', _1: 'ű'},
+			{ctor: '_Tuple2', _0: '&#x172;', _1: 'Ų'},
+			{ctor: '_Tuple2', _0: '&#x173;', _1: 'ų'},
+			{ctor: '_Tuple2', _0: '&#x174;', _1: 'Ŵ'},
+			{ctor: '_Tuple2', _0: '&#x175;', _1: 'ŵ'},
+			{ctor: '_Tuple2', _0: '&#x176;', _1: 'Ŷ'},
+			{ctor: '_Tuple2', _0: '&#x177;', _1: 'ŷ'},
+			{ctor: '_Tuple2', _0: '&#x178;', _1: 'Ÿ'},
+			{ctor: '_Tuple2', _0: '&#x179;', _1: 'Ź'},
+			{ctor: '_Tuple2', _0: '&#x17A;', _1: 'ź'},
+			{ctor: '_Tuple2', _0: '&#x17B;', _1: 'Ż'},
+			{ctor: '_Tuple2', _0: '&#x17C;', _1: 'ż'},
+			{ctor: '_Tuple2', _0: '&#x17D;', _1: 'Ž'},
+			{ctor: '_Tuple2', _0: '&#x17E;', _1: 'ž'},
+			{ctor: '_Tuple2', _0: '&#x17F;', _1: 'ſ'},
+			{ctor: '_Tuple2', _0: '&euro;', _1: '€'},
+			{ctor: '_Tuple2', _0: '&nbsp;', _1: ' '},
+			{ctor: '_Tuple2', _0: '&quot;', _1: '\"'},
+			{ctor: '_Tuple2', _0: '&amp;', _1: '&'},
+			{ctor: '_Tuple2', _0: '&lt;', _1: '<'},
+			{ctor: '_Tuple2', _0: '&gt;', _1: '>'},
+			{ctor: '_Tuple2', _0: '&nbsp;', _1: ' '},
+			{ctor: '_Tuple2', _0: '&iexcl;', _1: '¡'},
+			{ctor: '_Tuple2', _0: '&cent;', _1: '¢'},
+			{ctor: '_Tuple2', _0: '&pound;', _1: '£'},
+			{ctor: '_Tuple2', _0: '&curren;', _1: '¤'},
+			{ctor: '_Tuple2', _0: '&yen;', _1: '¥'},
+			{ctor: '_Tuple2', _0: '&brvbar;', _1: '¦'},
+			{ctor: '_Tuple2', _0: '&sect;', _1: '§'},
+			{ctor: '_Tuple2', _0: '&uml;', _1: '¨'},
+			{ctor: '_Tuple2', _0: '&copy;', _1: '©'},
+			{ctor: '_Tuple2', _0: '&ordf;', _1: 'ª'},
+			{ctor: '_Tuple2', _0: '&not;', _1: '¬'},
+			{ctor: '_Tuple2', _0: '&shy;', _1: ''},
+			{ctor: '_Tuple2', _0: '&reg;', _1: '®'},
+			{ctor: '_Tuple2', _0: '&macr;', _1: '¯'},
+			{ctor: '_Tuple2', _0: '&deg;', _1: '°'},
+			{ctor: '_Tuple2', _0: '&plusmn;', _1: '±'},
+			{ctor: '_Tuple2', _0: '&sup2;', _1: '²'},
+			{ctor: '_Tuple2', _0: '&sup3;', _1: '³'},
+			{ctor: '_Tuple2', _0: '&acute;', _1: '´'},
+			{ctor: '_Tuple2', _0: '&micro;', _1: 'µ'},
+			{ctor: '_Tuple2', _0: '&para;', _1: '¶'},
+			{ctor: '_Tuple2', _0: '&middot;', _1: '·'},
+			{ctor: '_Tuple2', _0: '&cedil;', _1: '¸'},
+			{ctor: '_Tuple2', _0: '&sup1;', _1: '¹'},
+			{ctor: '_Tuple2', _0: '&ordm;', _1: 'º'},
+			{ctor: '_Tuple2', _0: '&raquo;', _1: '»'},
+			{ctor: '_Tuple2', _0: '&frac14;', _1: '¼'},
+			{ctor: '_Tuple2', _0: '&frac12;', _1: '½'},
+			{ctor: '_Tuple2', _0: '&frac34;', _1: '¾'},
+			{ctor: '_Tuple2', _0: '&iquest;', _1: '¿'},
+			{ctor: '_Tuple2', _0: '&Agrave;', _1: 'À'},
+			{ctor: '_Tuple2', _0: '&Aacute;', _1: 'Á'},
+			{ctor: '_Tuple2', _0: '&Acirc;', _1: 'Â'},
+			{ctor: '_Tuple2', _0: '&Atilde;', _1: 'Ã'},
+			{ctor: '_Tuple2', _0: '&Auml;', _1: 'Ä'},
+			{ctor: '_Tuple2', _0: '&Aring;', _1: 'Å'},
+			{ctor: '_Tuple2', _0: '&AElig;', _1: 'Æ'},
+			{ctor: '_Tuple2', _0: '&Ccedil;', _1: 'Ç'},
+			{ctor: '_Tuple2', _0: '&Egrave;', _1: 'È'},
+			{ctor: '_Tuple2', _0: '&Eacute;', _1: 'É'},
+			{ctor: '_Tuple2', _0: '&Ecirc;', _1: 'Ê'},
+			{ctor: '_Tuple2', _0: '&Euml;', _1: 'Ë'},
+			{ctor: '_Tuple2', _0: '&Igrave;', _1: 'Ì'},
+			{ctor: '_Tuple2', _0: '&Iacute;', _1: 'Í'},
+			{ctor: '_Tuple2', _0: '&Icirc;', _1: 'Î'},
+			{ctor: '_Tuple2', _0: '&Iuml;', _1: 'Ï'},
+			{ctor: '_Tuple2', _0: '&ETH;', _1: 'Ð'},
+			{ctor: '_Tuple2', _0: '&Ntilde;', _1: 'Ñ'},
+			{ctor: '_Tuple2', _0: '&Ograve;', _1: 'Ò'},
+			{ctor: '_Tuple2', _0: '&Oacute;', _1: 'Ó'},
+			{ctor: '_Tuple2', _0: '&Ocirc;', _1: 'Ô'},
+			{ctor: '_Tuple2', _0: '&Otilde;', _1: 'Õ'},
+			{ctor: '_Tuple2', _0: '&Ouml;', _1: 'Ö'},
+			{ctor: '_Tuple2', _0: '&times;', _1: '×'},
+			{ctor: '_Tuple2', _0: '&Oslash;', _1: 'Ø'},
+			{ctor: '_Tuple2', _0: '&Ugrave;', _1: 'Ù'},
+			{ctor: '_Tuple2', _0: '&Uacute;', _1: 'Ú'},
+			{ctor: '_Tuple2', _0: '&Ucirc;', _1: 'Û'},
+			{ctor: '_Tuple2', _0: '&Uuml;', _1: 'Ü'},
+			{ctor: '_Tuple2', _0: '&Yacute;', _1: 'Ý'},
+			{ctor: '_Tuple2', _0: '&THORN;', _1: 'Þ'},
+			{ctor: '_Tuple2', _0: '&szlig;', _1: 'ß'},
+			{ctor: '_Tuple2', _0: '&agrave;', _1: 'à'},
+			{ctor: '_Tuple2', _0: '&aacute;', _1: 'á'},
+			{ctor: '_Tuple2', _0: '&acirc;', _1: 'â'},
+			{ctor: '_Tuple2', _0: '&atilde;', _1: 'ã'},
+			{ctor: '_Tuple2', _0: '&auml;', _1: 'ä'},
+			{ctor: '_Tuple2', _0: '&aring;', _1: 'å'},
+			{ctor: '_Tuple2', _0: '&aelig;', _1: 'æ'},
+			{ctor: '_Tuple2', _0: '&ccedil;', _1: 'ç'},
+			{ctor: '_Tuple2', _0: '&egrave;', _1: 'è'},
+			{ctor: '_Tuple2', _0: '&eacute;', _1: 'é'},
+			{ctor: '_Tuple2', _0: '&ecirc;', _1: 'ê'},
+			{ctor: '_Tuple2', _0: '&euml;', _1: 'ë'},
+			{ctor: '_Tuple2', _0: '&igrave;', _1: 'ì'},
+			{ctor: '_Tuple2', _0: '&iacute;', _1: 'í'},
+			{ctor: '_Tuple2', _0: '&icirc;', _1: 'î'},
+			{ctor: '_Tuple2', _0: '&iuml;', _1: 'ï'},
+			{ctor: '_Tuple2', _0: '&eth;', _1: 'ð'},
+			{ctor: '_Tuple2', _0: '&ntilde;', _1: 'ñ'},
+			{ctor: '_Tuple2', _0: '&ograve;', _1: 'ò'},
+			{ctor: '_Tuple2', _0: '&oacute;', _1: 'ó'},
+			{ctor: '_Tuple2', _0: '&ocirc;', _1: 'ô'},
+			{ctor: '_Tuple2', _0: '&otilde;', _1: 'õ'},
+			{ctor: '_Tuple2', _0: '&ouml;', _1: 'ö'},
+			{ctor: '_Tuple2', _0: '&divide;', _1: '÷'},
+			{ctor: '_Tuple2', _0: '&oslash;', _1: 'ø'},
+			{ctor: '_Tuple2', _0: '&ugrave;', _1: 'ù'},
+			{ctor: '_Tuple2', _0: '&uacute;', _1: 'ú'},
+			{ctor: '_Tuple2', _0: '&ucirc;', _1: 'û'},
+			{ctor: '_Tuple2', _0: '&uuml;', _1: 'ü'},
+			{ctor: '_Tuple2', _0: '&yacute;', _1: 'ý'},
+			{ctor: '_Tuple2', _0: '&thorn;', _1: 'þ'}
+		]));
+
+var _jinjor$elm_html_parser$HtmlParser_ops = _jinjor$elm_html_parser$HtmlParser_ops || {};
+_jinjor$elm_html_parser$HtmlParser_ops['*>'] = F2(
+	function (lp, rp) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			A2(
+				_Bogdanp$elm_combine$Combine$map,
+				_elm_lang$core$Basics$flip(_elm_lang$core$Basics$always),
+				lp),
+			rp);
+	});
+var _jinjor$elm_html_parser$HtmlParser$attributeValueEntityString = function (quote) {
+	return _Bogdanp$elm_combine$Combine$regex(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'[^<^&^',
+			A2(_elm_lang$core$Basics_ops['++'], quote, ']*')));
+};
+var _jinjor$elm_html_parser$HtmlParser$textNodeNonEntityString = _Bogdanp$elm_combine$Combine$regex('[^<^&]*');
+var _jinjor$elm_html_parser$HtmlParser$entityString = A2(
+	_Bogdanp$elm_combine$Combine$map,
+	function (code) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			code,
+			A2(_elm_lang$core$Dict$get, code, _jinjor$elm_html_parser$Escape$dict));
+	},
+	_Bogdanp$elm_combine$Combine$regex('&[#0-9a-zA-Z]*;'));
+var _jinjor$elm_html_parser$HtmlParser$attributeString = function (quote) {
+	return A2(
+		_Bogdanp$elm_combine$Combine$map,
+		function (list) {
+			return A2(_elm_lang$core$String$join, '', list);
+		},
+		_Bogdanp$elm_combine$Combine$many(
+			A2(
+				_Bogdanp$elm_combine$Combine$or,
+				_jinjor$elm_html_parser$HtmlParser$entityString,
+				_jinjor$elm_html_parser$HtmlParser$attributeValueEntityString(quote))));
+};
+var _jinjor$elm_html_parser$HtmlParser$textNodeString = A2(
+	_Bogdanp$elm_combine$Combine$map,
+	function (list) {
+		return A2(_elm_lang$core$String$join, '', list);
+	},
+	_Bogdanp$elm_combine$Combine$many(
+		A2(_Bogdanp$elm_combine$Combine$or, _jinjor$elm_html_parser$HtmlParser$entityString, _jinjor$elm_html_parser$HtmlParser$textNodeNonEntityString)));
+var _jinjor$elm_html_parser$HtmlParser$ngSetForP = _elm_lang$core$Set$fromList(
+	_elm_lang$core$Native_List.fromArray(
+		['address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'main', 'menu', 'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul']));
+var _jinjor$elm_html_parser$HtmlParser$isInvalidNest = F2(
+	function (tagName, childTagName) {
+		return (_elm_lang$core$Native_Utils.eq(tagName, 'head') && _elm_lang$core$Native_Utils.eq(childTagName, 'body')) || ((_elm_lang$core$Native_Utils.eq(tagName, 'li') && _elm_lang$core$Native_Utils.eq(childTagName, 'li')) || ((_elm_lang$core$Native_Utils.eq(tagName, 'dt') && (_elm_lang$core$Native_Utils.eq(childTagName, 'dt') || _elm_lang$core$Native_Utils.eq(childTagName, 'dd'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'dd') && (_elm_lang$core$Native_Utils.eq(childTagName, 'dt') || _elm_lang$core$Native_Utils.eq(childTagName, 'dd'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'p') && A2(_elm_lang$core$Set$member, childTagName, _jinjor$elm_html_parser$HtmlParser$ngSetForP)) || ((_elm_lang$core$Native_Utils.eq(tagName, 'rt') && (_elm_lang$core$Native_Utils.eq(childTagName, 'rt') || _elm_lang$core$Native_Utils.eq(childTagName, 'rp'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'rp') && (_elm_lang$core$Native_Utils.eq(childTagName, 'rt') || _elm_lang$core$Native_Utils.eq(childTagName, 'rp'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'optgroup') && _elm_lang$core$Native_Utils.eq(childTagName, 'optgroup')) || ((_elm_lang$core$Native_Utils.eq(tagName, 'option') && (_elm_lang$core$Native_Utils.eq(childTagName, 'option') || _elm_lang$core$Native_Utils.eq(childTagName, 'optgroup'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'colgroup') && (!_elm_lang$core$Native_Utils.eq(childTagName, 'col'))) || (_elm_lang$core$Native_Utils.eq(tagName, 'caption') || ((_elm_lang$core$Native_Utils.eq(tagName, 'thead') && (_elm_lang$core$Native_Utils.eq(childTagName, 'tbody') || _elm_lang$core$Native_Utils.eq(childTagName, 'tfoot'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'tbody') && (_elm_lang$core$Native_Utils.eq(childTagName, 'tbody') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tfoot') || _elm_lang$core$Native_Utils.eq(childTagName, 'table')))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'tfoot') && _elm_lang$core$Native_Utils.eq(childTagName, 'table')) || ((_elm_lang$core$Native_Utils.eq(tagName, 'tr') && (_elm_lang$core$Native_Utils.eq(childTagName, 'tr') || (_elm_lang$core$Native_Utils.eq(childTagName, 'thead') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tbody') || _elm_lang$core$Native_Utils.eq(childTagName, 'tfoot'))))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'td') && (_elm_lang$core$Native_Utils.eq(childTagName, 'td') || (_elm_lang$core$Native_Utils.eq(childTagName, 'th') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tr') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tbody') || _elm_lang$core$Native_Utils.eq(childTagName, 'tfoot')))))) || (_elm_lang$core$Native_Utils.eq(tagName, 'th') && (_elm_lang$core$Native_Utils.eq(childTagName, 'td') || (_elm_lang$core$Native_Utils.eq(childTagName, 'th') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tr') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tbody') || _elm_lang$core$Native_Utils.eq(childTagName, 'tfoot')))))))))))))))))))));
+	});
+var _jinjor$elm_html_parser$HtmlParser$optionalEndTag = _elm_lang$core$Set$fromList(
+	_elm_lang$core$Native_List.fromArray(
+		['li', 'dt', 'dd', 'p', 'rt', 'rp', 'optgroup', 'option', 'colgroup', 'caption', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th']));
+var _jinjor$elm_html_parser$HtmlParser$startTagOnly = _elm_lang$core$Set$fromList(
+	_elm_lang$core$Native_List.fromArray(
+		['br', 'img', 'hr', 'meta', 'input', 'embed', 'area', 'base', 'col', 'keygen', 'link', 'param', 'source', 'command', 'link', 'track', 'wbr']));
+var _jinjor$elm_html_parser$HtmlParser$attributeBareValue = _Bogdanp$elm_combine$Combine$regex('[^ ^`^\"^\'^<^>^=^\n^\r^\t]+');
+var _jinjor$elm_html_parser$HtmlParser$attributeQuotedValue = A2(
+	_Bogdanp$elm_combine$Combine$or,
+	A3(
+		_Bogdanp$elm_combine$Combine$between,
+		_Bogdanp$elm_combine$Combine$string('\"'),
+		_Bogdanp$elm_combine$Combine$string('\"'),
+		_jinjor$elm_html_parser$HtmlParser$attributeString('\"')),
+	A3(
+		_Bogdanp$elm_combine$Combine$between,
+		_Bogdanp$elm_combine$Combine$string('\''),
+		_Bogdanp$elm_combine$Combine$string('\''),
+		_jinjor$elm_html_parser$HtmlParser$attributeString('\'')));
+var _jinjor$elm_html_parser$HtmlParser$attributeValue = A2(_Bogdanp$elm_combine$Combine$or, _jinjor$elm_html_parser$HtmlParser$attributeQuotedValue, _jinjor$elm_html_parser$HtmlParser$attributeBareValue);
+var _jinjor$elm_html_parser$HtmlParser$attributeName = A2(
+	_Bogdanp$elm_combine$Combine$map,
+	_elm_lang$core$String$toLower,
+	_Bogdanp$elm_combine$Combine$regex('[a-zA-Z][a-zA-Z0-9:\\-]*'));
+var _jinjor$elm_html_parser$HtmlParser$tagName = A2(
+	_Bogdanp$elm_combine$Combine$map,
+	_elm_lang$core$String$toLower,
+	_Bogdanp$elm_combine$Combine$regex('[a-zA-Z][a-zA-Z0-9\\-]*'));
+var _jinjor$elm_html_parser$HtmlParser$spaces1 = _Bogdanp$elm_combine$Combine$regex('[ \t\r\n]+');
+var _jinjor$elm_html_parser$HtmlParser$spaces = _Bogdanp$elm_combine$Combine$regex('[ \t\r\n]*');
+var _jinjor$elm_html_parser$HtmlParser$spaced = function (p) {
+	return A3(_Bogdanp$elm_combine$Combine$between, _jinjor$elm_html_parser$HtmlParser$spaces, _jinjor$elm_html_parser$HtmlParser$spaces, p);
+};
+var _jinjor$elm_html_parser$HtmlParser$attributeNameValuePair = A2(
+	_Bogdanp$elm_combine$Combine$andMap,
+	A2(
+		_Bogdanp$elm_combine$Combine$andMap,
+		A2(
+			_Bogdanp$elm_combine$Combine$map,
+			F3(
+				function (name, _p0, value) {
+					return {ctor: '_Tuple2', _0: name, _1: value};
+				}),
+			_jinjor$elm_html_parser$HtmlParser$attributeName),
+		A3(
+			_Bogdanp$elm_combine$Combine$between,
+			_jinjor$elm_html_parser$HtmlParser$spaces,
+			_jinjor$elm_html_parser$HtmlParser$spaces,
+			_Bogdanp$elm_combine$Combine$string('='))),
+	_jinjor$elm_html_parser$HtmlParser$attributeValue);
+var _jinjor$elm_html_parser$HtmlParser$attribute = A2(
+	_Bogdanp$elm_combine$Combine$or,
+	_jinjor$elm_html_parser$HtmlParser$attributeNameValuePair,
+	A2(
+		_Bogdanp$elm_combine$Combine$map,
+		A2(
+			_elm_lang$core$Basics$flip,
+			F2(
+				function (v0, v1) {
+					return {ctor: '_Tuple2', _0: v0, _1: v1};
+				}),
+			''),
+		_jinjor$elm_html_parser$HtmlParser$attributeName));
+var _jinjor$elm_html_parser$HtmlParser$startTag = A2(
+	_Bogdanp$elm_combine$Combine$andMap,
+	A2(
+		_Bogdanp$elm_combine$Combine$andMap,
+		A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			A2(
+				_Bogdanp$elm_combine$Combine$map,
+				F4(
+					function (_p2, tagName, attrs, _p1) {
+						return {ctor: '_Tuple2', _0: tagName, _1: attrs};
+					}),
+				_Bogdanp$elm_combine$Combine$string('<')),
+			_jinjor$elm_html_parser$HtmlParser$tagName),
+		A3(
+			_Bogdanp$elm_combine$Combine$between,
+			_jinjor$elm_html_parser$HtmlParser$spaces,
+			_jinjor$elm_html_parser$HtmlParser$spaces,
+			A2(_Bogdanp$elm_combine$Combine$sepBy, _jinjor$elm_html_parser$HtmlParser$spaces, _jinjor$elm_html_parser$HtmlParser$attribute))),
+	_Bogdanp$elm_combine$Combine$string('>'));
+var _jinjor$elm_html_parser$HtmlParser$generalEndTag = A2(
+	_Bogdanp$elm_combine$Combine$andMap,
+	A2(
+		_Bogdanp$elm_combine$Combine$andMap,
+		A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			A2(
+				_Bogdanp$elm_combine$Combine$map,
+				F4(
+					function (_p5, tagName, _p4, _p3) {
+						return tagName;
+					}),
+				_Bogdanp$elm_combine$Combine$string('</')),
+			_jinjor$elm_html_parser$HtmlParser$tagName),
+		_jinjor$elm_html_parser$HtmlParser$spaces),
+	_Bogdanp$elm_combine$Combine$string('>'));
+var _jinjor$elm_html_parser$HtmlParser$endTag = function (tagName) {
+	return A2(
+		_Bogdanp$elm_combine$Combine$andThen,
+		_jinjor$elm_html_parser$HtmlParser$generalEndTag,
+		function (endTagName) {
+			return _elm_lang$core$Native_Utils.eq(tagName, endTagName) ? _Bogdanp$elm_combine$Combine$succeed(
+				{ctor: '_Tuple0'}) : _Bogdanp$elm_combine$Combine$fail(
+				_elm_lang$core$Native_List.fromArray(
+					[]));
+		});
+};
+var _jinjor$elm_html_parser$HtmlParser$singleTag = _Bogdanp$elm_combine$Combine$rec(
+	function (_p6) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			A2(
+				_Bogdanp$elm_combine$Combine$andMap,
+				A2(
+					_Bogdanp$elm_combine$Combine$andMap,
+					A2(
+						_Bogdanp$elm_combine$Combine$map,
+						F4(
+							function (_p8, tagName, attrs, _p7) {
+								return {ctor: '_Tuple2', _0: tagName, _1: attrs};
+							}),
+						_Bogdanp$elm_combine$Combine$string('<')),
+					_jinjor$elm_html_parser$HtmlParser$tagName),
+				A3(
+					_Bogdanp$elm_combine$Combine$between,
+					_jinjor$elm_html_parser$HtmlParser$spaces,
+					_jinjor$elm_html_parser$HtmlParser$spaces,
+					A2(_Bogdanp$elm_combine$Combine$sepBy, _jinjor$elm_html_parser$HtmlParser$spaces, _jinjor$elm_html_parser$HtmlParser$attribute))),
+			_Bogdanp$elm_combine$Combine$string('/>'));
+	});
+var _jinjor$elm_html_parser$HtmlParser$Comment = function (a) {
+	return {ctor: 'Comment', _0: a};
+};
+var _jinjor$elm_html_parser$HtmlParser$untilCommentEnd = A2(
+	_Bogdanp$elm_combine$Combine$map,
+	_jinjor$elm_html_parser$HtmlParser$Comment,
+	A2(
+		_Bogdanp$elm_combine$Combine$map,
+		_elm_lang$core$String$fromList,
+		A2(
+			_Bogdanp$elm_combine$Combine$manyTill,
+			_Bogdanp$elm_combine$Combine_Char$anyChar,
+			_Bogdanp$elm_combine$Combine$string('-->'))));
+var _jinjor$elm_html_parser$HtmlParser$commentNode = A2(
+	_jinjor$elm_html_parser$HtmlParser_ops['*>'],
+	_Bogdanp$elm_combine$Combine$string('<!--'),
+	_jinjor$elm_html_parser$HtmlParser$untilCommentEnd);
+var _jinjor$elm_html_parser$HtmlParser$Element = F3(
+	function (a, b, c) {
+		return {ctor: 'Element', _0: a, _1: b, _2: c};
+	});
+var _jinjor$elm_html_parser$HtmlParser$doctypeNode = A2(
+	_Bogdanp$elm_combine$Combine$map,
+	function (_p9) {
+		return A3(
+			_jinjor$elm_html_parser$HtmlParser$Element,
+			'!DOCTYPE',
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	},
+	_Bogdanp$elm_combine$Combine$regex('<!DOCTYPE [^>]*>'));
+var _jinjor$elm_html_parser$HtmlParser$singleNode = A2(
+	_Bogdanp$elm_combine$Combine$map,
+	function (_p10) {
+		var _p11 = _p10;
+		return A3(
+			_jinjor$elm_html_parser$HtmlParser$Element,
+			_p11._0,
+			_p11._1,
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	},
+	_jinjor$elm_html_parser$HtmlParser$singleTag);
+var _jinjor$elm_html_parser$HtmlParser$Text = function (a) {
+	return {ctor: 'Text', _0: a};
+};
+var _jinjor$elm_html_parser$HtmlParser$textNode = A2(_Bogdanp$elm_combine$Combine$map, _jinjor$elm_html_parser$HtmlParser$Text, _jinjor$elm_html_parser$HtmlParser$textNodeString);
+var _jinjor$elm_html_parser$HtmlParser$untilScriptEnd = function (tagName) {
+	return _Bogdanp$elm_combine$Combine$rec(
+		function (_p12) {
+			return A2(
+				_Bogdanp$elm_combine$Combine$map,
+				function (_p13) {
+					var _p14 = _p13;
+					var _p16 = _p14._0;
+					var _p15 = _p14._1;
+					return _elm_lang$core$Native_Utils.eq(_p16, '') ? _p15 : A2(
+						_elm_lang$core$List_ops['::'],
+						_jinjor$elm_html_parser$HtmlParser$Text(_p16),
+						_p15);
+				},
+				_jinjor$elm_html_parser$HtmlParser$untilScriptEndHelp(tagName));
+		});
+};
+var _jinjor$elm_html_parser$HtmlParser$untilScriptEndHelp = function (tagName) {
+	return _Bogdanp$elm_combine$Combine$rec(
+		function (_p17) {
+			return A2(
+				_Bogdanp$elm_combine$Combine$andThen,
+				_Bogdanp$elm_combine$Combine$regex('[^<]*'),
+				function (s) {
+					return A2(
+						_Bogdanp$elm_combine$Combine$or,
+						A2(
+							_Bogdanp$elm_combine$Combine$or,
+							A2(
+								_Bogdanp$elm_combine$Combine$andMap,
+								A2(
+									_Bogdanp$elm_combine$Combine$andMap,
+									A2(
+										_Bogdanp$elm_combine$Combine$map,
+										F3(
+											function (_p18, comment, rest) {
+												return {
+													ctor: '_Tuple2',
+													_0: s,
+													_1: A2(_elm_lang$core$List_ops['::'], comment, rest)
+												};
+											}),
+										_Bogdanp$elm_combine$Combine$string('<!--')),
+									_jinjor$elm_html_parser$HtmlParser$untilCommentEnd),
+								_jinjor$elm_html_parser$HtmlParser$untilScriptEnd(tagName)),
+							A2(
+								_Bogdanp$elm_combine$Combine$map,
+								function (_p19) {
+									return {
+										ctor: '_Tuple2',
+										_0: s,
+										_1: _elm_lang$core$Native_List.fromArray(
+											[])
+									};
+								},
+								_jinjor$elm_html_parser$HtmlParser$endTag(tagName))),
+						A2(
+							_Bogdanp$elm_combine$Combine$andMap,
+							A2(
+								_Bogdanp$elm_combine$Combine$map,
+								F2(
+									function (lt, _p20) {
+										var _p21 = _p20;
+										return {
+											ctor: '_Tuple2',
+											_0: A2(
+												_elm_lang$core$Basics_ops['++'],
+												s,
+												A2(_elm_lang$core$Basics_ops['++'], lt, _p21._0)),
+											_1: _p21._1
+										};
+									}),
+								_Bogdanp$elm_combine$Combine$string('<')),
+							_jinjor$elm_html_parser$HtmlParser$untilScriptEndHelp(tagName)));
+				});
+		});
+};
+var _jinjor$elm_html_parser$HtmlParser$normalNode = function (parentTagName) {
+	return _Bogdanp$elm_combine$Combine$rec(
+		function (_p22) {
+			return A2(
+				_Bogdanp$elm_combine$Combine$andThen,
+				_jinjor$elm_html_parser$HtmlParser$startTag,
+				function (_p23) {
+					var _p24 = _p23;
+					var _p26 = _p24._0;
+					var _p25 = _p24._1;
+					return (_elm_lang$core$Native_Utils.eq(_p26, 'script') || _elm_lang$core$Native_Utils.eq(_p26, 'style')) ? A2(
+						_Bogdanp$elm_combine$Combine$map,
+						function (children) {
+							return A3(_jinjor$elm_html_parser$HtmlParser$Element, _p26, _p25, children);
+						},
+						_jinjor$elm_html_parser$HtmlParser$untilScriptEnd(_p26)) : (A2(_jinjor$elm_html_parser$HtmlParser$isInvalidNest, parentTagName, _p26) ? _Bogdanp$elm_combine$Combine$fail(
+						_elm_lang$core$Native_List.fromArray(
+							[])) : (A2(_elm_lang$core$Set$member, _p26, _jinjor$elm_html_parser$HtmlParser$startTagOnly) ? _Bogdanp$elm_combine$Combine$succeed(
+						A3(
+							_jinjor$elm_html_parser$HtmlParser$Element,
+							_p26,
+							_p25,
+							_elm_lang$core$Native_List.fromArray(
+								[]))) : A2(
+						_Bogdanp$elm_combine$Combine$map,
+						function (children) {
+							return A3(_jinjor$elm_html_parser$HtmlParser$Element, _p26, _p25, children);
+						},
+						_jinjor$elm_html_parser$HtmlParser$untilEndTag(_p26))));
+				});
+		});
+};
+var _jinjor$elm_html_parser$HtmlParser$untilEndTag = function (tagName) {
+	return _Bogdanp$elm_combine$Combine$rec(
+		function (_p27) {
+			return A2(
+				_Bogdanp$elm_combine$Combine$andMap,
+				A2(
+					_Bogdanp$elm_combine$Combine$map,
+					F2(
+						function (children1, children2) {
+							return A2(_elm_lang$core$Basics_ops['++'], children1, children2);
+						}),
+					_Bogdanp$elm_combine$Combine$many(
+						_jinjor$elm_html_parser$HtmlParser$node(tagName))),
+				A2(
+					_Bogdanp$elm_combine$Combine$optional,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					A2(
+						_Bogdanp$elm_combine$Combine$andThen,
+						_jinjor$elm_html_parser$HtmlParser$generalEndTag,
+						function (endTagName) {
+							return _elm_lang$core$Native_Utils.eq(tagName, endTagName) ? _Bogdanp$elm_combine$Combine$succeed(
+								_elm_lang$core$Native_List.fromArray(
+									[])) : _jinjor$elm_html_parser$HtmlParser$untilEndTag(tagName);
+						})));
+		});
+};
+var _jinjor$elm_html_parser$HtmlParser$node = function (parentTagName) {
+	return _Bogdanp$elm_combine$Combine$rec(
+		function (_p28) {
+			return A2(
+				_Bogdanp$elm_combine$Combine$or,
+				A2(
+					_Bogdanp$elm_combine$Combine$or,
+					A2(
+						_Bogdanp$elm_combine$Combine$or,
+						A2(_Bogdanp$elm_combine$Combine$or, _jinjor$elm_html_parser$HtmlParser$doctypeNode, _jinjor$elm_html_parser$HtmlParser$singleNode),
+						_jinjor$elm_html_parser$HtmlParser$normalNode(parentTagName)),
+					_jinjor$elm_html_parser$HtmlParser$commentNode),
+				_jinjor$elm_html_parser$HtmlParser$textNode);
+		});
+};
+var _jinjor$elm_html_parser$HtmlParser$nodesAndEnd = A2(
+	_Bogdanp$elm_combine$Combine$andMap,
+	A2(
+		_Bogdanp$elm_combine$Combine$map,
+		F2(
+			function (nodes, _p29) {
+				return nodes;
+			}),
+		_jinjor$elm_html_parser$HtmlParser$untilEndTag('')),
+	_Bogdanp$elm_combine$Combine$end);
+var _jinjor$elm_html_parser$HtmlParser$parse = function (s) {
+	var _p30 = _elm_lang$core$Basics$fst(
+		A2(_Bogdanp$elm_combine$Combine$parse, _jinjor$elm_html_parser$HtmlParser$nodesAndEnd, s));
+	if (_p30.ctor === 'Ok') {
+		return _p30._0;
+	} else {
+		return _elm_lang$core$Native_List.fromArray(
+			[]);
+	}
+};
+
 var _user$project$Constants$constants = {email: 'info@campinglequebecois.qc.ca', phone: '(450) 788-2680'};
 
 var _user$project$Tabs$update = F2(
@@ -14120,9 +16515,9 @@ var _user$project$Tabs$update = F2(
 				};
 		}
 	});
-var _user$project$Tabs$defaultTab = {url: '', parent: '', title: 'prout'};
+var _user$project$Tabs$defaultTab = {url: '', parent: '', title: ''};
 var _user$project$Tabs$model = function (tabs$) {
-	return {current: 'news', tabs: tabs$, mdl: _debois$elm_mdl$Material$model};
+	return {current: 'index', tabs: tabs$, mdl: _debois$elm_mdl$Material$model};
 };
 var _user$project$Tabs$Model = F3(
 	function (a, b, c) {
@@ -14261,26 +16656,55 @@ var _user$project$JsonDecoder$extractTabs = function (tabs) {
 		return _p0._0;
 	}
 };
-var _user$project$JsonDecoder$BackendData = F3(
-	function (a, b, c) {
-		return {lang: a, tabs: b, content: c};
+var _user$project$JsonDecoder$BackendData = F5(
+	function (a, b, c, d, e) {
+		return {lang: a, tabs: b, content: c, title: d, url: e};
 	});
-var _user$project$JsonDecoder$decodeData = A4(
-	_elm_lang$core$Json_Decode$object3,
+var _user$project$JsonDecoder$decodeData = A6(
+	_elm_lang$core$Json_Decode$object5,
 	_user$project$JsonDecoder$BackendData,
 	_elm_lang$core$Json_Decode$maybe(
 		A2(_elm_lang$core$Json_Decode_ops[':='], 'lang', _elm_lang$core$Json_Decode$string)),
 	_elm_lang$core$Json_Decode$maybe(
 		A2(_elm_lang$core$Json_Decode_ops[':='], 'tabs', _user$project$JsonDecoder$decodeTabs)),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'content', _elm_lang$core$Json_Decode$string));
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'content', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'title', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string));
 
+var _user$project$Main$htmlAttributesToElm = function (attrs) {
+	return A2(
+		_elm_lang$core$List$map,
+		function (_p0) {
+			var _p1 = _p0;
+			return A2(_elm_lang$html$Html_Attributes$attribute, _p1._0, _p1._1);
+		},
+		attrs);
+};
+var _user$project$Main$htmlNodesToElm = function (htmlList) {
+	return A2(_elm_lang$core$List$map, _user$project$Main$htmlNodeToElm, htmlList);
+};
+var _user$project$Main$htmlNodeToElm = function (node) {
+	var _p2 = node;
+	switch (_p2.ctor) {
+		case 'Text':
+			return _elm_lang$html$Html$text(_p2._0);
+		case 'Element':
+			var children$ = _user$project$Main$htmlNodesToElm(_p2._2);
+			var attrs = _user$project$Main$htmlAttributesToElm(_p2._1);
+			return A3(_elm_lang$html$Html$node, _p2._0, attrs, children$);
+		default:
+			return _elm_lang$html$Html$text('');
+	}
+};
 var _user$project$Main$boxed = _elm_lang$core$Native_List.fromArray(
 	[
 		A2(_debois$elm_mdl$Material_Options$css, 'margin', 'auto'),
 		A2(_debois$elm_mdl$Material_Options$css, 'padding-left', '8%'),
 		A2(_debois$elm_mdl$Material_Options$css, 'padding-right', '8%')
 	]);
-var _user$project$Main$viewBody = function (model) {
+var _user$project$Main$viewBody = function (page) {
+	var htmlContent = _user$project$Main$htmlNodesToElm(
+		_jinjor$elm_html_parser$HtmlParser$parse(page.content));
 	return A2(
 		_debois$elm_mdl$Material_Options$div,
 		_user$project$Main$boxed,
@@ -14298,71 +16722,24 @@ var _user$project$Main$viewBody = function (model) {
 							[
 								A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12)
 							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html$text(model.current)
-							]))
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_elm_lang$core$Native_List.fromArray(
+								[
+									A2(
+									_elm_lang$html$Html$h3,
+									_elm_lang$core$Native_List.fromArray(
+										[]),
+									_elm_lang$core$Native_List.fromArray(
+										[
+											_elm_lang$html$Html$text(page.title)
+										]))
+								]),
+							htmlContent))
 					]))
 			]));
 };
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'Mdl':
-				return A2(_debois$elm_mdl$Material$update, _p0._0, model);
-			case 'Nop':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'TabMsg':
-				var _p1 = A2(_user$project$Tabs$update, _p0._0, model.tabs);
-				var tabs$ = _p1._0;
-				var cmd$ = _p1._1;
-				var url = _p1._2;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{tabs: tabs$, current: url}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'NavTabs':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'FetchSucceed':
-				var _p4 = _p0._0;
-				var two = A2(_elm_lang$core$Debug$log, 'siteurl', _p4.tabs);
-				var one = A2(_elm_lang$core$Debug$log, 'lang', _p4.lang);
-				var tabs$ = function () {
-					var _p2 = _p4.tabs;
-					if (_p2.ctor === 'Nothing') {
-						return _elm_lang$core$Native_List.fromArray(
-							[]);
-					} else {
-						return _p2._0;
-					}
-				}();
-				var lang$ = function () {
-					var _p3 = _p4.lang;
-					if (_p3.ctor === 'Nothing') {
-						return 'fr';
-					} else {
-						return _p3._0;
-					}
-				}();
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							lang: lang$,
-							tabs: _user$project$Tabs$model(tabs$),
-							content: _p4.content
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		}
-	});
+var _user$project$Main$defaultPage = {title: '', url: 'index', content: ''};
 var _user$project$Main$model = {
 	mdl: _debois$elm_mdl$Material$model,
 	tabs: _user$project$Tabs$model(
@@ -14370,8 +16747,7 @@ var _user$project$Main$model = {
 			[])),
 	siteurl: '',
 	lang: 'fr',
-	content: 'Nothing',
-	current: ''
+	current: _user$project$Main$defaultPage
 };
 var _user$project$Main$Page = F3(
 	function (a, b, c) {
@@ -14381,9 +16757,9 @@ var _user$project$Main$Languages = F2(
 	function (a, b) {
 		return {currentLang: a, otherLang: b};
 	});
-var _user$project$Main$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {mdl: a, tabs: b, siteurl: c, lang: d, content: e, current: f};
+var _user$project$Main$Model = F5(
+	function (a, b, c, d, e) {
+		return {mdl: a, tabs: b, siteurl: c, lang: d, current: e};
 	});
 var _user$project$Main$Flags = function (a) {
 	return {siteurl: a};
@@ -14456,6 +16832,70 @@ var _user$project$Main$getData = F3(
 var _user$project$Main$getInit = function (siteurl) {
 	return A3(_user$project$Main$getData, siteurl, 'init', _user$project$JsonDecoder$decodeData);
 };
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
+			case 'Mdl':
+				return A2(_debois$elm_mdl$Material$update, _p3._0, model);
+			case 'Nop':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'TabMsg':
+				var _p4 = A2(_user$project$Tabs$update, _p3._0, model.tabs);
+				var tabs$ = _p4._0;
+				var cmd$ = _p4._1;
+				var url = _p4._2;
+				var cmd = (!_elm_lang$core$Native_Utils.eq(url, '')) ? A3(_user$project$Main$getData, model.siteurl, url, _user$project$JsonDecoder$decodeData) : _elm_lang$core$Platform_Cmd$none;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{tabs: tabs$}),
+					_1: _elm_lang$core$Platform_Cmd$batch(
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$TabMsg, cmd$),
+								cmd
+							]))
+				};
+			case 'NavTabs':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'FetchSucceed':
+				var _p7 = _p3._0;
+				var two = A2(_elm_lang$core$Debug$log, 'siteurl', _p7.tabs);
+				var one = A2(_elm_lang$core$Debug$log, 'lang', _p7.lang);
+				var page = {url: _p7.url, content: _p7.content, title: _p7.title};
+				var tabs$ = function () {
+					var _p5 = _p7.tabs;
+					if (_p5.ctor === 'Nothing') {
+						return _elm_lang$core$Basics$not(
+							_elm_lang$core$List$isEmpty(model.tabs.tabs)) ? model.tabs : _user$project$Tabs$model(
+							_elm_lang$core$Native_List.fromArray(
+								[]));
+					} else {
+						return _user$project$Tabs$model(_p5._0);
+					}
+				}();
+				var lang$ = function () {
+					var _p6 = _p7.lang;
+					if (_p6.ctor === 'Nothing') {
+						return 'fr';
+					} else {
+						return _p6._0;
+					}
+				}();
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{lang: lang$, tabs: tabs$, current: page}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				var one = A2(_elm_lang$core$Debug$log, 'err', _p3._0);
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
 var _user$project$Main$NavTabs = function (a) {
 	return {ctor: 'NavTabs', _0: a};
 };
@@ -14483,7 +16923,7 @@ var _user$project$Main$view$ = function (model) {
 			},
 			main: _elm_lang$core$Native_List.fromArray(
 				[
-					_user$project$Main$viewBody(model)
+					_user$project$Main$viewBody(model.current)
 				])
 		});
 };

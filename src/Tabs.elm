@@ -21,7 +21,7 @@ type alias Model =
 
 model : List Tab -> Model
 model tabs' =
-    { current = "news"
+    { current = "index"
     , tabs = tabs'
     , mdl = Material.model
     }
@@ -38,7 +38,7 @@ defaultTab : Tab
 defaultTab =
     { url = ""
     , parent = ""
-    , title = "prout"
+    , title = ""
     }
 
 
