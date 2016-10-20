@@ -1,16 +1,7 @@
-module JsonDecoder exposing (extractTabs, decodeData, BackendData)
+module JsonDecoder exposing (extractTabs, decodeData)
 
 import Json.Decode as Json exposing ((:=))
-import Tabs exposing (Tab)
-
-
-type alias BackendData =
-    { lang : Maybe String
-    , tabs : Maybe (List Tab)
-    , content : String
-    , title : String
-    , url : String
-    }
+import Types exposing (Tab, BackendData, initLanguages, Languages, Page)
 
 
 extractTabs : Json.Value -> List Tab
@@ -26,7 +17,7 @@ extractTabs tabs =
                     Debug.log "err" msg
 
                 default =
-                    Tabs.defaultTab
+                    Types.defaultTab
             in
                 [ { default | title = "error" } ]
 
@@ -41,22 +32,27 @@ decodeTabs =
 
 decodeTab : Json.Decoder Tab
 decodeTab =
-    Json.object3 Tab
+    Json.object2 Tab
         ("url" := Json.string)
-        ("parent" := Json.string)
         ("title" := Json.string)
 
 
-decodeInit : Json.Decoder String
-decodeInit =
-    Json.at [ "lang" ] Json.string
+decodeLanguages : Json.Decoder Languages
+decodeLanguages =
+    Json.object1 initLanguages <| Json.list Json.string
+
+
+decodePage : Json.Decoder Page
+decodePage =
+    Json.object3 Page
+        ("title" := Json.string)
+        ("content" := Json.string)
+        (Json.maybe <| "children" := decodeTabs)
 
 
 decodeData : Json.Decoder BackendData
 decodeData =
-    Json.object5 BackendData
-        (Json.maybe ("lang" := Json.string))
-        (Json.maybe ("tabs" := decodeTabs))
-        ("content" := Json.string)
-        ("title" := Json.string)
-        ("url" := Json.string)
+    Json.object3 BackendData
+        (Json.maybe <| "langs" := decodeLanguages)
+        (Json.maybe <| "tabs" := decodeTabs)
+        ("page" := decodePage)

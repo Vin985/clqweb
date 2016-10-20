@@ -49,13 +49,13 @@ define('GSCHMOD', 0664);
 #define('GSEDITORHEIGHT', '400');
 
 # WYSIWYG toolbars (advanced, basic or [custom config])
-#define('GSEDITORTOOL', 'advanced');
+define('GSEDITORTOOL', 'advanced');
 
 # WYSIWYG editor language (default en)
 #define('GSEDITORLANG', 'en');
 
 # WYSIWYG Editor Options
-#define('GSEDITOROPTIONS', '');
+define('GSEDITOROPTIONS', "extraPlugins: 'markdown'");
 
 # Set email from address
 #define('GSFROMEMAIL', 'noreply@get-simple.info');

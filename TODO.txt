@@ -1,10 +1,8 @@
 Elm
- *** Navigation:
-        - trouver bonne url
-        - gerer current correctement
-        - charger les donnees
+*** Menu mobile
+*** modules getSimple/Elm
 *** Changement de langue
-** Chargement donnees : utiliser page?
+
 
 
 Ajouter des photos!!!

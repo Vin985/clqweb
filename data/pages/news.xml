@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<item><pubDate>Sun, 28 Feb 2016 16:03:46 -0500</pubDate><title><![CDATA[Nouvelles]]></title><url><![CDATA[news]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><template><![CDATA[template.php]]></template><content><![CDATA[]]></content><author><![CDATA[admin]]></author><parent><![CDATA[]]></parent><menu><![CDATA[]]></menu><menuStatus><![CDATA[Y]]></menuStatus><private><![CDATA[]]></private><menuOrder><![CDATA[3]]></menuOrder></item>
+<item><pubDate>Sun, 02 Oct 2016 09:40:17 -0400</pubDate><title><![CDATA[Nouvelles]]></title><url><![CDATA[news]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Nouvelles]]></menu><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[]]></parent><content><![CDATA[&lt;p&gt;{% banner &quot;image.png&quot; %}&lt;/p&gt;
+&lt;p&gt;hello world&lt;/p&gt;
+]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author><menuOrder><![CDATA[3]]></menuOrder></item>

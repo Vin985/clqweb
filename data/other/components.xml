@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<channel><item><title><![CDATA[calendar]]></title><slug>calendar</slug><value><![CDATA[&lt;?php 
+<channel><item><title><![CDATA[banner]]></title><slug>banner</slug><value><![CDATA[&lt;banner src=&quot;&lt;?php echo $args[0] ?&gt;&quot; /&gt;]]></value></item><item><title><![CDATA[calendar]]></title><slug>calendar</slug><value><![CDATA[&lt;?php 
 display_calendar();
 ?&gt;]]></value></item><item><title><![CDATA[Navbar]]></title><slug>navbar</slug><value><![CDATA[&lt;div class=&quot;navitem &lt;?php echo $item-&gt;classes; ?&gt;&quot;&gt;
   &lt;a href=&quot;&lt;?php echo htmlspecialchars($item-&gt;link); ?&gt;&quot; &gt;
@@ -36,7 +36,7 @@ display_calendar();
 &lt;li&gt;Growing community&lt;/li&gt; 
 &lt;/ul&gt;
 &lt;p&gt;This is your sidebar text. Please change me in &lt;em&gt;Theme -&gt; Edit Components&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;http://get-simple.info/download/&quot;&gt;Download the Latest GetSimple&lt;/a&gt;&lt;/p&gt;]]></value></item><item><title><![CDATA[Tagline]]></title><slug>tagline</slug><value><![CDATA[Just Another GetSimple Website]]></value></item><item><title><![CDATA[Tarifs]]></title><slug>tarifs</slug><value><![CDATA[&lt;b&gt;Voici nos tarifs pour la saison 2016:&lt;/b&gt;
+&lt;p&gt;&lt;a href=&quot;http://get-simple.info/download/&quot;&gt;Download the Latest GetSimple&lt;/a&gt;&lt;/p&gt;]]></value></item><item><title><![CDATA[Tarifs]]></title><slug>tarifs</slug><value><![CDATA[&lt;b&gt;Voici nos tarifs pour la saison 2016:&lt;/b&gt;
 &lt;?php 
 display_rates();
 ?&gt;]]></value></item></channel>

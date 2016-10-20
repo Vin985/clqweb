@@ -29,7 +29,7 @@
     <!-- elm -->
     <script src="<?php get_theme_url(); ?>/js/elm.js"></script>
     <script>
-      var app = Elm.Main.fullscreen({"siteurl" : '<?php get_site_url(); ?>'});
+      var app = Elm.Main.fullscreen({"siteUrl" : '<?php get_site_url(); ?>'});
     /*  app.ports.getSlug.subscribe(function (test) {
         console.log(test);
       setTimeout(function(){ app.ports.slug.send("<?php get_page_title(); ?>"); }, 0);

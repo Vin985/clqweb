@@ -1,73 +1,38 @@
-module Tabs exposing (Model, model, Tab, view, defaultTab, Msg, update)
+module Tabs exposing (view)
 
 import Material.Icon as Icon
 import Material.Options exposing (css)
-import Material.Menu as Menu
-import Material
 import Html exposing (..)
 import Html exposing (..)
 import Material.Layout as Layout
 import Material.Options as Options exposing (css, when, cs, nop)
 import String exposing (..)
-import Constants exposing (constants)
+import Messages exposing (..)
+import Types exposing (Tabs, Tab, defaultTab)
 
 
-type alias Model =
-    { current : String
-    , tabs : List Tab
-    , mdl : Material.Model
-    }
+{-
+   update : Msg -> Model -> ( Model, Cmd Msg, String )
+   update msg model =
+       case msg of
+           -- When the `Mdl` messages come through, update appropriately.
+           Mdl msg' ->
+               let
+                   ( updated, cmd ) =
+                       Material.update msg' model
+               in
+                   ( updated, cmd, "" )
+
+           Nop ->
+               ( model, Cmd.none, "" )
+
+           ChangePage url ->
+               ( { model | current = url }, Cmd.none, url )
+-}
 
 
-model : List Tab -> Model
-model tabs' =
-    { current = "index"
-    , tabs = tabs'
-    , mdl = Material.model
-    }
-
-
-type alias Tab =
-    { url : String
-    , parent : String
-    , title : String
-    }
-
-
-defaultTab : Tab
-defaultTab =
-    { url = ""
-    , parent = ""
-    , title = ""
-    }
-
-
-type Msg
-    = Mdl (Material.Msg Msg)
-    | Nop
-    | ChangePage String
-
-
-update : Msg -> Model -> ( Model, Cmd Msg, String )
-update msg model =
-    case msg of
-        -- When the `Mdl` messages come through, update appropriately.
-        Mdl msg' ->
-            let
-                ( updated, cmd ) =
-                    Material.update msg' model
-            in
-                ( updated, cmd, "" )
-
-        Nop ->
-            ( model, Cmd.none, "" )
-
-        ChangePage url ->
-            ( { model | current = url }, Cmd.none, url )
-
-
-view : Model -> List (Html Msg)
-view model =
+view : Tabs -> String -> List (Html Msg)
+view tabs current =
     let
         i name =
             Icon.view name [ css "width" "40px" ]
@@ -75,21 +40,25 @@ view model =
         padding =
             css "padding-right" "24px"
     in
-        List.map (viewTab model.current) model.tabs
-            ++ [ Menu.render Mdl
-                    [ 0 ]
-                    model.mdl
-                    [ Menu.bottomRight, Menu.icon "contact_phone" ]
-                    [ Menu.item [ Menu.onSelect Nop, padding ]
-                        [ i "phone"
-                        , text constants.phone
-                        ]
-                    , Menu.item [ Menu.onSelect Nop, padding ]
-                        [ i "email"
-                        , text constants.email
-                        ]
-                    ]
-               ]
+        List.map (viewTab current) tabs
+
+
+
+{- ++ [ Menu.render Mdl
+        [ 0 ]
+        model.mdl
+        [ Menu.bottomRight, Menu.icon "contact_phone" ]
+        [ Menu.item [ Menu.onSelect Nop, padding ]
+            [ i "phone"
+            , text constants.phone
+            ]
+        , Menu.item [ Menu.onSelect Nop, padding ]
+            [ i "email"
+            , text constants.email
+            ]
+        ]
+   ]
+-}
 
 
 viewTab : String -> Tab -> Html Msg

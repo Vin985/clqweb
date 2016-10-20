@@ -6,7 +6,6 @@
 
 port module Main exposing (..)
 
-import Html.App as App
 import Html exposing (..)
 import Html.Lazy
 import Html.Attributes exposing (href, class, style, src, attribute)
@@ -16,12 +15,18 @@ import Material.Grid exposing (..)
 import Material.Layout as Layout
 import Material.Color as Color
 import Material.Options as Options exposing (css, when, cs)
-import Json.Decode as Json exposing (Value)
-import JsonDecoder exposing (extractTabs, BackendData, decodeData)
 import Http
 import Task
-import Tabs exposing (Tab)
+import String
+import Navigation
+import Tabs exposing (view)
 import HtmlParser
+import RouteUrl as Routing
+import Messages exposing (..)
+import Types exposing (Tabs, BackendData, Languages, Page, defaultPage)
+import JsonDecoder
+import Dict exposing (Dict)
+import Constants
 
 
 -- MODEL
@@ -29,34 +34,18 @@ import HtmlParser
 -- This is referred to as the "model container"
 
 
-type alias Page =
-    { title : String
-    , url : String
-    , content : String
-    }
-
-
-defaultPage : Page
-defaultPage =
-    { title = ""
-    , url = "index"
-    , content = ""
-    }
-
-
-type alias Languages =
-    { currentLang : String
-    , otherLang : List String
-    }
-
-
 type alias Model =
     { mdl : Material.Model
-    , tabs : Tabs.Model
-    , siteurl : String
-    , lang : String
-    , current : Page
+    , tabs : Tabs
+    , siteUrl : String
+    , languages : Languages
+    , current : String
+    , page : Page
     }
+
+
+type alias UrlArgs =
+    List ( String, String )
 
 
 
@@ -68,10 +57,11 @@ model =
     { mdl =
         Material.model
         -- Boilerplate: Always use this initial Mdl model store.
-    , tabs = Tabs.model []
-    , siteurl = ""
-    , lang = "fr"
-    , current = defaultPage
+    , tabs = []
+    , siteUrl = ""
+    , languages = Languages "fr" []
+    , current = "index"
+    , page = defaultPage
     }
 
 
@@ -81,32 +71,55 @@ model =
 -- appropriately.
 
 
-type Msg
-    = Mdl (Material.Msg Msg)
-    | Nop
-    | NavTabs Json.Value
-    | FetchFail Http.Error
-    | FetchSucceed BackendData
-    | TabMsg Tabs.Msg
-
-
-getData : String -> String -> Json.Decoder BackendData -> Cmd Msg
-getData siteurl page decoder =
+getData : String -> UrlArgs -> Cmd Msg
+getData siteUrl args =
     let
+        args =
+            ( "id", "fetchdata" ) :: args
+
         url =
-            Http.url (siteurl ++ "index.php") [ ( "id", "fetchdata" ), ( "page", page ) ]
+            Http.url (siteUrl ++ "index.php") args
     in
-        Task.perform FetchFail FetchSucceed (Http.get decoder url)
+        Task.perform FetchFail FetchSucceed (Http.get JsonDecoder.decodeData url)
+
+
+getPageData : String -> Model -> Cmd Msg
+getPageData page model =
+    let
+        args =
+            [ ( "page", page ) ]
+    in
+        getData model.siteUrl args
+
+
+changeLanguage : String -> Model -> Cmd Msg
+changeLanguage lang model =
+    let
+        args =
+            [ ( "page", model.current ), ( "setlang", lang ) ]
+
+        one =
+            Debug.log "changelang" lang
+    in
+        getData model.siteUrl args
 
 
 getInit : String -> Cmd Msg
-getInit siteurl =
-    getData siteurl "init" decodeData
+getInit siteUrl =
+    getData siteUrl [ ( "page", "init" ) ]
 
 
 
 {- getInit : String -> String -> Decoder -> Cmd Msg -}
 -- Boilerplate: Msg clause for internal Mdl messages.
+
+
+changePage : String -> Model -> Cmd Msg
+changePage url model =
+    if url /= model.current && url /= "" then
+        getPageData url model
+    else
+        Cmd.none
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -119,54 +132,47 @@ update msg model =
         Nop ->
             ( model, Cmd.none )
 
-        TabMsg msg' ->
-            let
-                ( tabs', cmd', url ) =
-                    Tabs.update msg' model.tabs
+        ChangePage url ->
+            ( { model | current = url }, changePage url model )
 
-                cmd =
-                    if url /= "" then
-                        getData model.siteurl url decodeData
-                    else
-                        Cmd.none
-            in
-                ( { model | tabs = tabs' }, Cmd.batch [ Cmd.map TabMsg cmd', cmd ] )
+        ChangeLanguage lang ->
+            ( model, changeLanguage lang model )
 
-        NavTabs value ->
-            ( model, Cmd.none )
-
+        {- TabMsg msg' ->
+           let
+               ( tabs', cmd', url ) =
+                   Tabs.update msg' model.tabs
+           in
+               ( { model | tabs = tabs', current = url }
+               , Cmd.batch [ Cmd.map TabMsg cmd', changePage url model ]
+               )
+        -}
         FetchSucceed data ->
             let
-                lang' =
+                langs =
                     case data.lang of
                         Nothing ->
-                            "fr"
+                            model.languages
 
                         Just lang ->
                             lang
 
-                tabs' =
+                tabs_ =
                     case data.tabs of
                         Nothing ->
                             {- TODO : add isEmpty to Tabs model -}
-                            if not <| List.isEmpty model.tabs.tabs then
+                            if not <| List.isEmpty model.tabs then
                                 model.tabs
                             else
-                                Tabs.model []
+                                []
 
                         Just tabs ->
-                            Tabs.model tabs
-
-                page =
-                    { url = data.url, content = data.content, title = data.title }
+                            tabs
 
                 one =
-                    Debug.log "lang" data.lang
-
-                two =
-                    Debug.log "siteurl" data.tabs
+                    Debug.log "data" data
             in
-                ( { model | lang = lang', tabs = tabs', current = page }, Cmd.none )
+                ( { model | languages = langs, tabs = tabs_, page = data.page }, Cmd.none )
 
         FetchFail err ->
             let
@@ -198,7 +204,7 @@ view' model =
         { header = header model
         , drawer = []
         , tabs = ( [], [] )
-        , main = [ viewBody model.current ]
+        , main = [ viewBody model.page ]
         }
 
 
@@ -210,7 +216,10 @@ header model =
         ]
         [ Layout.title [] [ img [ src "theme/clq/css/img/logo3-simple.png" ] [] ]
         , Layout.spacer
-        , Layout.navigation [] (List.map (App.map TabMsg) (Tabs.view model.tabs))
+        , Layout.navigation []
+            (Tabs.view model.tabs model.current
+                ++ [ viewLanguages model.languages ]
+            )
         ]
     ]
 
@@ -221,6 +230,21 @@ boxed =
     , css "padding-left" "8%"
     , css "padding-right" "8%"
     ]
+
+
+viewLanguages : Languages -> Html Msg
+viewLanguages langs =
+    case langs.other of
+        lang :: [] ->
+            Layout.link [ Layout.onClick (ChangeLanguage lang) ] [ text <| getLanguageText lang Constants.langsText ]
+
+        _ ->
+            text "languages"
+
+
+getLanguageText : String -> Dict String String -> String
+getLanguageText key texts =
+    Maybe.withDefault "Key not found" <| Dict.get key texts
 
 
 viewBody : Page -> Html Msg
@@ -267,8 +291,39 @@ htmlAttributesToElm attrs =
     List.map (\( x, y ) -> Html.Attributes.attribute x y) attrs
 
 
+
+-- Routing
+
+
+urlOf : Model -> String
+urlOf model =
+    "#" ++ model.current
+
+
+delta2url : Model -> Model -> Maybe Routing.UrlChange
+delta2url model1 model2 =
+    if model1.current /= model2.current || model1.languages.current /= model2.languages.current then
+        { entry = Routing.NewEntry
+        , url = urlOf model2
+        }
+            |> Just
+    else
+        Nothing
+
+
+location2messages : Navigation.Location -> List Msg
+location2messages location =
+    [ case String.dropLeft 1 location.hash of
+        "" ->
+            ChangePage "index"
+
+        x ->
+            ChangePage x
+    ]
+
+
 type alias Flags =
-    { siteurl : String
+    { siteUrl : String
     }
 
 
@@ -276,16 +331,18 @@ init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { model
         | mdl = Layout.setTabsWidth 800 model.mdl {- , tabs = extractTabs flags.tabs -}
-        , siteurl = flags.siteurl
+        , siteUrl = flags.siteUrl
       }
-    , Cmd.batch [ Material.init Mdl, getInit flags.siteurl ]
+    , Cmd.batch [ Material.init Mdl, getInit flags.siteUrl ]
     )
 
 
 main : Program Flags
 main =
-    App.programWithFlags
-        { init = init
+    Routing.programWithFlags
+        { delta2url = delta2url
+        , location2messages = location2messages
+        , init = init
         , view = view
         , subscriptions = Material.subscriptions Mdl
         , update = update
