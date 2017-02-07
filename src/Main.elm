@@ -160,11 +160,7 @@ update msg model =
                 tabs_ =
                     case data.tabs of
                         Nothing ->
-                            {- TODO : add isEmpty to Tabs model -}
-                            if not <| List.isEmpty model.tabs then
-                                model.tabs
-                            else
-                                []
+                            model.tabs
 
                         Just tabs ->
                             tabs
@@ -236,7 +232,10 @@ viewLanguages : Languages -> Html Msg
 viewLanguages langs =
     case langs.other of
         lang :: [] ->
-            Layout.link [ Layout.onClick (ChangeLanguage lang) ] [ text <| getLanguageText lang Constants.langsText ]
+            Layout.link [ Layout.onClick (ChangeLanguage lang) ]
+                [ text
+                    <| getLanguageText lang Constants.langsText
+                ]
 
         _ ->
             text "languages"

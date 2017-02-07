@@ -17880,9 +17880,7 @@ var _user$project$Main$update = F2(
 				var tabs_ = function () {
 					var _p8 = _p10.tabs;
 					if (_p8.ctor === 'Nothing') {
-						return _elm_lang$core$Basics$not(
-							_elm_lang$core$List$isEmpty(model.tabs)) ? model.tabs : _elm_lang$core$Native_List.fromArray(
-							[]);
+						return model.tabs;
 					} else {
 						return _p8._0;
 					}
