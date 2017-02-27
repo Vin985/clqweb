@@ -49,7 +49,6 @@ theme/building-agency/
 theme/Cardinal/
 backups/
 data/cache/
-/elm-package.json
 /elm-stuff/build-artifacts/0.17.1/debois/elm-dom/1.2.2/DOM.elmi
 /elm-stuff/build-artifacts/0.17.1/debois/elm-dom/1.2.2/DOM.elmo
 /elm-stuff/build-artifacts/0.17.1/debois/elm-dom/1.2.2/graph.dat
