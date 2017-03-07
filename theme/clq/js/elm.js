@@ -135,6 +135,27 @@ function A9(fun, a, b, c, d, e, f, g, h, i)
     : fun(a)(b)(c)(d)(e)(f)(g)(h)(i);
 }
 
+var _elm_lang$lazy$Native_Lazy = function() {
+
+function memoize(thunk)
+{
+    var value;
+    var isForced = false;
+    return function(tuple0) {
+        if (!isForced) {
+            value = thunk(tuple0);
+            isForced = true;
+        }
+        return value;
+    };
+}
+
+return {
+    memoize: memoize
+};
+
+}();
+
 //import Native.Utils //
 
 var _elm_lang$core$Native_Basics = function() {
@@ -499,11 +520,17 @@ function guid(_)
 function update(oldRecord, updatedFields)
 {
 	var newRecord = {};
+
 	for (var key in oldRecord)
 	{
-		var value = (key in updatedFields) ? updatedFields[key] : oldRecord[key];
-		newRecord[key] = value;
+		newRecord[key] = oldRecord[key];
 	}
+
+	for (var key in updatedFields)
+	{
+		newRecord[key] = updatedFields[key];
+	}
+
 	return newRecord;
 }
 
@@ -591,8 +618,7 @@ function toString(v)
 	var type = typeof v;
 	if (type === 'function')
 	{
-		var name = v.func ? v.func.name : v.name;
-		return '<function' + (name === '' ? '' : ':') + name + '>';
+		return '<function>';
 	}
 
 	if (type === 'boolean')
@@ -759,10 +785,19 @@ return {
 };
 
 }();
-var _elm_lang$core$Basics$uncurry = F2(
-	function (f, _p0) {
+var _elm_lang$core$Basics$never = function (_p0) {
+	never:
+	while (true) {
 		var _p1 = _p0;
-		return A2(f, _p1._0, _p1._1);
+		var _v1 = _p1._0;
+		_p0 = _v1;
+		continue never;
+	}
+};
+var _elm_lang$core$Basics$uncurry = F2(
+	function (f, _p2) {
+		var _p3 = _p2;
+		return A2(f, _p3._0, _p3._1);
 	});
 var _elm_lang$core$Basics$curry = F3(
 	function (f, a, b) {
@@ -773,16 +808,8 @@ var _elm_lang$core$Basics$flip = F3(
 	function (f, b, a) {
 		return A2(f, a, b);
 	});
-var _elm_lang$core$Basics$snd = function (_p2) {
-	var _p3 = _p2;
-	return _p3._1;
-};
-var _elm_lang$core$Basics$fst = function (_p4) {
-	var _p5 = _p4;
-	return _p5._0;
-};
 var _elm_lang$core$Basics$always = F2(
-	function (a, _p6) {
+	function (a, _p4) {
 		return a;
 	});
 var _elm_lang$core$Basics$identity = function (x) {
@@ -880,8 +907,8 @@ var _elm_lang$core$Basics$radians = function (t) {
 var _elm_lang$core$Basics$GT = {ctor: 'GT'};
 var _elm_lang$core$Basics$EQ = {ctor: 'EQ'};
 var _elm_lang$core$Basics$LT = {ctor: 'LT'};
-var _elm_lang$core$Basics$Never = function (a) {
-	return {ctor: 'Never', _0: a};
+var _elm_lang$core$Basics$JustOneMore = function (a) {
+	return {ctor: 'JustOneMore', _0: a};
 };
 
 //import Native.Utils //
@@ -927,30 +954,11 @@ var _elm_lang$core$Maybe$withDefault = F2(
 		}
 	});
 var _elm_lang$core$Maybe$Nothing = {ctor: 'Nothing'};
-var _elm_lang$core$Maybe$oneOf = function (maybes) {
-	oneOf:
-	while (true) {
-		var _p1 = maybes;
-		if (_p1.ctor === '[]') {
-			return _elm_lang$core$Maybe$Nothing;
-		} else {
-			var _p3 = _p1._0;
-			var _p2 = _p3;
-			if (_p2.ctor === 'Nothing') {
-				var _v3 = _p1._1;
-				maybes = _v3;
-				continue oneOf;
-			} else {
-				return _p3;
-			}
-		}
-	}
-};
 var _elm_lang$core$Maybe$andThen = F2(
-	function (maybeValue, callback) {
-		var _p4 = maybeValue;
-		if (_p4.ctor === 'Just') {
-			return callback(_p4._0);
+	function (callback, maybeValue) {
+		var _p1 = maybeValue;
+		if (_p1.ctor === 'Just') {
+			return callback(_p1._0);
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
@@ -960,50 +968,50 @@ var _elm_lang$core$Maybe$Just = function (a) {
 };
 var _elm_lang$core$Maybe$map = F2(
 	function (f, maybe) {
-		var _p5 = maybe;
-		if (_p5.ctor === 'Just') {
+		var _p2 = maybe;
+		if (_p2.ctor === 'Just') {
 			return _elm_lang$core$Maybe$Just(
-				f(_p5._0));
+				f(_p2._0));
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	});
 var _elm_lang$core$Maybe$map2 = F3(
 	function (func, ma, mb) {
-		var _p6 = {ctor: '_Tuple2', _0: ma, _1: mb};
-		if (((_p6.ctor === '_Tuple2') && (_p6._0.ctor === 'Just')) && (_p6._1.ctor === 'Just')) {
+		var _p3 = {ctor: '_Tuple2', _0: ma, _1: mb};
+		if (((_p3.ctor === '_Tuple2') && (_p3._0.ctor === 'Just')) && (_p3._1.ctor === 'Just')) {
 			return _elm_lang$core$Maybe$Just(
-				A2(func, _p6._0._0, _p6._1._0));
+				A2(func, _p3._0._0, _p3._1._0));
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	});
 var _elm_lang$core$Maybe$map3 = F4(
 	function (func, ma, mb, mc) {
-		var _p7 = {ctor: '_Tuple3', _0: ma, _1: mb, _2: mc};
-		if ((((_p7.ctor === '_Tuple3') && (_p7._0.ctor === 'Just')) && (_p7._1.ctor === 'Just')) && (_p7._2.ctor === 'Just')) {
+		var _p4 = {ctor: '_Tuple3', _0: ma, _1: mb, _2: mc};
+		if ((((_p4.ctor === '_Tuple3') && (_p4._0.ctor === 'Just')) && (_p4._1.ctor === 'Just')) && (_p4._2.ctor === 'Just')) {
 			return _elm_lang$core$Maybe$Just(
-				A3(func, _p7._0._0, _p7._1._0, _p7._2._0));
+				A3(func, _p4._0._0, _p4._1._0, _p4._2._0));
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	});
 var _elm_lang$core$Maybe$map4 = F5(
 	function (func, ma, mb, mc, md) {
-		var _p8 = {ctor: '_Tuple4', _0: ma, _1: mb, _2: mc, _3: md};
-		if (((((_p8.ctor === '_Tuple4') && (_p8._0.ctor === 'Just')) && (_p8._1.ctor === 'Just')) && (_p8._2.ctor === 'Just')) && (_p8._3.ctor === 'Just')) {
+		var _p5 = {ctor: '_Tuple4', _0: ma, _1: mb, _2: mc, _3: md};
+		if (((((_p5.ctor === '_Tuple4') && (_p5._0.ctor === 'Just')) && (_p5._1.ctor === 'Just')) && (_p5._2.ctor === 'Just')) && (_p5._3.ctor === 'Just')) {
 			return _elm_lang$core$Maybe$Just(
-				A4(func, _p8._0._0, _p8._1._0, _p8._2._0, _p8._3._0));
+				A4(func, _p5._0._0, _p5._1._0, _p5._2._0, _p5._3._0));
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	});
 var _elm_lang$core$Maybe$map5 = F6(
 	function (func, ma, mb, mc, md, me) {
-		var _p9 = {ctor: '_Tuple5', _0: ma, _1: mb, _2: mc, _3: md, _4: me};
-		if ((((((_p9.ctor === '_Tuple5') && (_p9._0.ctor === 'Just')) && (_p9._1.ctor === 'Just')) && (_p9._2.ctor === 'Just')) && (_p9._3.ctor === 'Just')) && (_p9._4.ctor === 'Just')) {
+		var _p6 = {ctor: '_Tuple5', _0: ma, _1: mb, _2: mc, _3: md, _4: me};
+		if ((((((_p6.ctor === '_Tuple5') && (_p6._0.ctor === 'Just')) && (_p6._1.ctor === 'Just')) && (_p6._2.ctor === 'Just')) && (_p6._3.ctor === 'Just')) && (_p6._4.ctor === 'Just')) {
 			return _elm_lang$core$Maybe$Just(
-				A5(func, _p9._0._0, _p9._1._0, _p9._2._0, _p9._3._0, _p9._4._0));
+				A5(func, _p6._0._0, _p6._1._0, _p6._2._0, _p6._3._0, _p6._4._0));
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
@@ -1039,21 +1047,6 @@ function toArray(xs)
 		xs = xs._1;
 	}
 	return out;
-}
-
-
-function range(lo, hi)
-{
-	var list = Nil;
-	if (lo <= hi)
-	{
-		do
-		{
-			list = Cons(hi, list);
-		}
-		while (hi-- > lo);
-	}
-	return list;
 }
 
 function foldr(f, b, xs)
@@ -1149,7 +1142,6 @@ return {
 	cons: F2(Cons),
 	toArray: toArray,
 	fromArray: fromArray,
-	range: range,
 
 	foldr: F3(foldr),
 
@@ -1166,6 +1158,13 @@ var _elm_lang$core$List$sortWith = _elm_lang$core$Native_List.sortWith;
 var _elm_lang$core$List$sortBy = _elm_lang$core$Native_List.sortBy;
 var _elm_lang$core$List$sort = function (xs) {
 	return A2(_elm_lang$core$List$sortBy, _elm_lang$core$Basics$identity, xs);
+};
+var _elm_lang$core$List$singleton = function (value) {
+	return {
+		ctor: '::',
+		_0: value,
+		_1: {ctor: '[]'}
+	};
 };
 var _elm_lang$core$List$drop = F2(
 	function (n, list) {
@@ -1213,14 +1212,12 @@ var _elm_lang$core$List$any = F2(
 	});
 var _elm_lang$core$List$all = F2(
 	function (isOkay, list) {
-		return _elm_lang$core$Basics$not(
-			A2(
-				_elm_lang$core$List$any,
-				function (_p2) {
-					return _elm_lang$core$Basics$not(
-						isOkay(_p2));
-				},
-				list));
+		return !A2(
+			_elm_lang$core$List$any,
+			function (_p2) {
+				return !isOkay(_p2);
+			},
+			list);
 	});
 var _elm_lang$core$List$foldr = _elm_lang$core$Native_List.foldr;
 var _elm_lang$core$List$foldl = F3(
@@ -1289,16 +1286,6 @@ var _elm_lang$core$List$minimum = function (list) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _elm_lang$core$List$indexedMap = F2(
-	function (f, xs) {
-		return A3(
-			_elm_lang$core$List$map2,
-			f,
-			_elm_lang$core$Native_List.range(
-				0,
-				_elm_lang$core$List$length(xs) - 1),
-			xs);
-	});
 var _elm_lang$core$List$member = F2(
 	function (x, xs) {
 		return A2(
@@ -1340,33 +1327,32 @@ var _elm_lang$core$List$map = F2(
 			_elm_lang$core$List$foldr,
 			F2(
 				function (x, acc) {
-					return A2(
-						_elm_lang$core$List_ops['::'],
-						f(x),
-						acc);
+					return {
+						ctor: '::',
+						_0: f(x),
+						_1: acc
+					};
 				}),
-			_elm_lang$core$Native_List.fromArray(
-				[]),
+			{ctor: '[]'},
 			xs);
 	});
 var _elm_lang$core$List$filter = F2(
 	function (pred, xs) {
 		var conditionalCons = F2(
-			function (x, xs$) {
-				return pred(x) ? A2(_elm_lang$core$List_ops['::'], x, xs$) : xs$;
+			function (front, back) {
+				return pred(front) ? {ctor: '::', _0: front, _1: back} : back;
 			});
 		return A3(
 			_elm_lang$core$List$foldr,
 			conditionalCons,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
+			{ctor: '[]'},
 			xs);
 	});
 var _elm_lang$core$List$maybeCons = F3(
 	function (f, mx, xs) {
 		var _p10 = f(mx);
 		if (_p10.ctor === 'Just') {
-			return A2(_elm_lang$core$List_ops['::'], _p10._0, xs);
+			return {ctor: '::', _0: _p10._0, _1: xs};
 		} else {
 			return xs;
 		}
@@ -1376,8 +1362,7 @@ var _elm_lang$core$List$filterMap = F2(
 		return A3(
 			_elm_lang$core$List$foldr,
 			_elm_lang$core$List$maybeCons(f),
-			_elm_lang$core$Native_List.fromArray(
-				[]),
+			{ctor: '[]'},
 			xs);
 	});
 var _elm_lang$core$List$reverse = function (list) {
@@ -1385,10 +1370,9 @@ var _elm_lang$core$List$reverse = function (list) {
 		_elm_lang$core$List$foldl,
 		F2(
 			function (x, y) {
-				return A2(_elm_lang$core$List_ops['::'], x, y);
+				return {ctor: '::', _0: x, _1: y};
 			}),
-		_elm_lang$core$Native_List.fromArray(
-			[]),
+		{ctor: '[]'},
 		list);
 };
 var _elm_lang$core$List$scanl = F3(
@@ -1397,21 +1381,24 @@ var _elm_lang$core$List$scanl = F3(
 			function (x, accAcc) {
 				var _p11 = accAcc;
 				if (_p11.ctor === '::') {
-					return A2(
-						_elm_lang$core$List_ops['::'],
-						A2(f, x, _p11._0),
-						accAcc);
+					return {
+						ctor: '::',
+						_0: A2(f, x, _p11._0),
+						_1: accAcc
+					};
 				} else {
-					return _elm_lang$core$Native_List.fromArray(
-						[]);
+					return {ctor: '[]'};
 				}
 			});
 		return _elm_lang$core$List$reverse(
 			A3(
 				_elm_lang$core$List$foldl,
 				scan1,
-				_elm_lang$core$Native_List.fromArray(
-					[b]),
+				{
+					ctor: '::',
+					_0: b,
+					_1: {ctor: '[]'}
+				},
 				xs));
 	});
 var _elm_lang$core$List$append = F2(
@@ -1424,7 +1411,7 @@ var _elm_lang$core$List$append = F2(
 				_elm_lang$core$List$foldr,
 				F2(
 					function (x, y) {
-						return A2(_elm_lang$core$List_ops['::'], x, y);
+						return {ctor: '::', _0: x, _1: y};
 					}),
 				ys,
 				xs);
@@ -1434,8 +1421,7 @@ var _elm_lang$core$List$concat = function (lists) {
 	return A3(
 		_elm_lang$core$List$foldr,
 		_elm_lang$core$List$append,
-		_elm_lang$core$Native_List.fromArray(
-			[]),
+		{ctor: '[]'},
 		lists);
 };
 var _elm_lang$core$List$concatMap = F2(
@@ -1452,12 +1438,12 @@ var _elm_lang$core$List$partition = F2(
 				var _p15 = _p14._1;
 				return pred(x) ? {
 					ctor: '_Tuple2',
-					_0: A2(_elm_lang$core$List_ops['::'], x, _p16),
+					_0: {ctor: '::', _0: x, _1: _p16},
 					_1: _p15
 				} : {
 					ctor: '_Tuple2',
 					_0: _p16,
-					_1: A2(_elm_lang$core$List_ops['::'], x, _p15)
+					_1: {ctor: '::', _0: x, _1: _p15}
 				};
 			});
 		return A3(
@@ -1465,10 +1451,8 @@ var _elm_lang$core$List$partition = F2(
 			step,
 			{
 				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_List.fromArray(
-					[]),
-				_1: _elm_lang$core$Native_List.fromArray(
-					[])
+				_0: {ctor: '[]'},
+				_1: {ctor: '[]'}
 			},
 			list);
 	});
@@ -1479,8 +1463,8 @@ var _elm_lang$core$List$unzip = function (pairs) {
 			var _p20 = _p17;
 			return {
 				ctor: '_Tuple2',
-				_0: A2(_elm_lang$core$List_ops['::'], _p19._0, _p20._0),
-				_1: A2(_elm_lang$core$List_ops['::'], _p19._1, _p20._1)
+				_0: {ctor: '::', _0: _p19._0, _1: _p20._0},
+				_1: {ctor: '::', _0: _p19._1, _1: _p20._1}
 			};
 		});
 	return A3(
@@ -1488,10 +1472,8 @@ var _elm_lang$core$List$unzip = function (pairs) {
 		step,
 		{
 			ctor: '_Tuple2',
-			_0: _elm_lang$core$Native_List.fromArray(
-				[]),
-			_1: _elm_lang$core$Native_List.fromArray(
-				[])
+			_0: {ctor: '[]'},
+			_1: {ctor: '[]'}
 		},
 		pairs);
 };
@@ -1499,23 +1481,22 @@ var _elm_lang$core$List$intersperse = F2(
 	function (sep, xs) {
 		var _p21 = xs;
 		if (_p21.ctor === '[]') {
-			return _elm_lang$core$Native_List.fromArray(
-				[]);
+			return {ctor: '[]'};
 		} else {
 			var step = F2(
 				function (x, rest) {
-					return A2(
-						_elm_lang$core$List_ops['::'],
-						sep,
-						A2(_elm_lang$core$List_ops['::'], x, rest));
+					return {
+						ctor: '::',
+						_0: sep,
+						_1: {ctor: '::', _0: x, _1: rest}
+					};
 				});
 			var spersed = A3(
 				_elm_lang$core$List$foldr,
 				step,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
+				{ctor: '[]'},
 				_p21._1);
-			return A2(_elm_lang$core$List_ops['::'], _p21._0, spersed);
+			return {ctor: '::', _0: _p21._0, _1: spersed};
 		}
 	});
 var _elm_lang$core$List$takeReverse = F3(
@@ -1531,7 +1512,7 @@ var _elm_lang$core$List$takeReverse = F3(
 				} else {
 					var _v23 = n - 1,
 						_v24 = _p22._1,
-						_v25 = A2(_elm_lang$core$List_ops['::'], _p22._0, taken);
+						_v25 = {ctor: '::', _0: _p22._0, _1: taken};
 					n = _v23;
 					list = _v24;
 					taken = _v25;
@@ -1547,14 +1528,12 @@ var _elm_lang$core$List$takeTailRec = F2(
 				_elm_lang$core$List$takeReverse,
 				n,
 				list,
-				_elm_lang$core$Native_List.fromArray(
-					[])));
+				{ctor: '[]'}));
 	});
 var _elm_lang$core$List$takeFast = F3(
 	function (ctr, n, list) {
 		if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-			return _elm_lang$core$Native_List.fromArray(
-				[]);
+			return {ctor: '[]'};
 		} else {
 			var _p23 = {ctor: '_Tuple2', _0: n, _1: list};
 			_v26_5:
@@ -1570,12 +1549,30 @@ var _elm_lang$core$List$takeFast = F3(
 									case 1:
 										break _v26_1;
 									case 2:
-										return _elm_lang$core$Native_List.fromArray(
-											[_p23._1._0, _p23._1._1._0]);
+										return {
+											ctor: '::',
+											_0: _p23._1._0,
+											_1: {
+												ctor: '::',
+												_0: _p23._1._1._0,
+												_1: {ctor: '[]'}
+											}
+										};
 									case 3:
 										if (_p23._1._1._1.ctor === '::') {
-											return _elm_lang$core$Native_List.fromArray(
-												[_p23._1._0, _p23._1._1._0, _p23._1._1._1._0]);
+											return {
+												ctor: '::',
+												_0: _p23._1._0,
+												_1: {
+													ctor: '::',
+													_0: _p23._1._1._0,
+													_1: {
+														ctor: '::',
+														_0: _p23._1._1._1._0,
+														_1: {ctor: '[]'}
+													}
+												}
+											};
 										} else {
 											break _v26_5;
 										}
@@ -1586,31 +1583,39 @@ var _elm_lang$core$List$takeFast = F3(
 											var _p26 = _p23._1._0;
 											var _p25 = _p23._1._1._1._1._0;
 											var _p24 = _p23._1._1._1._1._1;
-											return (_elm_lang$core$Native_Utils.cmp(ctr, 1000) > 0) ? A2(
-												_elm_lang$core$List_ops['::'],
-												_p26,
-												A2(
-													_elm_lang$core$List_ops['::'],
-													_p27,
-													A2(
-														_elm_lang$core$List_ops['::'],
-														_p28,
-														A2(
-															_elm_lang$core$List_ops['::'],
-															_p25,
-															A2(_elm_lang$core$List$takeTailRec, n - 4, _p24))))) : A2(
-												_elm_lang$core$List_ops['::'],
-												_p26,
-												A2(
-													_elm_lang$core$List_ops['::'],
-													_p27,
-													A2(
-														_elm_lang$core$List_ops['::'],
-														_p28,
-														A2(
-															_elm_lang$core$List_ops['::'],
-															_p25,
-															A3(_elm_lang$core$List$takeFast, ctr + 1, n - 4, _p24)))));
+											return (_elm_lang$core$Native_Utils.cmp(ctr, 1000) > 0) ? {
+												ctor: '::',
+												_0: _p26,
+												_1: {
+													ctor: '::',
+													_0: _p27,
+													_1: {
+														ctor: '::',
+														_0: _p28,
+														_1: {
+															ctor: '::',
+															_0: _p25,
+															_1: A2(_elm_lang$core$List$takeTailRec, n - 4, _p24)
+														}
+													}
+												}
+											} : {
+												ctor: '::',
+												_0: _p26,
+												_1: {
+													ctor: '::',
+													_0: _p27,
+													_1: {
+														ctor: '::',
+														_0: _p28,
+														_1: {
+															ctor: '::',
+															_0: _p25,
+															_1: A3(_elm_lang$core$List$takeFast, ctr + 1, n - 4, _p24)
+														}
+													}
+												}
+											};
 										} else {
 											break _v26_5;
 										}
@@ -1627,8 +1632,11 @@ var _elm_lang$core$List$takeFast = F3(
 						break _v26_5;
 					}
 				} while(false);
-				return _elm_lang$core$Native_List.fromArray(
-					[_p23._1._0]);
+				return {
+					ctor: '::',
+					_0: _p23._1._0,
+					_1: {ctor: '[]'}
+				};
 			} while(false);
 			return list;
 		}
@@ -1644,7 +1652,7 @@ var _elm_lang$core$List$repeatHelp = F3(
 			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
 				return result;
 			} else {
-				var _v27 = A2(_elm_lang$core$List_ops['::'], value, result),
+				var _v27 = {ctor: '::', _0: value, _1: result},
 					_v28 = n - 1,
 					_v29 = value;
 				result = _v27;
@@ -1658,10 +1666,45 @@ var _elm_lang$core$List$repeat = F2(
 	function (n, value) {
 		return A3(
 			_elm_lang$core$List$repeatHelp,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
+			{ctor: '[]'},
 			n,
 			value);
+	});
+var _elm_lang$core$List$rangeHelp = F3(
+	function (lo, hi, list) {
+		rangeHelp:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.cmp(lo, hi) < 1) {
+				var _v30 = lo,
+					_v31 = hi - 1,
+					_v32 = {ctor: '::', _0: hi, _1: list};
+				lo = _v30;
+				hi = _v31;
+				list = _v32;
+				continue rangeHelp;
+			} else {
+				return list;
+			}
+		}
+	});
+var _elm_lang$core$List$range = F2(
+	function (lo, hi) {
+		return A3(
+			_elm_lang$core$List$rangeHelp,
+			lo,
+			hi,
+			{ctor: '[]'});
+	});
+var _elm_lang$core$List$indexedMap = F2(
+	function (f, xs) {
+		return A3(
+			_elm_lang$core$List$map2,
+			f,
+			A2(
+				_elm_lang$core$List$range,
+				0,
+				_elm_lang$core$List$length(xs) - 1),
+			xs);
 	});
 
 var _elm_lang$core$Result$toMaybe = function (result) {
@@ -1685,7 +1728,7 @@ var _elm_lang$core$Result$Err = function (a) {
 	return {ctor: 'Err', _0: a};
 };
 var _elm_lang$core$Result$andThen = F2(
-	function (result, callback) {
+	function (callback, result) {
 		var _p2 = result;
 		if (_p2.ctor === 'Ok') {
 			return callback(_p2._0);
@@ -1786,7 +1829,7 @@ var _elm_lang$core$Result$map5 = F6(
 			return _elm_lang$core$Result$Err(_p7._0._0);
 		}
 	});
-var _elm_lang$core$Result$formatError = F2(
+var _elm_lang$core$Result$mapError = F2(
 	function (f, result) {
 		var _p8 = result;
 		if (_p8.ctor === 'Ok') {
@@ -1806,6 +1849,474 @@ var _elm_lang$core$Result$fromMaybe = F2(
 		}
 	});
 
+//import Maybe, Native.List, Native.Utils, Result //
+
+var _elm_lang$core$Native_String = function() {
+
+function isEmpty(str)
+{
+	return str.length === 0;
+}
+function cons(chr, str)
+{
+	return chr + str;
+}
+function uncons(str)
+{
+	var hd = str[0];
+	if (hd)
+	{
+		return _elm_lang$core$Maybe$Just(_elm_lang$core$Native_Utils.Tuple2(_elm_lang$core$Native_Utils.chr(hd), str.slice(1)));
+	}
+	return _elm_lang$core$Maybe$Nothing;
+}
+function append(a, b)
+{
+	return a + b;
+}
+function concat(strs)
+{
+	return _elm_lang$core$Native_List.toArray(strs).join('');
+}
+function length(str)
+{
+	return str.length;
+}
+function map(f, str)
+{
+	var out = str.split('');
+	for (var i = out.length; i--; )
+	{
+		out[i] = f(_elm_lang$core$Native_Utils.chr(out[i]));
+	}
+	return out.join('');
+}
+function filter(pred, str)
+{
+	return str.split('').map(_elm_lang$core$Native_Utils.chr).filter(pred).join('');
+}
+function reverse(str)
+{
+	return str.split('').reverse().join('');
+}
+function foldl(f, b, str)
+{
+	var len = str.length;
+	for (var i = 0; i < len; ++i)
+	{
+		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
+	}
+	return b;
+}
+function foldr(f, b, str)
+{
+	for (var i = str.length; i--; )
+	{
+		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
+	}
+	return b;
+}
+function split(sep, str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.split(sep));
+}
+function join(sep, strs)
+{
+	return _elm_lang$core$Native_List.toArray(strs).join(sep);
+}
+function repeat(n, str)
+{
+	var result = '';
+	while (n > 0)
+	{
+		if (n & 1)
+		{
+			result += str;
+		}
+		n >>= 1, str += str;
+	}
+	return result;
+}
+function slice(start, end, str)
+{
+	return str.slice(start, end);
+}
+function left(n, str)
+{
+	return n < 1 ? '' : str.slice(0, n);
+}
+function right(n, str)
+{
+	return n < 1 ? '' : str.slice(-n);
+}
+function dropLeft(n, str)
+{
+	return n < 1 ? str : str.slice(n);
+}
+function dropRight(n, str)
+{
+	return n < 1 ? str : str.slice(0, -n);
+}
+function pad(n, chr, str)
+{
+	var half = (n - str.length) / 2;
+	return repeat(Math.ceil(half), chr) + str + repeat(half | 0, chr);
+}
+function padRight(n, chr, str)
+{
+	return str + repeat(n - str.length, chr);
+}
+function padLeft(n, chr, str)
+{
+	return repeat(n - str.length, chr) + str;
+}
+
+function trim(str)
+{
+	return str.trim();
+}
+function trimLeft(str)
+{
+	return str.replace(/^\s+/, '');
+}
+function trimRight(str)
+{
+	return str.replace(/\s+$/, '');
+}
+
+function words(str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.trim().split(/\s+/g));
+}
+function lines(str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.split(/\r\n|\r|\n/g));
+}
+
+function toUpper(str)
+{
+	return str.toUpperCase();
+}
+function toLower(str)
+{
+	return str.toLowerCase();
+}
+
+function any(pred, str)
+{
+	for (var i = str.length; i--; )
+	{
+		if (pred(_elm_lang$core$Native_Utils.chr(str[i])))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+function all(pred, str)
+{
+	for (var i = str.length; i--; )
+	{
+		if (!pred(_elm_lang$core$Native_Utils.chr(str[i])))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+function contains(sub, str)
+{
+	return str.indexOf(sub) > -1;
+}
+function startsWith(sub, str)
+{
+	return str.indexOf(sub) === 0;
+}
+function endsWith(sub, str)
+{
+	return str.length >= sub.length &&
+		str.lastIndexOf(sub) === str.length - sub.length;
+}
+function indexes(sub, str)
+{
+	var subLen = sub.length;
+
+	if (subLen < 1)
+	{
+		return _elm_lang$core$Native_List.Nil;
+	}
+
+	var i = 0;
+	var is = [];
+
+	while ((i = str.indexOf(sub, i)) > -1)
+	{
+		is.push(i);
+		i = i + subLen;
+	}
+
+	return _elm_lang$core$Native_List.fromArray(is);
+}
+
+
+function toInt(s)
+{
+	var len = s.length;
+
+	// if empty
+	if (len === 0)
+	{
+		return intErr(s);
+	}
+
+	// if hex
+	var c = s[0];
+	if (c === '0' && s[1] === 'x')
+	{
+		for (var i = 2; i < len; ++i)
+		{
+			var c = s[i];
+			if (('0' <= c && c <= '9') || ('A' <= c && c <= 'F') || ('a' <= c && c <= 'f'))
+			{
+				continue;
+			}
+			return intErr(s);
+		}
+		return _elm_lang$core$Result$Ok(parseInt(s, 16));
+	}
+
+	// is decimal
+	if (c > '9' || (c < '0' && c !== '-' && c !== '+'))
+	{
+		return intErr(s);
+	}
+	for (var i = 1; i < len; ++i)
+	{
+		var c = s[i];
+		if (c < '0' || '9' < c)
+		{
+			return intErr(s);
+		}
+	}
+
+	return _elm_lang$core$Result$Ok(parseInt(s, 10));
+}
+
+function intErr(s)
+{
+	return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int");
+}
+
+
+function toFloat(s)
+{
+	// check if it is a hex, octal, or binary number
+	if (s.length === 0 || /[\sxbo]/.test(s))
+	{
+		return floatErr(s);
+	}
+	var n = +s;
+	// faster isNaN check
+	return n === n ? _elm_lang$core$Result$Ok(n) : floatErr(s);
+}
+
+function floatErr(s)
+{
+	return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float");
+}
+
+
+function toList(str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.split('').map(_elm_lang$core$Native_Utils.chr));
+}
+function fromList(chars)
+{
+	return _elm_lang$core$Native_List.toArray(chars).join('');
+}
+
+return {
+	isEmpty: isEmpty,
+	cons: F2(cons),
+	uncons: uncons,
+	append: F2(append),
+	concat: concat,
+	length: length,
+	map: F2(map),
+	filter: F2(filter),
+	reverse: reverse,
+	foldl: F3(foldl),
+	foldr: F3(foldr),
+
+	split: F2(split),
+	join: F2(join),
+	repeat: F2(repeat),
+
+	slice: F3(slice),
+	left: F2(left),
+	right: F2(right),
+	dropLeft: F2(dropLeft),
+	dropRight: F2(dropRight),
+
+	pad: F3(pad),
+	padLeft: F3(padLeft),
+	padRight: F3(padRight),
+
+	trim: trim,
+	trimLeft: trimLeft,
+	trimRight: trimRight,
+
+	words: words,
+	lines: lines,
+
+	toUpper: toUpper,
+	toLower: toLower,
+
+	any: F2(any),
+	all: F2(all),
+
+	contains: F2(contains),
+	startsWith: F2(startsWith),
+	endsWith: F2(endsWith),
+	indexes: F2(indexes),
+
+	toInt: toInt,
+	toFloat: toFloat,
+	toList: toList,
+	fromList: fromList
+};
+
+}();
+
+//import Native.Utils //
+
+var _elm_lang$core$Native_Char = function() {
+
+return {
+	fromCode: function(c) { return _elm_lang$core$Native_Utils.chr(String.fromCharCode(c)); },
+	toCode: function(c) { return c.charCodeAt(0); },
+	toUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toUpperCase()); },
+	toLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLowerCase()); },
+	toLocaleUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleUpperCase()); },
+	toLocaleLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleLowerCase()); }
+};
+
+}();
+var _elm_lang$core$Char$fromCode = _elm_lang$core$Native_Char.fromCode;
+var _elm_lang$core$Char$toCode = _elm_lang$core$Native_Char.toCode;
+var _elm_lang$core$Char$toLocaleLower = _elm_lang$core$Native_Char.toLocaleLower;
+var _elm_lang$core$Char$toLocaleUpper = _elm_lang$core$Native_Char.toLocaleUpper;
+var _elm_lang$core$Char$toLower = _elm_lang$core$Native_Char.toLower;
+var _elm_lang$core$Char$toUpper = _elm_lang$core$Native_Char.toUpper;
+var _elm_lang$core$Char$isBetween = F3(
+	function (low, high, $char) {
+		var code = _elm_lang$core$Char$toCode($char);
+		return (_elm_lang$core$Native_Utils.cmp(
+			code,
+			_elm_lang$core$Char$toCode(low)) > -1) && (_elm_lang$core$Native_Utils.cmp(
+			code,
+			_elm_lang$core$Char$toCode(high)) < 1);
+	});
+var _elm_lang$core$Char$isUpper = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('A'),
+	_elm_lang$core$Native_Utils.chr('Z'));
+var _elm_lang$core$Char$isLower = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('a'),
+	_elm_lang$core$Native_Utils.chr('z'));
+var _elm_lang$core$Char$isDigit = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('0'),
+	_elm_lang$core$Native_Utils.chr('9'));
+var _elm_lang$core$Char$isOctDigit = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('0'),
+	_elm_lang$core$Native_Utils.chr('7'));
+var _elm_lang$core$Char$isHexDigit = function ($char) {
+	return _elm_lang$core$Char$isDigit($char) || (A3(
+		_elm_lang$core$Char$isBetween,
+		_elm_lang$core$Native_Utils.chr('a'),
+		_elm_lang$core$Native_Utils.chr('f'),
+		$char) || A3(
+		_elm_lang$core$Char$isBetween,
+		_elm_lang$core$Native_Utils.chr('A'),
+		_elm_lang$core$Native_Utils.chr('F'),
+		$char));
+};
+
+var _elm_lang$core$String$fromList = _elm_lang$core$Native_String.fromList;
+var _elm_lang$core$String$toList = _elm_lang$core$Native_String.toList;
+var _elm_lang$core$String$toFloat = _elm_lang$core$Native_String.toFloat;
+var _elm_lang$core$String$toInt = _elm_lang$core$Native_String.toInt;
+var _elm_lang$core$String$indices = _elm_lang$core$Native_String.indexes;
+var _elm_lang$core$String$indexes = _elm_lang$core$Native_String.indexes;
+var _elm_lang$core$String$endsWith = _elm_lang$core$Native_String.endsWith;
+var _elm_lang$core$String$startsWith = _elm_lang$core$Native_String.startsWith;
+var _elm_lang$core$String$contains = _elm_lang$core$Native_String.contains;
+var _elm_lang$core$String$all = _elm_lang$core$Native_String.all;
+var _elm_lang$core$String$any = _elm_lang$core$Native_String.any;
+var _elm_lang$core$String$toLower = _elm_lang$core$Native_String.toLower;
+var _elm_lang$core$String$toUpper = _elm_lang$core$Native_String.toUpper;
+var _elm_lang$core$String$lines = _elm_lang$core$Native_String.lines;
+var _elm_lang$core$String$words = _elm_lang$core$Native_String.words;
+var _elm_lang$core$String$trimRight = _elm_lang$core$Native_String.trimRight;
+var _elm_lang$core$String$trimLeft = _elm_lang$core$Native_String.trimLeft;
+var _elm_lang$core$String$trim = _elm_lang$core$Native_String.trim;
+var _elm_lang$core$String$padRight = _elm_lang$core$Native_String.padRight;
+var _elm_lang$core$String$padLeft = _elm_lang$core$Native_String.padLeft;
+var _elm_lang$core$String$pad = _elm_lang$core$Native_String.pad;
+var _elm_lang$core$String$dropRight = _elm_lang$core$Native_String.dropRight;
+var _elm_lang$core$String$dropLeft = _elm_lang$core$Native_String.dropLeft;
+var _elm_lang$core$String$right = _elm_lang$core$Native_String.right;
+var _elm_lang$core$String$left = _elm_lang$core$Native_String.left;
+var _elm_lang$core$String$slice = _elm_lang$core$Native_String.slice;
+var _elm_lang$core$String$repeat = _elm_lang$core$Native_String.repeat;
+var _elm_lang$core$String$join = _elm_lang$core$Native_String.join;
+var _elm_lang$core$String$split = _elm_lang$core$Native_String.split;
+var _elm_lang$core$String$foldr = _elm_lang$core$Native_String.foldr;
+var _elm_lang$core$String$foldl = _elm_lang$core$Native_String.foldl;
+var _elm_lang$core$String$reverse = _elm_lang$core$Native_String.reverse;
+var _elm_lang$core$String$filter = _elm_lang$core$Native_String.filter;
+var _elm_lang$core$String$map = _elm_lang$core$Native_String.map;
+var _elm_lang$core$String$length = _elm_lang$core$Native_String.length;
+var _elm_lang$core$String$concat = _elm_lang$core$Native_String.concat;
+var _elm_lang$core$String$append = _elm_lang$core$Native_String.append;
+var _elm_lang$core$String$uncons = _elm_lang$core$Native_String.uncons;
+var _elm_lang$core$String$cons = _elm_lang$core$Native_String.cons;
+var _elm_lang$core$String$fromChar = function ($char) {
+	return A2(_elm_lang$core$String$cons, $char, '');
+};
+var _elm_lang$core$String$isEmpty = _elm_lang$core$Native_String.isEmpty;
+
+var _elm_lang$core$Tuple$mapSecond = F2(
+	function (func, _p0) {
+		var _p1 = _p0;
+		return {
+			ctor: '_Tuple2',
+			_0: _p1._0,
+			_1: func(_p1._1)
+		};
+	});
+var _elm_lang$core$Tuple$mapFirst = F2(
+	function (func, _p2) {
+		var _p3 = _p2;
+		return {
+			ctor: '_Tuple2',
+			_0: func(_p3._0),
+			_1: _p3._1
+		};
+	});
+var _elm_lang$core$Tuple$second = function (_p4) {
+	var _p5 = _p4;
+	return _p5._1;
+};
+var _elm_lang$core$Tuple$first = function (_p6) {
+	var _p7 = _p6;
+	return _p7._0;
+};
+
 //import //
 
 var _elm_lang$core$Native_Platform = function() {
@@ -1813,167 +2324,109 @@ var _elm_lang$core$Native_Platform = function() {
 
 // PROGRAMS
 
-function addPublicModule(object, name, main)
+function program(impl)
 {
-	var init = main ? makeEmbed(name, main) : mainIsUndefined(name);
-
-	object['worker'] = function worker(flags)
+	return function(flagDecoder)
 	{
-		return init(undefined, flags, false);
-	}
-
-	object['embed'] = function embed(domNode, flags)
-	{
-		return init(domNode, flags, true);
-	}
-
-	object['fullscreen'] = function fullscreen(flags)
-	{
-		return init(document.body, flags, true);
-	};
-}
-
-
-// PROGRAM FAIL
-
-function mainIsUndefined(name)
-{
-	return function(domNode)
-	{
-		var message = 'Cannot initialize module `' + name +
-			'` because it has no `main` value!\nWhat should I show on screen?';
-		domNode.innerHTML = errorHtml(message);
-		throw new Error(message);
-	};
-}
-
-function errorHtml(message)
-{
-	return '<div style="padding-left:1em;">'
-		+ '<h2 style="font-weight:normal;"><b>Oops!</b> Something went wrong when starting your Elm program.</h2>'
-		+ '<pre style="padding-left:1em;">' + message + '</pre>'
-		+ '</div>';
-}
-
-
-// PROGRAM SUCCESS
-
-function makeEmbed(moduleName, main)
-{
-	return function embed(rootDomNode, flags, withRenderer)
-	{
-		try
+		return function(object, moduleName)
 		{
-			var program = mainToProgram(moduleName, main);
-			if (!withRenderer)
+			object['worker'] = function worker(flags)
 			{
-				program.renderer = dummyRenderer;
-			}
-			return makeEmbedHelp(moduleName, program, rootDomNode, flags);
-		}
-		catch (e)
-		{
-			rootDomNode.innerHTML = errorHtml(e.message);
-			throw e;
-		}
+				if (typeof flags !== 'undefined')
+				{
+					throw new Error(
+						'The `' + moduleName + '` module does not need flags.\n'
+						+ 'Call ' + moduleName + '.worker() with no arguments and you should be all set!'
+					);
+				}
+
+				return initialize(
+					impl.init,
+					impl.update,
+					impl.subscriptions,
+					renderer
+				);
+			};
+		};
 	};
 }
 
-function dummyRenderer()
+function programWithFlags(impl)
 {
-	return { update: function() {} };
+	return function(flagDecoder)
+	{
+		return function(object, moduleName)
+		{
+			object['worker'] = function worker(flags)
+			{
+				if (typeof flagDecoder === 'undefined')
+				{
+					throw new Error(
+						'Are you trying to sneak a Never value into Elm? Trickster!\n'
+						+ 'It looks like ' + moduleName + '.main is defined with `programWithFlags` but has type `Program Never`.\n'
+						+ 'Use `program` instead if you do not want flags.'
+					);
+				}
+
+				var result = A2(_elm_lang$core$Native_Json.run, flagDecoder, flags);
+				if (result.ctor === 'Err')
+				{
+					throw new Error(
+						moduleName + '.worker(...) was called with an unexpected argument.\n'
+						+ 'I tried to convert it to an Elm value, but ran into this problem:\n\n'
+						+ result._0
+					);
+				}
+
+				return initialize(
+					impl.init(result._0),
+					impl.update,
+					impl.subscriptions,
+					renderer
+				);
+			};
+		};
+	};
+}
+
+function renderer(enqueue, _)
+{
+	return function(_) {};
 }
 
 
-// MAIN TO PROGRAM
+// HTML TO PROGRAM
 
-function mainToProgram(moduleName, wrappedMain)
+function htmlToProgram(vnode)
 {
-	var main = wrappedMain.main;
+	var emptyBag = batch(_elm_lang$core$Native_List.Nil);
+	var noChange = _elm_lang$core$Native_Utils.Tuple2(
+		_elm_lang$core$Native_Utils.Tuple0,
+		emptyBag
+	);
 
-	if (typeof main.init === 'undefined')
-	{
-		var emptyBag = batch(_elm_lang$core$Native_List.Nil);
-		var noChange = _elm_lang$core$Native_Utils.Tuple2(
-			_elm_lang$core$Native_Utils.Tuple0,
-			emptyBag
-		);
-
-		return _elm_lang$virtual_dom$VirtualDom$programWithFlags({
-			init: function() { return noChange; },
-			view: function() { return main; },
-			update: F2(function() { return noChange; }),
-			subscriptions: function () { return emptyBag; }
-		});
-	}
-
-	var flags = wrappedMain.flags;
-	var init = flags
-		? initWithFlags(moduleName, main.init, flags)
-		: initWithoutFlags(moduleName, main.init);
-
-	return _elm_lang$virtual_dom$VirtualDom$programWithFlags({
-		init: init,
-		view: main.view,
-		update: main.update,
-		subscriptions: main.subscriptions,
+	return _elm_lang$virtual_dom$VirtualDom$program({
+		init: noChange,
+		view: function(model) { return main; },
+		update: F2(function(msg, model) { return noChange; }),
+		subscriptions: function (model) { return emptyBag; }
 	});
 }
 
-function initWithoutFlags(moduleName, realInit)
+
+// INITIALIZE A PROGRAM
+
+function initialize(init, update, subscriptions, renderer)
 {
-	return function init(flags)
-	{
-		if (typeof flags !== 'undefined')
-		{
-			throw new Error(
-				'You are giving module `' + moduleName + '` an argument in JavaScript.\n'
-				+ 'This module does not take arguments though! You probably need to change the\n'
-				+ 'initialization code to something like `Elm.' + moduleName + '.fullscreen()`'
-			);
-		}
-		return realInit();
-	};
-}
-
-function initWithFlags(moduleName, realInit, flagDecoder)
-{
-	return function init(flags)
-	{
-		var result = A2(_elm_lang$core$Native_Json.run, flagDecoder, flags);
-		if (result.ctor === 'Err')
-		{
-			throw new Error(
-				'You are trying to initialize module `' + moduleName + '` with an unexpected argument.\n'
-				+ 'When trying to convert it to a usable Elm value, I run into this problem:\n\n'
-				+ result._0
-			);
-		}
-		return realInit(result._0);
-	};
-}
-
-
-// SETUP RUNTIME SYSTEM
-
-function makeEmbedHelp(moduleName, program, rootDomNode, flags)
-{
-	var init = program.init;
-	var update = program.update;
-	var subscriptions = program.subscriptions;
-	var view = program.view;
-	var makeRenderer = program.renderer;
-
 	// ambient state
 	var managers = {};
-	var renderer;
+	var updateView;
 
 	// init and update state in main process
 	var initApp = _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
-		var results = init(flags);
-		var model = results._0;
-		renderer = makeRenderer(rootDomNode, enqueue, view(model));
-		var cmds = results._1;
+		var model = init._0;
+		updateView = renderer(enqueue, model);
+		var cmds = init._1;
 		var subs = subscriptions(model);
 		dispatchEffects(managers, cmds, subs);
 		callback(_elm_lang$core$Native_Scheduler.succeed(model));
@@ -1984,7 +2437,7 @@ function makeEmbedHelp(moduleName, program, rootDomNode, flags)
 		return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
 			var results = A2(update, msg, model);
 			model = results._0;
-			renderer.update(view(model));
+			updateView(model);
 			var cmds = results._1;
 			var subs = subscriptions(model);
 			dispatchEffects(managers, cmds, subs);
@@ -2098,10 +2551,10 @@ function spawnLoop(init, onMessage)
 		var handleMsg = _elm_lang$core$Native_Scheduler.receive(function(msg) {
 			return onMessage(msg, state);
 		});
-		return A2(andThen, handleMsg, loop);
+		return A2(andThen, loop, handleMsg);
 	}
 
-	var task = A2(andThen, init, loop);
+	var task = A2(andThen, loop, init);
 
 	return _elm_lang$core$Native_Scheduler.rawSpawn(task);
 }
@@ -2266,10 +2719,12 @@ function setupOutgoingPort(name)
 	{
 		while (cmdList.ctor !== '[]')
 		{
+			// grab a separate reference to subs in case unsubscribe is called
+			var currentSubs = subs;
 			var value = converter(cmdList._0);
-			for (var i = 0; i < subs.length; i++)
+			for (var i = 0; i < currentSubs.length; i++)
 			{
-				subs[i](value);
+				currentSubs[i](value);
 			}
 			cmdList = cmdList._1;
 		}
@@ -2288,6 +2743,9 @@ function setupOutgoingPort(name)
 
 	function unsubscribe(callback)
 	{
+		// copy subs into a new array in case unsubscribe is called within a
+		// subscribed callback
+		subs = subs.slice();
 		var index = subs.indexOf(callback);
 		if (index >= 0)
 		{
@@ -2372,15 +2830,8 @@ function setupIncomingPort(name, callback)
 		sentBeforeInit.push(value);
 	}
 
-	function postInitSend(incomingValue)
+	function postInitSend(value)
 	{
-		var result = A2(_elm_lang$core$Json_Decode$decodeValue, converter, incomingValue);
-		if (result.ctor === 'Err')
-		{
-			throw new Error('Trying to send an unexpected type of value through port `' + name + '`:\n' + result._0);
-		}
-
-		var value = result._0;
 		var temp = subs;
 		while (temp.ctor !== '[]')
 		{
@@ -2391,7 +2842,13 @@ function setupIncomingPort(name, callback)
 
 	function send(incomingValue)
 	{
-		currentSend(incomingValue);
+		var result = A2(_elm_lang$core$Json_Decode$decodeValue, converter, incomingValue);
+		if (result.ctor === 'Err')
+		{
+			throw new Error('Trying to send an unexpected type of value through port `' + name + '`:\n' + result._0);
+		}
+
+		currentSend(result._0);
 	}
 
 	return { send: send };
@@ -2403,11 +2860,14 @@ return {
 	sendToSelf: F2(sendToSelf),
 
 	// global setup
-	mainToProgram: mainToProgram,
 	effectManagers: effectManagers,
 	outgoingPort: outgoingPort,
 	incomingPort: incomingPort,
-	addPublicModule: addPublicModule,
+
+	htmlToProgram: htmlToProgram,
+	program: program,
+	programWithFlags: programWithFlags,
+	initialize: initialize,
 
 	// effect bags
 	leaf: leaf,
@@ -2451,21 +2911,21 @@ function nativeBinding(callback)
 	};
 }
 
-function andThen(task, callback)
+function andThen(callback, task)
 {
 	return {
 		ctor: '_Task_andThen',
-		task: task,
-		callback: callback
+		callback: callback,
+		task: task
 	};
 }
 
-function onError(task, callback)
+function onError(callback, task)
 {
 	return {
 		ctor: '_Task_onError',
-		task: task,
-		callback: callback
+		callback: callback,
+		task: task
 	};
 }
 
@@ -2698,18 +3158,9 @@ return {
 };
 
 }();
-var _elm_lang$core$Platform$hack = _elm_lang$core$Native_Scheduler.succeed;
-var _elm_lang$core$Platform$sendToSelf = _elm_lang$core$Native_Platform.sendToSelf;
-var _elm_lang$core$Platform$sendToApp = _elm_lang$core$Native_Platform.sendToApp;
-var _elm_lang$core$Platform$Program = {ctor: 'Program'};
-var _elm_lang$core$Platform$Task = {ctor: 'Task'};
-var _elm_lang$core$Platform$ProcessId = {ctor: 'ProcessId'};
-var _elm_lang$core$Platform$Router = {ctor: 'Router'};
-
 var _elm_lang$core$Platform_Cmd$batch = _elm_lang$core$Native_Platform.batch;
 var _elm_lang$core$Platform_Cmd$none = _elm_lang$core$Platform_Cmd$batch(
-	_elm_lang$core$Native_List.fromArray(
-		[]));
+	{ctor: '[]'});
 var _elm_lang$core$Platform_Cmd_ops = _elm_lang$core$Platform_Cmd_ops || {};
 _elm_lang$core$Platform_Cmd_ops['!'] = F2(
 	function (model, commands) {
@@ -2724,31 +3175,19 @@ var _elm_lang$core$Platform_Cmd$Cmd = {ctor: 'Cmd'};
 
 var _elm_lang$core$Platform_Sub$batch = _elm_lang$core$Native_Platform.batch;
 var _elm_lang$core$Platform_Sub$none = _elm_lang$core$Platform_Sub$batch(
-	_elm_lang$core$Native_List.fromArray(
-		[]));
+	{ctor: '[]'});
 var _elm_lang$core$Platform_Sub$map = _elm_lang$core$Native_Platform.map;
 var _elm_lang$core$Platform_Sub$Sub = {ctor: 'Sub'};
 
-var _elm_lang$lazy$Native_Lazy = function() {
-
-function memoize(thunk)
-{
-    var value;
-    var isForced = false;
-    return function(tuple0) {
-        if (!isForced) {
-            value = thunk(tuple0);
-            isForced = true;
-        }
-        return value;
-    };
-}
-
-return {
-    memoize: memoize
-};
-
-}();
+var _elm_lang$core$Platform$hack = _elm_lang$core$Native_Scheduler.succeed;
+var _elm_lang$core$Platform$sendToSelf = _elm_lang$core$Native_Platform.sendToSelf;
+var _elm_lang$core$Platform$sendToApp = _elm_lang$core$Native_Platform.sendToApp;
+var _elm_lang$core$Platform$programWithFlags = _elm_lang$core$Native_Platform.programWithFlags;
+var _elm_lang$core$Platform$program = _elm_lang$core$Native_Platform.program;
+var _elm_lang$core$Platform$Program = {ctor: 'Program'};
+var _elm_lang$core$Platform$Task = {ctor: 'Task'};
+var _elm_lang$core$Platform$ProcessId = {ctor: 'ProcessId'};
+var _elm_lang$core$Platform$Router = {ctor: 'Router'};
 
 var _elm_lang$lazy$Lazy$force = function (_p0) {
 	var _p1 = _p0;
@@ -2833,7 +3272,7 @@ var _elm_lang$lazy$Lazy$apply = F2(
 			});
 	});
 var _elm_lang$lazy$Lazy$andThen = F2(
-	function (a, callback) {
+	function (callback, a) {
 		return _elm_lang$lazy$Lazy$lazy(
 			function (_p14) {
 				var _p15 = _p14;
@@ -2842,443 +3281,6 @@ var _elm_lang$lazy$Lazy$andThen = F2(
 						_elm_lang$lazy$Lazy$force(a)));
 			});
 	});
-
-//import Maybe, Native.List, Native.Utils, Result //
-
-var _elm_lang$core$Native_String = function() {
-
-function isEmpty(str)
-{
-	return str.length === 0;
-}
-function cons(chr, str)
-{
-	return chr + str;
-}
-function uncons(str)
-{
-	var hd = str[0];
-	if (hd)
-	{
-		return _elm_lang$core$Maybe$Just(_elm_lang$core$Native_Utils.Tuple2(_elm_lang$core$Native_Utils.chr(hd), str.slice(1)));
-	}
-	return _elm_lang$core$Maybe$Nothing;
-}
-function append(a, b)
-{
-	return a + b;
-}
-function concat(strs)
-{
-	return _elm_lang$core$Native_List.toArray(strs).join('');
-}
-function length(str)
-{
-	return str.length;
-}
-function map(f, str)
-{
-	var out = str.split('');
-	for (var i = out.length; i--; )
-	{
-		out[i] = f(_elm_lang$core$Native_Utils.chr(out[i]));
-	}
-	return out.join('');
-}
-function filter(pred, str)
-{
-	return str.split('').map(_elm_lang$core$Native_Utils.chr).filter(pred).join('');
-}
-function reverse(str)
-{
-	return str.split('').reverse().join('');
-}
-function foldl(f, b, str)
-{
-	var len = str.length;
-	for (var i = 0; i < len; ++i)
-	{
-		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
-	}
-	return b;
-}
-function foldr(f, b, str)
-{
-	for (var i = str.length; i--; )
-	{
-		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
-	}
-	return b;
-}
-function split(sep, str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split(sep));
-}
-function join(sep, strs)
-{
-	return _elm_lang$core$Native_List.toArray(strs).join(sep);
-}
-function repeat(n, str)
-{
-	var result = '';
-	while (n > 0)
-	{
-		if (n & 1)
-		{
-			result += str;
-		}
-		n >>= 1, str += str;
-	}
-	return result;
-}
-function slice(start, end, str)
-{
-	return str.slice(start, end);
-}
-function left(n, str)
-{
-	return n < 1 ? '' : str.slice(0, n);
-}
-function right(n, str)
-{
-	return n < 1 ? '' : str.slice(-n);
-}
-function dropLeft(n, str)
-{
-	return n < 1 ? str : str.slice(n);
-}
-function dropRight(n, str)
-{
-	return n < 1 ? str : str.slice(0, -n);
-}
-function pad(n, chr, str)
-{
-	var half = (n - str.length) / 2;
-	return repeat(Math.ceil(half), chr) + str + repeat(half | 0, chr);
-}
-function padRight(n, chr, str)
-{
-	return str + repeat(n - str.length, chr);
-}
-function padLeft(n, chr, str)
-{
-	return repeat(n - str.length, chr) + str;
-}
-
-function trim(str)
-{
-	return str.trim();
-}
-function trimLeft(str)
-{
-	return str.replace(/^\s+/, '');
-}
-function trimRight(str)
-{
-	return str.replace(/\s+$/, '');
-}
-
-function words(str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.trim().split(/\s+/g));
-}
-function lines(str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split(/\r\n|\r|\n/g));
-}
-
-function toUpper(str)
-{
-	return str.toUpperCase();
-}
-function toLower(str)
-{
-	return str.toLowerCase();
-}
-
-function any(pred, str)
-{
-	for (var i = str.length; i--; )
-	{
-		if (pred(_elm_lang$core$Native_Utils.chr(str[i])))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-function all(pred, str)
-{
-	for (var i = str.length; i--; )
-	{
-		if (!pred(_elm_lang$core$Native_Utils.chr(str[i])))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-function contains(sub, str)
-{
-	return str.indexOf(sub) > -1;
-}
-function startsWith(sub, str)
-{
-	return str.indexOf(sub) === 0;
-}
-function endsWith(sub, str)
-{
-	return str.length >= sub.length &&
-		str.lastIndexOf(sub) === str.length - sub.length;
-}
-function indexes(sub, str)
-{
-	var subLen = sub.length;
-	
-	if (subLen < 1)
-	{
-		return _elm_lang$core$Native_List.Nil;
-	}
-
-	var i = 0;
-	var is = [];
-
-	while ((i = str.indexOf(sub, i)) > -1)
-	{
-		is.push(i);
-		i = i + subLen;
-	}	
-	
-	return _elm_lang$core$Native_List.fromArray(is);
-}
-
-function toInt(s)
-{
-	var len = s.length;
-	if (len === 0)
-	{
-		return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int" );
-	}
-	var start = 0;
-	if (s[0] === '-')
-	{
-		if (len === 1)
-		{
-			return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int" );
-		}
-		start = 1;
-	}
-	for (var i = start; i < len; ++i)
-	{
-		var c = s[i];
-		if (c < '0' || '9' < c)
-		{
-			return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int" );
-		}
-	}
-	return _elm_lang$core$Result$Ok(parseInt(s, 10));
-}
-
-function toFloat(s)
-{
-	var len = s.length;
-	if (len === 0)
-	{
-		return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float" );
-	}
-	var start = 0;
-	if (s[0] === '-')
-	{
-		if (len === 1)
-		{
-			return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float" );
-		}
-		start = 1;
-	}
-	var dotCount = 0;
-	for (var i = start; i < len; ++i)
-	{
-		var c = s[i];
-		if ('0' <= c && c <= '9')
-		{
-			continue;
-		}
-		if (c === '.')
-		{
-			dotCount += 1;
-			if (dotCount <= 1)
-			{
-				continue;
-			}
-		}
-		return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float" );
-	}
-	return _elm_lang$core$Result$Ok(parseFloat(s));
-}
-
-function toList(str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split('').map(_elm_lang$core$Native_Utils.chr));
-}
-function fromList(chars)
-{
-	return _elm_lang$core$Native_List.toArray(chars).join('');
-}
-
-return {
-	isEmpty: isEmpty,
-	cons: F2(cons),
-	uncons: uncons,
-	append: F2(append),
-	concat: concat,
-	length: length,
-	map: F2(map),
-	filter: F2(filter),
-	reverse: reverse,
-	foldl: F3(foldl),
-	foldr: F3(foldr),
-
-	split: F2(split),
-	join: F2(join),
-	repeat: F2(repeat),
-
-	slice: F3(slice),
-	left: F2(left),
-	right: F2(right),
-	dropLeft: F2(dropLeft),
-	dropRight: F2(dropRight),
-
-	pad: F3(pad),
-	padLeft: F3(padLeft),
-	padRight: F3(padRight),
-
-	trim: trim,
-	trimLeft: trimLeft,
-	trimRight: trimRight,
-
-	words: words,
-	lines: lines,
-
-	toUpper: toUpper,
-	toLower: toLower,
-
-	any: F2(any),
-	all: F2(all),
-
-	contains: F2(contains),
-	startsWith: F2(startsWith),
-	endsWith: F2(endsWith),
-	indexes: F2(indexes),
-
-	toInt: toInt,
-	toFloat: toFloat,
-	toList: toList,
-	fromList: fromList
-};
-
-}();
-
-//import Native.Utils //
-
-var _elm_lang$core$Native_Char = function() {
-
-return {
-	fromCode: function(c) { return _elm_lang$core$Native_Utils.chr(String.fromCharCode(c)); },
-	toCode: function(c) { return c.charCodeAt(0); },
-	toUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toUpperCase()); },
-	toLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLowerCase()); },
-	toLocaleUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleUpperCase()); },
-	toLocaleLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleLowerCase()); }
-};
-
-}();
-var _elm_lang$core$Char$fromCode = _elm_lang$core$Native_Char.fromCode;
-var _elm_lang$core$Char$toCode = _elm_lang$core$Native_Char.toCode;
-var _elm_lang$core$Char$toLocaleLower = _elm_lang$core$Native_Char.toLocaleLower;
-var _elm_lang$core$Char$toLocaleUpper = _elm_lang$core$Native_Char.toLocaleUpper;
-var _elm_lang$core$Char$toLower = _elm_lang$core$Native_Char.toLower;
-var _elm_lang$core$Char$toUpper = _elm_lang$core$Native_Char.toUpper;
-var _elm_lang$core$Char$isBetween = F3(
-	function (low, high, $char) {
-		var code = _elm_lang$core$Char$toCode($char);
-		return (_elm_lang$core$Native_Utils.cmp(
-			code,
-			_elm_lang$core$Char$toCode(low)) > -1) && (_elm_lang$core$Native_Utils.cmp(
-			code,
-			_elm_lang$core$Char$toCode(high)) < 1);
-	});
-var _elm_lang$core$Char$isUpper = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('A'),
-	_elm_lang$core$Native_Utils.chr('Z'));
-var _elm_lang$core$Char$isLower = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('a'),
-	_elm_lang$core$Native_Utils.chr('z'));
-var _elm_lang$core$Char$isDigit = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('0'),
-	_elm_lang$core$Native_Utils.chr('9'));
-var _elm_lang$core$Char$isOctDigit = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('0'),
-	_elm_lang$core$Native_Utils.chr('7'));
-var _elm_lang$core$Char$isHexDigit = function ($char) {
-	return _elm_lang$core$Char$isDigit($char) || (A3(
-		_elm_lang$core$Char$isBetween,
-		_elm_lang$core$Native_Utils.chr('a'),
-		_elm_lang$core$Native_Utils.chr('f'),
-		$char) || A3(
-		_elm_lang$core$Char$isBetween,
-		_elm_lang$core$Native_Utils.chr('A'),
-		_elm_lang$core$Native_Utils.chr('F'),
-		$char));
-};
-
-var _elm_lang$core$String$fromList = _elm_lang$core$Native_String.fromList;
-var _elm_lang$core$String$toList = _elm_lang$core$Native_String.toList;
-var _elm_lang$core$String$toFloat = _elm_lang$core$Native_String.toFloat;
-var _elm_lang$core$String$toInt = _elm_lang$core$Native_String.toInt;
-var _elm_lang$core$String$indices = _elm_lang$core$Native_String.indexes;
-var _elm_lang$core$String$indexes = _elm_lang$core$Native_String.indexes;
-var _elm_lang$core$String$endsWith = _elm_lang$core$Native_String.endsWith;
-var _elm_lang$core$String$startsWith = _elm_lang$core$Native_String.startsWith;
-var _elm_lang$core$String$contains = _elm_lang$core$Native_String.contains;
-var _elm_lang$core$String$all = _elm_lang$core$Native_String.all;
-var _elm_lang$core$String$any = _elm_lang$core$Native_String.any;
-var _elm_lang$core$String$toLower = _elm_lang$core$Native_String.toLower;
-var _elm_lang$core$String$toUpper = _elm_lang$core$Native_String.toUpper;
-var _elm_lang$core$String$lines = _elm_lang$core$Native_String.lines;
-var _elm_lang$core$String$words = _elm_lang$core$Native_String.words;
-var _elm_lang$core$String$trimRight = _elm_lang$core$Native_String.trimRight;
-var _elm_lang$core$String$trimLeft = _elm_lang$core$Native_String.trimLeft;
-var _elm_lang$core$String$trim = _elm_lang$core$Native_String.trim;
-var _elm_lang$core$String$padRight = _elm_lang$core$Native_String.padRight;
-var _elm_lang$core$String$padLeft = _elm_lang$core$Native_String.padLeft;
-var _elm_lang$core$String$pad = _elm_lang$core$Native_String.pad;
-var _elm_lang$core$String$dropRight = _elm_lang$core$Native_String.dropRight;
-var _elm_lang$core$String$dropLeft = _elm_lang$core$Native_String.dropLeft;
-var _elm_lang$core$String$right = _elm_lang$core$Native_String.right;
-var _elm_lang$core$String$left = _elm_lang$core$Native_String.left;
-var _elm_lang$core$String$slice = _elm_lang$core$Native_String.slice;
-var _elm_lang$core$String$repeat = _elm_lang$core$Native_String.repeat;
-var _elm_lang$core$String$join = _elm_lang$core$Native_String.join;
-var _elm_lang$core$String$split = _elm_lang$core$Native_String.split;
-var _elm_lang$core$String$foldr = _elm_lang$core$Native_String.foldr;
-var _elm_lang$core$String$foldl = _elm_lang$core$Native_String.foldl;
-var _elm_lang$core$String$reverse = _elm_lang$core$Native_String.reverse;
-var _elm_lang$core$String$filter = _elm_lang$core$Native_String.filter;
-var _elm_lang$core$String$map = _elm_lang$core$Native_String.map;
-var _elm_lang$core$String$length = _elm_lang$core$Native_String.length;
-var _elm_lang$core$String$concat = _elm_lang$core$Native_String.concat;
-var _elm_lang$core$String$append = _elm_lang$core$Native_String.append;
-var _elm_lang$core$String$uncons = _elm_lang$core$Native_String.uncons;
-var _elm_lang$core$String$cons = _elm_lang$core$Native_String.cons;
-var _elm_lang$core$String$fromChar = function ($char) {
-	return A2(_elm_lang$core$String$cons, $char, '');
-};
-var _elm_lang$core$String$isEmpty = _elm_lang$core$Native_String.isEmpty;
 
 //import Maybe, Native.List //
 
@@ -3357,7 +3359,7 @@ function replace(n, re, replacer, string)
 		return replacer({
 			match: match,
 			submatches: _elm_lang$core$Native_List.fromArray(submatches),
-			index: arguments[i - 1],
+			index: arguments[arguments.length - 2],
 			number: count
 		});
 	}
@@ -3375,6 +3377,7 @@ function split(n, re, str)
 	var result;
 	var out = [];
 	var start = re.lastIndex;
+	var restoreLastIndex = re.lastIndex;
 	while (n--)
 	{
 		if (!(result = re.exec(string))) break;
@@ -3382,6 +3385,7 @@ function split(n, re, str)
 		start = re.lastIndex;
 	}
 	out.push(string.slice(start));
+	re.lastIndex = restoreLastIndex;
 	return _elm_lang$core$Native_List.fromArray(out);
 }
 
@@ -3423,25 +3427,100 @@ var _Bogdanp$elm_combine$Combine$app = function (p) {
 		return _elm_lang$lazy$Lazy$force(_p0._0);
 	}
 };
-var _Bogdanp$elm_combine$Combine$parse = F2(
-	function (p, input) {
-		return A2(
+var _Bogdanp$elm_combine$Combine$InputStream = F3(
+	function (a, b, c) {
+		return {data: a, input: b, position: c};
+	});
+var _Bogdanp$elm_combine$Combine$initStream = function (s) {
+	return A3(_Bogdanp$elm_combine$Combine$InputStream, s, s, 0);
+};
+var _Bogdanp$elm_combine$Combine$runParser = F3(
+	function (p, st, s) {
+		var _p1 = A3(
 			_Bogdanp$elm_combine$Combine$app,
 			p,
-			{input: input, position: 0});
+			st,
+			_Bogdanp$elm_combine$Combine$initStream(s));
+		if (_p1._2.ctor === 'Ok') {
+			return _elm_lang$core$Result$Ok(
+				{ctor: '_Tuple3', _0: _p1._0, _1: _p1._1, _2: _p1._2._0});
+		} else {
+			return _elm_lang$core$Result$Err(
+				{ctor: '_Tuple3', _0: _p1._0, _1: _p1._1, _2: _p1._2._0});
+		}
 	});
-var _Bogdanp$elm_combine$Combine$Context = F2(
-	function (a, b) {
-		return {input: a, position: b};
+var _Bogdanp$elm_combine$Combine$parse = function (p) {
+	return A2(
+		_Bogdanp$elm_combine$Combine$runParser,
+		p,
+		{ctor: '_Tuple0'});
+};
+var _Bogdanp$elm_combine$Combine$ParseLocation = F3(
+	function (a, b, c) {
+		return {source: a, line: b, column: c};
 	});
+var _Bogdanp$elm_combine$Combine$currentLocation = function (stream) {
+	var find = F3(
+		function (position, currentLine, lines) {
+			find:
+			while (true) {
+				var _p2 = lines;
+				if (_p2.ctor === '[]') {
+					return A3(_Bogdanp$elm_combine$Combine$ParseLocation, '', 1, position);
+				} else {
+					if (_p2._1.ctor === '[]') {
+						return A3(_Bogdanp$elm_combine$Combine$ParseLocation, _p2._0, currentLine + 1, position);
+					} else {
+						var _p3 = _p2._0;
+						var length = _elm_lang$core$String$length(_p3);
+						if (_elm_lang$core$Native_Utils.cmp(position, length) > -1) {
+							var _v3 = (position - length) - 1,
+								_v4 = currentLine + 1,
+								_v5 = _p2._1;
+							position = _v3;
+							currentLine = _v4;
+							lines = _v5;
+							continue find;
+						} else {
+							if (_elm_lang$core$Native_Utils.eq(currentLine, 0)) {
+								return A3(_Bogdanp$elm_combine$Combine$ParseLocation, _p3, 1, position);
+							} else {
+								return A3(_Bogdanp$elm_combine$Combine$ParseLocation, _p3, currentLine, position - 1);
+							}
+						}
+					}
+				}
+			}
+		});
+	var lines = A2(_elm_lang$core$String$split, '\n', stream.data);
+	return A3(find, stream.position, 0, lines);
+};
+var _Bogdanp$elm_combine$Combine$currentSourceLine = function (_p4) {
+	return function (_) {
+		return _.source;
+	}(
+		_Bogdanp$elm_combine$Combine$currentLocation(_p4));
+};
+var _Bogdanp$elm_combine$Combine$currentLine = function (_p5) {
+	return function (_) {
+		return _.line;
+	}(
+		_Bogdanp$elm_combine$Combine$currentLocation(_p5));
+};
+var _Bogdanp$elm_combine$Combine$currentColumn = function (_p6) {
+	return function (_) {
+		return _.column;
+	}(
+		_Bogdanp$elm_combine$Combine$currentLocation(_p6));
+};
 var _Bogdanp$elm_combine$Combine$RecursiveParser = function (a) {
 	return {ctor: 'RecursiveParser', _0: a};
 };
-var _Bogdanp$elm_combine$Combine$rec = function (t) {
+var _Bogdanp$elm_combine$Combine$lazy = function (t) {
 	return _Bogdanp$elm_combine$Combine$RecursiveParser(
 		_elm_lang$lazy$Lazy$lazy(
-			function (_p1) {
-				var _p2 = _p1;
+			function (_p7) {
+				var _p8 = _p7;
 				return _Bogdanp$elm_combine$Combine$app(
 					t(
 						{ctor: '_Tuple0'}));
@@ -3454,151 +3533,282 @@ var _Bogdanp$elm_combine$Combine$primitive = _Bogdanp$elm_combine$Combine$Parser
 var _Bogdanp$elm_combine$Combine$bimap = F3(
 	function (fok, ferr, p) {
 		return _Bogdanp$elm_combine$Combine$Parser(
-			function (cx) {
-				var _p3 = A2(_Bogdanp$elm_combine$Combine$app, p, cx);
-				if (_p3._0.ctor === 'Ok') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Result$Ok(
-							fok(_p3._0._0)),
-						_1: _p3._1
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Result$Err(
-							ferr(_p3._0._0)),
-						_1: _p3._1
-					};
-				}
-			});
+			F2(
+				function (state, stream) {
+					var _p9 = A3(_Bogdanp$elm_combine$Combine$app, p, state, stream);
+					if (_p9._2.ctor === 'Ok') {
+						return {
+							ctor: '_Tuple3',
+							_0: _p9._0,
+							_1: _p9._1,
+							_2: _elm_lang$core$Result$Ok(
+								fok(_p9._2._0))
+						};
+					} else {
+						return {
+							ctor: '_Tuple3',
+							_0: _p9._0,
+							_1: _p9._1,
+							_2: _elm_lang$core$Result$Err(
+								ferr(_p9._2._0))
+						};
+					}
+				}));
 	});
 var _Bogdanp$elm_combine$Combine$map = F2(
 	function (f, p) {
 		return A3(_Bogdanp$elm_combine$Combine$bimap, f, _elm_lang$core$Basics$identity, p);
 	});
+var _Bogdanp$elm_combine$Combine_ops = _Bogdanp$elm_combine$Combine_ops || {};
+_Bogdanp$elm_combine$Combine_ops['<$>'] = _Bogdanp$elm_combine$Combine$map;
+var _Bogdanp$elm_combine$Combine_ops = _Bogdanp$elm_combine$Combine_ops || {};
+_Bogdanp$elm_combine$Combine_ops['<$'] = function (res) {
+	return _Bogdanp$elm_combine$Combine$map(
+		_elm_lang$core$Basics$always(res));
+};
+var _Bogdanp$elm_combine$Combine$skip = function (p) {
+	return A2(
+		_Bogdanp$elm_combine$Combine_ops['<$'],
+		{ctor: '_Tuple0'},
+		p);
+};
+var _Bogdanp$elm_combine$Combine_ops = _Bogdanp$elm_combine$Combine_ops || {};
+_Bogdanp$elm_combine$Combine_ops['$>'] = _elm_lang$core$Basics$flip(
+	F2(
+		function (x, y) {
+			return A2(_Bogdanp$elm_combine$Combine_ops['<$'], x, y);
+		}));
 var _Bogdanp$elm_combine$Combine$mapError = _Bogdanp$elm_combine$Combine$bimap(_elm_lang$core$Basics$identity);
+var _Bogdanp$elm_combine$Combine_ops = _Bogdanp$elm_combine$Combine_ops || {};
+_Bogdanp$elm_combine$Combine_ops['<?>'] = F2(
+	function (p, m) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$mapError,
+			_elm_lang$core$Basics$always(
+				{
+					ctor: '::',
+					_0: m,
+					_1: {ctor: '[]'}
+				}),
+			p);
+	});
+var _Bogdanp$elm_combine$Combine$withState = function (f) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		F2(
+			function (state, stream) {
+				return A3(
+					_Bogdanp$elm_combine$Combine$app,
+					f(state),
+					state,
+					stream);
+			}));
+};
+var _Bogdanp$elm_combine$Combine$withLocation = function (f) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		F2(
+			function (state, stream) {
+				return A3(
+					_Bogdanp$elm_combine$Combine$app,
+					f(
+						_Bogdanp$elm_combine$Combine$currentLocation(stream)),
+					state,
+					stream);
+			}));
+};
+var _Bogdanp$elm_combine$Combine$withLine = function (f) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		F2(
+			function (state, stream) {
+				return A3(
+					_Bogdanp$elm_combine$Combine$app,
+					f(
+						_Bogdanp$elm_combine$Combine$currentLine(stream)),
+					state,
+					stream);
+			}));
+};
+var _Bogdanp$elm_combine$Combine$withColumn = function (f) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		F2(
+			function (state, stream) {
+				return A3(
+					_Bogdanp$elm_combine$Combine$app,
+					f(
+						_Bogdanp$elm_combine$Combine$currentColumn(stream)),
+					state,
+					stream);
+			}));
+};
 var _Bogdanp$elm_combine$Combine$andThen = F2(
-	function (p, f) {
+	function (f, p) {
 		return _Bogdanp$elm_combine$Combine$Parser(
-			function (cx) {
-				var _p4 = A2(_Bogdanp$elm_combine$Combine$app, p, cx);
-				if (_p4._0.ctor === 'Ok') {
-					return A2(
-						_Bogdanp$elm_combine$Combine$app,
-						f(_p4._0._0),
-						_p4._1);
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Result$Err(_p4._0._0),
-						_1: _p4._1
-					};
-				}
-			});
+			F2(
+				function (state, stream) {
+					var _p10 = A3(_Bogdanp$elm_combine$Combine$app, p, state, stream);
+					if (_p10._2.ctor === 'Ok') {
+						return A3(
+							_Bogdanp$elm_combine$Combine$app,
+							f(_p10._2._0),
+							_p10._0,
+							_p10._1);
+					} else {
+						return {
+							ctor: '_Tuple3',
+							_0: _p10._0,
+							_1: _p10._1,
+							_2: _elm_lang$core$Result$Err(_p10._2._0)
+						};
+					}
+				}));
+	});
+var _Bogdanp$elm_combine$Combine_ops = _Bogdanp$elm_combine$Combine_ops || {};
+_Bogdanp$elm_combine$Combine_ops['>>='] = _elm_lang$core$Basics$flip(_Bogdanp$elm_combine$Combine$andThen);
+var _Bogdanp$elm_combine$Combine$andMap = F2(
+	function (rp, lp) {
+		return A2(
+			_Bogdanp$elm_combine$Combine_ops['>>='],
+			lp,
+			A2(_elm_lang$core$Basics$flip, _Bogdanp$elm_combine$Combine$map, rp));
+	});
+var _Bogdanp$elm_combine$Combine_ops = _Bogdanp$elm_combine$Combine_ops || {};
+_Bogdanp$elm_combine$Combine_ops['<*>'] = _elm_lang$core$Basics$flip(_Bogdanp$elm_combine$Combine$andMap);
+var _Bogdanp$elm_combine$Combine_ops = _Bogdanp$elm_combine$Combine_ops || {};
+_Bogdanp$elm_combine$Combine_ops['<*'] = F2(
+	function (lp, rp) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			rp,
+			A2(_Bogdanp$elm_combine$Combine$map, _elm_lang$core$Basics$always, lp));
+	});
+var _Bogdanp$elm_combine$Combine_ops = _Bogdanp$elm_combine$Combine_ops || {};
+_Bogdanp$elm_combine$Combine_ops['*>'] = F2(
+	function (lp, rp) {
+		return A2(
+			_Bogdanp$elm_combine$Combine$andMap,
+			rp,
+			A2(
+				_Bogdanp$elm_combine$Combine$map,
+				_elm_lang$core$Basics$flip(_elm_lang$core$Basics$always),
+				lp));
+	});
+var _Bogdanp$elm_combine$Combine$between = F3(
+	function (lp, rp, p) {
+		return A2(
+			_Bogdanp$elm_combine$Combine_ops['<*'],
+			A2(_Bogdanp$elm_combine$Combine_ops['*>'], lp, p),
+			rp);
 	});
 var _Bogdanp$elm_combine$Combine$sequence = function (ps) {
-	var accumulate = F3(
-		function (acc, ps, cx) {
+	var accumulate = F4(
+		function (acc, ps, state, stream) {
 			accumulate:
 			while (true) {
-				var _p5 = ps;
-				if (_p5.ctor === '[]') {
+				var _p11 = ps;
+				if (_p11.ctor === '[]') {
 					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Result$Ok(
-							_elm_lang$core$List$reverse(acc)),
-						_1: cx
+						ctor: '_Tuple3',
+						_0: state,
+						_1: stream,
+						_2: _elm_lang$core$Result$Ok(
+							_elm_lang$core$List$reverse(acc))
 					};
 				} else {
-					var _p6 = A2(_Bogdanp$elm_combine$Combine$app, _p5._0, cx);
-					if (_p6._0.ctor === 'Ok') {
-						var _v6 = A2(_elm_lang$core$List_ops['::'], _p6._0._0, acc),
-							_v7 = _p5._1,
-							_v8 = _p6._1;
-						acc = _v6;
-						ps = _v7;
-						cx = _v8;
+					var _p12 = A3(_Bogdanp$elm_combine$Combine$app, _p11._0, state, stream);
+					if (_p12._2.ctor === 'Ok') {
+						var _v11 = {ctor: '::', _0: _p12._2._0, _1: acc},
+							_v12 = _p11._1,
+							_v13 = _p12._0,
+							_v14 = _p12._1;
+						acc = _v11;
+						ps = _v12;
+						state = _v13;
+						stream = _v14;
 						continue accumulate;
 					} else {
 						return {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Result$Err(_p6._0._0),
-							_1: _p6._1
+							ctor: '_Tuple3',
+							_0: _p12._0,
+							_1: _p12._1,
+							_2: _elm_lang$core$Result$Err(_p12._2._0)
 						};
 					}
 				}
 			}
 		});
 	return _Bogdanp$elm_combine$Combine$Parser(
-		function (cx) {
-			return A3(
-				accumulate,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				ps,
-				cx);
-		});
+		F2(
+			function (state, stream) {
+				return A4(
+					accumulate,
+					{ctor: '[]'},
+					ps,
+					state,
+					stream);
+			}));
 };
-var _Bogdanp$elm_combine$Combine$fail = function (ms) {
+var _Bogdanp$elm_combine$Combine$fail = function (m) {
 	return _Bogdanp$elm_combine$Combine$Parser(
-		function (cx) {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Result$Err(ms),
-				_1: cx
-			};
-		});
+		F2(
+			function (state, stream) {
+				return {
+					ctor: '_Tuple3',
+					_0: state,
+					_1: stream,
+					_2: _elm_lang$core$Result$Err(
+						{
+							ctor: '::',
+							_0: m,
+							_1: {ctor: '[]'}
+						})
+				};
+			}));
 };
-var _Bogdanp$elm_combine$Combine$succeed = function (r) {
+var _Bogdanp$elm_combine$Combine$emptyErr = _Bogdanp$elm_combine$Combine$Parser(
+	F2(
+		function (state, stream) {
+			return {
+				ctor: '_Tuple3',
+				_0: state,
+				_1: stream,
+				_2: _elm_lang$core$Result$Err(
+					{ctor: '[]'})
+			};
+		}));
+var _Bogdanp$elm_combine$Combine$succeed = function (res) {
 	return _Bogdanp$elm_combine$Combine$Parser(
-		function (cx) {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Result$Ok(r),
-				_1: cx
-			};
-		});
+		F2(
+			function (state, stream) {
+				return {
+					ctor: '_Tuple3',
+					_0: state,
+					_1: stream,
+					_2: _elm_lang$core$Result$Ok(res)
+				};
+			}));
 };
-var _Bogdanp$elm_combine$Combine$andMap = F2(
-	function (lp, rp) {
-		return A2(
-			_Bogdanp$elm_combine$Combine$andThen,
-			lp,
-			function (f) {
-				return A2(
-					_Bogdanp$elm_combine$Combine$andThen,
-					rp,
-					function (x) {
-						return _Bogdanp$elm_combine$Combine$succeed(
-							f(x));
-					});
-			});
-	});
-var _Bogdanp$elm_combine$Combine$between = F3(
-	function (lp, rp, p) {
-		return A2(
-			_Bogdanp$elm_combine$Combine$andMap,
-			A2(
-				_Bogdanp$elm_combine$Combine$andMap,
-				A2(
-					_Bogdanp$elm_combine$Combine$map,
-					_elm_lang$core$Basics$flip(
-						function (_p7) {
-							return _elm_lang$core$Basics$always(
-								_elm_lang$core$Basics$always(_p7));
-						}),
-					lp),
-				p),
-			rp);
-	});
-var _Bogdanp$elm_combine$Combine$skip = function (p) {
-	return A2(
-		_Bogdanp$elm_combine$Combine$andThen,
-		p,
-		_elm_lang$core$Basics$always(
-			_Bogdanp$elm_combine$Combine$succeed(
-				{ctor: '_Tuple0'})));
+var _Bogdanp$elm_combine$Combine$putState = function (state) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		F2(
+			function (_p13, stream) {
+				return A3(
+					_Bogdanp$elm_combine$Combine$app,
+					_Bogdanp$elm_combine$Combine$succeed(
+						{ctor: '_Tuple0'}),
+					state,
+					stream);
+			}));
+};
+var _Bogdanp$elm_combine$Combine$modifyState = function (f) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		F2(
+			function (state, stream) {
+				return A3(
+					_Bogdanp$elm_combine$Combine$app,
+					_Bogdanp$elm_combine$Combine$succeed(
+						{ctor: '_Tuple0'}),
+					f(state),
+					stream);
+			}));
 };
 var _Bogdanp$elm_combine$Combine$count = F2(
 	function (n, p) {
@@ -3607,49 +3817,52 @@ var _Bogdanp$elm_combine$Combine$count = F2(
 				return (_elm_lang$core$Native_Utils.cmp(x, 0) < 1) ? _Bogdanp$elm_combine$Combine$succeed(
 					_elm_lang$core$List$reverse(acc)) : A2(
 					_Bogdanp$elm_combine$Combine$andThen,
-					p,
 					function (res) {
 						return A2(
 							accumulate,
 							x - 1,
-							A2(_elm_lang$core$List_ops['::'], res, acc));
-					});
+							{ctor: '::', _0: res, _1: acc});
+					},
+					p);
 			});
 		return A2(
 			accumulate,
 			n,
-			_elm_lang$core$Native_List.fromArray(
-				[]));
+			{ctor: '[]'});
 	});
 var _Bogdanp$elm_combine$Combine$string = function (s) {
 	return _Bogdanp$elm_combine$Combine$Parser(
-		function (cx) {
-			if (A2(_elm_lang$core$String$startsWith, s, cx.input)) {
-				var len = _elm_lang$core$String$length(s);
-				var rem = A2(_elm_lang$core$String$dropLeft, len, cx.input);
-				var pos = cx.position + len;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Result$Ok(s),
-					_1: _elm_lang$core$Native_Utils.update(
-						cx,
-						{input: rem, position: pos})
-				};
-			} else {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Result$Err(
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A2(
-								_elm_lang$core$Basics_ops['++'],
-								'expected ',
-								_elm_lang$core$Basics$toString(s))
-							])),
-					_1: cx
-				};
-			}
-		});
+		F2(
+			function (state, stream) {
+				if (A2(_elm_lang$core$String$startsWith, s, stream.input)) {
+					var len = _elm_lang$core$String$length(s);
+					var rem = A2(_elm_lang$core$String$dropLeft, len, stream.input);
+					var pos = stream.position + len;
+					return {
+						ctor: '_Tuple3',
+						_0: state,
+						_1: _elm_lang$core$Native_Utils.update(
+							stream,
+							{input: rem, position: pos}),
+						_2: _elm_lang$core$Result$Ok(s)
+					};
+				} else {
+					return {
+						ctor: '_Tuple3',
+						_0: state,
+						_1: stream,
+						_2: _elm_lang$core$Result$Err(
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$Basics_ops['++'],
+									'expected ',
+									_elm_lang$core$Basics$toString(s)),
+								_1: {ctor: '[]'}
+							})
+					};
+				}
+			}));
 };
 var _Bogdanp$elm_combine$Combine$parens = A2(
 	_Bogdanp$elm_combine$Combine$between,
@@ -3663,349 +3876,381 @@ var _Bogdanp$elm_combine$Combine$brackets = A2(
 	_Bogdanp$elm_combine$Combine$between,
 	_Bogdanp$elm_combine$Combine$string('['),
 	_Bogdanp$elm_combine$Combine$string(']'));
-var _Bogdanp$elm_combine$Combine$regex = function (pattern) {
-	var pattern$ = A2(_elm_lang$core$String$startsWith, '^', pattern) ? pattern : A2(_elm_lang$core$Basics_ops['++'], '^', pattern);
+var _Bogdanp$elm_combine$Combine$regex = function (pat) {
+	var pattern = A2(_elm_lang$core$String$startsWith, '^', pat) ? pat : A2(_elm_lang$core$Basics_ops['++'], '^', pat);
 	return _Bogdanp$elm_combine$Combine$Parser(
-		function (cx) {
-			var _p8 = A3(
-				_elm_lang$core$Regex$find,
-				_elm_lang$core$Regex$AtMost(1),
-				_elm_lang$core$Regex$regex(pattern$),
-				cx.input);
-			if ((_p8.ctor === '::') && (_p8._1.ctor === '[]')) {
-				var _p9 = _p8._0;
-				var len = _elm_lang$core$String$length(_p9.match);
-				var rem = A2(_elm_lang$core$String$dropLeft, len, cx.input);
-				var pos = cx.position + len;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Result$Ok(_p9.match),
-					_1: _elm_lang$core$Native_Utils.update(
-						cx,
-						{input: rem, position: pos})
-				};
-			} else {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Result$Err(
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A2(
-								_elm_lang$core$Basics_ops['++'],
-								'expected input matching Regexp /',
-								A2(_elm_lang$core$Basics_ops['++'], pattern$, '/'))
-							])),
-					_1: cx
-				};
-			}
-		});
+		F2(
+			function (state, stream) {
+				var _p14 = A3(
+					_elm_lang$core$Regex$find,
+					_elm_lang$core$Regex$AtMost(1),
+					_elm_lang$core$Regex$regex(pattern),
+					stream.input);
+				if ((_p14.ctor === '::') && (_p14._1.ctor === '[]')) {
+					var _p15 = _p14._0;
+					var len = _elm_lang$core$String$length(_p15.match);
+					var rem = A2(_elm_lang$core$String$dropLeft, len, stream.input);
+					var pos = stream.position + len;
+					return {
+						ctor: '_Tuple3',
+						_0: state,
+						_1: _elm_lang$core$Native_Utils.update(
+							stream,
+							{input: rem, position: pos}),
+						_2: _elm_lang$core$Result$Ok(_p15.match)
+					};
+				} else {
+					return {
+						ctor: '_Tuple3',
+						_0: state,
+						_1: stream,
+						_2: _elm_lang$core$Result$Err(
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$Basics_ops['++'],
+									'expected input matching Regexp /',
+									A2(_elm_lang$core$Basics_ops['++'], pattern, '/')),
+								_1: {ctor: '[]'}
+							})
+					};
+				}
+			}));
 };
+var _Bogdanp$elm_combine$Combine$whitespace = A2(
+	_Bogdanp$elm_combine$Combine_ops['<?>'],
+	_Bogdanp$elm_combine$Combine$regex('[ \t\r\n]*'),
+	'whitespace');
 var _Bogdanp$elm_combine$Combine$while = function (pred) {
-	var accumulate = F2(
-		function (acc, cx) {
+	var accumulate = F3(
+		function (acc, state, stream) {
 			accumulate:
 			while (true) {
-				var _p10 = _elm_lang$core$String$uncons(cx.input);
-				if (_p10.ctor === 'Just') {
-					var _p11 = _p10._0._0;
-					if (pred(_p11)) {
-						var pos = cx.position + 1;
-						var c = A2(_elm_lang$core$String$cons, _p11, '');
-						var _v11 = A2(_elm_lang$core$Basics_ops['++'], acc, c),
-							_v12 = _elm_lang$core$Native_Utils.update(
-							cx,
-							{input: _p10._0._1, position: pos});
-						acc = _v11;
-						cx = _v12;
+				var _p16 = _elm_lang$core$String$uncons(stream.input);
+				if (_p16.ctor === 'Just') {
+					var _p17 = _p16._0._0;
+					if (pred(_p17)) {
+						var pos = stream.position + 1;
+						var c = A2(_elm_lang$core$String$cons, _p17, '');
+						var _v17 = A2(_elm_lang$core$Basics_ops['++'], acc, c),
+							_v18 = state,
+							_v19 = _elm_lang$core$Native_Utils.update(
+							stream,
+							{input: _p16._0._1, position: pos});
+						acc = _v17;
+						state = _v18;
+						stream = _v19;
 						continue accumulate;
 					} else {
-						return {ctor: '_Tuple2', _0: acc, _1: cx};
+						return {ctor: '_Tuple3', _0: state, _1: stream, _2: acc};
 					}
 				} else {
-					return {ctor: '_Tuple2', _0: acc, _1: cx};
+					return {ctor: '_Tuple3', _0: state, _1: stream, _2: acc};
 				}
 			}
 		});
 	return _Bogdanp$elm_combine$Combine$Parser(
-		function (cx) {
-			var _p12 = A2(accumulate, '', cx);
-			var res = _p12._0;
-			var cx$ = _p12._1;
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Result$Ok(res),
-				_1: cx$
-			};
-		});
+		F2(
+			function (state, stream) {
+				var _p18 = A3(accumulate, '', state, stream);
+				var rstate = _p18._0;
+				var rstream = _p18._1;
+				var res = _p18._2;
+				return {
+					ctor: '_Tuple3',
+					_0: rstate,
+					_1: rstream,
+					_2: _elm_lang$core$Result$Ok(res)
+				};
+			}));
 };
 var _Bogdanp$elm_combine$Combine$end = _Bogdanp$elm_combine$Combine$Parser(
-	function (cx) {
-		return _elm_lang$core$Native_Utils.eq(cx.input, '') ? {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Result$Ok(
-				{ctor: '_Tuple0'}),
-			_1: cx
-		} : {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Result$Err(
-				_elm_lang$core$Native_List.fromArray(
-					['expected end of input'])),
-			_1: cx
-		};
-	});
+	F2(
+		function (state, stream) {
+			return _elm_lang$core$Native_Utils.eq(stream.input, '') ? {
+				ctor: '_Tuple3',
+				_0: state,
+				_1: stream,
+				_2: _elm_lang$core$Result$Ok(
+					{ctor: '_Tuple0'})
+			} : {
+				ctor: '_Tuple3',
+				_0: state,
+				_1: stream,
+				_2: _elm_lang$core$Result$Err(
+					{
+						ctor: '::',
+						_0: 'expected end of input',
+						_1: {ctor: '[]'}
+					})
+			};
+		}));
+var _Bogdanp$elm_combine$Combine$lookAhead = function (p) {
+	return _Bogdanp$elm_combine$Combine$Parser(
+		F2(
+			function (state, stream) {
+				var _p19 = A3(_Bogdanp$elm_combine$Combine$app, p, state, stream);
+				if ((_p19.ctor === '_Tuple3') && (_p19._2.ctor === 'Ok')) {
+					return {
+						ctor: '_Tuple3',
+						_0: _p19._0,
+						_1: stream,
+						_2: _elm_lang$core$Result$Ok(_p19._2._0)
+					};
+				} else {
+					return _p19;
+				}
+			}));
+};
 var _Bogdanp$elm_combine$Combine$or = F2(
 	function (lp, rp) {
 		return _Bogdanp$elm_combine$Combine$Parser(
-			function (cx) {
-				var res = A2(_Bogdanp$elm_combine$Combine$app, lp, cx);
-				var _p13 = res;
-				if (_p13._0.ctor === 'Ok') {
-					return res;
-				} else {
-					var res$ = A2(_Bogdanp$elm_combine$Combine$app, rp, cx);
-					var _p14 = res$;
-					if (_p14._0.ctor === 'Ok') {
-						return res$;
+			F2(
+				function (state, stream) {
+					var _p20 = A3(_Bogdanp$elm_combine$Combine$app, lp, state, stream);
+					if (_p20._2.ctor === 'Ok') {
+						return _p20;
 					} else {
-						return {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Result$Err(
-								A2(_elm_lang$core$Basics_ops['++'], _p13._0._0, _p14._0._0)),
-							_1: cx
-						};
+						var _p21 = A3(_Bogdanp$elm_combine$Combine$app, rp, state, stream);
+						if (_p21._2.ctor === 'Ok') {
+							return _p21;
+						} else {
+							return {
+								ctor: '_Tuple3',
+								_0: state,
+								_1: stream,
+								_2: _elm_lang$core$Result$Err(
+									A2(_elm_lang$core$Basics_ops['++'], _p20._2._0, _p21._2._0))
+							};
+						}
 					}
-				}
-			});
+				}));
 	});
 var _Bogdanp$elm_combine$Combine$choice = function (xs) {
-	return A3(
-		_elm_lang$core$List$foldr,
-		_Bogdanp$elm_combine$Combine$or,
-		_Bogdanp$elm_combine$Combine$fail(
-			_elm_lang$core$Native_List.fromArray(
-				[])),
-		xs);
+	return A3(_elm_lang$core$List$foldr, _Bogdanp$elm_combine$Combine$or, _Bogdanp$elm_combine$Combine$emptyErr, xs);
 };
+var _Bogdanp$elm_combine$Combine_ops = _Bogdanp$elm_combine$Combine_ops || {};
+_Bogdanp$elm_combine$Combine_ops['<|>'] = _Bogdanp$elm_combine$Combine$or;
 var _Bogdanp$elm_combine$Combine$optional = F2(
 	function (res, p) {
 		return A2(
-			_Bogdanp$elm_combine$Combine$or,
+			_Bogdanp$elm_combine$Combine_ops['<|>'],
 			p,
 			_Bogdanp$elm_combine$Combine$succeed(res));
 	});
 var _Bogdanp$elm_combine$Combine$chainl = F2(
-	function (p, op) {
+	function (op, p) {
 		var accumulate = function (x) {
 			return A2(
-				_Bogdanp$elm_combine$Combine$or,
+				_Bogdanp$elm_combine$Combine_ops['<|>'],
 				A2(
 					_Bogdanp$elm_combine$Combine$andThen,
-					op,
 					function (f) {
 						return A2(
 							_Bogdanp$elm_combine$Combine$andThen,
-							p,
 							function (y) {
 								return accumulate(
 									A2(f, x, y));
-							});
-					}),
+							},
+							p);
+					},
+					op),
 				_Bogdanp$elm_combine$Combine$succeed(x));
 		};
-		return A2(_Bogdanp$elm_combine$Combine$andThen, p, accumulate);
+		return A2(_Bogdanp$elm_combine$Combine$andThen, accumulate, p);
 	});
 var _Bogdanp$elm_combine$Combine$chainr = F2(
-	function (p, op) {
+	function (op, p) {
 		var accumulate = function (x) {
 			return A2(
-				_Bogdanp$elm_combine$Combine$or,
+				_Bogdanp$elm_combine$Combine_ops['<|>'],
 				A2(
 					_Bogdanp$elm_combine$Combine$andThen,
-					op,
 					function (f) {
 						return A2(
 							_Bogdanp$elm_combine$Combine$andThen,
-							A2(_Bogdanp$elm_combine$Combine$andThen, p, accumulate),
 							function (y) {
 								return _Bogdanp$elm_combine$Combine$succeed(
 									A2(f, x, y));
-							});
-					}),
+							},
+							A2(_Bogdanp$elm_combine$Combine$andThen, accumulate, p));
+					},
+					op),
 				_Bogdanp$elm_combine$Combine$succeed(x));
 		};
-		return A2(_Bogdanp$elm_combine$Combine$andThen, p, accumulate);
+		return A2(_Bogdanp$elm_combine$Combine$andThen, accumulate, p);
 	});
 var _Bogdanp$elm_combine$Combine$maybe = function (p) {
 	return _Bogdanp$elm_combine$Combine$Parser(
-		function (cx) {
-			var _p15 = A2(_Bogdanp$elm_combine$Combine$app, p, cx);
-			if ((_p15.ctor === '_Tuple2') && (_p15._0.ctor === 'Ok')) {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Result$Ok(
-						_elm_lang$core$Maybe$Just(_p15._0._0)),
-					_1: _p15._1
-				};
-			} else {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Result$Ok(_elm_lang$core$Maybe$Nothing),
-					_1: cx
-				};
-			}
-		});
+		F2(
+			function (state, stream) {
+				var _p22 = A3(_Bogdanp$elm_combine$Combine$app, p, state, stream);
+				if ((_p22.ctor === '_Tuple3') && (_p22._2.ctor === 'Ok')) {
+					return {
+						ctor: '_Tuple3',
+						_0: _p22._0,
+						_1: _p22._1,
+						_2: _elm_lang$core$Result$Ok(
+							_elm_lang$core$Maybe$Just(_p22._2._0))
+					};
+				} else {
+					return {
+						ctor: '_Tuple3',
+						_0: state,
+						_1: stream,
+						_2: _elm_lang$core$Result$Ok(_elm_lang$core$Maybe$Nothing)
+					};
+				}
+			}));
 };
 var _Bogdanp$elm_combine$Combine$many = function (p) {
-	var accumulate = F2(
-		function (acc, cx) {
+	var accumulate = F3(
+		function (acc, state, stream) {
 			accumulate:
 			while (true) {
-				var _p16 = A2(_Bogdanp$elm_combine$Combine$app, p, cx);
-				if ((_p16.ctor === '_Tuple2') && (_p16._0.ctor === 'Ok')) {
-					var _p17 = _p16._1;
-					if (_elm_lang$core$Native_Utils.eq(cx, _p17)) {
+				var _p23 = A3(_Bogdanp$elm_combine$Combine$app, p, state, stream);
+				if ((_p23.ctor === '_Tuple3') && (_p23._2.ctor === 'Ok')) {
+					var _p25 = _p23._1;
+					var _p24 = _p23._0;
+					if (_elm_lang$core$Native_Utils.eq(stream, _p25)) {
 						return {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$List$reverse(acc),
-							_1: cx
+							ctor: '_Tuple3',
+							_0: _p24,
+							_1: _p25,
+							_2: _elm_lang$core$List$reverse(acc)
 						};
 					} else {
-						var _v17 = A2(_elm_lang$core$List_ops['::'], _p16._0._0, acc),
-							_v18 = _p17;
-						acc = _v17;
-						cx = _v18;
+						var _v25 = {ctor: '::', _0: _p23._2._0, _1: acc},
+							_v26 = _p24,
+							_v27 = _p25;
+						acc = _v25;
+						state = _v26;
+						stream = _v27;
 						continue accumulate;
 					}
 				} else {
 					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$List$reverse(acc),
-						_1: cx
+						ctor: '_Tuple3',
+						_0: state,
+						_1: stream,
+						_2: _elm_lang$core$List$reverse(acc)
 					};
 				}
 			}
 		});
 	return _Bogdanp$elm_combine$Combine$Parser(
-		function (cx) {
-			var _p18 = A2(
-				accumulate,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				cx);
-			var res = _p18._0;
-			var cx$ = _p18._1;
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Result$Ok(res),
-				_1: cx$
-			};
-		});
+		F2(
+			function (state, stream) {
+				var _p26 = A3(
+					accumulate,
+					{ctor: '[]'},
+					state,
+					stream);
+				var rstate = _p26._0;
+				var rstream = _p26._1;
+				var res = _p26._2;
+				return {
+					ctor: '_Tuple3',
+					_0: rstate,
+					_1: rstream,
+					_2: _elm_lang$core$Result$Ok(res)
+				};
+			}));
 };
 var _Bogdanp$elm_combine$Combine$many1 = function (p) {
 	return A2(
-		_Bogdanp$elm_combine$Combine$andMap,
+		_Bogdanp$elm_combine$Combine_ops['<*>'],
 		A2(
-			_Bogdanp$elm_combine$Combine$map,
+			_Bogdanp$elm_combine$Combine_ops['<$>'],
 			F2(
 				function (x, y) {
-					return A2(_elm_lang$core$List_ops['::'], x, y);
+					return {ctor: '::', _0: x, _1: y};
 				}),
 			p),
 		_Bogdanp$elm_combine$Combine$many(p));
 };
 var _Bogdanp$elm_combine$Combine$skipMany1 = function (p) {
 	return A2(
-		_Bogdanp$elm_combine$Combine$andThen,
+		_Bogdanp$elm_combine$Combine_ops['<$'],
+		{ctor: '_Tuple0'},
 		_Bogdanp$elm_combine$Combine$many1(
-			_Bogdanp$elm_combine$Combine$skip(p)),
-		_elm_lang$core$Basics$always(
-			_Bogdanp$elm_combine$Combine$succeed(
-				{ctor: '_Tuple0'})));
+			_Bogdanp$elm_combine$Combine$skip(p)));
 };
 var _Bogdanp$elm_combine$Combine$sepBy1 = F2(
 	function (sep, p) {
 		return A2(
-			_Bogdanp$elm_combine$Combine$andMap,
+			_Bogdanp$elm_combine$Combine_ops['<*>'],
 			A2(
-				_Bogdanp$elm_combine$Combine$map,
+				_Bogdanp$elm_combine$Combine_ops['<$>'],
 				F2(
 					function (x, y) {
-						return A2(_elm_lang$core$List_ops['::'], x, y);
+						return {ctor: '::', _0: x, _1: y};
 					}),
 				p),
 			_Bogdanp$elm_combine$Combine$many(
-				A2(
-					_Bogdanp$elm_combine$Combine$andMap,
-					A2(
-						_Bogdanp$elm_combine$Combine$map,
-						_elm_lang$core$Basics$flip(_elm_lang$core$Basics$always),
-						sep),
-					p)));
+				A2(_Bogdanp$elm_combine$Combine_ops['*>'], sep, p)));
 	});
 var _Bogdanp$elm_combine$Combine$sepBy = F2(
 	function (sep, p) {
 		return A2(
-			_Bogdanp$elm_combine$Combine$or,
+			_Bogdanp$elm_combine$Combine_ops['<|>'],
 			A2(_Bogdanp$elm_combine$Combine$sepBy1, sep, p),
 			_Bogdanp$elm_combine$Combine$succeed(
-				_elm_lang$core$Native_List.fromArray(
-					[])));
+				{ctor: '[]'}));
 	});
 var _Bogdanp$elm_combine$Combine$sepEndBy1 = F2(
 	function (sep, p) {
 		return A2(
-			_Bogdanp$elm_combine$Combine$andMap,
-			A2(
-				_Bogdanp$elm_combine$Combine$map,
-				_elm_lang$core$Basics$always,
-				A2(_Bogdanp$elm_combine$Combine$sepBy1, sep, p)),
+			_Bogdanp$elm_combine$Combine_ops['<*'],
+			A2(_Bogdanp$elm_combine$Combine$sepBy1, sep, p),
 			_Bogdanp$elm_combine$Combine$maybe(sep));
 	});
 var _Bogdanp$elm_combine$Combine$sepEndBy = F2(
 	function (sep, p) {
 		return A2(
-			_Bogdanp$elm_combine$Combine$or,
+			_Bogdanp$elm_combine$Combine_ops['<|>'],
 			A2(_Bogdanp$elm_combine$Combine$sepEndBy1, sep, p),
 			_Bogdanp$elm_combine$Combine$succeed(
-				_elm_lang$core$Native_List.fromArray(
-					[])));
+				{ctor: '[]'}));
 	});
 var _Bogdanp$elm_combine$Combine$skipMany = function (p) {
 	return A2(
-		_Bogdanp$elm_combine$Combine$andThen,
+		_Bogdanp$elm_combine$Combine_ops['<$'],
+		{ctor: '_Tuple0'},
 		_Bogdanp$elm_combine$Combine$many(
-			_Bogdanp$elm_combine$Combine$skip(p)),
-		_elm_lang$core$Basics$always(
-			_Bogdanp$elm_combine$Combine$succeed(
-				{ctor: '_Tuple0'})));
+			_Bogdanp$elm_combine$Combine$skip(p)));
 };
 var _Bogdanp$elm_combine$Combine$manyTill = F2(
 	function (p, end) {
-		var accumulate = F2(
-			function (acc, cx) {
+		var accumulate = F3(
+			function (acc, state, stream) {
 				accumulate:
 				while (true) {
-					var _p19 = A2(_Bogdanp$elm_combine$Combine$app, end, cx);
-					if (_p19._0.ctor === 'Ok') {
+					var _p27 = A3(_Bogdanp$elm_combine$Combine$app, end, state, stream);
+					if (_p27._2.ctor === 'Ok') {
 						return {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Result$Ok(
-								_elm_lang$core$List$reverse(acc)),
-							_1: _p19._1
+							ctor: '_Tuple3',
+							_0: _p27._0,
+							_1: _p27._1,
+							_2: _elm_lang$core$Result$Ok(
+								_elm_lang$core$List$reverse(acc))
 						};
 					} else {
-						var _p20 = A2(_Bogdanp$elm_combine$Combine$app, p, cx);
-						if ((_p20.ctor === '_Tuple2') && (_p20._0.ctor === 'Ok')) {
-							var _v21 = A2(_elm_lang$core$List_ops['::'], _p20._0._0, acc),
-								_v22 = _p20._1;
-							acc = _v21;
-							cx = _v22;
+						var _p28 = A3(_Bogdanp$elm_combine$Combine$app, p, state, stream);
+						if ((_p28.ctor === '_Tuple3') && (_p28._2.ctor === 'Ok')) {
+							var _v30 = {ctor: '::', _0: _p28._2._0, _1: acc},
+								_v31 = _p28._0,
+								_v32 = _p28._1;
+							acc = _v30;
+							state = _v31;
+							stream = _v32;
 							continue accumulate;
 						} else {
 							return {
-								ctor: '_Tuple2',
-								_0: _elm_lang$core$Result$Err(_p19._0._0),
-								_1: _p19._1
+								ctor: '_Tuple3',
+								_0: _p27._0,
+								_1: _p27._1,
+								_2: _elm_lang$core$Result$Err(_p27._2._0)
 							};
 						}
 					}
@@ -4013,95 +4258,60 @@ var _Bogdanp$elm_combine$Combine$manyTill = F2(
 			});
 		return _Bogdanp$elm_combine$Combine$Parser(
 			accumulate(
-				_elm_lang$core$Native_List.fromArray(
-					[])));
+				{ctor: '[]'}));
 	});
-
-var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
-_Bogdanp$elm_combine$Combine_Infix_ops['<|>'] = _Bogdanp$elm_combine$Combine$or;
-var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
-_Bogdanp$elm_combine$Combine_Infix_ops['*>'] = F2(
-	function (lp, rp) {
-		return A2(
-			_Bogdanp$elm_combine$Combine$andMap,
-			A2(
-				_Bogdanp$elm_combine$Combine$map,
-				_elm_lang$core$Basics$flip(_elm_lang$core$Basics$always),
-				lp),
-			rp);
-	});
-var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
-_Bogdanp$elm_combine$Combine_Infix_ops['<*'] = F2(
-	function (lp, rp) {
-		return A2(
-			_Bogdanp$elm_combine$Combine$andMap,
-			A2(_Bogdanp$elm_combine$Combine$map, _elm_lang$core$Basics$always, lp),
-			rp);
-	});
-var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
-_Bogdanp$elm_combine$Combine_Infix_ops['<?>'] = F2(
-	function (p, m) {
-		return A2(
-			_Bogdanp$elm_combine$Combine$mapError,
-			function (_p0) {
-				return _elm_lang$core$Native_List.fromArray(
-					[m]);
-			},
-			p);
-	});
-var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
-_Bogdanp$elm_combine$Combine_Infix_ops['<$'] = function (res) {
-	return _Bogdanp$elm_combine$Combine$map(
-		function (_p1) {
-			return res;
-		});
-};
-var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
-_Bogdanp$elm_combine$Combine_Infix_ops['<*>'] = _Bogdanp$elm_combine$Combine$andMap;
-var _Bogdanp$elm_combine$Combine_Infix_ops = _Bogdanp$elm_combine$Combine_Infix_ops || {};
-_Bogdanp$elm_combine$Combine_Infix_ops['<$>'] = _Bogdanp$elm_combine$Combine$map;
 
 var _Bogdanp$elm_combine$Combine_Char$crlf = A2(
-	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_ops['<$'],
+	_elm_lang$core$Native_Utils.chr('\n'),
 	A2(
-		_Bogdanp$elm_combine$Combine_Infix_ops['<$'],
-		_elm_lang$core$Native_Utils.chr('\n'),
-		_Bogdanp$elm_combine$Combine$regex('\r\n')),
-	'expected crlf');
+		_Bogdanp$elm_combine$Combine_ops['<?>'],
+		_Bogdanp$elm_combine$Combine$regex('\r\n'),
+		'expected crlf'));
 var _Bogdanp$elm_combine$Combine_Char$satisfy = function (pred) {
 	return _Bogdanp$elm_combine$Combine$primitive(
-		function (cx) {
-			var message = 'could not satisfy predicate';
-			var _p0 = _elm_lang$core$String$uncons(cx.input);
-			if (_p0.ctor === 'Just') {
-				var _p1 = _p0._0._0;
-				return pred(_p1) ? {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Result$Ok(_p1),
-					_1: _elm_lang$core$Native_Utils.update(
-						cx,
-						{input: _p0._0._1, position: cx.position + 1})
-				} : {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Result$Err(
-						_elm_lang$core$Native_List.fromArray(
-							[message])),
-					_1: cx
-				};
-			} else {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Result$Err(
-						_elm_lang$core$Native_List.fromArray(
-							[message])),
-					_1: cx
-				};
-			}
-		});
+		F2(
+			function (state, stream) {
+				var message = 'could not satisfy predicate';
+				var _p0 = _elm_lang$core$String$uncons(stream.input);
+				if (_p0.ctor === 'Just') {
+					var _p1 = _p0._0._0;
+					return pred(_p1) ? {
+						ctor: '_Tuple3',
+						_0: state,
+						_1: _elm_lang$core$Native_Utils.update(
+							stream,
+							{input: _p0._0._1, position: stream.position + 1}),
+						_2: _elm_lang$core$Result$Ok(_p1)
+					} : {
+						ctor: '_Tuple3',
+						_0: state,
+						_1: stream,
+						_2: _elm_lang$core$Result$Err(
+							{
+								ctor: '::',
+								_0: message,
+								_1: {ctor: '[]'}
+							})
+					};
+				} else {
+					return {
+						ctor: '_Tuple3',
+						_0: state,
+						_1: stream,
+						_2: _elm_lang$core$Result$Err(
+							{
+								ctor: '::',
+								_0: message,
+								_1: {ctor: '[]'}
+							})
+					};
+				}
+			}));
 };
 var _Bogdanp$elm_combine$Combine_Char$char = function (c) {
 	return A2(
-		_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+		_Bogdanp$elm_combine$Combine_ops['<?>'],
 		_Bogdanp$elm_combine$Combine_Char$satisfy(
 			F2(
 				function (x, y) {
@@ -4113,13 +4323,13 @@ var _Bogdanp$elm_combine$Combine_Char$char = function (c) {
 			_elm_lang$core$Basics$toString(c)));
 };
 var _Bogdanp$elm_combine$Combine_Char$anyChar = A2(
-	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_ops['<?>'],
 	_Bogdanp$elm_combine$Combine_Char$satisfy(
 		_elm_lang$core$Basics$always(true)),
 	'expected any character');
 var _Bogdanp$elm_combine$Combine_Char$oneOf = function (cs) {
 	return A2(
-		_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+		_Bogdanp$elm_combine$Combine_ops['<?>'],
 		_Bogdanp$elm_combine$Combine_Char$satisfy(
 			A2(_elm_lang$core$Basics$flip, _elm_lang$core$List$member, cs)),
 		A2(
@@ -4129,11 +4339,10 @@ var _Bogdanp$elm_combine$Combine_Char$oneOf = function (cs) {
 };
 var _Bogdanp$elm_combine$Combine_Char$noneOf = function (cs) {
 	return A2(
-		_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+		_Bogdanp$elm_combine$Combine_ops['<?>'],
 		_Bogdanp$elm_combine$Combine_Char$satisfy(
 			function (_p2) {
-				return _elm_lang$core$Basics$not(
-					A3(_elm_lang$core$Basics$flip, _elm_lang$core$List$member, cs, _p2));
+				return !A3(_elm_lang$core$Basics$flip, _elm_lang$core$List$member, cs, _p2);
 			}),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
@@ -4141,7 +4350,7 @@ var _Bogdanp$elm_combine$Combine_Char$noneOf = function (cs) {
 			_elm_lang$core$Basics$toString(cs)));
 };
 var _Bogdanp$elm_combine$Combine_Char$space = A2(
-	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_ops['<?>'],
 	_Bogdanp$elm_combine$Combine_Char$satisfy(
 		F2(
 			function (x, y) {
@@ -4150,7 +4359,7 @@ var _Bogdanp$elm_combine$Combine_Char$space = A2(
 			_elm_lang$core$Native_Utils.chr(' '))),
 	'expected space');
 var _Bogdanp$elm_combine$Combine_Char$tab = A2(
-	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_ops['<?>'],
 	_Bogdanp$elm_combine$Combine_Char$satisfy(
 		F2(
 			function (x, y) {
@@ -4159,7 +4368,7 @@ var _Bogdanp$elm_combine$Combine_Char$tab = A2(
 			_elm_lang$core$Native_Utils.chr('\t'))),
 	'expected tab');
 var _Bogdanp$elm_combine$Combine_Char$newline = A2(
-	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_ops['<?>'],
 	_Bogdanp$elm_combine$Combine_Char$satisfy(
 		F2(
 			function (x, y) {
@@ -4167,27 +4376,100 @@ var _Bogdanp$elm_combine$Combine_Char$newline = A2(
 			})(
 			_elm_lang$core$Native_Utils.chr('\n'))),
 	'expected newline');
-var _Bogdanp$elm_combine$Combine_Char$eol = A2(_Bogdanp$elm_combine$Combine_Infix_ops['<|>'], _Bogdanp$elm_combine$Combine_Char$newline, _Bogdanp$elm_combine$Combine_Char$crlf);
+var _Bogdanp$elm_combine$Combine_Char$eol = A2(_Bogdanp$elm_combine$Combine_ops['<|>'], _Bogdanp$elm_combine$Combine_Char$newline, _Bogdanp$elm_combine$Combine_Char$crlf);
 var _Bogdanp$elm_combine$Combine_Char$lower = A2(
-	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_ops['<?>'],
 	_Bogdanp$elm_combine$Combine_Char$satisfy(_elm_lang$core$Char$isLower),
 	'expected a lowercase character');
 var _Bogdanp$elm_combine$Combine_Char$upper = A2(
-	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_ops['<?>'],
 	_Bogdanp$elm_combine$Combine_Char$satisfy(_elm_lang$core$Char$isUpper),
 	'expected an uppercase character');
 var _Bogdanp$elm_combine$Combine_Char$digit = A2(
-	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_ops['<?>'],
 	_Bogdanp$elm_combine$Combine_Char$satisfy(_elm_lang$core$Char$isDigit),
 	'expected a digit');
 var _Bogdanp$elm_combine$Combine_Char$octDigit = A2(
-	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_ops['<?>'],
 	_Bogdanp$elm_combine$Combine_Char$satisfy(_elm_lang$core$Char$isOctDigit),
 	'expected an octal digit');
 var _Bogdanp$elm_combine$Combine_Char$hexDigit = A2(
-	_Bogdanp$elm_combine$Combine_Infix_ops['<?>'],
+	_Bogdanp$elm_combine$Combine_ops['<?>'],
 	_Bogdanp$elm_combine$Combine_Char$satisfy(_elm_lang$core$Char$isHexDigit),
 	'expected a hexadecimal digit');
+
+var _ccapndave$elm_update_extra$Update_Extra$identity = function (model) {
+	return A2(
+		_elm_lang$core$Platform_Cmd_ops['!'],
+		model,
+		{ctor: '[]'});
+};
+var _ccapndave$elm_update_extra$Update_Extra$mapCmd = F2(
+	function (tagger, _p0) {
+		var _p1 = _p0;
+		return {
+			ctor: '_Tuple2',
+			_0: _p1._0,
+			_1: A2(_elm_lang$core$Platform_Cmd$map, tagger, _p1._1)
+		};
+	});
+var _ccapndave$elm_update_extra$Update_Extra$addCmd = F2(
+	function (cmd_, _p2) {
+		var _p3 = _p2;
+		return {
+			ctor: '_Tuple2',
+			_0: _p3._0,
+			_1: _elm_lang$core$Platform_Cmd$batch(
+				{
+					ctor: '::',
+					_0: _p3._1,
+					_1: {
+						ctor: '::',
+						_0: cmd_,
+						_1: {ctor: '[]'}
+					}
+				})
+		};
+	});
+var _ccapndave$elm_update_extra$Update_Extra$updateModel = F2(
+	function (f, _p4) {
+		var _p5 = _p4;
+		return {
+			ctor: '_Tuple2',
+			_0: f(_p5._0),
+			_1: _p5._1
+		};
+	});
+var _ccapndave$elm_update_extra$Update_Extra$filter = F2(
+	function (pred, f) {
+		return pred ? f : _elm_lang$core$Basics$identity;
+	});
+var _ccapndave$elm_update_extra$Update_Extra$andThen = F3(
+	function (update, msg, _p6) {
+		var _p7 = _p6;
+		var _p8 = A2(update, msg, _p7._0);
+		var model_ = _p8._0;
+		var cmd_ = _p8._1;
+		return {
+			ctor: '_Tuple2',
+			_0: model_,
+			_1: _elm_lang$core$Platform_Cmd$batch(
+				{
+					ctor: '::',
+					_0: _p7._1,
+					_1: {
+						ctor: '::',
+						_0: cmd_,
+						_1: {ctor: '[]'}
+					}
+				})
+		};
+	});
+var _ccapndave$elm_update_extra$Update_Extra$sequence = F3(
+	function (update, msgs, init) {
+		var foldUpdate = _ccapndave$elm_update_extra$Update_Extra$andThen(update);
+		return A3(_elm_lang$core$List$foldl, foldUpdate, init, msgs);
+	});
 
 //import Native.List //
 
@@ -5193,7 +5475,8 @@ var _elm_lang$core$Array$toIndexedList = function (array) {
 			function (v0, v1) {
 				return {ctor: '_Tuple2', _0: v0, _1: v1};
 			}),
-		_elm_lang$core$Native_List.range(
+		A2(
+			_elm_lang$core$List$range,
 			0,
 			_elm_lang$core$Native_Array.length(array) - 1),
 		_elm_lang$core$Native_Array.toList(array));
@@ -5237,10 +5520,9 @@ var _elm_lang$core$Dict$keys = function (dict) {
 		_elm_lang$core$Dict$foldr,
 		F3(
 			function (key, value, keyList) {
-				return A2(_elm_lang$core$List_ops['::'], key, keyList);
+				return {ctor: '::', _0: key, _1: keyList};
 			}),
-		_elm_lang$core$Native_List.fromArray(
-			[]),
+		{ctor: '[]'},
 		dict);
 };
 var _elm_lang$core$Dict$values = function (dict) {
@@ -5248,10 +5530,9 @@ var _elm_lang$core$Dict$values = function (dict) {
 		_elm_lang$core$Dict$foldr,
 		F3(
 			function (key, value, valueList) {
-				return A2(_elm_lang$core$List_ops['::'], value, valueList);
+				return {ctor: '::', _0: value, _1: valueList};
 			}),
-		_elm_lang$core$Native_List.fromArray(
-			[]),
+		{ctor: '[]'},
 		dict);
 };
 var _elm_lang$core$Dict$toList = function (dict) {
@@ -5259,13 +5540,13 @@ var _elm_lang$core$Dict$toList = function (dict) {
 		_elm_lang$core$Dict$foldr,
 		F3(
 			function (key, value, list) {
-				return A2(
-					_elm_lang$core$List_ops['::'],
-					{ctor: '_Tuple2', _0: key, _1: value},
-					list);
+				return {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: key, _1: value},
+					_1: list
+				};
 			}),
-		_elm_lang$core$Native_List.fromArray(
-			[]),
+		{ctor: '[]'},
 		dict);
 };
 var _elm_lang$core$Dict$foldl = F3(
@@ -5365,18 +5646,43 @@ var _elm_lang$core$Dict$reportRemBug = F4(
 	function (msg, c, lgot, rgot) {
 		return _elm_lang$core$Native_Debug.crash(
 			_elm_lang$core$String$concat(
-				_elm_lang$core$Native_List.fromArray(
-					[
-						'Internal red-black tree invariant violated, expected ',
-						msg,
-						' and got ',
-						_elm_lang$core$Basics$toString(c),
-						'/',
-						lgot,
-						'/',
-						rgot,
-						'\nPlease report this bug to <https://github.com/elm-lang/core/issues>'
-					])));
+				{
+					ctor: '::',
+					_0: 'Internal red-black tree invariant violated, expected ',
+					_1: {
+						ctor: '::',
+						_0: msg,
+						_1: {
+							ctor: '::',
+							_0: ' and got ',
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$core$Basics$toString(c),
+								_1: {
+									ctor: '::',
+									_0: '/',
+									_1: {
+										ctor: '::',
+										_0: lgot,
+										_1: {
+											ctor: '::',
+											_0: '/',
+											_1: {
+												ctor: '::',
+												_0: rgot,
+												_1: {
+													ctor: '::',
+													_0: '\nPlease report this bug to <https://github.com/elm-lang/core/issues>',
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}));
 	});
 var _elm_lang$core$Dict$isBBlack = function (dict) {
 	var _p13 = dict;
@@ -5836,11 +6142,11 @@ var _elm_lang$core$Dict$removeMax = F5(
 		}
 	});
 var _elm_lang$core$Dict$rem = F3(
-	function (c, l, r) {
-		var _p29 = {ctor: '_Tuple2', _0: l, _1: r};
+	function (color, left, right) {
+		var _p29 = {ctor: '_Tuple2', _0: left, _1: right};
 		if (_p29._0.ctor === 'RBEmpty_elm_builtin') {
 			if (_p29._1.ctor === 'RBEmpty_elm_builtin') {
-				var _p30 = c;
+				var _p30 = color;
 				switch (_p30.ctor) {
 					case 'Red':
 						return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
@@ -5852,14 +6158,14 @@ var _elm_lang$core$Dict$rem = F3(
 			} else {
 				var _p33 = _p29._1._0;
 				var _p32 = _p29._0._0;
-				var _p31 = {ctor: '_Tuple3', _0: c, _1: _p32, _2: _p33};
+				var _p31 = {ctor: '_Tuple3', _0: color, _1: _p32, _2: _p33};
 				if ((((_p31.ctor === '_Tuple3') && (_p31._0.ctor === 'Black')) && (_p31._1.ctor === 'LBlack')) && (_p31._2.ctor === 'Red')) {
 					return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p29._1._1, _p29._1._2, _p29._1._3, _p29._1._4);
 				} else {
 					return A4(
 						_elm_lang$core$Dict$reportRemBug,
 						'Black/LBlack/Red',
-						c,
+						color,
 						_elm_lang$core$Basics$toString(_p32),
 						_elm_lang$core$Basics$toString(_p33));
 				}
@@ -5868,14 +6174,14 @@ var _elm_lang$core$Dict$rem = F3(
 			if (_p29._1.ctor === 'RBEmpty_elm_builtin') {
 				var _p36 = _p29._1._0;
 				var _p35 = _p29._0._0;
-				var _p34 = {ctor: '_Tuple3', _0: c, _1: _p35, _2: _p36};
+				var _p34 = {ctor: '_Tuple3', _0: color, _1: _p35, _2: _p36};
 				if ((((_p34.ctor === '_Tuple3') && (_p34._0.ctor === 'Black')) && (_p34._1.ctor === 'Red')) && (_p34._2.ctor === 'LBlack')) {
 					return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p29._0._1, _p29._0._2, _p29._0._3, _p29._0._4);
 				} else {
 					return A4(
 						_elm_lang$core$Dict$reportRemBug,
 						'Black/Red/LBlack',
-						c,
+						color,
 						_elm_lang$core$Basics$toString(_p35),
 						_elm_lang$core$Basics$toString(_p36));
 				}
@@ -5883,11 +6189,11 @@ var _elm_lang$core$Dict$rem = F3(
 				var _p40 = _p29._0._2;
 				var _p39 = _p29._0._4;
 				var _p38 = _p29._0._1;
-				var l$ = A5(_elm_lang$core$Dict$removeMax, _p29._0._0, _p38, _p40, _p29._0._3, _p39);
+				var newLeft = A5(_elm_lang$core$Dict$removeMax, _p29._0._0, _p38, _p40, _p29._0._3, _p39);
 				var _p37 = A3(_elm_lang$core$Dict$maxWithDefault, _p38, _p40, _p39);
 				var k = _p37._0;
 				var v = _p37._1;
-				return A5(_elm_lang$core$Dict$bubble, c, k, v, l$, r);
+				return A5(_elm_lang$core$Dict$bubble, color, k, v, newLeft, right);
 			}
 		}
 	});
@@ -6165,6 +6471,16 @@ function decodeField(field, decoder)
 	};
 }
 
+function decodeIndex(index, decoder)
+{
+	return {
+		ctor: '<decoder>',
+		tag: 'index',
+		index: index,
+		decoder: decoder
+	};
+}
+
 function decodeKeyValuePairs(decoder)
 {
 	return {
@@ -6174,7 +6490,7 @@ function decodeKeyValuePairs(decoder)
 	};
 }
 
-function decodeObject(f, decoders)
+function mapMany(f, decoders)
 {
 	return {
 		ctor: '<decoder>',
@@ -6184,31 +6500,11 @@ function decodeObject(f, decoders)
 	};
 }
 
-function decodeTuple(f, decoders)
-{
-	return {
-		ctor: '<decoder>',
-		tag: 'tuple',
-		func: f,
-		decoders: decoders
-	};
-}
-
-function andThen(decoder, callback)
+function andThen(callback, decoder)
 {
 	return {
 		ctor: '<decoder>',
 		tag: 'andThen',
-		decoder: decoder,
-		callback: callback
-	};
-}
-
-function customAndThen(decoder, callback)
-{
-	return {
-		ctor: '<decoder>',
-		tag: 'customAndThen',
 		decoder: decoder,
 		callback: callback
 	};
@@ -6226,87 +6522,44 @@ function oneOf(decoders)
 
 // DECODING OBJECTS
 
-function decodeObject1(f, d1)
+function map1(f, d1)
 {
-	return decodeObject(f, [d1]);
+	return mapMany(f, [d1]);
 }
 
-function decodeObject2(f, d1, d2)
+function map2(f, d1, d2)
 {
-	return decodeObject(f, [d1, d2]);
+	return mapMany(f, [d1, d2]);
 }
 
-function decodeObject3(f, d1, d2, d3)
+function map3(f, d1, d2, d3)
 {
-	return decodeObject(f, [d1, d2, d3]);
+	return mapMany(f, [d1, d2, d3]);
 }
 
-function decodeObject4(f, d1, d2, d3, d4)
+function map4(f, d1, d2, d3, d4)
 {
-	return decodeObject(f, [d1, d2, d3, d4]);
+	return mapMany(f, [d1, d2, d3, d4]);
 }
 
-function decodeObject5(f, d1, d2, d3, d4, d5)
+function map5(f, d1, d2, d3, d4, d5)
 {
-	return decodeObject(f, [d1, d2, d3, d4, d5]);
+	return mapMany(f, [d1, d2, d3, d4, d5]);
 }
 
-function decodeObject6(f, d1, d2, d3, d4, d5, d6)
+function map6(f, d1, d2, d3, d4, d5, d6)
 {
-	return decodeObject(f, [d1, d2, d3, d4, d5, d6]);
+	return mapMany(f, [d1, d2, d3, d4, d5, d6]);
 }
 
-function decodeObject7(f, d1, d2, d3, d4, d5, d6, d7)
+function map7(f, d1, d2, d3, d4, d5, d6, d7)
 {
-	return decodeObject(f, [d1, d2, d3, d4, d5, d6, d7]);
+	return mapMany(f, [d1, d2, d3, d4, d5, d6, d7]);
 }
 
-function decodeObject8(f, d1, d2, d3, d4, d5, d6, d7, d8)
+function map8(f, d1, d2, d3, d4, d5, d6, d7, d8)
 {
-	return decodeObject(f, [d1, d2, d3, d4, d5, d6, d7, d8]);
-}
-
-
-// DECODING TUPLES
-
-function decodeTuple1(f, d1)
-{
-	return decodeTuple(f, [d1]);
-}
-
-function decodeTuple2(f, d1, d2)
-{
-	return decodeTuple(f, [d1, d2]);
-}
-
-function decodeTuple3(f, d1, d2, d3)
-{
-	return decodeTuple(f, [d1, d2, d3]);
-}
-
-function decodeTuple4(f, d1, d2, d3, d4)
-{
-	return decodeTuple(f, [d1, d2, d3, d4]);
-}
-
-function decodeTuple5(f, d1, d2, d3, d4, d5)
-{
-	return decodeTuple(f, [d1, d2, d3, d4, d5]);
-}
-
-function decodeTuple6(f, d1, d2, d3, d4, d5, d6)
-{
-	return decodeTuple(f, [d1, d2, d3, d4, d5, d6]);
-}
-
-function decodeTuple7(f, d1, d2, d3, d4, d5, d6, d7)
-{
-	return decodeTuple(f, [d1, d2, d3, d4, d5, d6, d7]);
-}
-
-function decodeTuple8(f, d1, d2, d3, d4, d5, d6, d7, d8)
-{
-	return decodeTuple(f, [d1, d2, d3, d4, d5, d6, d7, d8]);
+	return mapMany(f, [d1, d2, d3, d4, d5, d6, d7, d8]);
 }
 
 
@@ -6332,14 +6585,14 @@ function badField(field, nestedProblems)
 	return { tag: 'field', field: field, rest: nestedProblems };
 }
 
+function badIndex(index, nestedProblems)
+{
+	return { tag: 'index', index: index, rest: nestedProblems };
+}
+
 function badOneOf(problems)
 {
 	return { tag: 'oneOf', problems: problems };
-}
-
-function badCustom(msg)
-{
-	return { tag: 'custom', msg: msg };
 }
 
 function bad(msg)
@@ -6378,11 +6631,6 @@ function badToString(problem)
 				return 'I ran into the following problems'
 					+ (context === '_' ? '' : ' at ' + context)
 					+ ':\n\n' + problems.join('\n');
-
-			case 'custom':
-				return 'A `customDecoder` failed'
-					+ (context === '_' ? '' : ' at ' + context)
-					+ ' with the message: ' + problem.msg;
 
 			case 'fail':
 				return 'I ran into a `fail` decoder'
@@ -6519,9 +6767,21 @@ function runHelp(decoder, value)
 			}
 
 			var result = runHelp(decoder.decoder, value[field]);
-			return (result.tag === 'ok')
-				? result
-				: badField(field, result);
+			return (result.tag === 'ok') ? result : badField(field, result);
+
+		case 'index':
+			var index = decoder.index;
+			if (!(value instanceof Array))
+			{
+				return badPrimitive('an array', value);
+			}
+			if (index >= value.length)
+			{
+				return badPrimitive('a longer array. Need index ' + index + ' but there are only ' + value.length + ' entries', value);
+			}
+
+			var result = runHelp(decoder.decoder, value[index]);
+			return (result.tag === 'ok') ? result : badIndex(index, result);
 
 		case 'key-value':
 			if (typeof value !== 'object' || value === null || value instanceof Array)
@@ -6555,40 +6815,6 @@ function runHelp(decoder, value)
 				answer = answer(result.value);
 			}
 			return ok(answer);
-
-		case 'tuple':
-			var decoders = decoder.decoders;
-			var len = decoders.length;
-
-			if ( !(value instanceof Array) || value.length !== len )
-			{
-				return badPrimitive('a Tuple with ' + len + ' entries', value);
-			}
-
-			var answer = decoder.func;
-			for (var i = 0; i < len; i++)
-			{
-				var result = runHelp(decoders[i], value[i]);
-				if (result.tag !== 'ok')
-				{
-					return badIndex(i, result);
-				}
-				answer = answer(result.value);
-			}
-			return ok(answer);
-
-		case 'customAndThen':
-			var result = runHelp(decoder.decoder, value);
-			if (result.tag !== 'ok')
-			{
-				return result;
-			}
-			var realResult = decoder.callback(result.value);
-			if (realResult.ctor === 'Err')
-			{
-				return badCustom(realResult._0);
-			}
-			return ok(realResult._0);
 
 		case 'andThen':
 			var result = runHelp(decoder.decoder, value);
@@ -6662,8 +6888,10 @@ function equality(a, b)
 		case 'field':
 			return a.field === b.field && equality(a.decoder, b.decoder);
 
+		case 'index':
+			return a.index === b.index && equality(a.decoder, b.decoder);
+
 		case 'map-many':
-		case 'tuple':
 			if (a.func !== b.func)
 			{
 				return false;
@@ -6671,7 +6899,6 @@ function equality(a, b)
 			return listEquality(a.decoders, b.decoders);
 
 		case 'andThen':
-		case 'customAndThen':
 			return a.callback === b.callback && equality(a.decoder, b.decoder);
 
 		case 'oneOf':
@@ -6731,28 +6958,19 @@ return {
 	decodeContainer: F2(decodeContainer),
 
 	decodeField: F2(decodeField),
+	decodeIndex: F2(decodeIndex),
 
-	decodeObject1: F2(decodeObject1),
-	decodeObject2: F3(decodeObject2),
-	decodeObject3: F4(decodeObject3),
-	decodeObject4: F5(decodeObject4),
-	decodeObject5: F6(decodeObject5),
-	decodeObject6: F7(decodeObject6),
-	decodeObject7: F8(decodeObject7),
-	decodeObject8: F9(decodeObject8),
+	map1: F2(map1),
+	map2: F3(map2),
+	map3: F4(map3),
+	map4: F5(map4),
+	map5: F6(map5),
+	map6: F7(map6),
+	map7: F8(map7),
+	map8: F9(map8),
 	decodeKeyValuePairs: decodeKeyValuePairs,
 
-	decodeTuple1: F2(decodeTuple1),
-	decodeTuple2: F3(decodeTuple2),
-	decodeTuple3: F4(decodeTuple3),
-	decodeTuple4: F5(decodeTuple4),
-	decodeTuple5: F6(decodeTuple5),
-	decodeTuple6: F7(decodeTuple6),
-	decodeTuple7: F8(decodeTuple7),
-	decodeTuple8: F9(decodeTuple8),
-
 	andThen: F2(andThen),
-	customAndThen: F2(customAndThen),
 	fail: fail,
 	succeed: succeed,
 	oneOf: oneOf,
@@ -6779,88 +6997,88 @@ var _elm_lang$core$Json_Encode$string = _elm_lang$core$Native_Json.identity;
 var _elm_lang$core$Json_Encode$encode = _elm_lang$core$Native_Json.encode;
 var _elm_lang$core$Json_Encode$Value = {ctor: 'Value'};
 
-var _elm_lang$core$Json_Decode$tuple8 = _elm_lang$core$Native_Json.decodeTuple8;
-var _elm_lang$core$Json_Decode$tuple7 = _elm_lang$core$Native_Json.decodeTuple7;
-var _elm_lang$core$Json_Decode$tuple6 = _elm_lang$core$Native_Json.decodeTuple6;
-var _elm_lang$core$Json_Decode$tuple5 = _elm_lang$core$Native_Json.decodeTuple5;
-var _elm_lang$core$Json_Decode$tuple4 = _elm_lang$core$Native_Json.decodeTuple4;
-var _elm_lang$core$Json_Decode$tuple3 = _elm_lang$core$Native_Json.decodeTuple3;
-var _elm_lang$core$Json_Decode$tuple2 = _elm_lang$core$Native_Json.decodeTuple2;
-var _elm_lang$core$Json_Decode$tuple1 = _elm_lang$core$Native_Json.decodeTuple1;
-var _elm_lang$core$Json_Decode$succeed = _elm_lang$core$Native_Json.succeed;
-var _elm_lang$core$Json_Decode$fail = _elm_lang$core$Native_Json.fail;
-var _elm_lang$core$Json_Decode$andThen = _elm_lang$core$Native_Json.andThen;
-var _elm_lang$core$Json_Decode$customDecoder = _elm_lang$core$Native_Json.customAndThen;
-var _elm_lang$core$Json_Decode$decodeValue = _elm_lang$core$Native_Json.run;
+var _elm_lang$core$Json_Decode$null = _elm_lang$core$Native_Json.decodeNull;
 var _elm_lang$core$Json_Decode$value = _elm_lang$core$Native_Json.decodePrimitive('value');
+var _elm_lang$core$Json_Decode$andThen = _elm_lang$core$Native_Json.andThen;
+var _elm_lang$core$Json_Decode$fail = _elm_lang$core$Native_Json.fail;
+var _elm_lang$core$Json_Decode$succeed = _elm_lang$core$Native_Json.succeed;
+var _elm_lang$core$Json_Decode$lazy = function (thunk) {
+	return A2(
+		_elm_lang$core$Json_Decode$andThen,
+		thunk,
+		_elm_lang$core$Json_Decode$succeed(
+			{ctor: '_Tuple0'}));
+};
+var _elm_lang$core$Json_Decode$decodeValue = _elm_lang$core$Native_Json.run;
+var _elm_lang$core$Json_Decode$decodeString = _elm_lang$core$Native_Json.runOnString;
+var _elm_lang$core$Json_Decode$map8 = _elm_lang$core$Native_Json.map8;
+var _elm_lang$core$Json_Decode$map7 = _elm_lang$core$Native_Json.map7;
+var _elm_lang$core$Json_Decode$map6 = _elm_lang$core$Native_Json.map6;
+var _elm_lang$core$Json_Decode$map5 = _elm_lang$core$Native_Json.map5;
+var _elm_lang$core$Json_Decode$map4 = _elm_lang$core$Native_Json.map4;
+var _elm_lang$core$Json_Decode$map3 = _elm_lang$core$Native_Json.map3;
+var _elm_lang$core$Json_Decode$map2 = _elm_lang$core$Native_Json.map2;
+var _elm_lang$core$Json_Decode$map = _elm_lang$core$Native_Json.map1;
+var _elm_lang$core$Json_Decode$oneOf = _elm_lang$core$Native_Json.oneOf;
 var _elm_lang$core$Json_Decode$maybe = function (decoder) {
 	return A2(_elm_lang$core$Native_Json.decodeContainer, 'maybe', decoder);
 };
-var _elm_lang$core$Json_Decode$null = _elm_lang$core$Native_Json.decodeNull;
-var _elm_lang$core$Json_Decode$array = function (decoder) {
-	return A2(_elm_lang$core$Native_Json.decodeContainer, 'array', decoder);
-};
-var _elm_lang$core$Json_Decode$list = function (decoder) {
-	return A2(_elm_lang$core$Native_Json.decodeContainer, 'list', decoder);
-};
-var _elm_lang$core$Json_Decode$bool = _elm_lang$core$Native_Json.decodePrimitive('bool');
-var _elm_lang$core$Json_Decode$int = _elm_lang$core$Native_Json.decodePrimitive('int');
-var _elm_lang$core$Json_Decode$float = _elm_lang$core$Native_Json.decodePrimitive('float');
-var _elm_lang$core$Json_Decode$string = _elm_lang$core$Native_Json.decodePrimitive('string');
-var _elm_lang$core$Json_Decode$oneOf = _elm_lang$core$Native_Json.oneOf;
-var _elm_lang$core$Json_Decode$keyValuePairs = _elm_lang$core$Native_Json.decodeKeyValuePairs;
-var _elm_lang$core$Json_Decode$object8 = _elm_lang$core$Native_Json.decodeObject8;
-var _elm_lang$core$Json_Decode$object7 = _elm_lang$core$Native_Json.decodeObject7;
-var _elm_lang$core$Json_Decode$object6 = _elm_lang$core$Native_Json.decodeObject6;
-var _elm_lang$core$Json_Decode$object5 = _elm_lang$core$Native_Json.decodeObject5;
-var _elm_lang$core$Json_Decode$object4 = _elm_lang$core$Native_Json.decodeObject4;
-var _elm_lang$core$Json_Decode$object3 = _elm_lang$core$Native_Json.decodeObject3;
-var _elm_lang$core$Json_Decode$object2 = _elm_lang$core$Native_Json.decodeObject2;
-var _elm_lang$core$Json_Decode$object1 = _elm_lang$core$Native_Json.decodeObject1;
-var _elm_lang$core$Json_Decode_ops = _elm_lang$core$Json_Decode_ops || {};
-_elm_lang$core$Json_Decode_ops[':='] = _elm_lang$core$Native_Json.decodeField;
+var _elm_lang$core$Json_Decode$index = _elm_lang$core$Native_Json.decodeIndex;
+var _elm_lang$core$Json_Decode$field = _elm_lang$core$Native_Json.decodeField;
 var _elm_lang$core$Json_Decode$at = F2(
 	function (fields, decoder) {
-		return A3(
-			_elm_lang$core$List$foldr,
-			F2(
-				function (x, y) {
-					return A2(_elm_lang$core$Json_Decode_ops[':='], x, y);
-				}),
-			decoder,
-			fields);
+		return A3(_elm_lang$core$List$foldr, _elm_lang$core$Json_Decode$field, decoder, fields);
 	});
-var _elm_lang$core$Json_Decode$decodeString = _elm_lang$core$Native_Json.runOnString;
-var _elm_lang$core$Json_Decode$map = _elm_lang$core$Native_Json.decodeObject1;
+var _elm_lang$core$Json_Decode$keyValuePairs = _elm_lang$core$Native_Json.decodeKeyValuePairs;
 var _elm_lang$core$Json_Decode$dict = function (decoder) {
 	return A2(
 		_elm_lang$core$Json_Decode$map,
 		_elm_lang$core$Dict$fromList,
 		_elm_lang$core$Json_Decode$keyValuePairs(decoder));
 };
+var _elm_lang$core$Json_Decode$array = function (decoder) {
+	return A2(_elm_lang$core$Native_Json.decodeContainer, 'array', decoder);
+};
+var _elm_lang$core$Json_Decode$list = function (decoder) {
+	return A2(_elm_lang$core$Native_Json.decodeContainer, 'list', decoder);
+};
+var _elm_lang$core$Json_Decode$nullable = function (decoder) {
+	return _elm_lang$core$Json_Decode$oneOf(
+		{
+			ctor: '::',
+			_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+			_1: {
+				ctor: '::',
+				_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, decoder),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _elm_lang$core$Json_Decode$float = _elm_lang$core$Native_Json.decodePrimitive('float');
+var _elm_lang$core$Json_Decode$int = _elm_lang$core$Native_Json.decodePrimitive('int');
+var _elm_lang$core$Json_Decode$bool = _elm_lang$core$Native_Json.decodePrimitive('bool');
+var _elm_lang$core$Json_Decode$string = _elm_lang$core$Native_Json.decodePrimitive('string');
 var _elm_lang$core$Json_Decode$Decoder = {ctor: 'Decoder'};
 
 var _debois$elm_dom$DOM$className = A2(
 	_elm_lang$core$Json_Decode$at,
-	_elm_lang$core$Native_List.fromArray(
-		['className']),
+	{
+		ctor: '::',
+		_0: 'className',
+		_1: {ctor: '[]'}
+	},
 	_elm_lang$core$Json_Decode$string);
-var _debois$elm_dom$DOM$scrollTop = A2(_elm_lang$core$Json_Decode_ops[':='], 'scrollTop', _elm_lang$core$Json_Decode$float);
-var _debois$elm_dom$DOM$scrollLeft = A2(_elm_lang$core$Json_Decode_ops[':='], 'scrollLeft', _elm_lang$core$Json_Decode$float);
-var _debois$elm_dom$DOM$offsetTop = A2(_elm_lang$core$Json_Decode_ops[':='], 'offsetTop', _elm_lang$core$Json_Decode$float);
-var _debois$elm_dom$DOM$offsetLeft = A2(_elm_lang$core$Json_Decode_ops[':='], 'offsetLeft', _elm_lang$core$Json_Decode$float);
-var _debois$elm_dom$DOM$offsetHeight = A2(_elm_lang$core$Json_Decode_ops[':='], 'offsetHeight', _elm_lang$core$Json_Decode$float);
-var _debois$elm_dom$DOM$offsetWidth = A2(_elm_lang$core$Json_Decode_ops[':='], 'offsetWidth', _elm_lang$core$Json_Decode$float);
+var _debois$elm_dom$DOM$scrollTop = A2(_elm_lang$core$Json_Decode$field, 'scrollTop', _elm_lang$core$Json_Decode$float);
+var _debois$elm_dom$DOM$scrollLeft = A2(_elm_lang$core$Json_Decode$field, 'scrollLeft', _elm_lang$core$Json_Decode$float);
+var _debois$elm_dom$DOM$offsetTop = A2(_elm_lang$core$Json_Decode$field, 'offsetTop', _elm_lang$core$Json_Decode$float);
+var _debois$elm_dom$DOM$offsetLeft = A2(_elm_lang$core$Json_Decode$field, 'offsetLeft', _elm_lang$core$Json_Decode$float);
+var _debois$elm_dom$DOM$offsetHeight = A2(_elm_lang$core$Json_Decode$field, 'offsetHeight', _elm_lang$core$Json_Decode$float);
+var _debois$elm_dom$DOM$offsetWidth = A2(_elm_lang$core$Json_Decode$field, 'offsetWidth', _elm_lang$core$Json_Decode$float);
 var _debois$elm_dom$DOM$childNodes = function (decoder) {
 	var loop = F2(
 		function (idx, xs) {
 			return A2(
 				_elm_lang$core$Json_Decode$andThen,
-				_elm_lang$core$Json_Decode$maybe(
-					A2(
-						_elm_lang$core$Json_Decode_ops[':='],
-						_elm_lang$core$Basics$toString(idx),
-						decoder)),
 				function (_p0) {
 					return A2(
 						_elm_lang$core$Maybe$withDefault,
@@ -6871,66 +7089,68 @@ var _debois$elm_dom$DOM$childNodes = function (decoder) {
 								return A2(
 									loop,
 									idx + 1,
-									A2(_elm_lang$core$List_ops['::'], x, xs));
+									{ctor: '::', _0: x, _1: xs});
 							},
 							_p0));
-				});
+				},
+				_elm_lang$core$Json_Decode$maybe(
+					A2(
+						_elm_lang$core$Json_Decode$field,
+						_elm_lang$core$Basics$toString(idx),
+						decoder)));
 		});
 	return A2(
 		_elm_lang$core$Json_Decode$map,
 		_elm_lang$core$List$reverse,
 		A2(
-			_elm_lang$core$Json_Decode_ops[':='],
+			_elm_lang$core$Json_Decode$field,
 			'childNodes',
 			A2(
 				loop,
 				0,
-				_elm_lang$core$Native_List.fromArray(
-					[]))));
+				{ctor: '[]'})));
 };
 var _debois$elm_dom$DOM$childNode = function (idx) {
 	return _elm_lang$core$Json_Decode$at(
-		_elm_lang$core$Native_List.fromArray(
-			[
-				'childNodes',
-				_elm_lang$core$Basics$toString(idx)
-			]));
+		{
+			ctor: '::',
+			_0: 'childNodes',
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$core$Basics$toString(idx),
+				_1: {ctor: '[]'}
+			}
+		});
 };
 var _debois$elm_dom$DOM$parentElement = function (decoder) {
-	return A2(_elm_lang$core$Json_Decode_ops[':='], 'parentElement', decoder);
+	return A2(_elm_lang$core$Json_Decode$field, 'parentElement', decoder);
 };
 var _debois$elm_dom$DOM$previousSibling = function (decoder) {
-	return A2(_elm_lang$core$Json_Decode_ops[':='], 'previousSibling', decoder);
+	return A2(_elm_lang$core$Json_Decode$field, 'previousSibling', decoder);
 };
 var _debois$elm_dom$DOM$nextSibling = function (decoder) {
-	return A2(_elm_lang$core$Json_Decode_ops[':='], 'nextSibling', decoder);
+	return A2(_elm_lang$core$Json_Decode$field, 'nextSibling', decoder);
 };
 var _debois$elm_dom$DOM$offsetParent = F2(
 	function (x, decoder) {
 		return _elm_lang$core$Json_Decode$oneOf(
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$core$Json_Decode_ops[':='],
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$core$Json_Decode$field,
 					'offsetParent',
 					_elm_lang$core$Json_Decode$null(x)),
-					A2(_elm_lang$core$Json_Decode_ops[':='], 'offsetParent', decoder)
-				]));
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$core$Json_Decode$field, 'offsetParent', decoder),
+					_1: {ctor: '[]'}
+				}
+			});
 	});
 var _debois$elm_dom$DOM$position = F2(
 	function (x, y) {
 		return A2(
 			_elm_lang$core$Json_Decode$andThen,
-			A5(
-				_elm_lang$core$Json_Decode$object4,
-				F4(
-					function (scrollLeft, scrollTop, offsetLeft, offsetTop) {
-						return {ctor: '_Tuple2', _0: (x + offsetLeft) - scrollLeft, _1: (y + offsetTop) - scrollTop};
-					}),
-				_debois$elm_dom$DOM$scrollLeft,
-				_debois$elm_dom$DOM$scrollTop,
-				_debois$elm_dom$DOM$offsetLeft,
-				_debois$elm_dom$DOM$offsetTop),
 			function (_p1) {
 				var _p2 = _p1;
 				var _p4 = _p2._1;
@@ -6939,10 +7159,20 @@ var _debois$elm_dom$DOM$position = F2(
 					_debois$elm_dom$DOM$offsetParent,
 					{ctor: '_Tuple2', _0: _p3, _1: _p4},
 					A2(_debois$elm_dom$DOM$position, _p3, _p4));
-			});
+			},
+			A5(
+				_elm_lang$core$Json_Decode$map4,
+				F4(
+					function (scrollLeft, scrollTop, offsetLeft, offsetTop) {
+						return {ctor: '_Tuple2', _0: (x + offsetLeft) - scrollLeft, _1: (y + offsetTop) - scrollTop};
+					}),
+				_debois$elm_dom$DOM$scrollLeft,
+				_debois$elm_dom$DOM$scrollTop,
+				_debois$elm_dom$DOM$offsetLeft,
+				_debois$elm_dom$DOM$offsetTop));
 	});
 var _debois$elm_dom$DOM$boundingClientRect = A4(
-	_elm_lang$core$Json_Decode$object3,
+	_elm_lang$core$Json_Decode$map3,
 	F3(
 		function (_p5, width, height) {
 			var _p6 = _p5;
@@ -6952,208 +7182,15 @@ var _debois$elm_dom$DOM$boundingClientRect = A4(
 	_debois$elm_dom$DOM$offsetWidth,
 	_debois$elm_dom$DOM$offsetHeight);
 var _debois$elm_dom$DOM$target = function (decoder) {
-	return A2(_elm_lang$core$Json_Decode_ops[':='], 'target', decoder);
+	return A2(_elm_lang$core$Json_Decode$field, 'target', decoder);
 };
 var _debois$elm_dom$DOM$Rectangle = F4(
 	function (a, b, c, d) {
 		return {top: a, left: b, width: c, height: d};
 	});
 
-var _debois$elm_parts$Parts$map2nd = F2(
-	function (f, _p0) {
-		var _p1 = _p0;
-		return {
-			ctor: '_Tuple2',
-			_0: _p1._0,
-			_1: f(_p1._1)
-		};
-	});
-var _debois$elm_parts$Parts$map1st = F2(
-	function (f, _p2) {
-		var _p3 = _p2;
-		return {
-			ctor: '_Tuple2',
-			_0: f(_p3._0),
-			_1: _p3._1
-		};
-	});
-var _debois$elm_parts$Parts$generalize = F4(
-	function (upd, f, m, c) {
-		return _elm_lang$core$Maybe$Just(
-			A2(
-				_debois$elm_parts$Parts$map2nd,
-				_elm_lang$core$Platform_Cmd$map(f),
-				A2(upd, m, c)));
-	});
-var _debois$elm_parts$Parts$update = F2(
-	function (_p4, c) {
-		var _p5 = _p4;
-		return A2(
-			_elm_lang$core$Maybe$withDefault,
-			{ctor: '_Tuple2', _0: c, _1: _elm_lang$core$Platform_Cmd$none},
-			_p5._0(c));
-	});
-var _debois$elm_parts$Parts$update$ = F2(
-	function (_p6, c) {
-		var _p7 = _p6;
-		return _p7._0(c);
-	});
-var _debois$elm_parts$Parts$indexed = F3(
-	function (get, set, model0) {
-		return {
-			ctor: '_Tuple2',
-			_0: F2(
-				function (idx, c) {
-					return A2(
-						_elm_lang$core$Maybe$withDefault,
-						model0,
-						A2(
-							_elm_lang$core$Dict$get,
-							idx,
-							get(c)));
-				}),
-			_1: F3(
-				function (idx, model, c) {
-					return A2(
-						set,
-						A3(
-							_elm_lang$core$Dict$insert,
-							idx,
-							model,
-							get(c)),
-						c);
-				})
-		};
-	});
-var _debois$elm_parts$Parts$accessors = F4(
-	function (get0, set0, model0, idx) {
-		var _p8 = A3(_debois$elm_parts$Parts$indexed, get0, set0, model0);
-		var get = _p8._0;
-		var set = _p8._1;
-		return {
-			get: get(idx),
-			set: set(idx),
-			map: F2(
-				function (f, c) {
-					return A3(
-						_elm_lang$core$Basics$flip,
-						set(idx),
-						c,
-						f(
-							A2(get, idx, c)));
-				}),
-			reset: function (c) {
-				return function (m) {
-					return A2(set0, m, c);
-				}(
-					A2(
-						_elm_lang$core$Dict$remove,
-						idx,
-						get0(c)));
-			}
-		};
-	});
-var _debois$elm_parts$Parts$embedUpdate = F6(
-	function (get, set, update, f, msg, c) {
-		return A2(
-			_elm_lang$core$Maybe$map,
-			_debois$elm_parts$Parts$map1st(
-				A2(_elm_lang$core$Basics$flip, set, c)),
-			A3(
-				update,
-				f,
-				msg,
-				get(c)));
-	});
-var _debois$elm_parts$Parts$embedView = F2(
-	function (get, view) {
-		return function (_p9) {
-			return view(
-				get(_p9));
-		};
-	});
-var _debois$elm_parts$Parts$Accessors = F4(
-	function (a, b, c, d) {
-		return {get: a, set: b, map: c, reset: d};
-	});
-var _debois$elm_parts$Parts$Msg = function (a) {
-	return {ctor: 'Msg', _0: a};
-};
-var _debois$elm_parts$Parts$partial = F3(
-	function (fwd, upd, msg) {
-		return _debois$elm_parts$Parts$Msg(
-			function (c) {
-				return A3(
-					upd,
-					function (_p10) {
-						return fwd(
-							A3(_debois$elm_parts$Parts$partial, fwd, upd, _p10));
-					},
-					msg,
-					c);
-			});
-	});
-var _debois$elm_parts$Parts$pack = F5(
-	function (update, get0, set0, model0, fwd) {
-		var _p11 = A3(_debois$elm_parts$Parts$indexed, get0, set0, model0);
-		var get = _p11._0;
-		var set = _p11._1;
-		return function (idx) {
-			return function (_p12) {
-				return fwd(
-					A3(
-						_debois$elm_parts$Parts$partial,
-						fwd,
-						A3(
-							_debois$elm_parts$Parts$embedUpdate,
-							get(idx),
-							set(idx),
-							update),
-						_p12));
-			};
-		};
-	});
-var _debois$elm_parts$Parts$create = F6(
-	function (view, update, get0, set0, model0, fwd) {
-		var embeddedUpdate = A5(_debois$elm_parts$Parts$pack, update, get0, set0, model0, fwd);
-		var get = _elm_lang$core$Basics$fst(
-			A3(_debois$elm_parts$Parts$indexed, get0, set0, model0));
-		return F2(
-			function (idx, c) {
-				return A2(
-					view,
-					embeddedUpdate(idx),
-					A2(get, idx, c));
-			});
-	});
-var _debois$elm_parts$Parts$pack1 = F4(
-	function (update, get, set, fwd) {
-		return function (_p13) {
-			return fwd(
-				A3(
-					_debois$elm_parts$Parts$partial,
-					fwd,
-					A3(_debois$elm_parts$Parts$embedUpdate, get, set, update),
-					_p13));
-		};
-	});
-var _debois$elm_parts$Parts$create1 = F5(
-	function (view, update, get, set, fwd) {
-		var embeddedUpdate = function (_p14) {
-			return fwd(
-				A3(
-					_debois$elm_parts$Parts$partial,
-					fwd,
-					A3(_debois$elm_parts$Parts$embedUpdate, get, set, update),
-					_p14));
-		};
-		return A2(
-			_debois$elm_parts$Parts$embedView,
-			get,
-			view(embeddedUpdate));
-	});
-
-//import Native.Json //
+var _elm_lang$virtual_dom$VirtualDom_Debug$wrap;
+var _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags;
 
 var _elm_lang$virtual_dom$Native_VirtualDom = function() {
 
@@ -7162,6 +7199,7 @@ var EVENT_KEY = 'EVENT';
 var ATTR_KEY = 'ATTR';
 var ATTR_NS_KEY = 'ATTR_NS';
 
+var localDoc = typeof document !== 'undefined' ? document : {};
 
 
 ////////////  VIRTUAL DOM NODES  ////////////
@@ -7332,7 +7370,14 @@ function organizeFacts(factList)
 		{
 			namespace = entry.value;
 		}
-		else
+		else if (key === 'className')
+		{
+			var classes = facts[key];
+			facts[key] = typeof classes === 'undefined'
+				? entry.value
+				: classes + ' ' + entry.value;
+		}
+ 		else
 		{
 			facts[key] = entry.value;
 		}
@@ -7406,9 +7451,9 @@ function on(name, options, decoder)
 
 function equalEvents(a, b)
 {
-	if (!a.options === b.options)
+	if (a.options !== b.options)
 	{
-		if (a.stopPropagation !== b.stopPropagation || a.preventDefault !== b.preventDefault)
+		if (a.options.stopPropagation !== b.options.stopPropagation || a.options.preventDefault !== b.options.preventDefault)
 		{
 			return false;
 		}
@@ -7417,66 +7462,18 @@ function equalEvents(a, b)
 }
 
 
-
-////////////  RENDERER  ////////////
-
-
-function renderer(parent, tagger, initialVirtualNode)
+function mapProperty(func, property)
 {
-	var eventNode = { tagger: tagger, parent: undefined };
-
-	var domNode = render(initialVirtualNode, eventNode);
-	parent.appendChild(domNode);
-
-	var state = 'NO_REQUEST';
-	var currentVirtualNode = initialVirtualNode;
-	var nextVirtualNode = initialVirtualNode;
-
-	function registerVirtualNode(vNode)
+	if (property.key !== EVENT_KEY)
 	{
-		if (state === 'NO_REQUEST')
-		{
-			rAF(updateIfNeeded);
-		}
-		state = 'PENDING_REQUEST';
-		nextVirtualNode = vNode;
+		return property;
 	}
-
-	function updateIfNeeded()
-	{
-		switch (state)
-		{
-			case 'NO_REQUEST':
-				throw new Error(
-					'Unexpected draw callback.\n' +
-					'Please report this to <https://github.com/elm-lang/core/issues>.'
-				);
-
-			case 'PENDING_REQUEST':
-				rAF(updateIfNeeded);
-				state = 'EXTRA_REQUEST';
-
-				var patches = diff(currentVirtualNode, nextVirtualNode);
-				domNode = applyPatches(domNode, currentVirtualNode, patches, eventNode);
-				currentVirtualNode = nextVirtualNode;
-
-				return;
-
-			case 'EXTRA_REQUEST':
-				state = 'NO_REQUEST';
-				return;
-		}
-	}
-
-	return { update: registerVirtualNode };
+	return on(
+		property.realKey,
+		property.value.options,
+		A2(_elm_lang$core$Json_Decode$map, func, property.value.decoder)
+	);
 }
-
-
-var rAF =
-	typeof requestAnimationFrame !== 'undefined'
-		? requestAnimationFrame
-		: function(cb) { setTimeout(cb, 1000 / 60); };
-
 
 
 ////////////  RENDER  ////////////
@@ -7506,22 +7503,18 @@ function render(vNode, eventNode)
 				subNode = subNode.node;
 			}
 
-			var subEventRoot = {
-				tagger: tagger,
-				parent: eventNode
-			};
-
+			var subEventRoot = { tagger: tagger, parent: eventNode };
 			var domNode = render(subNode, subEventRoot);
 			domNode.elm_event_node_ref = subEventRoot;
 			return domNode;
 
 		case 'text':
-			return document.createTextNode(vNode.text);
+			return localDoc.createTextNode(vNode.text);
 
 		case 'node':
 			var domNode = vNode.namespace
-				? document.createElementNS(vNode.namespace, vNode.tag)
-				: document.createElement(vNode.tag);
+				? localDoc.createElementNS(vNode.namespace, vNode.tag)
+				: localDoc.createElement(vNode.tag);
 
 			applyFacts(domNode, eventNode, vNode.facts);
 
@@ -7536,8 +7529,8 @@ function render(vNode, eventNode)
 
 		case 'keyed-node':
 			var domNode = vNode.namespace
-				? document.createElementNS(vNode.namespace, vNode.tag)
-				: document.createElement(vNode.tag);
+				? localDoc.createElementNS(vNode.namespace, vNode.tag)
+				: localDoc.createElement(vNode.tag);
 
 			applyFacts(domNode, eventNode, vNode.facts);
 
@@ -8458,7 +8451,14 @@ function applyPatch(domNode, patch)
 			return applyPatchesHelp(domNode, patch.data);
 
 		case 'p-tagger':
-			domNode.elm_event_node_ref.tagger = patch.data;
+			if (typeof domNode.elm_event_node_ref !== 'undefined')
+			{
+				domNode.elm_event_node_ref.tagger = patch.data;
+			}
+			else
+			{
+				domNode.elm_event_node_ref = { tagger: patch.data, parent: patch.eventNode };
+			}
 			return domNode;
 
 		case 'p-remove-last':
@@ -8562,7 +8562,7 @@ function applyPatchReorderEndInsertsHelp(endInserts, patch)
 		return;
 	}
 
-	var frag = document.createDocumentFragment();
+	var frag = localDoc.createDocumentFragment();
 	for (var i = 0; i < endInserts.length; i++)
 	{
 		var insert = endInserts[i];
@@ -8576,28 +8576,480 @@ function applyPatchReorderEndInsertsHelp(endInserts, patch)
 }
 
 
+// PROGRAMS
 
-////////////  PROGRAMS  ////////////
+var program = makeProgram(checkNoFlags);
+var programWithFlags = makeProgram(checkYesFlags);
 
-
-function programWithFlags(details)
+function makeProgram(flagChecker)
 {
-	return {
-		init: details.init,
-		update: details.update,
-		subscriptions: details.subscriptions,
-		view: details.view,
-		renderer: renderer
+	return F2(function(debugWrap, impl)
+	{
+		return function(flagDecoder)
+		{
+			return function(object, moduleName, debugMetadata)
+			{
+				var checker = flagChecker(flagDecoder, moduleName);
+				if (typeof debugMetadata === 'undefined')
+				{
+					normalSetup(impl, object, moduleName, checker);
+				}
+				else
+				{
+					debugSetup(A2(debugWrap, debugMetadata, impl), object, moduleName, checker);
+				}
+			};
+		};
+	});
+}
+
+function staticProgram(vNode)
+{
+	var nothing = _elm_lang$core$Native_Utils.Tuple2(
+		_elm_lang$core$Native_Utils.Tuple0,
+		_elm_lang$core$Platform_Cmd$none
+	);
+	return A2(program, _elm_lang$virtual_dom$VirtualDom_Debug$wrap, {
+		init: nothing,
+		view: function() { return vNode; },
+		update: F2(function() { return nothing; }),
+		subscriptions: function() { return _elm_lang$core$Platform_Sub$none; }
+	})();
+}
+
+
+// FLAG CHECKERS
+
+function checkNoFlags(flagDecoder, moduleName)
+{
+	return function(init, flags, domNode)
+	{
+		if (typeof flags === 'undefined')
+		{
+			return init;
+		}
+
+		var errorMessage =
+			'The `' + moduleName + '` module does not need flags.\n'
+			+ 'Initialize it with no arguments and you should be all set!';
+
+		crash(errorMessage, domNode);
 	};
 }
+
+function checkYesFlags(flagDecoder, moduleName)
+{
+	return function(init, flags, domNode)
+	{
+		if (typeof flagDecoder === 'undefined')
+		{
+			var errorMessage =
+				'Are you trying to sneak a Never value into Elm? Trickster!\n'
+				+ 'It looks like ' + moduleName + '.main is defined with `programWithFlags` but has type `Program Never`.\n'
+				+ 'Use `program` instead if you do not want flags.'
+
+			crash(errorMessage, domNode);
+		}
+
+		var result = A2(_elm_lang$core$Native_Json.run, flagDecoder, flags);
+		if (result.ctor === 'Ok')
+		{
+			return init(result._0);
+		}
+
+		var errorMessage =
+			'Trying to initialize the `' + moduleName + '` module with an unexpected flag.\n'
+			+ 'I tried to convert it to an Elm value, but ran into this problem:\n\n'
+			+ result._0;
+
+		crash(errorMessage, domNode);
+	};
+}
+
+function crash(errorMessage, domNode)
+{
+	if (domNode)
+	{
+		domNode.innerHTML =
+			'<div style="padding-left:1em;">'
+			+ '<h2 style="font-weight:normal;"><b>Oops!</b> Something went wrong when starting your Elm program.</h2>'
+			+ '<pre style="padding-left:1em;">' + errorMessage + '</pre>'
+			+ '</div>';
+	}
+
+	throw new Error(errorMessage);
+}
+
+
+//  NORMAL SETUP
+
+function normalSetup(impl, object, moduleName, flagChecker)
+{
+	object['embed'] = function embed(node, flags)
+	{
+		while (node.lastChild)
+		{
+			node.removeChild(node.lastChild);
+		}
+
+		return _elm_lang$core$Native_Platform.initialize(
+			flagChecker(impl.init, flags, node),
+			impl.update,
+			impl.subscriptions,
+			normalRenderer(node, impl.view)
+		);
+	};
+
+	object['fullscreen'] = function fullscreen(flags)
+	{
+		return _elm_lang$core$Native_Platform.initialize(
+			flagChecker(impl.init, flags, document.body),
+			impl.update,
+			impl.subscriptions,
+			normalRenderer(document.body, impl.view)
+		);
+	};
+}
+
+function normalRenderer(parentNode, view)
+{
+	return function(tagger, initialModel)
+	{
+		var eventNode = { tagger: tagger, parent: undefined };
+		var initialVirtualNode = view(initialModel);
+		var domNode = render(initialVirtualNode, eventNode);
+		parentNode.appendChild(domNode);
+		return makeStepper(domNode, view, initialVirtualNode, eventNode);
+	};
+}
+
+
+// STEPPER
+
+var rAF =
+	typeof requestAnimationFrame !== 'undefined'
+		? requestAnimationFrame
+		: function(callback) { setTimeout(callback, 1000 / 60); };
+
+function makeStepper(domNode, view, initialVirtualNode, eventNode)
+{
+	var state = 'NO_REQUEST';
+	var currNode = initialVirtualNode;
+	var nextModel;
+
+	function updateIfNeeded()
+	{
+		switch (state)
+		{
+			case 'NO_REQUEST':
+				throw new Error(
+					'Unexpected draw callback.\n' +
+					'Please report this to <https://github.com/elm-lang/virtual-dom/issues>.'
+				);
+
+			case 'PENDING_REQUEST':
+				rAF(updateIfNeeded);
+				state = 'EXTRA_REQUEST';
+
+				var nextNode = view(nextModel);
+				var patches = diff(currNode, nextNode);
+				domNode = applyPatches(domNode, currNode, patches, eventNode);
+				currNode = nextNode;
+
+				return;
+
+			case 'EXTRA_REQUEST':
+				state = 'NO_REQUEST';
+				return;
+		}
+	}
+
+	return function stepper(model)
+	{
+		if (state === 'NO_REQUEST')
+		{
+			rAF(updateIfNeeded);
+		}
+		state = 'PENDING_REQUEST';
+		nextModel = model;
+	};
+}
+
+
+// DEBUG SETUP
+
+function debugSetup(impl, object, moduleName, flagChecker)
+{
+	object['fullscreen'] = function fullscreen(flags)
+	{
+		var popoutRef = { doc: undefined };
+		return _elm_lang$core$Native_Platform.initialize(
+			flagChecker(impl.init, flags, document.body),
+			impl.update(scrollTask(popoutRef)),
+			impl.subscriptions,
+			debugRenderer(moduleName, document.body, popoutRef, impl.view, impl.viewIn, impl.viewOut)
+		);
+	};
+
+	object['embed'] = function fullscreen(node, flags)
+	{
+		var popoutRef = { doc: undefined };
+		return _elm_lang$core$Native_Platform.initialize(
+			flagChecker(impl.init, flags, node),
+			impl.update(scrollTask(popoutRef)),
+			impl.subscriptions,
+			debugRenderer(moduleName, node, popoutRef, impl.view, impl.viewIn, impl.viewOut)
+		);
+	};
+}
+
+function scrollTask(popoutRef)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		var doc = popoutRef.doc;
+		if (doc)
+		{
+			var msgs = doc.getElementsByClassName('debugger-sidebar-messages')[0];
+			if (msgs)
+			{
+				msgs.scrollTop = msgs.scrollHeight;
+			}
+		}
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+
+function debugRenderer(moduleName, parentNode, popoutRef, view, viewIn, viewOut)
+{
+	return function(tagger, initialModel)
+	{
+		var appEventNode = { tagger: tagger, parent: undefined };
+		var eventNode = { tagger: tagger, parent: undefined };
+
+		// make normal stepper
+		var appVirtualNode = view(initialModel);
+		var appNode = render(appVirtualNode, appEventNode);
+		parentNode.appendChild(appNode);
+		var appStepper = makeStepper(appNode, view, appVirtualNode, appEventNode);
+
+		// make overlay stepper
+		var overVirtualNode = viewIn(initialModel)._1;
+		var overNode = render(overVirtualNode, eventNode);
+		parentNode.appendChild(overNode);
+		var wrappedViewIn = wrapViewIn(appEventNode, overNode, viewIn);
+		var overStepper = makeStepper(overNode, wrappedViewIn, overVirtualNode, eventNode);
+
+		// make debugger stepper
+		var debugStepper = makeDebugStepper(initialModel, viewOut, eventNode, parentNode, moduleName, popoutRef);
+
+		return function stepper(model)
+		{
+			appStepper(model);
+			overStepper(model);
+			debugStepper(model);
+		}
+	};
+}
+
+function makeDebugStepper(initialModel, view, eventNode, parentNode, moduleName, popoutRef)
+{
+	var curr;
+	var domNode;
+
+	return function stepper(model)
+	{
+		if (!model.isDebuggerOpen)
+		{
+			return;
+		}
+
+		if (!popoutRef.doc)
+		{
+			curr = view(model);
+			domNode = openDebugWindow(moduleName, popoutRef, curr, eventNode);
+			return;
+		}
+
+		// switch to document of popout
+		localDoc = popoutRef.doc;
+
+		var next = view(model);
+		var patches = diff(curr, next);
+		domNode = applyPatches(domNode, curr, patches, eventNode);
+		curr = next;
+
+		// switch back to normal document
+		localDoc = document;
+	};
+}
+
+function openDebugWindow(moduleName, popoutRef, virtualNode, eventNode)
+{
+	var w = 900;
+	var h = 360;
+	var x = screen.width - w;
+	var y = screen.height - h;
+	var debugWindow = window.open('', '', 'width=' + w + ',height=' + h + ',left=' + x + ',top=' + y);
+
+	// switch to window document
+	localDoc = debugWindow.document;
+
+	popoutRef.doc = localDoc;
+	localDoc.title = 'Debugger - ' + moduleName;
+	localDoc.body.style.margin = '0';
+	localDoc.body.style.padding = '0';
+	var domNode = render(virtualNode, eventNode);
+	localDoc.body.appendChild(domNode);
+
+	localDoc.addEventListener('keydown', function(event) {
+		if (event.metaKey && event.which === 82)
+		{
+			window.location.reload();
+		}
+		if (event.which === 38)
+		{
+			eventNode.tagger({ ctor: 'Up' });
+			event.preventDefault();
+		}
+		if (event.which === 40)
+		{
+			eventNode.tagger({ ctor: 'Down' });
+			event.preventDefault();
+		}
+	});
+
+	function close()
+	{
+		popoutRef.doc = undefined;
+		debugWindow.close();
+	}
+	window.addEventListener('unload', close);
+	debugWindow.addEventListener('unload', function() {
+		popoutRef.doc = undefined;
+		window.removeEventListener('unload', close);
+		eventNode.tagger({ ctor: 'Close' });
+	});
+
+	// switch back to the normal document
+	localDoc = document;
+
+	return domNode;
+}
+
+
+// BLOCK EVENTS
+
+function wrapViewIn(appEventNode, overlayNode, viewIn)
+{
+	var ignorer = makeIgnorer(overlayNode);
+	var blocking = 'Normal';
+	var overflow;
+
+	var normalTagger = appEventNode.tagger;
+	var blockTagger = function() {};
+
+	return function(model)
+	{
+		var tuple = viewIn(model);
+		var newBlocking = tuple._0.ctor;
+		appEventNode.tagger = newBlocking === 'Normal' ? normalTagger : blockTagger;
+		if (blocking !== newBlocking)
+		{
+			traverse('removeEventListener', ignorer, blocking);
+			traverse('addEventListener', ignorer, newBlocking);
+
+			if (blocking === 'Normal')
+			{
+				overflow = document.body.style.overflow;
+				document.body.style.overflow = 'hidden';
+			}
+
+			if (newBlocking === 'Normal')
+			{
+				document.body.style.overflow = overflow;
+			}
+
+			blocking = newBlocking;
+		}
+		return tuple._1;
+	}
+}
+
+function traverse(verbEventListener, ignorer, blocking)
+{
+	switch(blocking)
+	{
+		case 'Normal':
+			return;
+
+		case 'Pause':
+			return traverseHelp(verbEventListener, ignorer, mostEvents);
+
+		case 'Message':
+			return traverseHelp(verbEventListener, ignorer, allEvents);
+	}
+}
+
+function traverseHelp(verbEventListener, handler, eventNames)
+{
+	for (var i = 0; i < eventNames.length; i++)
+	{
+		document.body[verbEventListener](eventNames[i], handler, true);
+	}
+}
+
+function makeIgnorer(overlayNode)
+{
+	return function(event)
+	{
+		if (event.type === 'keydown' && event.metaKey && event.which === 82)
+		{
+			return;
+		}
+
+		var isScroll = event.type === 'scroll' || event.type === 'wheel';
+
+		var node = event.target;
+		while (node !== null)
+		{
+			if (node.className === 'elm-overlay-message-details' && isScroll)
+			{
+				return;
+			}
+
+			if (node === overlayNode && !isScroll)
+			{
+				return;
+			}
+			node = node.parentNode;
+		}
+
+		event.stopPropagation();
+		event.preventDefault();
+	}
+}
+
+var mostEvents = [
+	'click', 'dblclick', 'mousemove',
+	'mouseup', 'mousedown', 'mouseenter', 'mouseleave',
+	'touchstart', 'touchend', 'touchcancel', 'touchmove',
+	'pointerdown', 'pointerup', 'pointerover', 'pointerout',
+	'pointerenter', 'pointerleave', 'pointermove', 'pointercancel',
+	'dragstart', 'drag', 'dragend', 'dragenter', 'dragover', 'dragleave', 'drop',
+	'keyup', 'keydown', 'keypress',
+	'input', 'change',
+	'focus', 'blur'
+];
+
+var allEvents = mostEvents.concat('wheel', 'scroll');
 
 
 return {
 	node: node,
 	text: text,
-
 	custom: custom,
-
 	map: F2(map),
 
 	on: F3(on),
@@ -8605,17 +9057,26 @@ return {
 	property: F2(property),
 	attribute: F2(attribute),
 	attributeNS: F3(attributeNS),
+	mapProperty: F2(mapProperty),
 
 	lazy: F2(lazy),
 	lazy2: F3(lazy2),
 	lazy3: F4(lazy3),
 	keyedNode: F3(keyedNode),
 
-	programWithFlags: programWithFlags
+	program: program,
+	programWithFlags: programWithFlags,
+	staticProgram: staticProgram
 };
 
 }();
-var _elm_lang$virtual_dom$VirtualDom$programWithFlags = _elm_lang$virtual_dom$Native_VirtualDom.programWithFlags;
+
+var _elm_lang$virtual_dom$VirtualDom$programWithFlags = function (impl) {
+	return A2(_elm_lang$virtual_dom$Native_VirtualDom.programWithFlags, _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags, impl);
+};
+var _elm_lang$virtual_dom$VirtualDom$program = function (impl) {
+	return A2(_elm_lang$virtual_dom$Native_VirtualDom.program, _elm_lang$virtual_dom$VirtualDom_Debug$wrap, impl);
+};
 var _elm_lang$virtual_dom$VirtualDom$keyedNode = _elm_lang$virtual_dom$Native_VirtualDom.keyedNode;
 var _elm_lang$virtual_dom$VirtualDom$lazy3 = _elm_lang$virtual_dom$Native_VirtualDom.lazy3;
 var _elm_lang$virtual_dom$VirtualDom$lazy2 = _elm_lang$virtual_dom$Native_VirtualDom.lazy2;
@@ -8627,6 +9088,7 @@ var _elm_lang$virtual_dom$VirtualDom$on = F2(
 		return A3(_elm_lang$virtual_dom$VirtualDom$onWithOptions, eventName, _elm_lang$virtual_dom$VirtualDom$defaultOptions, decoder);
 	});
 var _elm_lang$virtual_dom$VirtualDom$style = _elm_lang$virtual_dom$Native_VirtualDom.style;
+var _elm_lang$virtual_dom$VirtualDom$mapProperty = _elm_lang$virtual_dom$Native_VirtualDom.mapProperty;
 var _elm_lang$virtual_dom$VirtualDom$attributeNS = _elm_lang$virtual_dom$Native_VirtualDom.attributeNS;
 var _elm_lang$virtual_dom$VirtualDom$attribute = _elm_lang$virtual_dom$Native_VirtualDom.attribute;
 var _elm_lang$virtual_dom$VirtualDom$property = _elm_lang$virtual_dom$Native_VirtualDom.property;
@@ -8640,6 +9102,30 @@ var _elm_lang$virtual_dom$VirtualDom$Options = F2(
 var _elm_lang$virtual_dom$VirtualDom$Node = {ctor: 'Node'};
 var _elm_lang$virtual_dom$VirtualDom$Property = {ctor: 'Property'};
 
+var _elm_lang$html$Html$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
+var _elm_lang$html$Html$program = _elm_lang$virtual_dom$VirtualDom$program;
+var _elm_lang$html$Html$beginnerProgram = function (_p0) {
+	var _p1 = _p0;
+	return _elm_lang$html$Html$program(
+		{
+			init: A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				_p1.model,
+				{ctor: '[]'}),
+			update: F2(
+				function (msg, model) {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						A2(_p1.update, msg, model),
+						{ctor: '[]'});
+				}),
+			view: _p1.view,
+			subscriptions: function (_p2) {
+				return _elm_lang$core$Platform_Sub$none;
+			}
+		});
+};
+var _elm_lang$html$Html$map = _elm_lang$virtual_dom$VirtualDom$map;
 var _elm_lang$html$Html$text = _elm_lang$virtual_dom$VirtualDom$text;
 var _elm_lang$html$Html$node = _elm_lang$virtual_dom$VirtualDom$node;
 var _elm_lang$html$Html$body = _elm_lang$html$Html$node('body');
@@ -8656,7 +9142,7 @@ var _elm_lang$html$Html$h6 = _elm_lang$html$Html$node('h6');
 var _elm_lang$html$Html$header = _elm_lang$html$Html$node('header');
 var _elm_lang$html$Html$footer = _elm_lang$html$Html$node('footer');
 var _elm_lang$html$Html$address = _elm_lang$html$Html$node('address');
-var _elm_lang$html$Html$main$ = _elm_lang$html$Html$node('main');
+var _elm_lang$html$Html$main_ = _elm_lang$html$Html$node('main');
 var _elm_lang$html$Html$p = _elm_lang$html$Html$node('p');
 var _elm_lang$html$Html$hr = _elm_lang$html$Html$node('hr');
 var _elm_lang$html$Html$pre = _elm_lang$html$Html$node('pre');
@@ -8710,7 +9196,6 @@ var _elm_lang$html$Html$audio = _elm_lang$html$Html$node('audio');
 var _elm_lang$html$Html$source = _elm_lang$html$Html$node('source');
 var _elm_lang$html$Html$track = _elm_lang$html$Html$node('track');
 var _elm_lang$html$Html$canvas = _elm_lang$html$Html$node('canvas');
-var _elm_lang$html$Html$svg = _elm_lang$html$Html$node('svg');
 var _elm_lang$html$Html$math = _elm_lang$html$Html$node('math');
 var _elm_lang$html$Html$table = _elm_lang$html$Html$node('table');
 var _elm_lang$html$Html$caption = _elm_lang$html$Html$node('caption');
@@ -8742,6 +9227,7 @@ var _elm_lang$html$Html$summary = _elm_lang$html$Html$node('summary');
 var _elm_lang$html$Html$menuitem = _elm_lang$html$Html$node('menuitem');
 var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
 
+var _elm_lang$html$Html_Attributes$map = _elm_lang$virtual_dom$VirtualDom$mapProperty;
 var _elm_lang$html$Html_Attributes$attribute = _elm_lang$virtual_dom$VirtualDom$attribute;
 var _elm_lang$html$Html_Attributes$contextmenu = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$attribute, 'contextmenu', value);
@@ -8749,14 +9235,77 @@ var _elm_lang$html$Html_Attributes$contextmenu = function (value) {
 var _elm_lang$html$Html_Attributes$draggable = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$attribute, 'draggable', value);
 };
+var _elm_lang$html$Html_Attributes$itemprop = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'itemprop', value);
+};
+var _elm_lang$html$Html_Attributes$tabindex = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'tabIndex',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$charset = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'charset', value);
+};
+var _elm_lang$html$Html_Attributes$height = function (value) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'height',
+		_elm_lang$core$Basics$toString(value));
+};
+var _elm_lang$html$Html_Attributes$width = function (value) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'width',
+		_elm_lang$core$Basics$toString(value));
+};
+var _elm_lang$html$Html_Attributes$formaction = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'formAction', value);
+};
 var _elm_lang$html$Html_Attributes$list = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$attribute, 'list', value);
+};
+var _elm_lang$html$Html_Attributes$minlength = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'minLength',
+		_elm_lang$core$Basics$toString(n));
 };
 var _elm_lang$html$Html_Attributes$maxlength = function (n) {
 	return A2(
 		_elm_lang$html$Html_Attributes$attribute,
 		'maxlength',
 		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$size = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'size',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$form = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'form', value);
+};
+var _elm_lang$html$Html_Attributes$cols = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'cols',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$rows = function (n) {
+	return A2(
+		_elm_lang$html$Html_Attributes$attribute,
+		'rows',
+		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$challenge = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'challenge', value);
+};
+var _elm_lang$html$Html_Attributes$media = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'media', value);
+};
+var _elm_lang$html$Html_Attributes$rel = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'rel', value);
 };
 var _elm_lang$html$Html_Attributes$datetime = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$attribute, 'datetime', value);
@@ -8775,6 +9324,9 @@ var _elm_lang$html$Html_Attributes$rowspan = function (n) {
 		_elm_lang$html$Html_Attributes$attribute,
 		'rowspan',
 		_elm_lang$core$Basics$toString(n));
+};
+var _elm_lang$html$Html_Attributes$manifest = function (value) {
+	return A2(_elm_lang$html$Html_Attributes$attribute, 'manifest', value);
 };
 var _elm_lang$html$Html_Attributes$property = _elm_lang$virtual_dom$VirtualDom$property;
 var _elm_lang$html$Html_Attributes$stringProperty = F2(
@@ -8805,20 +9357,8 @@ var _elm_lang$html$Html_Attributes$dir = function (value) {
 var _elm_lang$html$Html_Attributes$dropzone = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'dropzone', value);
 };
-var _elm_lang$html$Html_Attributes$itemprop = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'itemprop', value);
-};
 var _elm_lang$html$Html_Attributes$lang = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'lang', value);
-};
-var _elm_lang$html$Html_Attributes$tabindex = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'tabIndex',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$charset = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'charset', value);
 };
 var _elm_lang$html$Html_Attributes$content = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'content', value);
@@ -8831,18 +9371,6 @@ var _elm_lang$html$Html_Attributes$language = function (value) {
 };
 var _elm_lang$html$Html_Attributes$src = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'src', value);
-};
-var _elm_lang$html$Html_Attributes$height = function (value) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'height',
-		_elm_lang$core$Basics$toString(value));
-};
-var _elm_lang$html$Html_Attributes$width = function (value) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'width',
-		_elm_lang$core$Basics$toString(value));
 };
 var _elm_lang$html$Html_Attributes$alt = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'alt', value);
@@ -8865,7 +9393,7 @@ var _elm_lang$html$Html_Attributes$sandbox = function (value) {
 var _elm_lang$html$Html_Attributes$srcdoc = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'srcdoc', value);
 };
-var _elm_lang$html$Html_Attributes$type$ = function (value) {
+var _elm_lang$html$Html_Attributes$type_ = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'type', value);
 };
 var _elm_lang$html$Html_Attributes$value = function (value) {
@@ -8892,20 +9420,8 @@ var _elm_lang$html$Html_Attributes$autocomplete = function (bool) {
 		'autocomplete',
 		bool ? 'on' : 'off');
 };
-var _elm_lang$html$Html_Attributes$autosave = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'autosave', value);
-};
 var _elm_lang$html$Html_Attributes$enctype = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'enctype', value);
-};
-var _elm_lang$html$Html_Attributes$formaction = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'formAction', value);
-};
-var _elm_lang$html$Html_Attributes$minlength = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'minLength',
-		_elm_lang$core$Basics$toString(n));
 };
 var _elm_lang$html$Html_Attributes$method = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'method', value);
@@ -8916,17 +9432,8 @@ var _elm_lang$html$Html_Attributes$name = function (value) {
 var _elm_lang$html$Html_Attributes$pattern = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'pattern', value);
 };
-var _elm_lang$html$Html_Attributes$size = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'size',
-		_elm_lang$core$Basics$toString(n));
-};
 var _elm_lang$html$Html_Attributes$for = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'htmlFor', value);
-};
-var _elm_lang$html$Html_Attributes$form = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'form', value);
 };
 var _elm_lang$html$Html_Attributes$max = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'max', value);
@@ -8936,18 +9443,6 @@ var _elm_lang$html$Html_Attributes$min = function (value) {
 };
 var _elm_lang$html$Html_Attributes$step = function (n) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'step', n);
-};
-var _elm_lang$html$Html_Attributes$cols = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'cols',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$rows = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'rows',
-		_elm_lang$core$Basics$toString(n));
 };
 var _elm_lang$html$Html_Attributes$wrap = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'wrap', value);
@@ -8960,9 +9455,6 @@ var _elm_lang$html$Html_Attributes$shape = function (value) {
 };
 var _elm_lang$html$Html_Attributes$coords = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'coords', value);
-};
-var _elm_lang$html$Html_Attributes$challenge = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'challenge', value);
 };
 var _elm_lang$html$Html_Attributes$keytype = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'keytype', value);
@@ -8985,14 +9477,8 @@ var _elm_lang$html$Html_Attributes$downloadAs = function (value) {
 var _elm_lang$html$Html_Attributes$hreflang = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'hreflang', value);
 };
-var _elm_lang$html$Html_Attributes$media = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'media', value);
-};
 var _elm_lang$html$Html_Attributes$ping = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'ping', value);
-};
-var _elm_lang$html$Html_Attributes$rel = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'rel', value);
 };
 var _elm_lang$html$Html_Attributes$start = function (n) {
 	return A2(
@@ -9005,9 +9491,6 @@ var _elm_lang$html$Html_Attributes$headers = function (value) {
 };
 var _elm_lang$html$Html_Attributes$scope = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'scope', value);
-};
-var _elm_lang$html$Html_Attributes$manifest = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'manifest', value);
 };
 var _elm_lang$html$Html_Attributes$boolProperty = F2(
 	function (name, bool) {
@@ -9089,8 +9572,8 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 			' ',
 			A2(
 				_elm_lang$core$List$map,
-				_elm_lang$core$Basics$fst,
-				A2(_elm_lang$core$List$filter, _elm_lang$core$Basics$snd, list))));
+				_elm_lang$core$Tuple$first,
+				A2(_elm_lang$core$List$filter, _elm_lang$core$Tuple$second, list))));
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
 
@@ -9129,158 +9612,142 @@ var _elm_lang$core$Task$spawnCmd = F2(
 		return _elm_lang$core$Native_Scheduler.spawn(
 			A2(
 				_elm_lang$core$Task$andThen,
-				_p1._0,
-				_elm_lang$core$Platform$sendToApp(router)));
+				_elm_lang$core$Platform$sendToApp(router),
+				_p1._0));
 	});
 var _elm_lang$core$Task$fail = _elm_lang$core$Native_Scheduler.fail;
 var _elm_lang$core$Task$mapError = F2(
-	function (f, task) {
+	function (convert, task) {
 		return A2(
 			_elm_lang$core$Task$onError,
-			task,
-			function (err) {
+			function (_p2) {
 				return _elm_lang$core$Task$fail(
-					f(err));
-			});
+					convert(_p2));
+			},
+			task);
 	});
 var _elm_lang$core$Task$succeed = _elm_lang$core$Native_Scheduler.succeed;
 var _elm_lang$core$Task$map = F2(
 	function (func, taskA) {
 		return A2(
 			_elm_lang$core$Task$andThen,
-			taskA,
 			function (a) {
 				return _elm_lang$core$Task$succeed(
 					func(a));
-			});
+			},
+			taskA);
 	});
 var _elm_lang$core$Task$map2 = F3(
 	function (func, taskA, taskB) {
 		return A2(
 			_elm_lang$core$Task$andThen,
-			taskA,
 			function (a) {
 				return A2(
 					_elm_lang$core$Task$andThen,
-					taskB,
 					function (b) {
 						return _elm_lang$core$Task$succeed(
 							A2(func, a, b));
-					});
-			});
+					},
+					taskB);
+			},
+			taskA);
 	});
 var _elm_lang$core$Task$map3 = F4(
 	function (func, taskA, taskB, taskC) {
 		return A2(
 			_elm_lang$core$Task$andThen,
-			taskA,
 			function (a) {
 				return A2(
 					_elm_lang$core$Task$andThen,
-					taskB,
 					function (b) {
 						return A2(
 							_elm_lang$core$Task$andThen,
-							taskC,
 							function (c) {
 								return _elm_lang$core$Task$succeed(
 									A3(func, a, b, c));
-							});
-					});
-			});
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
 	});
 var _elm_lang$core$Task$map4 = F5(
 	function (func, taskA, taskB, taskC, taskD) {
 		return A2(
 			_elm_lang$core$Task$andThen,
-			taskA,
 			function (a) {
 				return A2(
 					_elm_lang$core$Task$andThen,
-					taskB,
 					function (b) {
 						return A2(
 							_elm_lang$core$Task$andThen,
-							taskC,
 							function (c) {
 								return A2(
 									_elm_lang$core$Task$andThen,
-									taskD,
 									function (d) {
 										return _elm_lang$core$Task$succeed(
 											A4(func, a, b, c, d));
-									});
-							});
-					});
-			});
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
 	});
 var _elm_lang$core$Task$map5 = F6(
 	function (func, taskA, taskB, taskC, taskD, taskE) {
 		return A2(
 			_elm_lang$core$Task$andThen,
-			taskA,
 			function (a) {
 				return A2(
 					_elm_lang$core$Task$andThen,
-					taskB,
 					function (b) {
 						return A2(
 							_elm_lang$core$Task$andThen,
-							taskC,
 							function (c) {
 								return A2(
 									_elm_lang$core$Task$andThen,
-									taskD,
 									function (d) {
 										return A2(
 											_elm_lang$core$Task$andThen,
-											taskE,
 											function (e) {
 												return _elm_lang$core$Task$succeed(
 													A5(func, a, b, c, d, e));
-											});
-									});
-							});
-					});
-			});
-	});
-var _elm_lang$core$Task$andMap = F2(
-	function (taskFunc, taskValue) {
-		return A2(
-			_elm_lang$core$Task$andThen,
-			taskFunc,
-			function (func) {
-				return A2(
-					_elm_lang$core$Task$andThen,
-					taskValue,
-					function (value) {
-						return _elm_lang$core$Task$succeed(
-							func(value));
-					});
-			});
+											},
+											taskE);
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
 	});
 var _elm_lang$core$Task$sequence = function (tasks) {
-	var _p2 = tasks;
-	if (_p2.ctor === '[]') {
+	var _p3 = tasks;
+	if (_p3.ctor === '[]') {
 		return _elm_lang$core$Task$succeed(
-			_elm_lang$core$Native_List.fromArray(
-				[]));
+			{ctor: '[]'});
 	} else {
 		return A3(
 			_elm_lang$core$Task$map2,
 			F2(
 				function (x, y) {
-					return A2(_elm_lang$core$List_ops['::'], x, y);
+					return {ctor: '::', _0: x, _1: y};
 				}),
-			_p2._0,
-			_elm_lang$core$Task$sequence(_p2._1));
+			_p3._0,
+			_elm_lang$core$Task$sequence(_p3._1));
 	}
 };
 var _elm_lang$core$Task$onEffects = F3(
 	function (router, commands, state) {
 		return A2(
 			_elm_lang$core$Task$map,
-			function (_p3) {
+			function (_p4) {
 				return {ctor: '_Tuple0'};
 			},
 			_elm_lang$core$Task$sequence(
@@ -9289,67 +9756,47 @@ var _elm_lang$core$Task$onEffects = F3(
 					_elm_lang$core$Task$spawnCmd(router),
 					commands)));
 	});
-var _elm_lang$core$Task$toMaybe = function (task) {
-	return A2(
-		_elm_lang$core$Task$onError,
-		A2(_elm_lang$core$Task$map, _elm_lang$core$Maybe$Just, task),
-		function (_p4) {
-			return _elm_lang$core$Task$succeed(_elm_lang$core$Maybe$Nothing);
-		});
-};
-var _elm_lang$core$Task$fromMaybe = F2(
-	function ($default, maybe) {
-		var _p5 = maybe;
-		if (_p5.ctor === 'Just') {
-			return _elm_lang$core$Task$succeed(_p5._0);
-		} else {
-			return _elm_lang$core$Task$fail($default);
-		}
-	});
-var _elm_lang$core$Task$toResult = function (task) {
-	return A2(
-		_elm_lang$core$Task$onError,
-		A2(_elm_lang$core$Task$map, _elm_lang$core$Result$Ok, task),
-		function (msg) {
-			return _elm_lang$core$Task$succeed(
-				_elm_lang$core$Result$Err(msg));
-		});
-};
-var _elm_lang$core$Task$fromResult = function (result) {
-	var _p6 = result;
-	if (_p6.ctor === 'Ok') {
-		return _elm_lang$core$Task$succeed(_p6._0);
-	} else {
-		return _elm_lang$core$Task$fail(_p6._0);
-	}
-};
 var _elm_lang$core$Task$init = _elm_lang$core$Task$succeed(
 	{ctor: '_Tuple0'});
 var _elm_lang$core$Task$onSelfMsg = F3(
-	function (_p9, _p8, _p7) {
+	function (_p7, _p6, _p5) {
 		return _elm_lang$core$Task$succeed(
 			{ctor: '_Tuple0'});
 	});
 var _elm_lang$core$Task$command = _elm_lang$core$Native_Platform.leaf('Task');
-var _elm_lang$core$Task$T = function (a) {
-	return {ctor: 'T', _0: a};
+var _elm_lang$core$Task$Perform = function (a) {
+	return {ctor: 'Perform', _0: a};
 };
-var _elm_lang$core$Task$perform = F3(
-	function (onFail, onSuccess, task) {
+var _elm_lang$core$Task$perform = F2(
+	function (toMessage, task) {
 		return _elm_lang$core$Task$command(
-			_elm_lang$core$Task$T(
+			_elm_lang$core$Task$Perform(
+				A2(_elm_lang$core$Task$map, toMessage, task)));
+	});
+var _elm_lang$core$Task$attempt = F2(
+	function (resultToMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
 				A2(
 					_elm_lang$core$Task$onError,
-					A2(_elm_lang$core$Task$map, onSuccess, task),
-					function (x) {
+					function (_p8) {
 						return _elm_lang$core$Task$succeed(
-							onFail(x));
-					})));
+							resultToMessage(
+								_elm_lang$core$Result$Err(_p8)));
+					},
+					A2(
+						_elm_lang$core$Task$andThen,
+						function (_p9) {
+							return _elm_lang$core$Task$succeed(
+								resultToMessage(
+									_elm_lang$core$Result$Ok(_p9)));
+						},
+						task))));
 	});
 var _elm_lang$core$Task$cmdMap = F2(
 	function (tagger, _p10) {
 		var _p11 = _p10;
-		return _elm_lang$core$Task$T(
+		return _elm_lang$core$Task$Perform(
 			A2(_elm_lang$core$Task$map, tagger, _p11._0));
 	});
 _elm_lang$core$Native_Platform.effectManagers['Task'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Task$init, onEffects: _elm_lang$core$Task$onEffects, onSelfMsg: _elm_lang$core$Task$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Task$cmdMap};
@@ -9362,20 +9809,19 @@ var _elm_lang$core$Time$spawnHelp = F3(
 			return _elm_lang$core$Task$succeed(processes);
 		} else {
 			var _p1 = _p0._0;
-			return A2(
-				_elm_lang$core$Task$andThen,
-				_elm_lang$core$Native_Scheduler.spawn(
-					A2(
-						_elm_lang$core$Time$setInterval,
-						_p1,
-						A2(_elm_lang$core$Platform$sendToSelf, router, _p1))),
-				function (id) {
-					return A3(
-						_elm_lang$core$Time$spawnHelp,
-						router,
-						_p0._1,
-						A3(_elm_lang$core$Dict$insert, _p1, id, processes));
-				});
+			var spawnRest = function (id) {
+				return A3(
+					_elm_lang$core$Time$spawnHelp,
+					router,
+					_p0._1,
+					A3(_elm_lang$core$Dict$insert, _p1, id, processes));
+			};
+			var spawnTimer = _elm_lang$core$Native_Scheduler.spawn(
+				A2(
+					_elm_lang$core$Time$setInterval,
+					_p1,
+					A2(_elm_lang$core$Platform$sendToSelf, router, _p1)));
+			return A2(_elm_lang$core$Task$andThen, spawnRest, spawnTimer);
 		}
 	});
 var _elm_lang$core$Time$addMySub = F2(
@@ -9388,14 +9834,17 @@ var _elm_lang$core$Time$addMySub = F2(
 			return A3(
 				_elm_lang$core$Dict$insert,
 				_p5,
-				_elm_lang$core$Native_List.fromArray(
-					[_p6]),
+				{
+					ctor: '::',
+					_0: _p6,
+					_1: {ctor: '[]'}
+				},
 				state);
 		} else {
 			return A3(
 				_elm_lang$core$Dict$insert,
 				_p5,
-				A2(_elm_lang$core$List_ops['::'], _p6, _p4._0),
+				{ctor: '::', _0: _p6, _1: _p4._0},
 				state);
 		}
 	});
@@ -9422,26 +9871,24 @@ var _elm_lang$core$Time$onSelfMsg = F3(
 		if (_p7.ctor === 'Nothing') {
 			return _elm_lang$core$Task$succeed(state);
 		} else {
+			var tellTaggers = function (time) {
+				return _elm_lang$core$Task$sequence(
+					A2(
+						_elm_lang$core$List$map,
+						function (tagger) {
+							return A2(
+								_elm_lang$core$Platform$sendToApp,
+								router,
+								tagger(time));
+						},
+						_p7._0));
+			};
 			return A2(
 				_elm_lang$core$Task$andThen,
-				_elm_lang$core$Time$now,
-				function (time) {
-					return A2(
-						_elm_lang$core$Task$andThen,
-						_elm_lang$core$Task$sequence(
-							A2(
-								_elm_lang$core$List$map,
-								function (tagger) {
-									return A2(
-										_elm_lang$core$Platform$sendToApp,
-										router,
-										tagger(time));
-								},
-								_p7._0)),
-						function (_p8) {
-							return _elm_lang$core$Task$succeed(state);
-						});
-				});
+				function (_p8) {
+					return _elm_lang$core$Task$succeed(state);
+				},
+				A2(_elm_lang$core$Task$andThen, tellTaggers, _elm_lang$core$Time$now));
 		}
 	});
 var _elm_lang$core$Time$subscription = _elm_lang$core$Native_Platform.leaf('Time');
@@ -9463,10 +9910,10 @@ var _elm_lang$core$Time$onEffects = F3(
 					_1: _p13._1,
 					_2: A2(
 						_elm_lang$core$Task$andThen,
-						_elm_lang$core$Native_Scheduler.kill(id),
 						function (_p14) {
 							return _p13._2;
-						})
+						},
+						_elm_lang$core$Native_Scheduler.kill(id))
 				};
 			});
 		var bothStep = F4(
@@ -9484,7 +9931,7 @@ var _elm_lang$core$Time$onEffects = F3(
 				var _p18 = _p17;
 				return {
 					ctor: '_Tuple3',
-					_0: A2(_elm_lang$core$List_ops['::'], interval, _p18._0),
+					_0: {ctor: '::', _0: interval, _1: _p18._0},
 					_1: _p18._1,
 					_2: _p18._2
 				};
@@ -9499,8 +9946,7 @@ var _elm_lang$core$Time$onEffects = F3(
 			_p10.processes,
 			{
 				ctor: '_Tuple3',
-				_0: _elm_lang$core$Native_List.fromArray(
-					[]),
+				_0: {ctor: '[]'},
 				_1: _elm_lang$core$Dict$empty,
 				_2: _elm_lang$core$Task$succeed(
 					{ctor: '_Tuple0'})
@@ -9510,16 +9956,16 @@ var _elm_lang$core$Time$onEffects = F3(
 		var killTask = _p19._2;
 		return A2(
 			_elm_lang$core$Task$andThen,
-			killTask,
-			function (_p20) {
-				return A2(
-					_elm_lang$core$Task$andThen,
-					A3(_elm_lang$core$Time$spawnHelp, router, spawnList, existingDict),
-					function (newProcesses) {
-						return _elm_lang$core$Task$succeed(
-							A2(_elm_lang$core$Time$State, newTaggers, newProcesses));
-					});
-			});
+			function (newProcesses) {
+				return _elm_lang$core$Task$succeed(
+					A2(_elm_lang$core$Time$State, newTaggers, newProcesses));
+			},
+			A2(
+				_elm_lang$core$Task$andThen,
+				function (_p20) {
+					return A3(_elm_lang$core$Time$spawnHelp, router, spawnList, existingDict);
+				},
+				killTask));
 	});
 var _elm_lang$core$Time$Every = F2(
 	function (a, b) {
@@ -9557,9 +10003,8 @@ var _debois$elm_mdl$Material_Helpers$aria = F2(
 	});
 var _debois$elm_mdl$Material_Helpers$delay = F2(
 	function (t, x) {
-		return A3(
+		return A2(
 			_elm_lang$core$Task$perform,
-			_elm_lang$core$Basics$always(x),
 			_elm_lang$core$Basics$always(x),
 			_elm_lang$core$Process$sleep(t));
 	});
@@ -9567,9 +10012,8 @@ var _debois$elm_mdl$Material_Helpers$cssTransitionStep = function (x) {
 	return A2(_debois$elm_mdl$Material_Helpers$delay, 50, x);
 };
 var _debois$elm_mdl$Material_Helpers$cmd = function (msg) {
-	return A3(
+	return A2(
 		_elm_lang$core$Task$perform,
-		_elm_lang$core$Basics$always(msg),
 		_elm_lang$core$Basics$always(msg),
 		_elm_lang$core$Task$succeed(msg));
 };
@@ -9579,15 +10023,15 @@ var _debois$elm_mdl$Material_Helpers$lift = F6(
 			update,
 			action,
 			get(model));
-		var submodel$ = _p0._0;
+		var submodel_ = _p0._0;
 		var e = _p0._1;
 		return {
 			ctor: '_Tuple2',
-			_0: A2(set, model, submodel$),
+			_0: A2(set, model, submodel_),
 			_1: A2(_elm_lang$core$Platform_Cmd$map, fwd, e)
 		};
 	});
-var _debois$elm_mdl$Material_Helpers$lift$ = F5(
+var _debois$elm_mdl$Material_Helpers$lift_ = F5(
 	function (get, set, update, action, model) {
 		return {
 			ctor: '_Tuple2',
@@ -9643,16 +10087,168 @@ var _debois$elm_mdl$Material_Helpers$filter = F3(
 				html));
 	});
 
-var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode_ops[':='], 'keyCode', _elm_lang$core$Json_Decode$int);
+var _debois$elm_mdl$Material_Component$subs = F5(
+	function (ctor, get, subscriptions, lift, model) {
+		return _elm_lang$core$Platform_Sub$batch(
+			A3(
+				_elm_lang$core$Dict$foldl,
+				F3(
+					function (idx, model, ss) {
+						return {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$core$Platform_Sub$map,
+								function (_p0) {
+									return lift(
+										A2(ctor, idx, _p0));
+								},
+								subscriptions(model)),
+							_1: ss
+						};
+					}),
+				{ctor: '[]'},
+				get(model)));
+	});
+var _debois$elm_mdl$Material_Component$generalise = F4(
+	function (update, lift, msg, model) {
+		return A2(
+			_debois$elm_mdl$Material_Helpers$map2nd,
+			_elm_lang$core$Platform_Cmd$map(lift),
+			A2(
+				_debois$elm_mdl$Material_Helpers$map1st,
+				_elm_lang$core$Maybe$Just,
+				A2(update, msg, model)));
+	});
+var _debois$elm_mdl$Material_Component$react = F8(
+	function (get, set, ctor, update, lift, msg, idx, store) {
+		return A2(
+			_debois$elm_mdl$Material_Helpers$map1st,
+			_elm_lang$core$Maybe$map(
+				A2(set, idx, store)),
+			A3(
+				update,
+				function (_p1) {
+					return lift(
+						A2(ctor, idx, _p1));
+				},
+				msg,
+				A2(get, idx, store)));
+	});
+var _debois$elm_mdl$Material_Component$react1 = F7(
+	function (get, set, ctor, update, lift, msg, store) {
+		return A2(
+			_debois$elm_mdl$Material_Helpers$map1st,
+			_elm_lang$core$Maybe$map(
+				set(store)),
+			A3(
+				update,
+				function (_p2) {
+					return lift(
+						ctor(_p2));
+				},
+				msg,
+				get(store)));
+	});
+var _debois$elm_mdl$Material_Component$render = F6(
+	function (get_model, view, ctor, lift, idx, store) {
+		return A2(
+			view,
+			function (_p3) {
+				return lift(
+					A2(ctor, idx, _p3));
+			},
+			A2(get_model, idx, store));
+	});
+var _debois$elm_mdl$Material_Component$render1 = F5(
+	function (get_model, view, ctor, lift, store) {
+		return A2(
+			view,
+			function (_p4) {
+				return lift(
+					ctor(_p4));
+			},
+			get_model(store));
+	});
+var _debois$elm_mdl$Material_Component$indexed = F3(
+	function (get_model, set_model, model0) {
+		var set_ = F3(
+			function (idx, store, model) {
+				return A2(
+					set_model,
+					A3(
+						_elm_lang$core$Dict$insert,
+						idx,
+						model,
+						get_model(store)),
+					store);
+			});
+		var get_ = F2(
+			function (idx, store) {
+				return A2(
+					_elm_lang$core$Maybe$withDefault,
+					model0,
+					A2(
+						_elm_lang$core$Dict$get,
+						idx,
+						get_model(store)));
+			});
+		return {ctor: '_Tuple2', _0: get_, _1: set_};
+	});
+var _debois$elm_mdl$Material_Component$Dispatch = function (a) {
+	return {ctor: 'Dispatch', _0: a};
+};
+var _debois$elm_mdl$Material_Component$TabsMsg = F2(
+	function (a, b) {
+		return {ctor: 'TabsMsg', _0: a, _1: b};
+	});
+var _debois$elm_mdl$Material_Component$TooltipMsg = F2(
+	function (a, b) {
+		return {ctor: 'TooltipMsg', _0: a, _1: b};
+	});
+var _debois$elm_mdl$Material_Component$TogglesMsg = F2(
+	function (a, b) {
+		return {ctor: 'TogglesMsg', _0: a, _1: b};
+	});
+var _debois$elm_mdl$Material_Component$LayoutMsg = function (a) {
+	return {ctor: 'LayoutMsg', _0: a};
+};
+var _debois$elm_mdl$Material_Component$MenuMsg = F2(
+	function (a, b) {
+		return {ctor: 'MenuMsg', _0: a, _1: b};
+	});
+var _debois$elm_mdl$Material_Component$TextfieldMsg = F2(
+	function (a, b) {
+		return {ctor: 'TextfieldMsg', _0: a, _1: b};
+	});
+var _debois$elm_mdl$Material_Component$ButtonMsg = F2(
+	function (a, b) {
+		return {ctor: 'ButtonMsg', _0: a, _1: b};
+	});
+
+var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
 var _elm_lang$html$Html_Events$targetChecked = A2(
 	_elm_lang$core$Json_Decode$at,
-	_elm_lang$core$Native_List.fromArray(
-		['target', 'checked']),
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
 	_elm_lang$core$Json_Decode$bool);
 var _elm_lang$html$Html_Events$targetValue = A2(
 	_elm_lang$core$Json_Decode$at,
-	_elm_lang$core$Native_List.fromArray(
-		['target', 'value']),
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
 	_elm_lang$core$Json_Decode$string);
 var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
 var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
@@ -9744,55 +10340,608 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _elm_lang$html$Html_App$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
-var _elm_lang$html$Html_App$program = function (app) {
-	return _elm_lang$html$Html_App$programWithFlags(
-		_elm_lang$core$Native_Utils.update(
-			app,
-			{
-				init: function (_p0) {
-					return app.init;
+var _debois$elm_mdl$Material_Dispatch$split = F4(
+	function (k0, same, differ, xs) {
+		split:
+		while (true) {
+			var _p0 = xs;
+			if (_p0.ctor === '[]') {
+				return {ctor: '_Tuple2', _0: same, _1: differ};
+			} else {
+				var _p1 = _p0._1;
+				if (_elm_lang$core$Native_Utils.eq(_p0._0._0, k0)) {
+					var _v1 = k0,
+						_v2 = {ctor: '::', _0: _p0._0._1, _1: same},
+						_v3 = differ,
+						_v4 = _p1;
+					k0 = _v1;
+					same = _v2;
+					differ = _v3;
+					xs = _v4;
+					continue split;
+				} else {
+					var _v5 = k0,
+						_v6 = same,
+						_v7 = {ctor: '::', _0: _p0._0, _1: differ},
+						_v8 = _p1;
+					k0 = _v5;
+					same = _v6;
+					differ = _v7;
+					xs = _v8;
+					continue split;
 				}
+			}
+		}
+	});
+var _debois$elm_mdl$Material_Dispatch$group_ = F2(
+	function (acc, items) {
+		group_:
+		while (true) {
+			var _p2 = items;
+			if (_p2.ctor === '[]') {
+				return acc;
+			} else {
+				if (_p2._1.ctor === '[]') {
+					return {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: _p2._0._0,
+							_1: {
+								ctor: '::',
+								_0: _p2._0._1,
+								_1: {ctor: '[]'}
+							}
+						},
+						_1: acc
+					};
+				} else {
+					if ((_p2._1._0.ctor === '_Tuple2') && (_p2._1._1.ctor === '[]')) {
+						var _p6 = _p2._1._0._1;
+						var _p5 = _p2._0._1;
+						var _p4 = _p2._1._0._0;
+						var _p3 = _p2._0._0;
+						return _elm_lang$core$Native_Utils.eq(_p3, _p4) ? {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: _p3,
+								_1: {
+									ctor: '::',
+									_0: _p6,
+									_1: {
+										ctor: '::',
+										_0: _p5,
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							_1: acc
+						} : {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: _p4,
+								_1: {
+									ctor: '::',
+									_0: _p6,
+									_1: {ctor: '[]'}
+								}
+							},
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: _p3,
+									_1: {
+										ctor: '::',
+										_0: _p5,
+										_1: {ctor: '[]'}
+									}
+								},
+								_1: acc
+							}
+						};
+					} else {
+						var _p8 = _p2._0._0;
+						var _p7 = A4(
+							_debois$elm_mdl$Material_Dispatch$split,
+							_p8,
+							{
+								ctor: '::',
+								_0: _p2._0._1,
+								_1: {ctor: '[]'}
+							},
+							{ctor: '[]'},
+							_p2._1);
+						var same = _p7._0;
+						var different = _p7._1;
+						var _v10 = {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: _p8, _1: same},
+							_1: acc
+						},
+							_v11 = different;
+						acc = _v10;
+						items = _v11;
+						continue group_;
+					}
+				}
+			}
+		}
+	});
+var _debois$elm_mdl$Material_Dispatch$group = _debois$elm_mdl$Material_Dispatch$group_(
+	{ctor: '[]'});
+var _debois$elm_mdl$Material_Dispatch$onSingle = function (_p9) {
+	var _p10 = _p9;
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		_p10._0,
+		A2(_elm_lang$core$Maybe$withDefault, _elm_lang$html$Html_Events$defaultOptions, _p10._1._1),
+		_p10._1._0);
+};
+var _debois$elm_mdl$Material_Dispatch$pickOptions = function (decoders) {
+	pickOptions:
+	while (true) {
+		var _p11 = decoders;
+		if (_p11.ctor === '::') {
+			if ((_p11._0.ctor === '_Tuple2') && (_p11._0._1.ctor === 'Just')) {
+				return _p11._0._1._0;
+			} else {
+				var _v14 = _p11._1;
+				decoders = _v14;
+				continue pickOptions;
+			}
+		} else {
+			return _elm_lang$html$Html_Events$defaultOptions;
+		}
+	}
+};
+var _debois$elm_mdl$Material_Dispatch$flatten = function (decoders) {
+	return A2(
+		_elm_lang$core$Json_Decode$map,
+		function (value) {
+			return A2(
+				_elm_lang$core$List$filterMap,
+				function (decoder) {
+					return _elm_lang$core$Result$toMaybe(
+						A2(_elm_lang$core$Json_Decode$decodeValue, decoder, value));
+				},
+				decoders);
+		},
+		_elm_lang$core$Json_Decode$value);
+};
+var _debois$elm_mdl$Material_Dispatch$onWithOptions = F4(
+	function (event, lift, options, decoders) {
+		return A3(
+			_elm_lang$html$Html_Events$onWithOptions,
+			event,
+			options,
+			A2(
+				_elm_lang$core$Json_Decode$map,
+				lift,
+				_debois$elm_mdl$Material_Dispatch$flatten(decoders)));
+	});
+var _debois$elm_mdl$Material_Dispatch$on = F2(
+	function (event, lift) {
+		return A3(_debois$elm_mdl$Material_Dispatch$onWithOptions, event, lift, _elm_lang$html$Html_Events$defaultOptions);
+	});
+var _debois$elm_mdl$Material_Dispatch$onMany = F2(
+	function (lift, decoders) {
+		var _p12 = decoders;
+		if ((_p12._1.ctor === '::') && (_p12._1._1.ctor === '[]')) {
+			return _debois$elm_mdl$Material_Dispatch$onSingle(
+				{ctor: '_Tuple2', _0: _p12._0, _1: _p12._1._0});
+		} else {
+			var _p13 = _p12._1;
+			return A3(
+				_elm_lang$html$Html_Events$onWithOptions,
+				_p12._0,
+				_debois$elm_mdl$Material_Dispatch$pickOptions(_p13),
+				lift(
+					_debois$elm_mdl$Material_Dispatch$flatten(
+						A2(_elm_lang$core$List$map, _elm_lang$core$Tuple$first, _p13))));
+		}
+	});
+var _debois$elm_mdl$Material_Dispatch$map2nd = F2(
+	function (f, _p14) {
+		var _p15 = _p14;
+		return {
+			ctor: '_Tuple2',
+			_0: _p15._0,
+			_1: f(_p15._1)
+		};
+	});
+var _debois$elm_mdl$Material_Dispatch$update1 = F3(
+	function (update, cmd, _p16) {
+		var _p17 = _p16;
+		return A2(
+			_debois$elm_mdl$Material_Dispatch$map2nd,
+			A2(
+				_elm_lang$core$Basics$flip,
+				F2(
+					function (x, y) {
+						return {ctor: '::', _0: x, _1: y};
+					}),
+				_p17._1),
+			A2(update, cmd, _p17._0));
+	});
+var _debois$elm_mdl$Material_Dispatch$update = F3(
+	function (update, msg, model) {
+		return A2(
+			_debois$elm_mdl$Material_Dispatch$map2nd,
+			_elm_lang$core$Platform_Cmd$batch,
+			A3(
+				_elm_lang$core$List$foldl,
+				_debois$elm_mdl$Material_Dispatch$update1(update),
+				{
+					ctor: '_Tuple2',
+					_0: model,
+					_1: {ctor: '[]'}
+				},
+				msg));
+	});
+var _debois$elm_mdl$Material_Dispatch$cmd = function (msg) {
+	return A2(
+		_elm_lang$core$Task$perform,
+		_elm_lang$core$Basics$always(msg),
+		_elm_lang$core$Task$succeed(msg));
+};
+var _debois$elm_mdl$Material_Dispatch$forward = function (messages) {
+	return _elm_lang$core$Platform_Cmd$batch(
+		A2(_elm_lang$core$List$map, _debois$elm_mdl$Material_Dispatch$cmd, messages));
+};
+var _debois$elm_mdl$Material_Dispatch$toAttributes = function (_p18) {
+	var _p19 = _p18;
+	var _p21 = _p19._0;
+	var _p20 = _p21.lift;
+	if (_p20.ctor === 'Just') {
+		return A2(
+			_elm_lang$core$List$map,
+			_debois$elm_mdl$Material_Dispatch$onMany(_p20._0),
+			_debois$elm_mdl$Material_Dispatch$group(_p21.decoders));
+	} else {
+		return A2(_elm_lang$core$List$map, _debois$elm_mdl$Material_Dispatch$onSingle, _p21.decoders);
+	}
+};
+var _debois$elm_mdl$Material_Dispatch$getDecoder = function (_p22) {
+	var _p23 = _p22;
+	return _p23._0.lift;
+};
+var _debois$elm_mdl$Material_Dispatch$Config = function (a) {
+	return {ctor: 'Config', _0: a};
+};
+var _debois$elm_mdl$Material_Dispatch$defaultConfig = _debois$elm_mdl$Material_Dispatch$Config(
+	{
+		decoders: {ctor: '[]'},
+		lift: _elm_lang$core$Maybe$Nothing
+	});
+var _debois$elm_mdl$Material_Dispatch$setDecoder = F2(
+	function (f, _p24) {
+		var _p25 = _p24;
+		return _debois$elm_mdl$Material_Dispatch$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p25._0,
+				{
+					lift: _elm_lang$core$Maybe$Just(f)
+				}));
+	});
+var _debois$elm_mdl$Material_Dispatch$setMsg = function (_p26) {
+	return _debois$elm_mdl$Material_Dispatch$setDecoder(
+		_elm_lang$core$Json_Decode$map(_p26));
+};
+var _debois$elm_mdl$Material_Dispatch$add = F4(
+	function (event, options, decoder, _p27) {
+		var _p28 = _p27;
+		var _p29 = _p28._0;
+		return _debois$elm_mdl$Material_Dispatch$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p29,
+				{
+					decoders: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: event,
+							_1: {ctor: '_Tuple2', _0: decoder, _1: options}
+						},
+						_1: _p29.decoders
+					}
+				}));
+	});
+var _debois$elm_mdl$Material_Dispatch$clear = function (_p30) {
+	var _p31 = _p30;
+	return _debois$elm_mdl$Material_Dispatch$Config(
+		_elm_lang$core$Native_Utils.update(
+			_p31._0,
+			{
+				decoders: {ctor: '[]'}
 			}));
 };
-var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
-	var _p2 = _p1;
-	return _elm_lang$html$Html_App$programWithFlags(
-		{
-			init: function (_p3) {
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_p2.model,
-					_elm_lang$core$Native_List.fromArray(
-						[]));
-			},
-			update: F2(
-				function (msg, model) {
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						A2(_p2.update, msg, model),
-						_elm_lang$core$Native_List.fromArray(
-							[]));
-				}),
-			view: _p2.view,
-			subscriptions: function (_p4) {
-				return _elm_lang$core$Platform_Sub$none;
-			}
+
+var _debois$elm_mdl$Material_Options_Internal$addAttributes = F2(
+	function (summary, attrs) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			summary.attrs,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(summary.css),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(
+							A2(_elm_lang$core$String$join, ' ', summary.classes)),
+						_1: {ctor: '[]'}
+					}
+				},
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					attrs,
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						summary.internal,
+						_debois$elm_mdl$Material_Dispatch$toAttributes(summary.dispatch)))));
+	});
+var _debois$elm_mdl$Material_Options_Internal$collect1_ = F2(
+	function (options, acc) {
+		var _p0 = options;
+		switch (_p0.ctor) {
+			case 'Class':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						classes: {ctor: '::', _0: _p0._0, _1: acc.classes}
+					});
+			case 'CSS':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						css: {ctor: '::', _0: _p0._0, _1: acc.css}
+					});
+			case 'Attribute':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						attrs: {ctor: '::', _0: _p0._0, _1: acc.attrs}
+					});
+			case 'Internal':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						internal: {ctor: '::', _0: _p0._0, _1: acc.internal}
+					});
+			case 'Listener':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						dispatch: A4(_debois$elm_mdl$Material_Dispatch$add, _p0._0, _p0._1, _p0._2, acc.dispatch)
+					});
+			case 'Many':
+				return A3(_elm_lang$core$List$foldl, _debois$elm_mdl$Material_Options_Internal$collect1_, acc, _p0._0);
+			case 'Lift':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						dispatch: A2(_debois$elm_mdl$Material_Dispatch$setDecoder, _p0._0, acc.dispatch)
+					});
+			case 'Set':
+				return acc;
+			default:
+				return acc;
+		}
+	});
+var _debois$elm_mdl$Material_Options_Internal$collect1 = F2(
+	function (option, acc) {
+		var _p1 = option;
+		switch (_p1.ctor) {
+			case 'Class':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						classes: {ctor: '::', _0: _p1._0, _1: acc.classes}
+					});
+			case 'CSS':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						css: {ctor: '::', _0: _p1._0, _1: acc.css}
+					});
+			case 'Attribute':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						attrs: {ctor: '::', _0: _p1._0, _1: acc.attrs}
+					});
+			case 'Internal':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						internal: {ctor: '::', _0: _p1._0, _1: acc.internal}
+					});
+			case 'Many':
+				return A3(_elm_lang$core$List$foldl, _debois$elm_mdl$Material_Options_Internal$collect1, acc, _p1._0);
+			case 'Set':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						config: _p1._0(acc.config)
+					});
+			case 'Listener':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						dispatch: A4(_debois$elm_mdl$Material_Dispatch$add, _p1._0, _p1._1, _p1._2, acc.dispatch)
+					});
+			case 'Lift':
+				return _elm_lang$core$Native_Utils.update(
+					acc,
+					{
+						dispatch: A2(_debois$elm_mdl$Material_Dispatch$setDecoder, _p1._0, acc.dispatch)
+					});
+			default:
+				return acc;
+		}
+	});
+var _debois$elm_mdl$Material_Options_Internal$recollect = _elm_lang$core$List$foldl(_debois$elm_mdl$Material_Options_Internal$collect1);
+var _debois$elm_mdl$Material_Options_Internal$apply = F4(
+	function (summary, ctor, options, attrs) {
+		return ctor(
+			A2(
+				_debois$elm_mdl$Material_Options_Internal$addAttributes,
+				A2(_debois$elm_mdl$Material_Options_Internal$recollect, summary, options),
+				attrs));
+	});
+var _debois$elm_mdl$Material_Options_Internal$Summary = F6(
+	function (a, b, c, d, e, f) {
+		return {classes: a, css: b, attrs: c, internal: d, dispatch: e, config: f};
+	});
+var _debois$elm_mdl$Material_Options_Internal$collect = function (_p2) {
+	return _debois$elm_mdl$Material_Options_Internal$recollect(
+		A6(
+			_debois$elm_mdl$Material_Options_Internal$Summary,
+			{ctor: '[]'},
+			{ctor: '[]'},
+			{ctor: '[]'},
+			{ctor: '[]'},
+			_debois$elm_mdl$Material_Dispatch$defaultConfig,
+			_p2));
+};
+var _debois$elm_mdl$Material_Options_Internal$collect_ = A2(
+	_elm_lang$core$List$foldl,
+	_debois$elm_mdl$Material_Options_Internal$collect1_,
+	A6(
+		_debois$elm_mdl$Material_Options_Internal$Summary,
+		{ctor: '[]'},
+		{ctor: '[]'},
+		{ctor: '[]'},
+		{ctor: '[]'},
+		_debois$elm_mdl$Material_Dispatch$defaultConfig,
+		{ctor: '_Tuple0'}));
+var _debois$elm_mdl$Material_Options_Internal$None = {ctor: 'None'};
+var _debois$elm_mdl$Material_Options_Internal$Lift = function (a) {
+	return {ctor: 'Lift', _0: a};
+};
+var _debois$elm_mdl$Material_Options_Internal$dispatch = function (lift) {
+	return _debois$elm_mdl$Material_Options_Internal$Lift(
+		function (_p3) {
+			return A2(
+				_elm_lang$core$Json_Decode$map,
+				lift,
+				A2(_elm_lang$core$Json_Decode$map, _debois$elm_mdl$Material_Component$Dispatch, _p3));
 		});
 };
-var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
-
-var _debois$elm_mdl$Material_Options_Internal$None = {ctor: 'None'};
+var _debois$elm_mdl$Material_Options_Internal$inject = F5(
+	function (view, lift, a, b, c) {
+		return A3(
+			view,
+			a,
+			b,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options_Internal$dispatch(lift),
+				_1: c
+			});
+	});
+var _debois$elm_mdl$Material_Options_Internal$Listener = F3(
+	function (a, b, c) {
+		return {ctor: 'Listener', _0: a, _1: b, _2: c};
+	});
+var _debois$elm_mdl$Material_Options_Internal$on1 = F3(
+	function (event, lift, m) {
+		return A3(
+			_debois$elm_mdl$Material_Options_Internal$Listener,
+			event,
+			_elm_lang$core$Maybe$Nothing,
+			A2(
+				_elm_lang$core$Json_Decode$map,
+				lift,
+				_elm_lang$core$Json_Decode$succeed(m)));
+	});
 var _debois$elm_mdl$Material_Options_Internal$Set = function (a) {
 	return {ctor: 'Set', _0: a};
 };
+var _debois$elm_mdl$Material_Options_Internal$option = _debois$elm_mdl$Material_Options_Internal$Set;
 var _debois$elm_mdl$Material_Options_Internal$Many = function (a) {
 	return {ctor: 'Many', _0: a};
 };
+var _debois$elm_mdl$Material_Options_Internal$applyContainer = F3(
+	function (summary, ctor, options) {
+		return A4(
+			_debois$elm_mdl$Material_Options_Internal$apply,
+			_elm_lang$core$Native_Utils.update(
+				summary,
+				{
+					dispatch: _debois$elm_mdl$Material_Dispatch$clear(summary.dispatch),
+					attrs: {ctor: '[]'},
+					internal: {ctor: '[]'},
+					config: {ctor: '_Tuple0'}
+				}),
+			ctor,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options_Internal$Many(summary.config.container),
+				_1: options
+			},
+			{ctor: '[]'});
+	});
+var _debois$elm_mdl$Material_Options_Internal$applyInput = F3(
+	function (summary, ctor, options) {
+		return A4(
+			_debois$elm_mdl$Material_Options_Internal$apply,
+			_elm_lang$core$Native_Utils.update(
+				summary,
+				{
+					classes: {ctor: '[]'},
+					css: {ctor: '[]'},
+					config: {ctor: '_Tuple0'}
+				}),
+			ctor,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options_Internal$Many(summary.config.input),
+				_1: options
+			},
+			{ctor: '[]'});
+	});
+var _debois$elm_mdl$Material_Options_Internal$input = function (_p4) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (style, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						input: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options_Internal$Many(style),
+							_1: config.input
+						}
+					});
+			})(_p4));
+};
+var _debois$elm_mdl$Material_Options_Internal$container = function (_p5) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (style, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						container: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options_Internal$Many(style),
+							_1: config.container
+						}
+					});
+			})(_p5));
+};
+var _debois$elm_mdl$Material_Options_Internal$Internal = function (a) {
+	return {ctor: 'Internal', _0: a};
+};
+var _debois$elm_mdl$Material_Options_Internal$attribute = _debois$elm_mdl$Material_Options_Internal$Internal;
 var _debois$elm_mdl$Material_Options_Internal$Attribute = function (a) {
 	return {ctor: 'Attribute', _0: a};
 };
-var _debois$elm_mdl$Material_Options_Internal$attribute = _debois$elm_mdl$Material_Options_Internal$Attribute;
 var _debois$elm_mdl$Material_Options_Internal$CSS = function (a) {
 	return {ctor: 'CSS', _0: a};
 };
@@ -9800,21 +10949,118 @@ var _debois$elm_mdl$Material_Options_Internal$Class = function (a) {
 	return {ctor: 'Class', _0: a};
 };
 
-var _debois$elm_mdl$Material_Options$id = function (_p0) {
-	return _debois$elm_mdl$Material_Options_Internal$Attribute(
-		_elm_lang$html$Html_Attributes$id(_p0));
+var _debois$elm_mdl$Material_Options$dispatch = function (_p0) {
+	return _debois$elm_mdl$Material_Options_Internal$Lift(
+		_elm_lang$core$Json_Decode$map(_p0));
 };
+var _debois$elm_mdl$Material_Options$onWithOptions = F2(
+	function (evt, options) {
+		return A2(
+			_debois$elm_mdl$Material_Options_Internal$Listener,
+			evt,
+			_elm_lang$core$Maybe$Just(options));
+	});
+var _debois$elm_mdl$Material_Options$on = function (event) {
+	return A2(_debois$elm_mdl$Material_Options_Internal$Listener, event, _elm_lang$core$Maybe$Nothing);
+};
+var _debois$elm_mdl$Material_Options$on1 = F2(
+	function (event, m) {
+		return A2(
+			_debois$elm_mdl$Material_Options$on,
+			event,
+			_elm_lang$core$Json_Decode$succeed(m));
+	});
+var _debois$elm_mdl$Material_Options$onToggle = _debois$elm_mdl$Material_Options$on1('change');
+var _debois$elm_mdl$Material_Options$onClick = function (msg) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Options$onDoubleClick = function (msg) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Options$onMouseDown = function (msg) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Options$onMouseUp = function (msg) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Options$onMouseEnter = function (msg) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Options$onMouseLeave = function (msg) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Options$onMouseOver = function (msg) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Options$onMouseOut = function (msg) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Options$onCheck = function (_p1) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'change',
+		A3(_elm_lang$core$Basics$flip, _elm_lang$core$Json_Decode$map, _elm_lang$html$Html_Events$targetChecked, _p1));
+};
+var _debois$elm_mdl$Material_Options$onBlur = function (msg) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Options$onFocus = function (msg) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Options$onInput = function (f) {
+	return A2(
+		_debois$elm_mdl$Material_Options$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, f, _elm_lang$html$Html_Events$targetValue));
+};
+var _debois$elm_mdl$Material_Options$container = _debois$elm_mdl$Material_Options_Internal$container;
+var _debois$elm_mdl$Material_Options$input = _debois$elm_mdl$Material_Options_Internal$input;
+var _debois$elm_mdl$Material_Options$id = function (_p2) {
+	return _debois$elm_mdl$Material_Options_Internal$Attribute(
+		_elm_lang$html$Html_Attributes$id(_p2));
+};
+var _debois$elm_mdl$Material_Options$attr = _debois$elm_mdl$Material_Options_Internal$Attribute;
 var _debois$elm_mdl$Material_Options$attribute = _debois$elm_mdl$Material_Options_Internal$Attribute;
 var _debois$elm_mdl$Material_Options$stylesheet = function (css) {
 	return A3(
 		_elm_lang$html$Html$node,
 		'style',
-		_elm_lang$core$Native_List.fromArray(
-			[]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html$text(css)
-			]));
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(css),
+			_1: {ctor: '[]'}
+		});
 };
 var _debois$elm_mdl$Material_Options$data = F2(
 	function (key, val) {
@@ -9824,20 +11070,9 @@ var _debois$elm_mdl$Material_Options$data = F2(
 				A2(_elm_lang$core$Basics_ops['++'], 'data-', key),
 				val));
 	});
-var _debois$elm_mdl$Material_Options$set = _debois$elm_mdl$Material_Options_Internal$Set;
-var _debois$elm_mdl$Material_Options$inner = function (options) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (c) {
-			return _elm_lang$core$Native_Utils.update(
-				c,
-				{
-					inner: A2(_elm_lang$core$Basics_ops['++'], options, c.inner)
-				});
-		});
-};
 var _debois$elm_mdl$Material_Options$nop = _debois$elm_mdl$Material_Options_Internal$None;
 var _debois$elm_mdl$Material_Options$when = F2(
-	function (prop, guard) {
+	function (guard, prop) {
 		return guard ? prop : _debois$elm_mdl$Material_Options$nop;
 	});
 var _debois$elm_mdl$Material_Options$maybe = function (prop) {
@@ -9850,12 +11085,19 @@ var _debois$elm_mdl$Material_Options$css = F2(
 			{ctor: '_Tuple2', _0: key, _1: value});
 	});
 var _debois$elm_mdl$Material_Options$center = _debois$elm_mdl$Material_Options$many(
-	_elm_lang$core$Native_List.fromArray(
-		[
-			A2(_debois$elm_mdl$Material_Options$css, 'display', 'flex'),
-			A2(_debois$elm_mdl$Material_Options$css, 'align-items', 'center'),
-			A2(_debois$elm_mdl$Material_Options$css, 'justify-content', 'center')
-		]));
+	{
+		ctor: '::',
+		_0: A2(_debois$elm_mdl$Material_Options$css, 'display', 'flex'),
+		_1: {
+			ctor: '::',
+			_0: A2(_debois$elm_mdl$Material_Options$css, 'align-items', 'center'),
+			_1: {
+				ctor: '::',
+				_0: A2(_debois$elm_mdl$Material_Options$css, 'justify-content', 'center'),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
 var _debois$elm_mdl$Material_Options$scrim = function (opacity) {
 	return A2(
 		_debois$elm_mdl$Material_Options$css,
@@ -9875,150 +11117,33 @@ var _debois$elm_mdl$Material_Options$disabled = function (v) {
 	return _debois$elm_mdl$Material_Options_Internal$Attribute(
 		_elm_lang$html$Html_Attributes$disabled(v));
 };
-var _debois$elm_mdl$Material_Options$addAttributes = F2(
-	function (summary, attrs) {
-		return A2(
-			_elm_lang$core$List$append,
-			attrs,
-			A2(
-				_elm_lang$core$List_ops['::'],
-				_elm_lang$html$Html_Attributes$style(summary.css),
-				A2(
-					_elm_lang$core$List_ops['::'],
-					_elm_lang$html$Html_Attributes$class(
-						A2(_elm_lang$core$String$join, ' ', summary.classes)),
-					summary.attrs)));
-	});
-var _debois$elm_mdl$Material_Options$collect1$ = F2(
-	function (options, acc) {
-		var _p1 = options;
-		switch (_p1.ctor) {
-			case 'Class':
-				return _elm_lang$core$Native_Utils.update(
-					acc,
-					{
-						classes: A2(_elm_lang$core$List_ops['::'], _p1._0, acc.classes)
-					});
-			case 'CSS':
-				return _elm_lang$core$Native_Utils.update(
-					acc,
-					{
-						css: A2(_elm_lang$core$List_ops['::'], _p1._0, acc.css)
-					});
-			case 'Attribute':
-				return _elm_lang$core$Native_Utils.update(
-					acc,
-					{
-						attrs: A2(_elm_lang$core$List_ops['::'], _p1._0, acc.attrs)
-					});
-			case 'Many':
-				return A3(_elm_lang$core$List$foldl, _debois$elm_mdl$Material_Options$collect1$, acc, _p1._0);
-			case 'Set':
-				return acc;
-			default:
-				return acc;
-		}
-	});
-var _debois$elm_mdl$Material_Options$collect1 = F2(
-	function (option, acc) {
-		var _p2 = option;
-		switch (_p2.ctor) {
-			case 'Class':
-				return _elm_lang$core$Native_Utils.update(
-					acc,
-					{
-						classes: A2(_elm_lang$core$List_ops['::'], _p2._0, acc.classes)
-					});
-			case 'CSS':
-				return _elm_lang$core$Native_Utils.update(
-					acc,
-					{
-						css: A2(_elm_lang$core$List_ops['::'], _p2._0, acc.css)
-					});
-			case 'Attribute':
-				return _elm_lang$core$Native_Utils.update(
-					acc,
-					{
-						attrs: A2(_elm_lang$core$List_ops['::'], _p2._0, acc.attrs)
-					});
-			case 'Many':
-				return A3(_elm_lang$core$List$foldl, _debois$elm_mdl$Material_Options$collect1, acc, _p2._0);
-			case 'Set':
-				return _elm_lang$core$Native_Utils.update(
-					acc,
-					{
-						config: _p2._0(acc.config)
-					});
-			default:
-				return acc;
-		}
-	});
-var _debois$elm_mdl$Material_Options$recollect = _elm_lang$core$List$foldl(_debois$elm_mdl$Material_Options$collect1);
-var _debois$elm_mdl$Material_Options$apply = F4(
-	function (summary, ctor, options, attrs) {
-		return ctor(
-			A2(
-				_debois$elm_mdl$Material_Options$addAttributes,
-				A2(_debois$elm_mdl$Material_Options$recollect, summary, options),
-				attrs));
-	});
-var _debois$elm_mdl$Material_Options$Summary = F4(
-	function (a, b, c, d) {
-		return {classes: a, css: b, attrs: c, config: d};
-	});
-var _debois$elm_mdl$Material_Options$collect = function (_p3) {
-	return _debois$elm_mdl$Material_Options$recollect(
-		A4(
-			_debois$elm_mdl$Material_Options$Summary,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_p3));
-};
-var _debois$elm_mdl$Material_Options$collect$ = A2(
-	_elm_lang$core$List$foldl,
-	_debois$elm_mdl$Material_Options$collect1$,
-	A4(
-		_debois$elm_mdl$Material_Options$Summary,
-		_elm_lang$core$Native_List.fromArray(
-			[]),
-		_elm_lang$core$Native_List.fromArray(
-			[]),
-		_elm_lang$core$Native_List.fromArray(
-			[]),
-		{ctor: '_Tuple0'}));
-var _debois$elm_mdl$Material_Options$styled = F2(
-	function (ctor, props) {
-		return ctor(
-			A2(
-				_debois$elm_mdl$Material_Options$addAttributes,
-				_debois$elm_mdl$Material_Options$collect$(props),
-				_elm_lang$core$Native_List.fromArray(
-					[])));
-	});
-var _debois$elm_mdl$Material_Options$div = _debois$elm_mdl$Material_Options$styled(_elm_lang$html$Html$div);
-var _debois$elm_mdl$Material_Options$span = _debois$elm_mdl$Material_Options$styled(_elm_lang$html$Html$span);
-var _debois$elm_mdl$Material_Options$styled$ = F3(
+var _debois$elm_mdl$Material_Options$styled_ = F3(
 	function (ctor, props, attrs) {
 		return ctor(
 			A2(
-				_debois$elm_mdl$Material_Options$addAttributes,
-				_debois$elm_mdl$Material_Options$collect$(props),
+				_debois$elm_mdl$Material_Options_Internal$addAttributes,
+				_debois$elm_mdl$Material_Options_Internal$collect_(props),
 				attrs));
 	});
 var _debois$elm_mdl$Material_Options$img = F2(
 	function (options, attrs) {
 		return A4(
-			_debois$elm_mdl$Material_Options$styled$,
+			_debois$elm_mdl$Material_Options$styled_,
 			_elm_lang$html$Html$img,
 			options,
 			attrs,
-			_elm_lang$core$Native_List.fromArray(
-				[]));
+			{ctor: '[]'});
 	});
+var _debois$elm_mdl$Material_Options$styled = F2(
+	function (ctor, props) {
+		return ctor(
+			A2(
+				_debois$elm_mdl$Material_Options_Internal$addAttributes,
+				_debois$elm_mdl$Material_Options_Internal$collect_(props),
+				{ctor: '[]'}));
+	});
+var _debois$elm_mdl$Material_Options$div = _debois$elm_mdl$Material_Options$styled(_elm_lang$html$Html$div);
+var _debois$elm_mdl$Material_Options$span = _debois$elm_mdl$Material_Options$styled(_elm_lang$html$Html$span);
 
 var _debois$elm_mdl$Material_Ripple$styles = F2(
 	function (m, frame) {
@@ -10050,14 +11175,27 @@ var _debois$elm_mdl$Material_Ripple$styles = F2(
 			_elm_lang$core$Basics_ops['++'],
 			'translate(-50%, -50%) ',
 			A2(_elm_lang$core$Basics_ops['++'], offset, scale));
-		return _elm_lang$core$Native_List.fromArray(
-			[
-				{ctor: '_Tuple2', _0: 'width', _1: rippleSize},
-				{ctor: '_Tuple2', _0: 'height', _1: rippleSize},
-				{ctor: '_Tuple2', _0: '-webkit-transform', _1: transformString},
-				{ctor: '_Tuple2', _0: '-ms-transform', _1: transformString},
-				{ctor: '_Tuple2', _0: 'transform', _1: transformString}
-			]);
+		return {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'width', _1: rippleSize},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'height', _1: rippleSize},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: '-webkit-transform', _1: transformString},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: '-ms-transform', _1: transformString},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'transform', _1: transformString},
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		};
 	});
 var _debois$elm_mdl$Material_Ripple$Metrics = F3(
 	function (a, b, c) {
@@ -10108,35 +11246,57 @@ var _debois$elm_mdl$Material_Ripple$Model = F3(
 	});
 var _debois$elm_mdl$Material_Ripple$DOMState = F6(
 	function (a, b, c, d, e, f) {
-		return {rect: a, clientX: b, clientY: c, touchX: d, touchY: e, type$: f};
+		return {rect: a, clientX: b, clientY: c, touchX: d, touchY: e, type_: f};
 	});
 var _debois$elm_mdl$Material_Ripple$geometryDecoder = A7(
-	_elm_lang$core$Json_Decode$object6,
+	_elm_lang$core$Json_Decode$map6,
 	_debois$elm_mdl$Material_Ripple$DOMState,
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'currentTarget', _debois$elm_dom$DOM$boundingClientRect),
+	A2(_elm_lang$core$Json_Decode$field, 'currentTarget', _debois$elm_dom$DOM$boundingClientRect),
 	_elm_lang$core$Json_Decode$maybe(
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'clientX', _elm_lang$core$Json_Decode$float)),
+		A2(_elm_lang$core$Json_Decode$field, 'clientX', _elm_lang$core$Json_Decode$float)),
 	_elm_lang$core$Json_Decode$maybe(
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'clientY', _elm_lang$core$Json_Decode$float)),
+		A2(_elm_lang$core$Json_Decode$field, 'clientY', _elm_lang$core$Json_Decode$float)),
 	_elm_lang$core$Json_Decode$maybe(
 		A2(
 			_elm_lang$core$Json_Decode$at,
-			_elm_lang$core$Native_List.fromArray(
-				['touches', '0', 'clientX']),
+			{
+				ctor: '::',
+				_0: 'touches',
+				_1: {
+					ctor: '::',
+					_0: '0',
+					_1: {
+						ctor: '::',
+						_0: 'clientX',
+						_1: {ctor: '[]'}
+					}
+				}
+			},
 			_elm_lang$core$Json_Decode$float)),
 	_elm_lang$core$Json_Decode$maybe(
 		A2(
 			_elm_lang$core$Json_Decode$at,
-			_elm_lang$core$Native_List.fromArray(
-				['touches', '0', 'clientY']),
+			{
+				ctor: '::',
+				_0: 'touches',
+				_1: {
+					ctor: '::',
+					_0: '0',
+					_1: {
+						ctor: '::',
+						_0: 'clientY',
+						_1: {ctor: '[]'}
+					}
+				}
+			},
 			_elm_lang$core$Json_Decode$float)),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'type', _elm_lang$core$Json_Decode$string));
+	A2(_elm_lang$core$Json_Decode$field, 'type', _elm_lang$core$Json_Decode$string));
 var _debois$elm_mdl$Material_Ripple$Inert = {ctor: 'Inert'};
 var _debois$elm_mdl$Material_Ripple$model = {animation: _debois$elm_mdl$Material_Ripple$Inert, metrics: _elm_lang$core$Maybe$Nothing, ignoringMouseDown: false};
 var _debois$elm_mdl$Material_Ripple$Frame = function (a) {
 	return {ctor: 'Frame', _0: a};
 };
-var _debois$elm_mdl$Material_Ripple$view$ = F2(
+var _debois$elm_mdl$Material_Ripple$view_ = F2(
 	function (attrs, model) {
 		var styling = function () {
 			var _p3 = {ctor: '_Tuple2', _0: model.metrics, _1: model.animation};
@@ -10147,41 +11307,51 @@ var _debois$elm_mdl$Material_Ripple$view$ = F2(
 					return A2(_debois$elm_mdl$Material_Ripple$styles, _p3._0._0, 1);
 				}
 			} else {
-				return _elm_lang$core$Native_List.fromArray(
-					[]);
+				return {ctor: '[]'};
 			}
 		}();
 		return A2(
 			_elm_lang$html$Html$span,
 			attrs,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
+			{
+				ctor: '::',
+				_0: A2(
 					_elm_lang$html$Html$span,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$classList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									{ctor: '_Tuple2', _0: 'mdl-ripple', _1: true},
-									{
-									ctor: '_Tuple2',
-									_0: 'is-animating',
-									_1: !_elm_lang$core$Native_Utils.eq(
-										model.animation,
-										_debois$elm_mdl$Material_Ripple$Frame(0))
-								},
-									{
-									ctor: '_Tuple2',
-									_0: 'is-visible',
-									_1: !_elm_lang$core$Native_Utils.eq(model.animation, _debois$elm_mdl$Material_Ripple$Inert)
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$classList(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'mdl-ripple', _1: true},
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'is-animating',
+										_1: !_elm_lang$core$Native_Utils.eq(
+											model.animation,
+											_debois$elm_mdl$Material_Ripple$Frame(0))
+									},
+									_1: {
+										ctor: '::',
+										_0: {
+											ctor: '_Tuple2',
+											_0: 'is-visible',
+											_1: !_elm_lang$core$Native_Utils.eq(model.animation, _debois$elm_mdl$Material_Ripple$Inert)
+										},
+										_1: {ctor: '[]'}
+									}
 								}
-								])),
-							_elm_lang$html$Html_Attributes$style(styling)
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[]))
-				]));
+							}),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$style(styling),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			});
 	});
 var _debois$elm_mdl$Material_Ripple$Tick = {ctor: 'Tick'};
 var _debois$elm_mdl$Material_Ripple$update = F2(
@@ -10190,7 +11360,7 @@ var _debois$elm_mdl$Material_Ripple$update = F2(
 		switch (_p4.ctor) {
 			case 'Down':
 				var _p5 = _p4._0;
-				return (_elm_lang$core$Native_Utils.eq(_p5.type$, 'mousedown') && model.ignoringMouseDown) ? _debois$elm_mdl$Material_Helpers$pure(
+				return (_elm_lang$core$Native_Utils.eq(_p5.type_, 'mousedown') && model.ignoringMouseDown) ? _debois$elm_mdl$Material_Helpers$pure(
 					_elm_lang$core$Native_Utils.update(
 						model,
 						{ignoringMouseDown: false})) : A2(
@@ -10201,7 +11371,7 @@ var _debois$elm_mdl$Material_Ripple$update = F2(
 						{
 							animation: _debois$elm_mdl$Material_Ripple$Frame(0),
 							metrics: _debois$elm_mdl$Material_Ripple$computeMetrics(_p5),
-							ignoringMouseDown: _elm_lang$core$Native_Utils.eq(_p5.type$, 'touchstart') ? true : model.ignoringMouseDown
+							ignoringMouseDown: _elm_lang$core$Native_Utils.eq(_p5.type_, 'touchstart') ? true : model.ignoringMouseDown
 						}));
 			case 'Up':
 				return _debois$elm_mdl$Material_Helpers$pure(
@@ -10220,7 +11390,15 @@ var _debois$elm_mdl$Material_Ripple$update = F2(
 		}
 	});
 var _debois$elm_mdl$Material_Ripple$Up = {ctor: 'Up'};
-var _debois$elm_mdl$Material_Ripple$upOn$ = F2(
+var _debois$elm_mdl$Material_Ripple$up = F2(
+	function (f, name) {
+		return A2(
+			_debois$elm_mdl$Material_Options$on,
+			name,
+			_elm_lang$core$Json_Decode$succeed(
+				f(_debois$elm_mdl$Material_Ripple$Up)));
+	});
+var _debois$elm_mdl$Material_Ripple$upOn_ = F2(
 	function (f, name) {
 		return A2(
 			_elm_lang$html$Html_Events$on,
@@ -10228,11 +11406,11 @@ var _debois$elm_mdl$Material_Ripple$upOn$ = F2(
 			_elm_lang$core$Json_Decode$succeed(
 				f(_debois$elm_mdl$Material_Ripple$Up)));
 	});
-var _debois$elm_mdl$Material_Ripple$upOn = _debois$elm_mdl$Material_Ripple$upOn$(_elm_lang$core$Basics$identity);
+var _debois$elm_mdl$Material_Ripple$upOn = _debois$elm_mdl$Material_Ripple$upOn_(_elm_lang$core$Basics$identity);
 var _debois$elm_mdl$Material_Ripple$Down = function (a) {
 	return {ctor: 'Down', _0: a};
 };
-var _debois$elm_mdl$Material_Ripple$downOn$ = F2(
+var _debois$elm_mdl$Material_Ripple$downOn_ = F2(
 	function (f, name) {
 		return A2(
 			_elm_lang$html$Html_Events$on,
@@ -10245,24 +11423,67 @@ var _debois$elm_mdl$Material_Ripple$downOn$ = F2(
 				},
 				_debois$elm_mdl$Material_Ripple$geometryDecoder));
 	});
-var _debois$elm_mdl$Material_Ripple$downOn = _debois$elm_mdl$Material_Ripple$downOn$(_elm_lang$core$Basics$identity);
+var _debois$elm_mdl$Material_Ripple$downOn = _debois$elm_mdl$Material_Ripple$downOn_(_elm_lang$core$Basics$identity);
 var _debois$elm_mdl$Material_Ripple$view = function (_p7) {
-	return _debois$elm_mdl$Material_Ripple$view$(
+	return _debois$elm_mdl$Material_Ripple$view_(
 		A3(
 			_elm_lang$core$Basics$flip,
 			_elm_lang$core$List$append,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Ripple$upOn('mouseup'),
-					_debois$elm_mdl$Material_Ripple$upOn('mouseleave'),
-					_debois$elm_mdl$Material_Ripple$upOn('touchend'),
-					_debois$elm_mdl$Material_Ripple$upOn('blur'),
-					_debois$elm_mdl$Material_Ripple$downOn('mousedown'),
-					_debois$elm_mdl$Material_Ripple$downOn('touchstart')
-				]),
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Ripple$upOn('mouseup'),
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Ripple$upOn('mouseleave'),
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Ripple$upOn('touchend'),
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Ripple$upOn('blur'),
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Ripple$downOn('mousedown'),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Ripple$downOn('touchstart'),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			},
 			_p7));
 };
+var _debois$elm_mdl$Material_Ripple$down = F2(
+	function (f, name) {
+		return A2(
+			_debois$elm_mdl$Material_Options$on,
+			name,
+			A2(
+				_elm_lang$core$Json_Decode$map,
+				function (_p8) {
+					return f(
+						_debois$elm_mdl$Material_Ripple$Down(_p8));
+				},
+				_debois$elm_mdl$Material_Ripple$geometryDecoder));
+	});
 
+var _debois$elm_mdl$Material_Button$_p0 = A3(
+	_debois$elm_mdl$Material_Component$indexed,
+	function (_) {
+		return _.button;
+	},
+	F2(
+		function (x, y) {
+			return _elm_lang$core$Native_Utils.update(
+				y,
+				{button: x});
+		}),
+	_debois$elm_mdl$Material_Ripple$model);
+var _debois$elm_mdl$Material_Button$get = _debois$elm_mdl$Material_Button$_p0._0;
+var _debois$elm_mdl$Material_Button$set = _debois$elm_mdl$Material_Button$_p0._1;
 var _debois$elm_mdl$Material_Button$icon = _debois$elm_mdl$Material_Options$cs('mdl-button--icon');
 var _debois$elm_mdl$Material_Button$minifab = _debois$elm_mdl$Material_Options$cs('mdl-button--mini-fab');
 var _debois$elm_mdl$Material_Button$fab = _debois$elm_mdl$Material_Options$cs('mdl-button--fab');
@@ -10274,281 +11495,311 @@ var _debois$elm_mdl$Material_Button$blurAndForward = function (event) {
 		A2(_elm_lang$core$Basics_ops['++'], 'on', event),
 		'this.blur(); (function(self) { var e = document.createEvent(\'Event\'); e.initEvent(\'touchcancel\', true, true); self.lastChild.dispatchEvent(e); }(this));');
 };
-var _debois$elm_mdl$Material_Button$type$ = function (tp) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (options) {
-			return _elm_lang$core$Native_Utils.update(
-				options,
-				{
-					type$: _elm_lang$core$Maybe$Just(tp)
-				});
-		});
+var _debois$elm_mdl$Material_Button$type_ = function (_p1) {
+	return _debois$elm_mdl$Material_Options_Internal$attribute(
+		_elm_lang$html$Html_Attributes$type_(_p1));
 };
 var _debois$elm_mdl$Material_Button$accent = _debois$elm_mdl$Material_Options$cs('mdl-button--accent');
 var _debois$elm_mdl$Material_Button$primary = _debois$elm_mdl$Material_Options$cs('mdl-button--primary');
 var _debois$elm_mdl$Material_Button$colored = _debois$elm_mdl$Material_Options$cs('mdl-button--colored');
 var _debois$elm_mdl$Material_Button$plain = _debois$elm_mdl$Material_Options$nop;
-var _debois$elm_mdl$Material_Button$disabled = _debois$elm_mdl$Material_Options$set(
-	function (options) {
-		return _elm_lang$core$Native_Utils.update(
-			options,
-			{disabled: true});
-	});
-var _debois$elm_mdl$Material_Button$ripple = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Button$disabled = _debois$elm_mdl$Material_Options_Internal$attribute(
+	_elm_lang$html$Html_Attributes$disabled(true));
+var _debois$elm_mdl$Material_Button$ripple = _debois$elm_mdl$Material_Options_Internal$option(
 	function (options) {
 		return _elm_lang$core$Native_Utils.update(
 			options,
 			{ripple: true});
 	});
-var _debois$elm_mdl$Material_Button$onClick = function (x) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (options) {
-			return _elm_lang$core$Native_Utils.update(
-				options,
-				{
-					onClick: _elm_lang$core$Maybe$Just(
-						_elm_lang$html$Html_Events$onClick(x))
-				});
+var _debois$elm_mdl$Material_Button$link = function (href) {
+	return _debois$elm_mdl$Material_Options$many(
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options_Internal$option(
+				function (options) {
+					return _elm_lang$core$Native_Utils.update(
+						options,
+						{link: true});
+				}),
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+					_elm_lang$html$Html_Attributes$href(href)),
+				_1: {ctor: '[]'}
+			}
 		});
 };
-var _debois$elm_mdl$Material_Button$defaultConfig = {ripple: false, onClick: _elm_lang$core$Maybe$Nothing, disabled: false, type$: _elm_lang$core$Maybe$Nothing};
+var _debois$elm_mdl$Material_Button$defaultConfig = {ripple: false, link: false};
 var _debois$elm_mdl$Material_Button$view = F4(
 	function (lift, model, config, html) {
-		var summary = A2(_debois$elm_mdl$Material_Options$collect, _debois$elm_mdl$Material_Button$defaultConfig, config);
-		var startListeners = summary.config.ripple ? _elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$core$Maybe$Just(
-				A2(_debois$elm_mdl$Material_Ripple$downOn$, lift, 'mousedown')),
-				_elm_lang$core$Maybe$Just(
-				A2(_debois$elm_mdl$Material_Ripple$downOn$, lift, 'touchstart'))
-			]) : _elm_lang$core$Native_List.fromArray(
-			[]);
-		var stopListeners = function () {
-			var handle = function (_p0) {
-				return _elm_lang$core$Maybe$Just(
-					(summary.config.ripple ? _debois$elm_mdl$Material_Button$blurAndForward : _debois$elm_mdl$Material_Helpers$blurOn)(_p0));
-			};
-			return _elm_lang$core$Native_List.fromArray(
-				[
-					handle('mouseup'),
-					handle('mouseleave'),
-					handle('touchend')
-				]);
-		}();
-		var misc = _elm_lang$core$Native_List.fromArray(
-			[
-				summary.config.onClick,
-				summary.config.disabled ? _elm_lang$core$Maybe$Just(
-				_elm_lang$html$Html_Attributes$disabled(true)) : _elm_lang$core$Maybe$Nothing
-			]);
-		var type$ = function () {
-			var _p1 = summary.config.type$;
-			if (_p1.ctor === 'Nothing') {
-				return _elm_lang$core$Native_List.fromArray(
-					[]);
-			} else {
-				return _elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$core$Maybe$Just(
-						_elm_lang$html$Html_Attributes$type$(_p1._0))
-					]);
-			}
-		}();
+		var listeners = _debois$elm_mdl$Material_Options$many(
+			{
+				ctor: '::',
+				_0: A2(_debois$elm_mdl$Material_Ripple$down, lift, 'mousedown'),
+				_1: {
+					ctor: '::',
+					_0: A2(_debois$elm_mdl$Material_Ripple$down, lift, 'touchstart'),
+					_1: {
+						ctor: '::',
+						_0: A2(_debois$elm_mdl$Material_Ripple$up, lift, 'touchcancel'),
+						_1: {
+							ctor: '::',
+							_0: A2(_debois$elm_mdl$Material_Ripple$up, lift, 'mouseup'),
+							_1: {
+								ctor: '::',
+								_0: A2(_debois$elm_mdl$Material_Ripple$up, lift, 'blur'),
+								_1: {
+									ctor: '::',
+									_0: A2(_debois$elm_mdl$Material_Ripple$up, lift, 'mouseleave'),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			});
+		var summary = A2(_debois$elm_mdl$Material_Options_Internal$collect, _debois$elm_mdl$Material_Button$defaultConfig, config);
 		return A5(
-			_debois$elm_mdl$Material_Options$apply,
+			_debois$elm_mdl$Material_Options_Internal$apply,
 			summary,
-			_elm_lang$html$Html$button,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options$cs('mdl-button'),
-					_debois$elm_mdl$Material_Options$cs('mdl-js-button'),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect'),
-					summary.config.ripple)
-				]),
-			A2(
-				_elm_lang$core$List$filterMap,
-				_elm_lang$core$Basics$identity,
-				_elm_lang$core$List$concat(
-					_elm_lang$core$Native_List.fromArray(
-						[startListeners, stopListeners, misc, type$]))),
+			summary.config.link ? _elm_lang$html$Html$a : _elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-button'),
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$cs('mdl-js-button'),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_Options$when,
+							summary.config.ripple,
+							_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect')),
+						_1: {
+							ctor: '::',
+							_0: listeners,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Helpers$blurOn('mouseup'),
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Helpers$blurOn('mouseleave'),
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Helpers$blurOn('touchend'),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
 			summary.config.ripple ? _elm_lang$core$List$concat(
-				_elm_lang$core$Native_List.fromArray(
-					[
-						html,
-						_elm_lang$core$Native_List.fromArray(
-						[
-							A2(
-							_elm_lang$html$Html_App$map,
-							lift,
-							A2(
-								_debois$elm_mdl$Material_Ripple$view$,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$html$Html_Attributes$class('mdl-button__ripple-container'),
-										_debois$elm_mdl$Material_Ripple$upOn('blur'),
-										_debois$elm_mdl$Material_Ripple$upOn('touchcancel')
-									]),
-								model))
-						])
-					])) : html);
+				{
+					ctor: '::',
+					_0: html,
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$map,
+								lift,
+								A2(
+									_debois$elm_mdl$Material_Ripple$view_,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdl-button__ripple-container'),
+										_1: {ctor: '[]'}
+									},
+									model)),
+							_1: {ctor: '[]'}
+						},
+						_1: {ctor: '[]'}
+					}
+				}) : html);
 	});
+var _debois$elm_mdl$Material_Button$render = A3(_debois$elm_mdl$Material_Component$render, _debois$elm_mdl$Material_Button$get, _debois$elm_mdl$Material_Button$view, _debois$elm_mdl$Material_Component$ButtonMsg);
 var _debois$elm_mdl$Material_Button$update = function (action) {
 	return _debois$elm_mdl$Material_Ripple$update(action);
 };
-var _debois$elm_mdl$Material_Button$render = A5(
-	_debois$elm_parts$Parts$create,
-	_debois$elm_mdl$Material_Button$view,
-	_debois$elm_parts$Parts$generalize(_debois$elm_mdl$Material_Button$update),
-	function (_) {
-		return _.button;
-	},
-	F2(
-		function (x, y) {
-			return _elm_lang$core$Native_Utils.update(
-				y,
-				{button: x});
-		}),
-	_debois$elm_mdl$Material_Ripple$model);
+var _debois$elm_mdl$Material_Button$react = A4(
+	_debois$elm_mdl$Material_Component$react,
+	_debois$elm_mdl$Material_Button$get,
+	_debois$elm_mdl$Material_Button$set,
+	_debois$elm_mdl$Material_Component$ButtonMsg,
+	_debois$elm_mdl$Material_Component$generalise(_debois$elm_mdl$Material_Button$update));
 var _debois$elm_mdl$Material_Button$defaultModel = _debois$elm_mdl$Material_Ripple$model;
-var _debois$elm_mdl$Material_Button$Config = F4(
-	function (a, b, c, d) {
-		return {ripple: a, onClick: b, disabled: c, type$: d};
+var _debois$elm_mdl$Material_Button$Config = F2(
+	function (a, b) {
+		return {ripple: a, link: b};
 	});
 
-var _debois$elm_mdl$Material_Textfield$update = F2(
-	function (action, model) {
-		var _p0 = action;
-		switch (_p0.ctor) {
-			case 'Input':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{value: _p0._0});
-			case 'Blur':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{isFocused: false});
-			default:
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{isFocused: true});
-		}
-	});
-var _debois$elm_mdl$Material_Textfield$defaultModel = {isFocused: false, value: ''};
-var _debois$elm_mdl$Material_Textfield$cols = function (cols) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{
-					cols: _elm_lang$core$Maybe$Just(cols)
-				});
-		});
-};
-var _debois$elm_mdl$Material_Textfield$rows = function (rows) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{
-					rows: _elm_lang$core$Maybe$Just(rows)
-				});
-		});
-};
-var _debois$elm_mdl$Material_Textfield$style = _debois$elm_mdl$Material_Options$inner;
-var _debois$elm_mdl$Material_Textfield$on = F2(
-	function (event, decoder) {
-		return _debois$elm_mdl$Material_Options$set(
-			function (config) {
-				return _elm_lang$core$Native_Utils.update(
-					config,
-					{
-						listeners: A2(
-							_elm_lang$core$Basics_ops['++'],
-							config.listeners,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									A2(_elm_lang$html$Html_Events$on, event, decoder)
-								]))
-					});
+var _debois$elm_mdl$Material_Icon$view = F2(
+	function (name, options) {
+		return A3(
+			_debois$elm_mdl$Material_Options$styled,
+			_elm_lang$html$Html$i,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('material-icons'),
+				_1: options
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(name),
+				_1: {ctor: '[]'}
 			});
 	});
-var _debois$elm_mdl$Material_Textfield$onInput = function (f) {
+var _debois$elm_mdl$Material_Icon$i = function (name) {
 	return A2(
-		_debois$elm_mdl$Material_Textfield$on,
-		'input',
-		A2(_elm_lang$core$Json_Decode$map, f, _elm_lang$html$Html_Events$targetValue));
+		_debois$elm_mdl$Material_Icon$view,
+		name,
+		{ctor: '[]'});
 };
-var _debois$elm_mdl$Material_Textfield$onBlur = function (f) {
-	return A2(
-		_debois$elm_mdl$Material_Textfield$on,
-		'focusout',
-		_elm_lang$core$Json_Decode$succeed(f));
+var _debois$elm_mdl$Material_Icon$size48 = A2(_debois$elm_mdl$Material_Options$css, 'font-size', '48px');
+var _debois$elm_mdl$Material_Icon$size36 = A2(_debois$elm_mdl$Material_Options$css, 'font-size', '36px');
+var _debois$elm_mdl$Material_Icon$size24 = A2(_debois$elm_mdl$Material_Options$css, 'font-size', '24px');
+var _debois$elm_mdl$Material_Icon$size18 = A2(_debois$elm_mdl$Material_Options$css, 'font-size', '18px');
+var _debois$elm_mdl$Material_Icon$defaultConfig = {};
+var _debois$elm_mdl$Material_Icon$Config = {};
+
+var _debois$elm_mdl$Material_Textfield$update = F3(
+	function (_p0, action, model) {
+		return A3(
+			_elm_lang$core$Basics$flip,
+			F2(
+				function (x, y) {
+					return A2(_elm_lang$core$Platform_Cmd_ops['!'], x, y);
+				}),
+			{ctor: '[]'},
+			function () {
+				var _p1 = action;
+				switch (_p1.ctor) {
+					case 'Input':
+						var dirty = !_elm_lang$core$Native_Utils.eq(_p1._0, '');
+						return _elm_lang$core$Native_Utils.eq(dirty, model.isDirty) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{isDirty: dirty}));
+					case 'Blur':
+						return _elm_lang$core$Maybe$Just(
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{isFocused: false}));
+					default:
+						return _elm_lang$core$Maybe$Just(
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{isFocused: true}));
+				}
+			}());
+	});
+var _debois$elm_mdl$Material_Textfield$defaultModel = {isFocused: false, isDirty: false};
+var _debois$elm_mdl$Material_Textfield$_p2 = A3(
+	_debois$elm_mdl$Material_Component$indexed,
+	function (_) {
+		return _.textfield;
+	},
+	F2(
+		function (x, c) {
+			return _elm_lang$core$Native_Utils.update(
+				c,
+				{textfield: x});
+		}),
+	_debois$elm_mdl$Material_Textfield$defaultModel);
+var _debois$elm_mdl$Material_Textfield$get = _debois$elm_mdl$Material_Textfield$_p2._0;
+var _debois$elm_mdl$Material_Textfield$set = _debois$elm_mdl$Material_Textfield$_p2._1;
+var _debois$elm_mdl$Material_Textfield$react = A4(_debois$elm_mdl$Material_Component$react, _debois$elm_mdl$Material_Textfield$get, _debois$elm_mdl$Material_Textfield$set, _debois$elm_mdl$Material_Component$TextfieldMsg, _debois$elm_mdl$Material_Textfield$update);
+var _debois$elm_mdl$Material_Textfield$cols = function (k) {
+	return _debois$elm_mdl$Material_Options_Internal$input(
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$attribute(
+				_elm_lang$html$Html_Attributes$cols(k)),
+			_1: {ctor: '[]'}
+		});
 };
-var _debois$elm_mdl$Material_Textfield$onFocus = function (f) {
-	return A2(
-		_debois$elm_mdl$Material_Textfield$on,
-		'focusin',
-		_elm_lang$core$Json_Decode$succeed(f));
+var _debois$elm_mdl$Material_Textfield$rows = function (k) {
+	return _debois$elm_mdl$Material_Options_Internal$input(
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$attribute(
+				_elm_lang$html$Html_Attributes$rows(k)),
+			_1: {ctor: '[]'}
+		});
 };
-var _debois$elm_mdl$Material_Textfield$disabled = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Textfield$input = _debois$elm_mdl$Material_Options$input;
+var _debois$elm_mdl$Material_Textfield$disabled = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{disabled: true});
 	});
-var _debois$elm_mdl$Material_Textfield$maxlength = function (v) {
-	return _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Textfield$maxlength = function (k) {
+	return _debois$elm_mdl$Material_Options$attribute(
+		_elm_lang$html$Html_Attributes$maxlength(k));
+};
+var _debois$elm_mdl$Material_Textfield$autofocus = _debois$elm_mdl$Material_Options$attribute(
+	_elm_lang$html$Html_Attributes$autofocus(true));
+var _debois$elm_mdl$Material_Textfield$value = function (_p3) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (str, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						value: _elm_lang$core$Maybe$Just(str)
+					});
+			})(_p3));
+};
+var _debois$elm_mdl$Material_Textfield$error = function (_p4) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (str, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						error: _elm_lang$core$Maybe$Just(str)
+					});
+			})(_p4));
+};
+var _debois$elm_mdl$Material_Textfield$expandableIcon = function (id) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		function (config) {
+			return _elm_lang$core$Native_Utils.update(
+				config,
+				{expandableIcon: id});
+		});
+};
+var _debois$elm_mdl$Material_Textfield$expandable = function (id) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
 		function (config) {
 			return _elm_lang$core$Native_Utils.update(
 				config,
 				{
-					maxlength: _elm_lang$core$Maybe$Just(v)
+					expandable: _elm_lang$core$Maybe$Just(id)
 				});
 		});
 };
-var _debois$elm_mdl$Material_Textfield$autofocus = _debois$elm_mdl$Material_Options$set(
-	function (config) {
-		return _elm_lang$core$Native_Utils.update(
-			config,
-			{autofocus: true});
-	});
-var _debois$elm_mdl$Material_Textfield$value = function (str) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{
-					value: _elm_lang$core$Maybe$Just(str)
-				});
-		});
-};
-var _debois$elm_mdl$Material_Textfield$error = function (str) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{
-					error: _elm_lang$core$Maybe$Just(str)
-				});
-		});
-};
-var _debois$elm_mdl$Material_Textfield$floatingLabel = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Textfield$floatingLabel = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{labelFloat: true});
 	});
-var _debois$elm_mdl$Material_Textfield$label = function (str) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{
-					labelText: _elm_lang$core$Maybe$Just(str)
-				});
-		});
+var _debois$elm_mdl$Material_Textfield$label = function (_p5) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (str, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						labelText: _elm_lang$core$Maybe$Just(str)
+					});
+			})(_p5));
 };
 var _debois$elm_mdl$Material_Textfield$Config = function (a) {
 	return function (b) {
@@ -10560,11 +11811,7 @@ var _debois$elm_mdl$Material_Textfield$Config = function (a) {
 							return function (h) {
 								return function (i) {
 									return function (j) {
-										return function (k) {
-											return function (l) {
-												return {labelText: a, labelFloat: b, error: c, value: d, disabled: e, kind: f, rows: g, cols: h, autofocus: i, maxlength: j, inner: k, listeners: l};
-											};
-										};
+										return {labelText: a, labelFloat: b, error: c, value: d, disabled: e, kind: f, expandable: g, expandableIcon: h, input: i, container: j};
 									};
 								};
 							};
@@ -10577,17 +11824,24 @@ var _debois$elm_mdl$Material_Textfield$Config = function (a) {
 };
 var _debois$elm_mdl$Material_Textfield$Model = F2(
 	function (a, b) {
-		return {isFocused: a, value: b};
+		return {isFocused: a, isDirty: b};
+	});
+var _debois$elm_mdl$Material_Textfield$Email = {ctor: 'Email'};
+var _debois$elm_mdl$Material_Textfield$email = _debois$elm_mdl$Material_Options_Internal$option(
+	function (config) {
+		return _elm_lang$core$Native_Utils.update(
+			config,
+			{kind: _debois$elm_mdl$Material_Textfield$Email});
 	});
 var _debois$elm_mdl$Material_Textfield$Password = {ctor: 'Password'};
-var _debois$elm_mdl$Material_Textfield$password = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Textfield$password = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{kind: _debois$elm_mdl$Material_Textfield$Password});
 	});
 var _debois$elm_mdl$Material_Textfield$Textarea = {ctor: 'Textarea'};
-var _debois$elm_mdl$Material_Textfield$textarea = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Textfield$textarea = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
@@ -10601,16 +11855,12 @@ var _debois$elm_mdl$Material_Textfield$defaultConfig = {
 	value: _elm_lang$core$Maybe$Nothing,
 	disabled: false,
 	kind: _debois$elm_mdl$Material_Textfield$Text,
-	rows: _elm_lang$core$Maybe$Nothing,
-	cols: _elm_lang$core$Maybe$Nothing,
-	autofocus: false,
-	maxlength: _elm_lang$core$Maybe$Nothing,
-	inner: _elm_lang$core$Native_List.fromArray(
-		[]),
-	listeners: _elm_lang$core$Native_List.fromArray(
-		[])
+	expandable: _elm_lang$core$Maybe$Nothing,
+	expandableIcon: 'search',
+	input: {ctor: '[]'},
+	container: {ctor: '[]'}
 };
-var _debois$elm_mdl$Material_Textfield$text$ = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Textfield$text_ = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
@@ -10621,229 +11871,299 @@ var _debois$elm_mdl$Material_Textfield$Input = function (a) {
 };
 var _debois$elm_mdl$Material_Textfield$Focus = {ctor: 'Focus'};
 var _debois$elm_mdl$Material_Textfield$Blur = {ctor: 'Blur'};
-var _debois$elm_mdl$Material_Textfield$view = F3(
-	function (lift, model, options) {
-		var _p1 = A2(_debois$elm_mdl$Material_Options$collect, _debois$elm_mdl$Material_Textfield$defaultConfig, options);
-		var summary = _p1;
-		var config = _p1.config;
-		var val = A2(_elm_lang$core$Maybe$withDefault, model.value, config.value);
-		var isTextarea = _elm_lang$core$Native_Utils.eq(config.kind, _debois$elm_mdl$Material_Textfield$Textarea);
-		var elementFunction = isTextarea ? _elm_lang$html$Html$textarea : _elm_lang$html$Html$input;
-		var typeAttributes = function () {
-			var _p2 = config.kind;
-			switch (_p2.ctor) {
-				case 'Text':
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$type$('text')
-						]);
-				case 'Password':
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$type$('password')
-						]);
-				default:
-					return A2(
-						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$core$Native_List.fromArray(
-							[]),
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							function () {
-								var _p3 = config.rows;
-								if (_p3.ctor === 'Just') {
-									return _elm_lang$core$Native_List.fromArray(
-										[
-											_elm_lang$html$Html_Attributes$rows(_p3._0)
-										]);
-								} else {
-									return _elm_lang$core$Native_List.fromArray(
-										[]);
+var _debois$elm_mdl$Material_Textfield$view = F4(
+	function (lift, model, options, _p6) {
+		var _p7 = A2(_debois$elm_mdl$Material_Options_Internal$collect, _debois$elm_mdl$Material_Textfield$defaultConfig, options);
+		var summary = _p7;
+		var config = _p7.config;
+		var labelFor = function () {
+			var _p8 = config.expandable;
+			if (_p8.ctor === 'Nothing') {
+				return {ctor: '[]'};
+			} else {
+				return {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$for(_p8._0),
+					_1: {ctor: '[]'}
+				};
+			}
+		}();
+		var expandableId = function () {
+			var _p9 = config.expandable;
+			if (_p9.ctor === 'Nothing') {
+				return _debois$elm_mdl$Material_Options$nop;
+			} else {
+				return _debois$elm_mdl$Material_Options_Internal$attribute(
+					_elm_lang$html$Html_Attributes$id(_p9._0));
+			}
+		}();
+		var expHolder = function () {
+			var _p10 = config.expandable;
+			if (_p10.ctor === 'Nothing') {
+				return _elm_lang$core$Basics$identity;
+			} else {
+				return function (x) {
+					return {
+						ctor: '::',
+						_0: A4(
+							_debois$elm_mdl$Material_Options$styled_,
+							_elm_lang$html$Html$label,
+							{
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options$cs('mdl-button'),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$cs('mdl-js-button'),
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Options$cs('mdl-button--icon'),
+										_1: {ctor: '[]'}
+									}
 								}
-							}(),
-							function () {
-								var _p4 = config.cols;
-								if (_p4.ctor === 'Just') {
-									return _elm_lang$core$Native_List.fromArray(
-										[
-											_elm_lang$html$Html_Attributes$cols(_p4._0)
-										]);
-								} else {
-									return _elm_lang$core$Native_List.fromArray(
-										[]);
-								}
-							}()));
-			}
-		}();
-		var maxlength = function () {
-			var _p5 = config.maxlength;
-			if (_p5.ctor === 'Just') {
-				return _elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$maxlength(_p5._0)
-					]);
-			} else {
-				return _elm_lang$core$Native_List.fromArray(
-					[]);
-			}
-		}();
-		var listeners = config.listeners;
-		var textValue = function () {
-			var _p6 = config.value;
-			if (_p6.ctor === 'Just') {
-				return _elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$value(_p6._0)
-					]);
-			} else {
-				return _elm_lang$core$Native_List.fromArray(
-					[]);
-			}
-		}();
-		var defaultInput = function () {
-			var _p7 = config.value;
-			if (_p7.ctor === 'Just') {
-				return _elm_lang$core$Maybe$Nothing;
-			} else {
-				return _elm_lang$core$Maybe$Just(
-					A2(
-						_elm_lang$html$Html_Events$on,
-						'input',
-						A2(
-							_elm_lang$core$Json_Decode$map,
-							function (_p8) {
-								return lift(
-									_debois$elm_mdl$Material_Textfield$Input(_p8));
 							},
-							_elm_lang$html$Html_Events$targetValue)));
+							labelFor,
+							{
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Icon$i(config.expandableIcon),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A3(
+								_debois$elm_mdl$Material_Options$styled,
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$cs('mdl-textfield__expandable-holder'),
+									_1: {ctor: '[]'}
+								},
+								x),
+							_1: {ctor: '[]'}
+						}
+					};
+				};
 			}
 		}();
-		return A5(
-			_debois$elm_mdl$Material_Options$apply,
+		return A4(
+			_debois$elm_mdl$Material_Options_Internal$applyContainer,
 			summary,
 			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options$cs('mdl-textfield'),
-					_debois$elm_mdl$Material_Options$cs('mdl-js-textfield'),
-					_debois$elm_mdl$Material_Options$cs('is-upgraded'),
-					config.labelFloat ? _debois$elm_mdl$Material_Options$cs('mdl-textfield--floating-label') : _debois$elm_mdl$Material_Options$nop,
-					(!_elm_lang$core$Native_Utils.eq(config.error, _elm_lang$core$Maybe$Nothing)) ? _debois$elm_mdl$Material_Options$cs('is-invalid') : _debois$elm_mdl$Material_Options$nop,
-					(!_elm_lang$core$Native_Utils.eq(val, '')) ? _debois$elm_mdl$Material_Options$cs('is-dirty') : _debois$elm_mdl$Material_Options$nop,
-					(model.isFocused && _elm_lang$core$Basics$not(config.disabled)) ? _debois$elm_mdl$Material_Options$cs('is-focused') : _debois$elm_mdl$Material_Options$nop,
-					config.disabled ? _debois$elm_mdl$Material_Options$cs('is-disabled') : _debois$elm_mdl$Material_Options$nop
-				]),
-			A2(
-				_elm_lang$core$List$filterMap,
-				_elm_lang$core$Basics$identity,
-				_elm_lang$core$Native_List.fromArray(
-					[defaultInput])),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A4(
-					_debois$elm_mdl$Material_Options$styled$,
-					elementFunction,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_debois$elm_mdl$Material_Options$cs('mdl-textfield__input'),
-							A2(_debois$elm_mdl$Material_Options$css, 'outline', 'none'),
-							_debois$elm_mdl$Material_Options_Internal$attribute(
-							A2(
-								_elm_lang$html$Html_Events$on,
-								'focus',
-								_elm_lang$core$Json_Decode$succeed(
-									lift(_debois$elm_mdl$Material_Textfield$Focus)))),
-							_debois$elm_mdl$Material_Options_Internal$attribute(
-							A2(
-								_elm_lang$html$Html_Events$on,
-								'blur',
-								_elm_lang$core$Json_Decode$succeed(
-									lift(_debois$elm_mdl$Material_Textfield$Blur)))),
-							_debois$elm_mdl$Material_Options$many(config.inner)
-						]),
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$disabled(config.disabled),
-								_elm_lang$html$Html_Attributes$autofocus(config.autofocus)
-							]),
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							textValue,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-textfield'),
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$cs('mdl-js-textfield'),
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Options$cs('is-upgraded'),
+						_1: {
+							ctor: '::',
+							_0: A3(_debois$elm_mdl$Material_Options_Internal$on1, 'focus', lift, _debois$elm_mdl$Material_Textfield$Focus),
+							_1: {
+								ctor: '::',
+								_0: A3(_debois$elm_mdl$Material_Options_Internal$on1, 'blur', lift, _debois$elm_mdl$Material_Textfield$Blur),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_debois$elm_mdl$Material_Options$when,
+										config.labelFloat,
+										_debois$elm_mdl$Material_Options$cs('mdl-textfield--floating-label')),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_debois$elm_mdl$Material_Options$when,
+											!_elm_lang$core$Native_Utils.eq(config.error, _elm_lang$core$Maybe$Nothing),
+											_debois$elm_mdl$Material_Options$cs('is-invalid')),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_debois$elm_mdl$Material_Options$when,
+												function () {
+													var _p11 = config.value;
+													if (_p11.ctor === 'Just') {
+														if (_p11._0 === '') {
+															return false;
+														} else {
+															return true;
+														}
+													} else {
+														return model.isDirty;
+													}
+												}(),
+												_debois$elm_mdl$Material_Options$cs('is-dirty')),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_debois$elm_mdl$Material_Options$when,
+													model.isFocused && (!config.disabled),
+													_debois$elm_mdl$Material_Options$cs('is-focused')),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_debois$elm_mdl$Material_Options$when,
+														config.disabled,
+														_debois$elm_mdl$Material_Options$cs('is-disabled')),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_debois$elm_mdl$Material_Options$when,
+															!_elm_lang$core$Native_Utils.eq(config.expandable, _elm_lang$core$Maybe$Nothing),
+															_debois$elm_mdl$Material_Options$cs('mdl-textfield--expandable')),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			expHolder(
+				{
+					ctor: '::',
+					_0: A4(
+						_debois$elm_mdl$Material_Options_Internal$applyInput,
+						summary,
+						_elm_lang$core$Native_Utils.eq(config.kind, _debois$elm_mdl$Material_Textfield$Textarea) ? _elm_lang$html$Html$textarea : _elm_lang$html$Html$input,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options$cs('mdl-textfield__input'),
+							_1: {
+								ctor: '::',
+								_0: A2(_debois$elm_mdl$Material_Options$css, 'outline', 'none'),
+								_1: {
+									ctor: '::',
+									_0: A3(_debois$elm_mdl$Material_Options_Internal$on1, 'focus', lift, _debois$elm_mdl$Material_Textfield$Focus),
+									_1: {
+										ctor: '::',
+										_0: A3(_debois$elm_mdl$Material_Options_Internal$on1, 'blur', lift, _debois$elm_mdl$Material_Textfield$Blur),
+										_1: {
+											ctor: '::',
+											_0: function () {
+												var _p12 = config.kind;
+												switch (_p12.ctor) {
+													case 'Text':
+														return _debois$elm_mdl$Material_Options_Internal$attribute(
+															_elm_lang$html$Html_Attributes$type_('text'));
+													case 'Password':
+														return _debois$elm_mdl$Material_Options_Internal$attribute(
+															_elm_lang$html$Html_Attributes$type_('password'));
+													case 'Email':
+														return _debois$elm_mdl$Material_Options_Internal$attribute(
+															_elm_lang$html$Html_Attributes$type_('email'));
+													default:
+														return _debois$elm_mdl$Material_Options$nop;
+												}
+											}(),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_debois$elm_mdl$Material_Options$when,
+													config.disabled,
+													_debois$elm_mdl$Material_Options_Internal$attribute(
+														_elm_lang$html$Html_Attributes$disabled(true))),
+												_1: {
+													ctor: '::',
+													_0: expandableId,
+													_1: {
+														ctor: '::',
+														_0: function () {
+															var _p13 = config.value;
+															if (_p13.ctor === 'Nothing') {
+																return A2(
+																	_debois$elm_mdl$Material_Options$on,
+																	'input',
+																	A2(
+																		_elm_lang$core$Json_Decode$map,
+																		function (_p14) {
+																			return lift(
+																				_debois$elm_mdl$Material_Textfield$Input(_p14));
+																		},
+																		_elm_lang$html$Html_Events$targetValue));
+															} else {
+																return _debois$elm_mdl$Material_Options_Internal$attribute(
+																	_elm_lang$html$Html_Attributes$value(_p13._0));
+															}
+														}(),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$label,
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								typeAttributes,
-								A2(_elm_lang$core$Basics_ops['++'], maxlength, listeners)))),
-					_elm_lang$core$Native_List.fromArray(
-						[])),
-					A2(
-					_elm_lang$html$Html$label,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('mdl-textfield__label')
-						]),
-					function () {
-						var _p9 = config.labelText;
-						if (_p9.ctor === 'Just') {
-							return _elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html$text(_p9._0)
-								]);
-						} else {
-							return _elm_lang$core$Native_List.fromArray(
-								[]);
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('mdl-textfield__label'),
+									_1: {ctor: '[]'}
+								},
+								labelFor),
+							function () {
+								var _p15 = config.labelText;
+								if (_p15.ctor === 'Just') {
+									return {
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(_p15._0),
+										_1: {ctor: '[]'}
+									};
+								} else {
+									return {ctor: '[]'};
+								}
+							}()),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$core$Maybe$withDefault,
+								A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									{ctor: '[]'}),
+								A2(
+									_elm_lang$core$Maybe$map,
+									function (e) {
+										return A2(
+											_elm_lang$html$Html$span,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('mdl-textfield__error'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(e),
+												_1: {ctor: '[]'}
+											});
+									},
+									config.error)),
+							_1: {ctor: '[]'}
 						}
-					}()),
-					A2(
-					_elm_lang$core$Maybe$withDefault,
-					A2(
-						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[]),
-						_elm_lang$core$Native_List.fromArray(
-							[])),
-					A2(
-						_elm_lang$core$Maybe$map,
-						function (e) {
-							return A2(
-								_elm_lang$html$Html$span,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$html$Html_Attributes$class('mdl-textfield__error')
-									]),
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$html$Html$text(e)
-									]));
-						},
-						config.error))
-				]));
+					}
+				}));
 	});
-var _debois$elm_mdl$Material_Textfield$render = A5(
-	_debois$elm_parts$Parts$create,
-	_debois$elm_mdl$Material_Textfield$view,
-	F3(
-		function (_p10, msg, model) {
-			return _elm_lang$core$Maybe$Just(
-				{
-					ctor: '_Tuple2',
-					_0: A2(_debois$elm_mdl$Material_Textfield$update, msg, model),
-					_1: _elm_lang$core$Platform_Cmd$none
-				});
-		}),
-	function (_) {
-		return _.textfield;
-	},
-	F2(
-		function (x, c) {
-			return _elm_lang$core$Native_Utils.update(
-				c,
-				{textfield: x});
-		}),
-	_debois$elm_mdl$Material_Textfield$defaultModel);
+var _debois$elm_mdl$Material_Textfield$render = A3(_debois$elm_mdl$Material_Component$render, _debois$elm_mdl$Material_Textfield$get, _debois$elm_mdl$Material_Textfield$view, _debois$elm_mdl$Material_Component$TextfieldMsg);
 
 var _elm_lang$dom$Native_Dom = function() {
+
+var fakeNode = {
+	addEventListener: function() {},
+	removeEventListener: function() {}
+};
+
+var onDocument = on(typeof document !== 'undefined' ? document : fakeNode);
+var onWindow = on(typeof window !== 'undefined' ? window : fakeNode);
 
 function on(node)
 {
@@ -10999,8 +12319,8 @@ function height(options, id)
 }
 
 return {
-	onDocument: F3(on(document)),
-	onWindow: F3(on(window)),
+	onDocument: F3(onDocument),
+	onWindow: F3(onWindow),
 
 	focus: focus,
 	blur: blur,
@@ -11021,64 +12341,65 @@ return {
 var _elm_lang$dom$Dom_LowLevel$onWindow = _elm_lang$dom$Native_Dom.onWindow;
 var _elm_lang$dom$Dom_LowLevel$onDocument = _elm_lang$dom$Native_Dom.onDocument;
 
+var _elm_lang$mouse$Mouse_ops = _elm_lang$mouse$Mouse_ops || {};
+_elm_lang$mouse$Mouse_ops['&>'] = F2(
+	function (t1, t2) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (_p0) {
+				return t2;
+			},
+			t1);
+	});
 var _elm_lang$mouse$Mouse$onSelfMsg = F3(
-	function (router, _p0, state) {
-		var _p1 = _p0;
-		var _p2 = A2(_elm_lang$core$Dict$get, _p1.category, state);
-		if (_p2.ctor === 'Nothing') {
+	function (router, _p1, state) {
+		var _p2 = _p1;
+		var _p3 = A2(_elm_lang$core$Dict$get, _p2.category, state);
+		if (_p3.ctor === 'Nothing') {
 			return _elm_lang$core$Task$succeed(state);
 		} else {
 			var send = function (tagger) {
 				return A2(
 					_elm_lang$core$Platform$sendToApp,
 					router,
-					tagger(_p1.position));
+					tagger(_p2.position));
 			};
 			return A2(
-				_elm_lang$core$Task$andThen,
+				_elm_lang$mouse$Mouse_ops['&>'],
 				_elm_lang$core$Task$sequence(
-					A2(_elm_lang$core$List$map, send, _p2._0.taggers)),
-				function (_p3) {
-					return _elm_lang$core$Task$succeed(state);
-				});
+					A2(_elm_lang$core$List$map, send, _p3._0.taggers)),
+				_elm_lang$core$Task$succeed(state));
 		}
-	});
-var _elm_lang$mouse$Mouse_ops = _elm_lang$mouse$Mouse_ops || {};
-_elm_lang$mouse$Mouse_ops['&>'] = F2(
-	function (t1, t2) {
-		return A2(
-			_elm_lang$core$Task$andThen,
-			t1,
-			function (_p4) {
-				return t2;
-			});
 	});
 var _elm_lang$mouse$Mouse$init = _elm_lang$core$Task$succeed(_elm_lang$core$Dict$empty);
 var _elm_lang$mouse$Mouse$categorizeHelpHelp = F2(
 	function (value, maybeValues) {
-		var _p5 = maybeValues;
-		if (_p5.ctor === 'Nothing') {
+		var _p4 = maybeValues;
+		if (_p4.ctor === 'Nothing') {
 			return _elm_lang$core$Maybe$Just(
-				_elm_lang$core$Native_List.fromArray(
-					[value]));
+				{
+					ctor: '::',
+					_0: value,
+					_1: {ctor: '[]'}
+				});
 		} else {
 			return _elm_lang$core$Maybe$Just(
-				A2(_elm_lang$core$List_ops['::'], value, _p5._0));
+				{ctor: '::', _0: value, _1: _p4._0});
 		}
 	});
 var _elm_lang$mouse$Mouse$categorizeHelp = F2(
 	function (subs, subDict) {
 		categorizeHelp:
 		while (true) {
-			var _p6 = subs;
-			if (_p6.ctor === '[]') {
+			var _p5 = subs;
+			if (_p5.ctor === '[]') {
 				return subDict;
 			} else {
-				var _v4 = _p6._1,
+				var _v4 = _p5._1,
 					_v5 = A3(
 					_elm_lang$core$Dict$update,
-					_p6._0._0,
-					_elm_lang$mouse$Mouse$categorizeHelpHelp(_p6._0._1),
+					_p5._0._0,
+					_elm_lang$mouse$Mouse$categorizeHelpHelp(_p5._0._1),
 					subDict);
 				subs = _v4;
 				subDict = _v5;
@@ -11095,10 +12416,10 @@ var _elm_lang$mouse$Mouse$Position = F2(
 		return {x: a, y: b};
 	});
 var _elm_lang$mouse$Mouse$position = A3(
-	_elm_lang$core$Json_Decode$object2,
+	_elm_lang$core$Json_Decode$map2,
 	_elm_lang$mouse$Mouse$Position,
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'pageX', _elm_lang$core$Json_Decode$int),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'pageY', _elm_lang$core$Json_Decode$int));
+	A2(_elm_lang$core$Json_Decode$field, 'pageX', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'pageY', _elm_lang$core$Json_Decode$int));
 var _elm_lang$mouse$Mouse$Watcher = F2(
 	function (a, b) {
 		return {taggers: a, pid: b};
@@ -11111,23 +12432,21 @@ var _elm_lang$mouse$Mouse$onEffects = F3(
 	function (router, newSubs, oldState) {
 		var rightStep = F3(
 			function (category, taggers, task) {
+				var tracker = A3(
+					_elm_lang$dom$Dom_LowLevel$onDocument,
+					category,
+					_elm_lang$mouse$Mouse$position,
+					function (_p6) {
+						return A2(
+							_elm_lang$core$Platform$sendToSelf,
+							router,
+							A2(_elm_lang$mouse$Mouse$Msg, category, _p6));
+					});
 				return A2(
 					_elm_lang$core$Task$andThen,
-					task,
 					function (state) {
 						return A2(
 							_elm_lang$core$Task$andThen,
-							_elm_lang$core$Process$spawn(
-								A3(
-									_elm_lang$dom$Dom_LowLevel$onDocument,
-									category,
-									_elm_lang$mouse$Mouse$position,
-									function (_p7) {
-										return A2(
-											_elm_lang$core$Platform$sendToSelf,
-											router,
-											A2(_elm_lang$mouse$Mouse$Msg, category, _p7));
-									})),
 							function (pid) {
 								return _elm_lang$core$Task$succeed(
 									A3(
@@ -11135,30 +12454,32 @@ var _elm_lang$mouse$Mouse$onEffects = F3(
 										category,
 										A2(_elm_lang$mouse$Mouse$Watcher, taggers, pid),
 										state));
-							});
-					});
+							},
+							_elm_lang$core$Process$spawn(tracker));
+					},
+					task);
 			});
 		var bothStep = F4(
-			function (category, _p8, taggers, task) {
-				var _p9 = _p8;
+			function (category, _p7, taggers, task) {
+				var _p8 = _p7;
 				return A2(
 					_elm_lang$core$Task$andThen,
-					task,
 					function (state) {
 						return _elm_lang$core$Task$succeed(
 							A3(
 								_elm_lang$core$Dict$insert,
 								category,
-								A2(_elm_lang$mouse$Mouse$Watcher, taggers, _p9.pid),
+								A2(_elm_lang$mouse$Mouse$Watcher, taggers, _p8.pid),
 								state));
-					});
+					},
+					task);
 			});
 		var leftStep = F3(
-			function (category, _p10, task) {
-				var _p11 = _p10;
+			function (category, _p9, task) {
+				var _p10 = _p9;
 				return A2(
 					_elm_lang$mouse$Mouse_ops['&>'],
-					_elm_lang$core$Process$kill(_p11.pid),
+					_elm_lang$core$Process$kill(_p10.pid),
 					task);
 			});
 		return A6(
@@ -11191,75 +12512,17 @@ var _elm_lang$mouse$Mouse$ups = function (tagger) {
 		A2(_elm_lang$mouse$Mouse$MySub, 'mouseup', tagger));
 };
 var _elm_lang$mouse$Mouse$subMap = F2(
-	function (func, _p12) {
-		var _p13 = _p12;
+	function (func, _p11) {
+		var _p12 = _p11;
 		return A2(
 			_elm_lang$mouse$Mouse$MySub,
-			_p13._0,
-			function (_p14) {
+			_p12._0,
+			function (_p13) {
 				return func(
-					_p13._1(_p14));
+					_p12._1(_p13));
 			});
 	});
 _elm_lang$core$Native_Platform.effectManagers['Mouse'] = {pkg: 'elm-lang/mouse', init: _elm_lang$mouse$Mouse$init, onEffects: _elm_lang$mouse$Mouse$onEffects, onSelfMsg: _elm_lang$mouse$Mouse$onSelfMsg, tag: 'sub', subMap: _elm_lang$mouse$Mouse$subMap};
-
-var _debois$elm_mdl$Material_Icon$size48 = A2(_debois$elm_mdl$Material_Options$css, 'font-size', '48px');
-var _debois$elm_mdl$Material_Icon$size36 = A2(_debois$elm_mdl$Material_Options$css, 'font-size', '36px');
-var _debois$elm_mdl$Material_Icon$size24 = A2(_debois$elm_mdl$Material_Options$css, 'font-size', '24px');
-var _debois$elm_mdl$Material_Icon$size18 = A2(_debois$elm_mdl$Material_Options$css, 'font-size', '18px');
-var _debois$elm_mdl$Material_Icon$onClick = function (x) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{
-					onClick: _elm_lang$core$Maybe$Just(
-						_elm_lang$html$Html_Events$onClick(x))
-				});
-		});
-};
-var _debois$elm_mdl$Material_Icon$defaultConfig = {onClick: _elm_lang$core$Maybe$Nothing};
-var _debois$elm_mdl$Material_Icon$view = F2(
-	function (name, options) {
-		var summary = A2(_debois$elm_mdl$Material_Options$collect, _debois$elm_mdl$Material_Icon$defaultConfig, options);
-		return A5(
-			_debois$elm_mdl$Material_Options$apply,
-			summary,
-			_elm_lang$html$Html$i,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options$cs('material-icons')
-				]),
-			A2(
-				_elm_lang$core$Maybe$withDefault,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				A2(
-					_elm_lang$core$Maybe$map,
-					A2(
-						_elm_lang$core$Basics$flip,
-						F2(
-							function (x, y) {
-								return A2(_elm_lang$core$List_ops['::'], x, y);
-							}),
-						_elm_lang$core$Native_List.fromArray(
-							[])),
-					summary.config.onClick)),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text(name)
-				]));
-	});
-var _debois$elm_mdl$Material_Icon$i = function (name) {
-	return A2(
-		_debois$elm_mdl$Material_Icon$view,
-		name,
-		_elm_lang$core$Native_List.fromArray(
-			[]));
-};
-var _debois$elm_mdl$Material_Icon$Config = function (a) {
-	return {onClick: a};
-};
 
 var _debois$elm_mdl$Material_Menu_Geometry$Geometry = F5(
 	function (a, b, c, d, e) {
@@ -11269,9 +12532,9 @@ var _debois$elm_mdl$Material_Menu_Geometry$Element = F4(
 	function (a, b, c, d) {
 		return {offsetTop: a, offsetLeft: b, offsetHeight: c, bounds: d};
 	});
-var _debois$elm_mdl$Material_Menu_Geometry$element = A5(_elm_lang$core$Json_Decode$object4, _debois$elm_mdl$Material_Menu_Geometry$Element, _debois$elm_dom$DOM$offsetTop, _debois$elm_dom$DOM$offsetLeft, _debois$elm_dom$DOM$offsetHeight, _debois$elm_dom$DOM$boundingClientRect);
+var _debois$elm_mdl$Material_Menu_Geometry$element = A5(_elm_lang$core$Json_Decode$map4, _debois$elm_mdl$Material_Menu_Geometry$Element, _debois$elm_dom$DOM$offsetTop, _debois$elm_dom$DOM$offsetLeft, _debois$elm_dom$DOM$offsetHeight, _debois$elm_dom$DOM$boundingClientRect);
 var _debois$elm_mdl$Material_Menu_Geometry$decode = A6(
-	_elm_lang$core$Json_Decode$object5,
+	_elm_lang$core$Json_Decode$map5,
 	_debois$elm_mdl$Material_Menu_Geometry$Geometry,
 	_debois$elm_dom$DOM$target(_debois$elm_mdl$Material_Menu_Geometry$element),
 	_debois$elm_dom$DOM$target(
@@ -11316,12 +12579,27 @@ var _debois$elm_mdl$Material_Menu$rect = F4(
 				A2(
 					_elm_lang$core$List$map,
 					_debois$elm_mdl$Material_Menu$toPx,
-					_elm_lang$core$Native_List.fromArray(
-						[x, y, w, h]))));
+					{
+						ctor: '::',
+						_0: x,
+						_1: {
+							ctor: '::',
+							_0: y,
+							_1: {
+								ctor: '::',
+								_0: w,
+								_1: {
+									ctor: '::',
+									_0: h,
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					})));
 	});
 var _debois$elm_mdl$Material_Menu$onKeyDown = function (action) {
 	return A3(
-		_elm_lang$html$Html_Events$onWithOptions,
+		_debois$elm_mdl$Material_Options$onWithOptions,
 		'keydown',
 		{preventDefault: true, stopPropagation: false},
 		A2(_elm_lang$core$Json_Decode$map, action, _elm_lang$html$Html_Events$keyCode));
@@ -11340,37 +12618,39 @@ var _debois$elm_mdl$Material_Menu$withGeometry = F2(
 			_debois$elm_mdl$Material_Options$nop,
 			A2(_elm_lang$core$Maybe$map, f, model.geometry));
 	});
-var _debois$elm_mdl$Material_Menu$icon = function (name) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{icon: name});
-		});
+var _debois$elm_mdl$Material_Menu$icon = function (_p1) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (name, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{icon: name});
+			})(_p1));
 };
-var _debois$elm_mdl$Material_Menu$ripple = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Menu$ripple = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{ripple: true});
 	});
-var _debois$elm_mdl$Material_Menu$onSelect = function (msg) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{
-					onSelect: _elm_lang$core$Maybe$Just(msg)
-				});
-		});
+var _debois$elm_mdl$Material_Menu$onSelect = function (_p2) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (msg, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						onSelect: _elm_lang$core$Maybe$Just(msg)
+					});
+			})(_p2));
 };
-var _debois$elm_mdl$Material_Menu$disabled = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Menu$disabled = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{enabled: false});
 	});
-var _debois$elm_mdl$Material_Menu$divider = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Menu$divider = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
@@ -11409,8 +12689,8 @@ var _debois$elm_mdl$Material_Menu$clip = F3(
 				if (_elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Opened) || _elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Closing)) {
 					return A4(_debois$elm_mdl$Material_Menu$rect, 0, width, height, 0);
 				} else {
-					var _p1 = config.alignment;
-					switch (_p1.ctor) {
+					var _p3 = config.alignment;
+					switch (_p3.ctor) {
 						case 'BottomRight':
 							return A4(_debois$elm_mdl$Material_Menu$rect, 0, width, 0, width);
 						case 'TopLeft':
@@ -11429,6 +12709,20 @@ var _debois$elm_mdl$Material_Menu$isActive = function (model) {
 };
 var _debois$elm_mdl$Material_Menu$Idle = {ctor: 'Idle'};
 var _debois$elm_mdl$Material_Menu$defaultModel = {ripples: _elm_lang$core$Dict$empty, animationState: _debois$elm_mdl$Material_Menu$Idle, geometry: _elm_lang$core$Maybe$Nothing, index: _elm_lang$core$Maybe$Nothing};
+var _debois$elm_mdl$Material_Menu$_p4 = A3(
+	_debois$elm_mdl$Material_Component$indexed,
+	function (_) {
+		return _.menu;
+	},
+	F2(
+		function (x, y) {
+			return _elm_lang$core$Native_Utils.update(
+				y,
+				{menu: x});
+		}),
+	_debois$elm_mdl$Material_Menu$defaultModel);
+var _debois$elm_mdl$Material_Menu$get = _debois$elm_mdl$Material_Menu$_p4._0;
+var _debois$elm_mdl$Material_Menu$set = _debois$elm_mdl$Material_Menu$_p4._1;
 var _debois$elm_mdl$Material_Menu$Key = F2(
 	function (a, b) {
 		return {ctor: 'Key', _0: a, _1: b};
@@ -11439,6 +12733,13 @@ var _debois$elm_mdl$Material_Menu$Click = function (a) {
 var _debois$elm_mdl$Material_Menu$subscriptions = function (model) {
 	return _elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Opened) ? _elm_lang$mouse$Mouse$clicks(_debois$elm_mdl$Material_Menu$Click) : _elm_lang$core$Platform_Sub$none;
 };
+var _debois$elm_mdl$Material_Menu$subs = A3(
+	_debois$elm_mdl$Material_Component$subs,
+	_debois$elm_mdl$Material_Component$MenuMsg,
+	function (_) {
+		return _.menu;
+	},
+	_debois$elm_mdl$Material_Menu$subscriptions);
 var _debois$elm_mdl$Material_Menu$Ripple = F2(
 	function (a, b) {
 		return {ctor: 'Ripple', _0: a, _1: b};
@@ -11453,8 +12754,8 @@ var _debois$elm_mdl$Material_Menu$update = F3(
 	function (fwd, msg, model) {
 		update:
 		while (true) {
-			var _p2 = msg;
-			switch (_p2.ctor) {
+			var _p5 = msg;
+			switch (_p5.ctor) {
 				case 'Open':
 					return {
 						ctor: '_Tuple2',
@@ -11462,14 +12763,14 @@ var _debois$elm_mdl$Material_Menu$update = F3(
 							model,
 							{
 								animationState: function () {
-									var _p3 = model.animationState;
-									if (_p3.ctor === 'Opened') {
+									var _p6 = model.animationState;
+									if (_p6.ctor === 'Opened') {
 										return _debois$elm_mdl$Material_Menu$Opened;
 									} else {
 										return _debois$elm_mdl$Material_Menu$Opening;
 									}
 								}(),
-								geometry: _elm_lang$core$Maybe$Just(_p2._0)
+								geometry: _elm_lang$core$Maybe$Just(_p5._0)
 							}),
 						_1: _debois$elm_mdl$Material_Helpers$cmd(
 							fwd(_debois$elm_mdl$Material_Menu$Tick))
@@ -11488,77 +12789,80 @@ var _debois$elm_mdl$Material_Menu$update = F3(
 					var cmds = A2(
 						_elm_lang$core$List$filterMap,
 						_elm_lang$core$Basics$identity,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$core$Maybe$Just(
+						{
+							ctor: '::',
+							_0: _elm_lang$core$Maybe$Just(
 								A2(
 									_debois$elm_mdl$Material_Helpers$delay,
 									_debois$elm_mdl$Material_Menu$constant.closeTimeout,
 									fwd(_debois$elm_mdl$Material_Menu$Close))),
-								A2(_elm_lang$core$Maybe$map, _debois$elm_mdl$Material_Helpers$cmd, _p2._1)
-							]));
-					var model$ = _elm_lang$core$Native_Utils.update(
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_lang$core$Maybe$map, _debois$elm_mdl$Material_Helpers$cmd, _p5._1),
+								_1: {ctor: '[]'}
+							}
+						});
+					var model_ = _elm_lang$core$Native_Utils.update(
 						model,
 						{animationState: _debois$elm_mdl$Material_Menu$Closing});
 					return {
 						ctor: '_Tuple2',
-						_0: model$,
+						_0: model_,
 						_1: _elm_lang$core$Platform_Cmd$batch(cmds)
 					};
 				case 'Ripple':
-					var _p6 = _p2._0;
-					var _p4 = A2(
+					var _p9 = _p5._0;
+					var _p7 = A2(
 						_debois$elm_mdl$Material_Ripple$update,
-						_p2._1,
+						_p5._1,
 						A2(
 							_elm_lang$core$Maybe$withDefault,
 							_debois$elm_mdl$Material_Ripple$model,
-							A2(_elm_lang$core$Dict$get, _p6, model.ripples)));
-					var model$ = _p4._0;
-					var effects = _p4._1;
+							A2(_elm_lang$core$Dict$get, _p9, model.ripples)));
+					var model_ = _p7._0;
+					var effects = _p7._1;
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
-								ripples: A3(_elm_lang$core$Dict$insert, _p6, model$, model.ripples)
+								ripples: A3(_elm_lang$core$Dict$insert, _p9, model_, model.ripples)
 							}),
 						_1: A2(
 							_elm_lang$core$Platform_Cmd$map,
-							function (_p5) {
+							function (_p8) {
 								return fwd(
-									A2(_debois$elm_mdl$Material_Menu$Ripple, _p6, _p5));
+									A2(_debois$elm_mdl$Material_Menu$Ripple, _p9, _p8));
 							},
 							effects)
 					};
 				case 'Click':
 					if (_debois$elm_mdl$Material_Menu$isActive(model)) {
-						var _p7 = model.geometry;
-						if (_p7.ctor === 'Just') {
+						var _p10 = model.geometry;
+						if (_p10.ctor === 'Just') {
 							var inside = F2(
-								function (_p9, _p8) {
-									var _p10 = _p9;
-									var _p15 = _p10.y;
-									var _p14 = _p10.x;
-									var _p11 = _p8;
-									var _p13 = _p11.top;
-									var _p12 = _p11.left;
+								function (_p12, _p11) {
+									var _p13 = _p12;
+									var _p18 = _p13.y;
+									var _p17 = _p13.x;
+									var _p14 = _p11;
+									var _p16 = _p14.top;
+									var _p15 = _p14.left;
 									return (_elm_lang$core$Native_Utils.cmp(
-										_p12,
-										_elm_lang$core$Basics$toFloat(_p14)) < 1) && ((_elm_lang$core$Native_Utils.cmp(
-										_elm_lang$core$Basics$toFloat(_p14),
-										_p12 + _p11.width) < 1) && ((_elm_lang$core$Native_Utils.cmp(
-										_p13,
-										_elm_lang$core$Basics$toFloat(_p15)) < 1) && (_elm_lang$core$Native_Utils.cmp(
-										_elm_lang$core$Basics$toFloat(_p15),
-										_p13 + _p11.height) < 1)));
+										_p15,
+										_elm_lang$core$Basics$toFloat(_p17)) < 1) && ((_elm_lang$core$Native_Utils.cmp(
+										_elm_lang$core$Basics$toFloat(_p17),
+										_p15 + _p14.width) < 1) && ((_elm_lang$core$Native_Utils.cmp(
+										_p16,
+										_elm_lang$core$Basics$toFloat(_p18)) < 1) && (_elm_lang$core$Native_Utils.cmp(
+										_elm_lang$core$Basics$toFloat(_p18),
+										_p16 + _p14.height) < 1)));
 								});
-							if (A2(inside, _p2._0, _p7._0.menu.bounds)) {
+							if (A2(inside, _p5._0, _p10._0.menu.bounds)) {
 								return A2(
 									_elm_lang$core$Platform_Cmd_ops['!'],
 									model,
-									_elm_lang$core$Native_List.fromArray(
-										[]));
+									{ctor: '[]'});
 							} else {
 								var _v6 = fwd,
 									_v7 = _debois$elm_mdl$Material_Menu$Close,
@@ -11572,40 +12876,37 @@ var _debois$elm_mdl$Material_Menu$update = F3(
 							return A2(
 								_elm_lang$core$Platform_Cmd_ops['!'],
 								model,
-								_elm_lang$core$Native_List.fromArray(
-									[]));
+								{ctor: '[]'});
 						}
 					} else {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							model,
-							_elm_lang$core$Native_List.fromArray(
-								[]));
+							{ctor: '[]'});
 					}
 				default:
-					var _p24 = _p2._0;
-					var _p16 = _p2._1;
-					switch (_p16) {
+					var _p27 = _p5._0;
+					var _p19 = _p5._1;
+					switch (_p19) {
 						case 13:
 							if (_debois$elm_mdl$Material_Menu$isActive(model)) {
-								var _p17 = model.index;
-								if (_p17.ctor === 'Just') {
-									var _p19 = _p17._0;
-									var cmd = A3(
-										_elm_lang$core$Basics$flip,
+								var _p20 = model.index;
+								if (_p20.ctor === 'Just') {
+									var _p22 = _p20._0;
+									var cmd = A2(
 										_elm_lang$core$Maybe$andThen,
-										function (_p18) {
+										function (_p21) {
 											return function (_) {
 												return _.onSelect;
 											}(
 												function (_) {
 													return _.config;
-												}(_p18));
+												}(_p21));
 										},
 										_elm_lang$core$List$head(
-											A2(_elm_lang$core$List$drop, _p19, _p24)));
+											A2(_elm_lang$core$List$drop, _p22, _p27)));
 									var _v11 = fwd,
-										_v12 = A2(_debois$elm_mdl$Material_Menu$Select, _p19 + 1, cmd),
+										_v12 = A2(_debois$elm_mdl$Material_Menu$Select, _p22 + 1, cmd),
 										_v13 = model;
 									fwd = _v11;
 									msg = _v12;
@@ -11624,8 +12925,7 @@ var _debois$elm_mdl$Material_Menu$update = F3(
 								return A2(
 									_elm_lang$core$Platform_Cmd_ops['!'],
 									model,
-									_elm_lang$core$Native_List.fromArray(
-										[]));
+									{ctor: '[]'});
 							}
 						case 27:
 							var _v17 = fwd,
@@ -11638,7 +12938,7 @@ var _debois$elm_mdl$Material_Menu$update = F3(
 						case 32:
 							if (_debois$elm_mdl$Material_Menu$isActive(model)) {
 								var _v20 = fwd,
-									_v21 = A2(_debois$elm_mdl$Material_Menu$Key, _p24, 13),
+									_v21 = A2(_debois$elm_mdl$Material_Menu$Key, _p27, 13),
 									_v22 = model;
 								fwd = _v20;
 								msg = _v21;
@@ -11648,8 +12948,7 @@ var _debois$elm_mdl$Material_Menu$update = F3(
 								return A2(
 									_elm_lang$core$Platform_Cmd_ops['!'],
 									model,
-									_elm_lang$core$Native_List.fromArray(
-										[]));
+									{ctor: '[]'});
 							}
 						case 40:
 							if (_debois$elm_mdl$Material_Menu$isActive(model)) {
@@ -11659,41 +12958,40 @@ var _debois$elm_mdl$Material_Menu$update = F3(
 										function (v0, v1) {
 											return {ctor: '_Tuple2', _0: v0, _1: v1};
 										}),
-									_p24);
+									_p27);
 								return A3(
 									_elm_lang$core$Basics$flip,
 									F2(
 										function (x, y) {
 											return A2(_elm_lang$core$Platform_Cmd_ops['!'], x, y);
 										}),
-									_elm_lang$core$Native_List.fromArray(
-										[]),
+									{ctor: '[]'},
 									A2(
 										_elm_lang$core$Maybe$withDefault,
 										model,
 										A2(
 											_elm_lang$core$Maybe$map,
-											function (_p20) {
-												return function (index$) {
+											function (_p23) {
+												return function (index_) {
 													return _elm_lang$core$Native_Utils.update(
 														model,
 														{
-															index: _elm_lang$core$Maybe$Just(index$)
+															index: _elm_lang$core$Maybe$Just(index_)
 														});
 												}(
-													_elm_lang$core$Basics$fst(_p20));
+													_elm_lang$core$Tuple$first(_p23));
 											},
 											_elm_lang$core$List$head(
 												A2(
 													_elm_lang$core$List$filter,
-													function (_p21) {
+													function (_p24) {
 														return function (_) {
 															return _.enabled;
 														}(
 															function (_) {
 																return _.config;
 															}(
-																_elm_lang$core$Basics$snd(_p21)));
+																_elm_lang$core$Tuple$second(_p24)));
 													},
 													A2(
 														_elm_lang$core$List$drop,
@@ -11703,8 +13001,7 @@ var _debois$elm_mdl$Material_Menu$update = F3(
 								return A2(
 									_elm_lang$core$Platform_Cmd_ops['!'],
 									model,
-									_elm_lang$core$Native_List.fromArray(
-										[]));
+									{ctor: '[]'});
 							}
 						case 38:
 							if (_debois$elm_mdl$Material_Menu$isActive(model)) {
@@ -11714,109 +13011,81 @@ var _debois$elm_mdl$Material_Menu$update = F3(
 										function (v0, v1) {
 											return {ctor: '_Tuple2', _0: v0, _1: v1};
 										}),
-									_p24);
+									_p27);
 								return _debois$elm_mdl$Material_Helpers$pure(
 									A2(
 										_elm_lang$core$Maybe$withDefault,
 										model,
 										A2(
 											_elm_lang$core$Maybe$map,
-											function (_p22) {
-												return function (index$) {
+											function (_p25) {
+												return function (index_) {
 													return _elm_lang$core$Native_Utils.update(
 														model,
 														{
-															index: _elm_lang$core$Maybe$Just(index$)
+															index: _elm_lang$core$Maybe$Just(index_)
 														});
 												}(
-													_elm_lang$core$Basics$fst(_p22));
+													_elm_lang$core$Tuple$first(_p25));
 											},
 											_elm_lang$core$List$head(
 												A2(
 													_elm_lang$core$List$filter,
-													function (_p23) {
+													function (_p26) {
 														return function (_) {
 															return _.enabled;
 														}(
 															function (_) {
 																return _.config;
 															}(
-																_elm_lang$core$Basics$snd(_p23)));
+																_elm_lang$core$Tuple$second(_p26)));
 													},
 													A2(
 														_elm_lang$core$List$drop,
-														_elm_lang$core$List$length(_p24) - A2(_elm_lang$core$Maybe$withDefault, 0, model.index),
+														_elm_lang$core$List$length(_p27) - A2(_elm_lang$core$Maybe$withDefault, 0, model.index),
 														_elm_lang$core$List$reverse(
 															A2(_elm_lang$core$Basics_ops['++'], items, items))))))));
 							} else {
 								return A2(
 									_elm_lang$core$Platform_Cmd_ops['!'],
 									model,
-									_elm_lang$core$Native_List.fromArray(
-										[]));
+									{ctor: '[]'});
 							}
 						default:
 							return A2(
 								_elm_lang$core$Platform_Cmd_ops['!'],
 								model,
-								_elm_lang$core$Native_List.fromArray(
-									[]));
+								{ctor: '[]'});
 					}
 			}
 		}
 	});
-var _debois$elm_mdl$Material_Menu$update$ = F3(
-	function (fwd, msg, model) {
-		return _elm_lang$core$Maybe$Just(
-			A3(_debois$elm_mdl$Material_Menu$update, fwd, msg, model));
-	});
-var _debois$elm_mdl$Material_Menu$pack = A4(
-	_debois$elm_parts$Parts$pack,
-	_debois$elm_mdl$Material_Menu$update$,
-	function (_) {
-		return _.menu;
-	},
-	F2(
-		function (x, y) {
-			return _elm_lang$core$Native_Utils.update(
-				y,
-				{menu: x});
-		}),
-	_debois$elm_mdl$Material_Menu$defaultModel);
-var _debois$elm_mdl$Material_Menu$subs = function (lift) {
-	return function (_p25) {
-		return _elm_lang$core$Platform_Sub$batch(
+var _debois$elm_mdl$Material_Menu$react = F4(
+	function (lift, msg, idx, store) {
+		return A2(
+			_debois$elm_mdl$Material_Helpers$map1st,
+			function (_p28) {
+				return _elm_lang$core$Maybe$Just(
+					A3(_debois$elm_mdl$Material_Menu$set, idx, store, _p28));
+			},
 			A3(
-				_elm_lang$core$Dict$foldl,
-				F3(
-					function (idx, model, ss) {
-						return A2(
-							_elm_lang$core$List_ops['::'],
-							A2(
-								_elm_lang$core$Platform_Sub$map,
-								A2(_debois$elm_mdl$Material_Menu$pack, lift, idx),
-								_debois$elm_mdl$Material_Menu$subscriptions(model)),
-							ss);
-					}),
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				function (_) {
-					return _.menu;
-				}(_p25)));
-	};
-};
+				_debois$elm_mdl$Material_Menu$update,
+				lift,
+				msg,
+				A2(_debois$elm_mdl$Material_Menu$get, idx, store)));
+	});
 var _debois$elm_mdl$Material_Menu$Open = function (a) {
 	return {ctor: 'Open', _0: a};
 };
 var _debois$elm_mdl$Material_Menu$TopRight = {ctor: 'TopRight'};
-var _debois$elm_mdl$Material_Menu$topRight = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Menu$topRight = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{alignment: _debois$elm_mdl$Material_Menu$TopRight});
 	});
 var _debois$elm_mdl$Material_Menu$TopLeft = {ctor: 'TopLeft'};
-var _debois$elm_mdl$Material_Menu$topLeft = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Menu$topLeft = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
@@ -11837,100 +13106,153 @@ var _debois$elm_mdl$Material_Menu$view1 = F8(
 	function (lift, config, model, offsetTop, offsetHeight, index, summary, item) {
 		var canSelect = summary.config.enabled && (!_elm_lang$core$Native_Utils.eq(summary.config.onSelect, _elm_lang$core$Maybe$Nothing));
 		var hasRipple = config.ripple && canSelect;
-		var ripple = function (_p26) {
+		var ripple = function (_p29) {
 			return lift(
-				A2(_debois$elm_mdl$Material_Menu$Ripple, index, _p26));
+				A2(_debois$elm_mdl$Material_Menu$Ripple, index, _p29));
 		};
 		return A5(
-			_debois$elm_mdl$Material_Options$apply,
+			_debois$elm_mdl$Material_Options_Internal$apply,
 			summary,
 			_elm_lang$html$Html$li,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options$cs('mdl-menu__item'),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect'),
-					config.ripple),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('mdl-menu__item--full-bleed-divider'),
-					summary.config.divider),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					A2(_debois$elm_mdl$Material_Options$css, 'background-color', 'rgb(238,238,238)'),
-					_elm_lang$core$Native_Utils.eq(
-						model.index,
-						_elm_lang$core$Maybe$Just(index))),
-					function () {
-					var _p27 = {
-						ctor: '_Tuple2',
-						_0: model.geometry,
-						_1: _debois$elm_mdl$Material_Menu$isActive(model)
-					};
-					if (((_p27.ctor === '_Tuple2') && (_p27._0.ctor === 'Just')) && (_p27._1 === true)) {
-						return A4(_debois$elm_mdl$Material_Menu$delay, config.alignment, _p27._0._0.menu.bounds.height, offsetTop, offsetHeight);
-					} else {
-						return _debois$elm_mdl$Material_Options$nop;
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-menu__item'),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_Options$when,
+						config.ripple,
+						_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect')),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_Options$when,
+							summary.config.divider,
+							_debois$elm_mdl$Material_Options$cs('mdl-menu__item--full-bleed-divider')),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_debois$elm_mdl$Material_Options$when,
+								_elm_lang$core$Native_Utils.eq(
+									model.index,
+									_elm_lang$core$Maybe$Just(index)),
+								A2(_debois$elm_mdl$Material_Options$css, 'background-color', 'rgb(238,238,238)')),
+							_1: {
+								ctor: '::',
+								_0: function () {
+									var _p30 = {
+										ctor: '_Tuple2',
+										_0: model.geometry,
+										_1: _debois$elm_mdl$Material_Menu$isActive(model)
+									};
+									if (((_p30.ctor === '_Tuple2') && (_p30._0.ctor === 'Just')) && (_p30._1 === true)) {
+										return A4(_debois$elm_mdl$Material_Menu$delay, config.alignment, _p30._0._0.menu.bounds.height, offsetTop, offsetHeight);
+									} else {
+										return _debois$elm_mdl$Material_Options$nop;
+									}
+								}(),
+								_1: {
+									ctor: '::',
+									_0: A2(_debois$elm_mdl$Material_Options$css, 'display', 'flex'),
+									_1: {
+										ctor: '::',
+										_0: A2(_debois$elm_mdl$Material_Options$css, 'align-items', 'center'),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_debois$elm_mdl$Material_Options$when,
+												canSelect,
+												_debois$elm_mdl$Material_Options$onClick(
+													lift(
+														A2(_debois$elm_mdl$Material_Menu$Select, index, summary.config.onSelect)))),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_debois$elm_mdl$Material_Options$when,
+													!summary.config.enabled,
+													_debois$elm_mdl$Material_Options_Internal$attribute(
+														A2(_elm_lang$html$Html_Attributes$attribute, 'disabled', 'disabled'))),
+												_1: {
+													ctor: '::',
+													_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+														A2(
+															_elm_lang$html$Html_Attributes$property,
+															'tabindex',
+															_elm_lang$core$Json_Encode$string('-1'))),
+													_1: {
+														ctor: '::',
+														_0: hasRipple ? _debois$elm_mdl$Material_Options$many(
+															{
+																ctor: '::',
+																_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+																	A2(_debois$elm_mdl$Material_Ripple$downOn_, ripple, 'mousedown')),
+																_1: {
+																	ctor: '::',
+																	_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+																		A2(_debois$elm_mdl$Material_Ripple$downOn_, ripple, 'touchstart')),
+																	_1: {
+																		ctor: '::',
+																		_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+																			A2(_debois$elm_mdl$Material_Ripple$upOn_, ripple, 'mouseup')),
+																		_1: {
+																			ctor: '::',
+																			_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+																				A2(_debois$elm_mdl$Material_Ripple$upOn_, ripple, 'mouseleave')),
+																			_1: {
+																				ctor: '::',
+																				_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+																					A2(_debois$elm_mdl$Material_Ripple$upOn_, ripple, 'touchend')),
+																				_1: {
+																					ctor: '::',
+																					_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+																						A2(_debois$elm_mdl$Material_Ripple$upOn_, ripple, 'blur')),
+																					_1: {ctor: '[]'}
+																				}
+																			}
+																		}
+																	}
+																}
+															}) : _debois$elm_mdl$Material_Options$nop,
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 					}
-				}(),
-					A2(_debois$elm_mdl$Material_Options$css, 'display', 'flex'),
-					A2(_debois$elm_mdl$Material_Options$css, 'align-items', 'center')
-				]),
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				A2(
-					_elm_lang$core$List$filterMap,
-					_elm_lang$core$Basics$identity,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							canSelect ? _elm_lang$core$Maybe$Just(
-							_elm_lang$html$Html_Events$onClick(
-								lift(
-									A2(_debois$elm_mdl$Material_Menu$Select, index, summary.config.onSelect)))) : _elm_lang$core$Maybe$Nothing,
-							_elm_lang$core$Basics$not(summary.config.enabled) ? _elm_lang$core$Maybe$Just(
-							A2(_elm_lang$html$Html_Attributes$attribute, 'disabled', 'disabled')) : _elm_lang$core$Maybe$Nothing,
-							_elm_lang$core$Maybe$Just(
-							A2(
-								_elm_lang$html$Html_Attributes$property,
-								'tabindex',
-								_elm_lang$core$Json_Encode$string('-1')))
-						])),
-				hasRipple ? _elm_lang$core$Native_List.fromArray(
-					[
-						A2(_debois$elm_mdl$Material_Ripple$downOn$, ripple, 'mousedown'),
-						A2(_debois$elm_mdl$Material_Ripple$downOn$, ripple, 'touchstart'),
-						A2(_debois$elm_mdl$Material_Ripple$upOn$, ripple, 'mouseup'),
-						A2(_debois$elm_mdl$Material_Ripple$upOn$, ripple, 'mouseleave'),
-						A2(_debois$elm_mdl$Material_Ripple$upOn$, ripple, 'touchend'),
-						A2(_debois$elm_mdl$Material_Ripple$upOn$, ripple, 'blur')
-					]) : _elm_lang$core$Native_List.fromArray(
-					[])),
+				}
+			},
+			{ctor: '[]'},
 			hasRipple ? A2(
 				F2(
 					function (x, y) {
 						return A2(_elm_lang$core$Basics_ops['++'], x, y);
 					}),
 				item.html,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_elm_lang$html$Html_App$map,
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$map,
 						ripple,
 						A2(
-							_debois$elm_mdl$Material_Ripple$view$,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html_Attributes$class('mdl-menu__item-ripple-container')
-								]),
+							_debois$elm_mdl$Material_Ripple$view_,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdl-menu__item-ripple-container'),
+								_1: {ctor: '[]'}
+							},
 							A2(
 								_elm_lang$core$Maybe$withDefault,
 								_debois$elm_mdl$Material_Ripple$model,
-								A2(_elm_lang$core$Dict$get, index, model.ripples))))
-					])) : item.html);
+								A2(_elm_lang$core$Dict$get, index, model.ripples)))),
+					_1: {ctor: '[]'}
+				}) : item.html);
 	});
 var _debois$elm_mdl$Material_Menu$BottomRight = {ctor: 'BottomRight'};
-var _debois$elm_mdl$Material_Menu$bottomRight = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Menu$bottomRight = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
@@ -11938,7 +13260,7 @@ var _debois$elm_mdl$Material_Menu$bottomRight = _debois$elm_mdl$Material_Options
 	});
 var _debois$elm_mdl$Material_Menu$BottomLeft = {ctor: 'BottomLeft'};
 var _debois$elm_mdl$Material_Menu$defaultConfig = {alignment: _debois$elm_mdl$Material_Menu$BottomLeft, ripple: false, icon: 'more_vert'};
-var _debois$elm_mdl$Material_Menu$bottomLeft = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Menu$bottomLeft = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
@@ -11947,70 +13269,86 @@ var _debois$elm_mdl$Material_Menu$bottomLeft = _debois$elm_mdl$Material_Options$
 var _debois$elm_mdl$Material_Menu$containerGeometry = F2(
 	function (alignment, geometry) {
 		return _debois$elm_mdl$Material_Options$many(
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
+			{
+				ctor: '::',
+				_0: A2(
 					_debois$elm_mdl$Material_Options$css,
 					'width',
 					_debois$elm_mdl$Material_Menu$toPx(geometry.menu.bounds.width)),
-					A2(
-					_debois$elm_mdl$Material_Options$css,
-					'height',
-					_debois$elm_mdl$Material_Menu$toPx(geometry.menu.bounds.height)),
-					(_elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$BottomRight) || _elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$BottomLeft)) ? A2(
-					_debois$elm_mdl$Material_Options$css,
-					'top',
-					_debois$elm_mdl$Material_Menu$toPx(geometry.button.offsetTop + geometry.button.offsetHeight)) : _debois$elm_mdl$Material_Options$nop,
-					function () {
-					if (_elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$BottomRight) || _elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$TopRight)) {
-						var right = function (e) {
-							return e.bounds.left + e.bounds.width;
-						};
-						return A2(
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_Options$css,
+						'height',
+						_debois$elm_mdl$Material_Menu$toPx(geometry.menu.bounds.height)),
+					_1: {
+						ctor: '::',
+						_0: (_elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$BottomRight) || _elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$BottomLeft)) ? A2(
 							_debois$elm_mdl$Material_Options$css,
-							'right',
-							_debois$elm_mdl$Material_Menu$toPx(
-								right(geometry.container) - right(geometry.menu)));
-					} else {
-						return _debois$elm_mdl$Material_Options$nop;
+							'top',
+							_debois$elm_mdl$Material_Menu$toPx(geometry.button.offsetTop + geometry.button.offsetHeight)) : _debois$elm_mdl$Material_Options$nop,
+						_1: {
+							ctor: '::',
+							_0: function () {
+								if (_elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$BottomRight) || _elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$TopRight)) {
+									var right = function (e) {
+										return e.bounds.left + e.bounds.width;
+									};
+									return A2(
+										_debois$elm_mdl$Material_Options$css,
+										'right',
+										_debois$elm_mdl$Material_Menu$toPx(
+											right(geometry.container) - right(geometry.menu)));
+								} else {
+									return _debois$elm_mdl$Material_Options$nop;
+								}
+							}(),
+							_1: {
+								ctor: '::',
+								_0: function () {
+									if (_elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$TopLeft) || _elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$TopRight)) {
+										var bottom = geometry.container.bounds.top + geometry.container.bounds.height;
+										return A2(
+											_debois$elm_mdl$Material_Options$css,
+											'bottom',
+											_debois$elm_mdl$Material_Menu$toPx(bottom - geometry.button.bounds.top));
+									} else {
+										return _debois$elm_mdl$Material_Options$nop;
+									}
+								}(),
+								_1: {
+									ctor: '::',
+									_0: (_elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$TopLeft) || _elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$BottomLeft)) ? A2(
+										_debois$elm_mdl$Material_Options$css,
+										'left',
+										_debois$elm_mdl$Material_Menu$toPx(geometry.menu.offsetLeft)) : _debois$elm_mdl$Material_Options$nop,
+									_1: {ctor: '[]'}
+								}
+							}
+						}
 					}
-				}(),
-					function () {
-					if (_elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$TopLeft) || _elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$TopRight)) {
-						var bottom = geometry.container.bounds.top + geometry.container.bounds.height;
-						return A2(
-							_debois$elm_mdl$Material_Options$css,
-							'bottom',
-							_debois$elm_mdl$Material_Menu$toPx(bottom - geometry.button.bounds.top));
-					} else {
-						return _debois$elm_mdl$Material_Options$nop;
-					}
-				}(),
-					(_elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$TopLeft) || _elm_lang$core$Native_Utils.eq(alignment, _debois$elm_mdl$Material_Menu$BottomLeft)) ? A2(
-					_debois$elm_mdl$Material_Options$css,
-					'left',
-					_debois$elm_mdl$Material_Menu$toPx(geometry.menu.offsetLeft)) : _debois$elm_mdl$Material_Options$nop
-				]));
+				}
+			});
 	});
 var _debois$elm_mdl$Material_Menu$view = F4(
 	function (lift, model, properties, items) {
 		var itemSummaries = A2(
 			_elm_lang$core$List$map,
-			function (_p28) {
+			function (_p31) {
 				return A2(
-					_debois$elm_mdl$Material_Options$collect,
+					_debois$elm_mdl$Material_Options_Internal$collect,
 					_debois$elm_mdl$Material_Menu$defaultItemConfig,
 					function (_) {
 						return _.options;
-					}(_p28));
+					}(_p31));
 			},
 			items);
 		var numItems = _elm_lang$core$List$length(items);
-		var summary = A2(_debois$elm_mdl$Material_Options$collect, _debois$elm_mdl$Material_Menu$defaultConfig, properties);
+		var summary = A2(_debois$elm_mdl$Material_Options_Internal$collect, _debois$elm_mdl$Material_Menu$defaultConfig, properties);
 		var config = summary.config;
 		var alignment = function () {
-			var _p29 = config.alignment;
-			switch (_p29.ctor) {
+			var _p32 = config.alignment;
+			switch (_p32.ctor) {
 				case 'BottomLeft':
 					return _debois$elm_mdl$Material_Options$cs('mdl-menu--bottom-left');
 				case 'BottomRight':
@@ -12022,156 +13360,205 @@ var _debois$elm_mdl$Material_Menu$view = F4(
 			}
 		}();
 		return A5(
-			_debois$elm_mdl$Material_Options$apply,
+			_debois$elm_mdl$Material_Options_Internal$apply,
 			summary,
 			_elm_lang$html$Html$div,
-			A2(
-				_elm_lang$core$List_ops['::'],
-				A2(_debois$elm_mdl$Material_Options$css, 'position', 'relative'),
-				properties),
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$html$Html_App$map,
+			{
+				ctor: '::',
+				_0: A2(_debois$elm_mdl$Material_Options$css, 'position', 'relative'),
+				_1: properties
+			},
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$map,
 					lift,
 					A3(
 						_debois$elm_mdl$Material_Options$styled,
 						_elm_lang$html$Html$button,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_debois$elm_mdl$Material_Options$cs('mdl-button'),
-								_debois$elm_mdl$Material_Options$cs('mdl-js-button'),
-								_debois$elm_mdl$Material_Options$cs('mdl-button--icon'),
-								A2(
-								_debois$elm_mdl$Material_Options$when,
-								_debois$elm_mdl$Material_Options_Internal$attribute(
-									_debois$elm_mdl$Material_Menu$onKeyDown(
-										_debois$elm_mdl$Material_Menu$Key(itemSummaries))),
-								_debois$elm_mdl$Material_Menu$isActive(model)),
-								A2(
-								_debois$elm_mdl$Material_Options$when,
-								_debois$elm_mdl$Material_Options_Internal$attribute(
-									A2(_debois$elm_mdl$Material_Menu$onClick, _debois$elm_mdl$Material_Menu_Geometry$decode, _debois$elm_mdl$Material_Menu$Open)),
-								!_elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Opened)),
-								A2(
-								_debois$elm_mdl$Material_Options$when,
-								_debois$elm_mdl$Material_Options_Internal$attribute(
-									_elm_lang$html$Html_Events$onClick(_debois$elm_mdl$Material_Menu$Close)),
-								_debois$elm_mdl$Material_Menu$isActive(model))
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A2(
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options$cs('mdl-button'),
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options$cs('mdl-js-button'),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$cs('mdl-button--icon'),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_debois$elm_mdl$Material_Options$when,
+											_debois$elm_mdl$Material_Menu$isActive(model),
+											_debois$elm_mdl$Material_Menu$onKeyDown(
+												_debois$elm_mdl$Material_Menu$Key(itemSummaries))),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_debois$elm_mdl$Material_Options$when,
+												!_elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Opened),
+												A2(
+													_debois$elm_mdl$Material_Options$on,
+													'click',
+													A2(_elm_lang$core$Json_Decode$map, _debois$elm_mdl$Material_Menu$Open, _debois$elm_mdl$Material_Menu_Geometry$decode))),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_debois$elm_mdl$Material_Options$when,
+													_debois$elm_mdl$Material_Menu$isActive(model),
+													_debois$elm_mdl$Material_Options$onClick(_debois$elm_mdl$Material_Menu$Close)),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							ctor: '::',
+							_0: A2(
 								_debois$elm_mdl$Material_Icon$view,
 								config.icon,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_debois$elm_mdl$Material_Options$cs('material-icons'),
-										A2(_debois$elm_mdl$Material_Options$css, 'pointer-events', 'none')
-									]))
-							]))),
-					A3(
-					_debois$elm_mdl$Material_Options$styled,
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_debois$elm_mdl$Material_Options$cs('mdl-menu__container'),
-							_debois$elm_mdl$Material_Options$cs('is-upgraded'),
-							A2(
-							_debois$elm_mdl$Material_Options$when,
-							_debois$elm_mdl$Material_Options$cs('is-visible'),
-							_elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Opened) || _elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Closing)),
-							A2(
-							_debois$elm_mdl$Material_Menu$withGeometry,
-							model,
-							_debois$elm_mdl$Material_Menu$containerGeometry(config.alignment))
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A3(
-							_debois$elm_mdl$Material_Options$styled,
-							_elm_lang$html$Html$div,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_debois$elm_mdl$Material_Options$cs('mdl-menu__outline'),
-									alignment,
-									A2(
-									_debois$elm_mdl$Material_Menu$withGeometry,
-									model,
-									function (geometry) {
-										return _debois$elm_mdl$Material_Options$many(
-											_elm_lang$core$Native_List.fromArray(
-												[
-													A2(
-													_debois$elm_mdl$Material_Options$css,
-													'width',
-													_debois$elm_mdl$Material_Menu$toPx(geometry.menu.bounds.width)),
-													A2(
-													_debois$elm_mdl$Material_Options$css,
-													'height',
-													_debois$elm_mdl$Material_Menu$toPx(geometry.menu.bounds.height))
-												]));
-									})
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[])),
-							A3(
-							_debois$elm_mdl$Material_Options$styled,
-							_elm_lang$html$Html$ul,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_debois$elm_mdl$Material_Options$cs('mdl-menu'),
-									_debois$elm_mdl$Material_Options$cs('mdl-js-menu'),
-									A2(
-									_debois$elm_mdl$Material_Options$when,
-									_debois$elm_mdl$Material_Options$cs('is-animating'),
-									_elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Opening) || _elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Closing)),
-									A2(
-									_debois$elm_mdl$Material_Menu$withGeometry,
-									model,
-									A2(_debois$elm_mdl$Material_Menu$clip, model, config)),
-									alignment
-								]),
-							function () {
-								var _p30 = model.geometry;
-								if (_p30.ctor === 'Just') {
-									var _p31 = _p30._0;
-									return A6(
-										_elm_lang$core$List$map5,
-										A3(_debois$elm_mdl$Material_Menu$view1, lift, config, model),
-										_p31.offsetTops,
-										_p31.offsetHeights,
-										_elm_lang$core$Native_List.range(0, numItems - 1),
-										itemSummaries,
-										items);
-								} else {
-									return A4(
-										_elm_lang$core$List$map3,
-										A5(_debois$elm_mdl$Material_Menu$view1, lift, config, model, 0, 0),
-										_elm_lang$core$Native_List.range(0, numItems - 1),
-										itemSummaries,
-										items);
+								{
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$cs('material-icons'),
+									_1: {
+										ctor: '::',
+										_0: A2(_debois$elm_mdl$Material_Options$css, 'pointer-events', 'none'),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						})),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_debois$elm_mdl$Material_Options$styled,
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options$cs('mdl-menu__container'),
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options$cs('is-upgraded'),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_debois$elm_mdl$Material_Options$when,
+										_elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Opened) || _elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Closing),
+										_debois$elm_mdl$Material_Options$cs('is-visible')),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_debois$elm_mdl$Material_Menu$withGeometry,
+											model,
+											_debois$elm_mdl$Material_Menu$containerGeometry(config.alignment)),
+										_1: {ctor: '[]'}
+									}
 								}
-							}())
-						]))
-				]));
+							}
+						},
+						{
+							ctor: '::',
+							_0: A3(
+								_debois$elm_mdl$Material_Options$styled,
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$cs('mdl-menu__outline'),
+									_1: {
+										ctor: '::',
+										_0: alignment,
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_debois$elm_mdl$Material_Menu$withGeometry,
+												model,
+												function (geometry) {
+													return _debois$elm_mdl$Material_Options$many(
+														{
+															ctor: '::',
+															_0: A2(
+																_debois$elm_mdl$Material_Options$css,
+																'width',
+																_debois$elm_mdl$Material_Menu$toPx(geometry.menu.bounds.width)),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_debois$elm_mdl$Material_Options$css,
+																	'height',
+																	_debois$elm_mdl$Material_Menu$toPx(geometry.menu.bounds.height)),
+																_1: {ctor: '[]'}
+															}
+														});
+												}),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: A3(
+									_debois$elm_mdl$Material_Options$styled,
+									_elm_lang$html$Html$ul,
+									{
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Options$cs('mdl-menu'),
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Options$cs('mdl-js-menu'),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_debois$elm_mdl$Material_Options$when,
+													_elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Opening) || _elm_lang$core$Native_Utils.eq(model.animationState, _debois$elm_mdl$Material_Menu$Closing),
+													_debois$elm_mdl$Material_Options$cs('is-animating')),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_debois$elm_mdl$Material_Menu$withGeometry,
+														model,
+														A2(_debois$elm_mdl$Material_Menu$clip, model, config)),
+													_1: {
+														ctor: '::',
+														_0: alignment,
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									},
+									function () {
+										var _p33 = model.geometry;
+										if (_p33.ctor === 'Just') {
+											var _p34 = _p33._0;
+											return A6(
+												_elm_lang$core$List$map5,
+												A3(_debois$elm_mdl$Material_Menu$view1, lift, config, model),
+												_p34.offsetTops,
+												_p34.offsetHeights,
+												A2(_elm_lang$core$List$range, 0, numItems - 1),
+												itemSummaries,
+												items);
+										} else {
+											return A4(
+												_elm_lang$core$List$map3,
+												A5(_debois$elm_mdl$Material_Menu$view1, lift, config, model, 0, 0),
+												A2(_elm_lang$core$List$range, 0, numItems - 1),
+												itemSummaries,
+												items);
+										}
+									}()),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
 	});
-var _debois$elm_mdl$Material_Menu$render = A5(
-	_debois$elm_parts$Parts$create,
-	_debois$elm_mdl$Material_Menu$view,
-	_debois$elm_mdl$Material_Menu$update$,
-	function (_) {
-		return _.menu;
-	},
-	F2(
-		function (x, y) {
-			return _elm_lang$core$Native_Utils.update(
-				y,
-				{menu: x});
-		}),
-	_debois$elm_mdl$Material_Menu$defaultModel);
+var _debois$elm_mdl$Material_Menu$render = A3(_debois$elm_mdl$Material_Component$render, _debois$elm_mdl$Material_Menu$get, _debois$elm_mdl$Material_Menu$view, _debois$elm_mdl$Material_Component$MenuMsg);
 
 var _debois$elm_mdl$Material_Snackbar$enqueue = F2(
 	function (contents, model) {
@@ -12181,8 +13568,11 @@ var _debois$elm_mdl$Material_Snackbar$enqueue = F2(
 				queue: A2(
 					_elm_lang$core$List$append,
 					model.queue,
-					_elm_lang$core$Native_List.fromArray(
-						[contents]))
+					{
+						ctor: '::',
+						_0: contents,
+						_1: {ctor: '[]'}
+					})
 			});
 	});
 var _debois$elm_mdl$Material_Snackbar$snackbar = F3(
@@ -12215,8 +13605,7 @@ var _debois$elm_mdl$Material_Snackbar$Active = function (a) {
 };
 var _debois$elm_mdl$Material_Snackbar$Inert = {ctor: 'Inert'};
 var _debois$elm_mdl$Material_Snackbar$model = {
-	queue: _elm_lang$core$Native_List.fromArray(
-		[]),
+	queue: {ctor: '[]'},
 	state: _debois$elm_mdl$Material_Snackbar$Inert,
 	seq: -1
 };
@@ -12255,95 +13644,110 @@ var _debois$elm_mdl$Material_Snackbar$view = function (model) {
 	}();
 	var action = A2(
 		_elm_lang$core$Maybe$andThen,
-		contents,
 		function (_) {
 			return _.action;
-		});
+		},
+		contents);
 	return A2(
 		_elm_lang$html$Html$div,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$html$Html_Attributes$classList(
-				_elm_lang$core$Native_List.fromArray(
-					[
-						{ctor: '_Tuple2', _0: 'mdl-js-snackbar', _1: true},
-						{ctor: '_Tuple2', _0: 'mdl-snackbar', _1: true},
-						{ctor: '_Tuple2', _0: 'mdl-snackbar--active', _1: isActive}
-					])),
-				A2(
-				_debois$elm_mdl$Material_Helpers$aria,
-				'hidden',
-				_elm_lang$core$Basics$not(isActive))
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$classList(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'mdl-js-snackbar', _1: true},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'mdl-snackbar', _1: true},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'mdl-snackbar--active', _1: isActive},
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(_debois$elm_mdl$Material_Helpers$aria, 'hidden', !isActive),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
 				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('mdl-snackbar__text')
-					]),
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('mdl-snackbar__text'),
+					_1: {ctor: '[]'}
+				},
 				A2(
 					_elm_lang$core$Maybe$withDefault,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
+					{ctor: '[]'},
 					A2(
 						_elm_lang$core$Maybe$map,
 						function (c) {
-							return _elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html$text(c.message)
-								]);
+							return {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(c.message),
+								_1: {ctor: '[]'}
+							};
 						},
 						contents))),
-				A2(
-				_elm_lang$html$Html$button,
-				A2(
-					_elm_lang$core$List_ops['::'],
-					_elm_lang$html$Html_Attributes$class('mdl-snackbar__action'),
-					A2(
-						_elm_lang$core$List_ops['::'],
-						_elm_lang$html$Html_Attributes$type$('button'),
-						A2(
-							_elm_lang$core$List_ops['::'],
-							A2(
-								_debois$elm_mdl$Material_Helpers$aria,
-								'hidden',
-								A2(
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mdl-snackbar__action'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('button'),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_debois$elm_mdl$Material_Helpers$aria,
+									'hidden',
+									A2(
+										_elm_lang$core$Maybe$withDefault,
+										true,
+										A2(
+											_elm_lang$core$Maybe$map,
+											_elm_lang$core$Basics$always(!isActive),
+											action))),
+								_1: A2(
 									_elm_lang$core$Maybe$withDefault,
-									true,
+									{ctor: '[]'},
 									A2(
 										_elm_lang$core$Maybe$map,
 										_elm_lang$core$Basics$always(
-											_elm_lang$core$Basics$not(isActive)),
-										action))),
-							A2(
-								_elm_lang$core$Maybe$withDefault,
-								_elm_lang$core$Native_List.fromArray(
-									[]),
-								A2(
-									_elm_lang$core$Maybe$map,
-									_elm_lang$core$Basics$always(
-										_elm_lang$core$Native_List.fromArray(
-											[
-												_elm_lang$html$Html_Events$onClick(
-												A2(_debois$elm_mdl$Material_Snackbar$Move, model.seq, _debois$elm_mdl$Material_Snackbar$Clicked))
-											])),
-									action))))),
-				A2(
-					_elm_lang$core$Maybe$withDefault,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(
+													A2(_debois$elm_mdl$Material_Snackbar$Move, model.seq, _debois$elm_mdl$Material_Snackbar$Clicked)),
+												_1: {ctor: '[]'}
+											}),
+										action))
+							}
+						}
+					},
 					A2(
-						_elm_lang$core$Maybe$map,
-						function (action) {
-							return _elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html$text(action)
-								]);
-						},
-						action)))
-			]));
+						_elm_lang$core$Maybe$withDefault,
+						{ctor: '[]'},
+						A2(
+							_elm_lang$core$Maybe$map,
+							function (action) {
+								return {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(action),
+									_1: {ctor: '[]'}
+								};
+							},
+							action))),
+				_1: {ctor: '[]'}
+			}
+		});
 };
 var _debois$elm_mdl$Material_Snackbar$Click = function (a) {
 	return {ctor: 'Click', _0: a};
@@ -12368,15 +13772,19 @@ var _debois$elm_mdl$Material_Snackbar$tryDequeue = function (model) {
 					seq: model.seq + 1
 				}),
 			_1: _elm_lang$core$Platform_Cmd$batch(
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
+				{
+					ctor: '::',
+					_0: A2(
 						_elm_lang$core$Platform_Cmd$map,
 						_debois$elm_mdl$Material_Snackbar$Move(model.seq + 1),
 						A2(_debois$elm_mdl$Material_Helpers$delay, _p3.timeout, _debois$elm_mdl$Material_Snackbar$Timeout)),
-						_debois$elm_mdl$Material_Helpers$cmd(
-						_debois$elm_mdl$Material_Snackbar$Begin(_p3.payload))
-					]))
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Helpers$cmd(
+							_debois$elm_mdl$Material_Snackbar$Begin(_p3.payload)),
+						_1: {ctor: '[]'}
+					}
+				})
 		};
 	} else {
 		return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
@@ -12399,15 +13807,19 @@ var _debois$elm_mdl$Material_Snackbar$move = F2(
 									state: _debois$elm_mdl$Material_Snackbar$Fading(_p5)
 								}),
 							_1: _elm_lang$core$Platform_Cmd$batch(
-								_elm_lang$core$Native_List.fromArray(
-									[
-										A2(
+								{
+									ctor: '::',
+									_0: A2(
 										_debois$elm_mdl$Material_Snackbar$next,
 										model,
 										A2(_debois$elm_mdl$Material_Helpers$delay, _p5.fade, _debois$elm_mdl$Material_Snackbar$Timeout)),
-										_debois$elm_mdl$Material_Helpers$cmd(
-										_debois$elm_mdl$Material_Snackbar$Click(_p5.payload))
-									]))
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Helpers$cmd(
+											_debois$elm_mdl$Material_Snackbar$Click(_p5.payload)),
+										_1: {ctor: '[]'}
+									}
+								})
 						};
 					} else {
 						break _v3_4;
@@ -12426,13 +13838,14 @@ var _debois$elm_mdl$Material_Snackbar$move = F2(
 										state: _debois$elm_mdl$Material_Snackbar$Fading(_p6)
 									}),
 								_1: _elm_lang$core$Platform_Cmd$batch(
-									_elm_lang$core$Native_List.fromArray(
-										[
-											A2(
+									{
+										ctor: '::',
+										_0: A2(
 											_debois$elm_mdl$Material_Snackbar$next,
 											model,
-											A2(_debois$elm_mdl$Material_Helpers$delay, _p6.fade, _debois$elm_mdl$Material_Snackbar$Timeout))
-										]))
+											A2(_debois$elm_mdl$Material_Helpers$delay, _p6.fade, _debois$elm_mdl$Material_Snackbar$Timeout)),
+										_1: {ctor: '[]'}
+									})
 							};
 						default:
 							return {
@@ -12441,15 +13854,19 @@ var _debois$elm_mdl$Material_Snackbar$move = F2(
 									model,
 									{state: _debois$elm_mdl$Material_Snackbar$Inert}),
 								_1: _elm_lang$core$Platform_Cmd$batch(
-									_elm_lang$core$Native_List.fromArray(
-										[
-											A2(
+									{
+										ctor: '::',
+										_0: A2(
 											_debois$elm_mdl$Material_Snackbar$next,
 											model,
 											_debois$elm_mdl$Material_Helpers$cmd(_debois$elm_mdl$Material_Snackbar$Timeout)),
-											_debois$elm_mdl$Material_Helpers$cmd(
-											_debois$elm_mdl$Material_Snackbar$End(_p4._0._0.payload))
-										]))
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Helpers$cmd(
+												_debois$elm_mdl$Material_Snackbar$End(_p4._0._0.payload)),
+											_1: {ctor: '[]'}
+										}
+									})
 							};
 					}
 				}
@@ -12495,13 +13912,13 @@ return {
 }();
 var _elm_lang$window$Window_ops = _elm_lang$window$Window_ops || {};
 _elm_lang$window$Window_ops['&>'] = F2(
-	function (t1, t2) {
+	function (task1, task2) {
 		return A2(
 			_elm_lang$core$Task$andThen,
-			t1,
 			function (_p0) {
-				return t2;
-			});
+				return task2;
+			},
+			task1);
 	});
 var _elm_lang$window$Window$onSelfMsg = F3(
 	function (router, dimensions, state) {
@@ -12546,6 +13963,11 @@ var _elm_lang$window$Window$onEffects = F3(
 			} else {
 				return A2(
 					_elm_lang$core$Task$andThen,
+					function (pid) {
+						return _elm_lang$core$Task$succeed(
+							_elm_lang$core$Maybe$Just(
+								{subs: newSubs, pid: pid}));
+					},
 					_elm_lang$core$Process$spawn(
 						A3(
 							_elm_lang$dom$Dom_LowLevel$onWindow,
@@ -12555,14 +13977,9 @@ var _elm_lang$window$Window$onEffects = F3(
 							function (_p5) {
 								return A2(
 									_elm_lang$core$Task$andThen,
-									_elm_lang$window$Window$size,
-									_elm_lang$core$Platform$sendToSelf(router));
-							})),
-					function (pid) {
-						return _elm_lang$core$Task$succeed(
-							_elm_lang$core$Maybe$Just(
-								{subs: newSubs, pid: pid}));
-					});
+									_elm_lang$core$Platform$sendToSelf(router),
+									_elm_lang$window$Window$size);
+							})));
 			}
 		} else {
 			if (_p4._1.ctor === '[]') {
@@ -12600,39 +14017,63 @@ var _elm_lang$window$Window$subMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Window'] = {pkg: 'elm-lang/window', init: _elm_lang$window$Window$init, onEffects: _elm_lang$window$Window$onEffects, onSelfMsg: _elm_lang$window$Window$onSelfMsg, tag: 'sub', subMap: _elm_lang$window$Window$subMap};
 
+var _debois$elm_mdl$Material_Layout$_p0 = {
+	ctor: '_Tuple2',
+	_0: function (_) {
+		return _.layout;
+	},
+	_1: F2(
+		function (x, s) {
+			return _elm_lang$core$Native_Utils.update(
+				s,
+				{layout: x});
+		})
+};
+var _debois$elm_mdl$Material_Layout$get = _debois$elm_mdl$Material_Layout$_p0._0;
+var _debois$elm_mdl$Material_Layout$set = _debois$elm_mdl$Material_Layout$_p0._1;
 var _debois$elm_mdl$Material_Layout$drawerView = F3(
 	function (lift, isVisible, elems) {
 		return A2(
 			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$classList(
-					_elm_lang$core$Native_List.fromArray(
-						[
-							{ctor: '_Tuple2', _0: 'mdl-layout__drawer', _1: true},
-							{ctor: '_Tuple2', _0: 'is-visible', _1: isVisible}
-						])),
-					A2(
-					_elm_lang$html$Html_Attributes$attribute,
-					'aria-hidden',
-					isVisible ? 'false' : 'true')
-				]),
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$classList(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'mdl-layout__drawer', _1: true},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'is-visible', _1: isVisible},
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html_Attributes$attribute,
+						'aria-hidden',
+						isVisible ? 'false' : 'true'),
+					_1: {ctor: '[]'}
+				}
+			},
 			elems);
 	});
 var _debois$elm_mdl$Material_Layout$onKeypressFilterSpaceAndEnter = A2(_elm_lang$html$Html_Attributes$attribute, 'onkeypress', '\n  (function (evt) {\n     if (evt && evt.type === \"keydown\" && (evt.keyCode === 32 || evt.keyCode === 13)) {\n       evt.preventDefault();\n     }\n   })(window.event);\n  ');
 var _debois$elm_mdl$Material_Layout$toList = function (x) {
-	var _p0 = x;
-	if (_p0.ctor === 'Nothing') {
-		return _elm_lang$core$Native_List.fromArray(
-			[]);
+	var _p1 = x;
+	if (_p1.ctor === 'Nothing') {
+		return {ctor: '[]'};
 	} else {
-		return _elm_lang$core$Native_List.fromArray(
-			[_p0._0]);
+		return {
+			ctor: '::',
+			_0: _p1._0,
+			_1: {ctor: '[]'}
+		};
 	}
 };
 var _debois$elm_mdl$Material_Layout$isWaterfall = function (mode) {
-	var _p1 = mode;
-	if (_p1.ctor === 'Waterfall') {
+	var _p2 = mode;
+	if (_p2.ctor === 'Waterfall') {
 		return true;
 	} else {
 		return false;
@@ -12640,118 +14081,123 @@ var _debois$elm_mdl$Material_Layout$isWaterfall = function (mode) {
 };
 var _debois$elm_mdl$Material_Layout$row = function (styles) {
 	return _debois$elm_mdl$Material_Options$div(
-		A2(
-			_elm_lang$core$List_ops['::'],
-			_debois$elm_mdl$Material_Options$cs('mdl-layout__header-row'),
-			styles));
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('mdl-layout__header-row'),
+			_1: styles
+		});
 };
 var _debois$elm_mdl$Material_Layout$link = F2(
 	function (styles, contents) {
 		return A3(
 			_debois$elm_mdl$Material_Options$styled,
 			_elm_lang$html$Html$a,
-			A2(
-				_elm_lang$core$List_ops['::'],
-				_debois$elm_mdl$Material_Options$cs('mdl-navigation__link'),
-				A2(
-					_elm_lang$core$List_ops['::'],
-					_debois$elm_mdl$Material_Options_Internal$attribute(
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-navigation__link'),
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options_Internal$attribute(
 						A2(_elm_lang$html$Html_Attributes$attribute, 'tabindex', '1')),
-					styles)),
+					_1: styles
+				}
+			},
 			contents);
 	});
-var _debois$elm_mdl$Material_Layout$href = function (_p2) {
-	return _debois$elm_mdl$Material_Options_Internal$attribute(
-		_elm_lang$html$Html_Attributes$href(_p2));
-};
-var _debois$elm_mdl$Material_Layout$onClick = function (_p3) {
-	return _debois$elm_mdl$Material_Options_Internal$attribute(
-		_elm_lang$html$Html_Events$onClick(_p3));
+var _debois$elm_mdl$Material_Layout$href = function (url) {
+	return _debois$elm_mdl$Material_Options$attribute(
+		_elm_lang$html$Html_Attributes$href(url));
 };
 var _debois$elm_mdl$Material_Layout$navigation = F2(
 	function (styles, contents) {
-		return A2(
+		return A3(
+			_debois$elm_mdl$Material_Options$styled,
 			_elm_lang$html$Html$nav,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$class('mdl-navigation')
-				]),
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-navigation'),
+				_1: styles
+			},
 			contents);
 	});
 var _debois$elm_mdl$Material_Layout$title = function (styles) {
 	return _debois$elm_mdl$Material_Options$span(
-		A2(
-			_elm_lang$core$List_ops['::'],
-			_debois$elm_mdl$Material_Options$cs('mdl-layout__title'),
-			styles));
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('mdl-layout__title'),
+			_1: styles
+		});
 };
 var _debois$elm_mdl$Material_Layout$spacer = A2(
 	_elm_lang$html$Html$div,
-	_elm_lang$core$Native_List.fromArray(
-		[
-			_elm_lang$html$Html_Attributes$class('mdl-layout-spacer')
-		]),
-	_elm_lang$core$Native_List.fromArray(
-		[]));
-var _debois$elm_mdl$Material_Layout$onSelectTab = function (f) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{
-					onSelectTab: _elm_lang$core$Maybe$Just(
-						function (_p4) {
-							return _elm_lang$html$Html_Events$onClick(
-								f(_p4));
-						})
-				});
-		});
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('mdl-layout-spacer'),
+		_1: {ctor: '[]'}
+	},
+	{ctor: '[]'});
+var _debois$elm_mdl$Material_Layout$onSelectTab = function (_p3) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (f, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						onSelectTab: _elm_lang$core$Maybe$Just(
+							function (_p4) {
+								return _elm_lang$html$Html_Events$onClick(
+									f(_p4));
+							})
+					});
+			})(_p3));
 };
-var _debois$elm_mdl$Material_Layout$moreTabs = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Layout$moreTabs = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{moreTabs: true});
 	});
-var _debois$elm_mdl$Material_Layout$selectedTab = function (k) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{selectedTab: k});
-		});
+var _debois$elm_mdl$Material_Layout$selectedTab = function (_p5) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (k, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{selectedTab: k});
+			})(_p5));
 };
-var _debois$elm_mdl$Material_Layout$transparentHeader = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Layout$transparentHeader = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{transparentHeader: true});
 	});
-var _debois$elm_mdl$Material_Layout$rippleTabs = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Layout$rippleTabs = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{rippleTabs: true});
 	});
-var _debois$elm_mdl$Material_Layout$fixedTabs = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Layout$fixedTabs = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{fixedTabs: true});
 	});
-var _debois$elm_mdl$Material_Layout$fixedDrawer = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Layout$fixedDrawer = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{fixedDrawer: true});
 	});
-var _debois$elm_mdl$Material_Layout$fixedHeader = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Layout$fixedHeader = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{fixedHeader: true});
 	});
-var _debois$elm_mdl$Material_Layout$setTabsWidth$ = F2(
+var _debois$elm_mdl$Material_Layout$mainId = 'elm-mdl-layout-main';
+var _debois$elm_mdl$Material_Layout$setTabsWidth_ = F2(
 	function (width, model) {
 		var x = model.tabScrollState;
 		return _elm_lang$core$Native_Utils.update(
@@ -12769,7 +14215,7 @@ var _debois$elm_mdl$Material_Layout$setTabsWidth = F2(
 		return _elm_lang$core$Native_Utils.update(
 			container,
 			{
-				layout: A2(_debois$elm_mdl$Material_Layout$setTabsWidth$, w, container.layout)
+				layout: A2(_debois$elm_mdl$Material_Layout$setTabsWidth_, w, container.layout)
 			});
 	});
 var _debois$elm_mdl$Material_Layout$defaultTabScrollState = {canScrollRight: true, canScrollLeft: false, width: _elm_lang$core$Maybe$Nothing};
@@ -12799,16 +14245,16 @@ var _debois$elm_mdl$Material_Layout$TransitionEnd = {ctor: 'TransitionEnd'};
 var _debois$elm_mdl$Material_Layout$TransitionHeader = function (a) {
 	return {ctor: 'TransitionHeader', _0: a};
 };
-var _debois$elm_mdl$Material_Layout$update$ = F3(
+var _debois$elm_mdl$Material_Layout$update_ = F3(
 	function (f, action, model) {
-		update$:
+		update_:
 		while (true) {
-			var _p5 = action;
-			switch (_p5.ctor) {
+			var _p6 = action;
+			switch (_p6.ctor) {
 				case 'NOP':
 					return _elm_lang$core$Maybe$Nothing;
 				case 'Resize':
-					var _p6 = _p5._0;
+					var _p7 = _p6._0;
 					var tabScrollState = A2(
 						_elm_lang$core$Maybe$withDefault,
 						model.tabScrollState,
@@ -12819,87 +14265,78 @@ var _debois$elm_mdl$Material_Layout$update$ = F3(
 								return _elm_lang$core$Native_Utils.update(
 									tabScrollState,
 									{
-										canScrollRight: _elm_lang$core$Native_Utils.cmp(tabsWidth + (2 * 56), _p6) > 0
+										canScrollRight: _elm_lang$core$Native_Utils.cmp(tabsWidth + (2 * 56), _p7) > 0
 									});
 							},
 							model.tabScrollState.width));
-					var isSmall = _elm_lang$core$Native_Utils.cmp(1024, _p6) > 0;
+					var isSmall = _elm_lang$core$Native_Utils.cmp(1024, _p7) > -1;
 					return (_elm_lang$core$Native_Utils.eq(isSmall, model.isSmallScreen) && _elm_lang$core$Native_Utils.eq(tabScrollState.canScrollRight, model.tabScrollState.canScrollRight)) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
 						_debois$elm_mdl$Material_Helpers$pure(
 							_elm_lang$core$Native_Utils.update(
 								model,
-								{
-									isSmallScreen: isSmall,
-									isDrawerOpen: _elm_lang$core$Basics$not(isSmall) && model.isDrawerOpen,
-									tabScrollState: tabScrollState
-								})));
+								{isSmallScreen: isSmall, isDrawerOpen: (!isSmall) && model.isDrawerOpen, tabScrollState: tabScrollState})));
 				case 'ToggleDrawer':
 					return _elm_lang$core$Maybe$Just(
 						_debois$elm_mdl$Material_Helpers$pure(
 							_elm_lang$core$Native_Utils.update(
 								model,
-								{
-									isDrawerOpen: _elm_lang$core$Basics$not(model.isDrawerOpen)
-								})));
+								{isDrawerOpen: !model.isDrawerOpen})));
 				case 'Ripple':
-					var _p8 = _p5._0;
+					var _p9 = _p6._0;
 					return _elm_lang$core$Maybe$Just(
 						A2(
 							_debois$elm_mdl$Material_Helpers$map2nd,
 							_elm_lang$core$Platform_Cmd$map(
-								function (_p7) {
+								function (_p8) {
 									return f(
-										A2(_debois$elm_mdl$Material_Layout$Ripple, _p8, _p7));
+										A2(_debois$elm_mdl$Material_Layout$Ripple, _p9, _p8));
 								}),
 							A2(
 								_debois$elm_mdl$Material_Helpers$map1st,
-								function (ripple$) {
+								function (ripple_) {
 									return _elm_lang$core$Native_Utils.update(
 										model,
 										{
-											ripples: A3(_elm_lang$core$Dict$insert, _p8, ripple$, model.ripples)
+											ripples: A3(_elm_lang$core$Dict$insert, _p9, ripple_, model.ripples)
 										});
 								},
 								A2(
 									_debois$elm_mdl$Material_Ripple$update,
-									_p5._1,
+									_p6._1,
 									A2(
 										_elm_lang$core$Maybe$withDefault,
 										_debois$elm_mdl$Material_Ripple$model,
-										A2(_elm_lang$core$Dict$get, _p8, model.ripples))))));
+										A2(_elm_lang$core$Dict$get, _p9, model.ripples))))));
 				case 'ScrollTab':
-					var _p9 = _p5._0;
-					return (!_elm_lang$core$Native_Utils.eq(model.tabScrollState, _p9)) ? _elm_lang$core$Maybe$Just(
+					var _p10 = _p6._0;
+					return (!_elm_lang$core$Native_Utils.eq(model.tabScrollState, _p10)) ? _elm_lang$core$Maybe$Just(
 						_debois$elm_mdl$Material_Helpers$pure(
 							_elm_lang$core$Native_Utils.update(
 								model,
-								{tabScrollState: _p9}))) : _elm_lang$core$Maybe$Nothing;
+								{tabScrollState: _p10}))) : _elm_lang$core$Maybe$Nothing;
 				case 'ScrollPane':
-					var isScrolled = _elm_lang$core$Native_Utils.cmp(0.0, _p5._1) < 0;
+					var isScrolled = _elm_lang$core$Native_Utils.cmp(0.0, _p6._1) < 0;
 					if (!_elm_lang$core$Native_Utils.eq(isScrolled, model.isScrolled)) {
 						var _v3 = f,
 							_v4 = _debois$elm_mdl$Material_Layout$TransitionHeader(
-							{toCompact: isScrolled, fixedHeader: _p5._0}),
+							{toCompact: isScrolled, fixedHeader: _p6._0}),
 							_v5 = _elm_lang$core$Native_Utils.update(
 							model,
 							{isScrolled: isScrolled});
 						f = _v3;
 						action = _v4;
 						model = _v5;
-						continue update$;
+						continue update_;
 					} else {
 						return _elm_lang$core$Maybe$Nothing;
 					}
 				case 'TransitionHeader':
-					return _elm_lang$core$Basics$not(model.isAnimating) ? _elm_lang$core$Maybe$Just(
+					return (!model.isAnimating) ? _elm_lang$core$Maybe$Just(
 						{
 							ctor: '_Tuple2',
 							_0: _elm_lang$core$Native_Utils.update(
 								model,
-								{
-									isCompact: _p5._0.toCompact,
-									isAnimating: _elm_lang$core$Basics$not(model.isSmallScreen) || _p5._0.fixedHeader
-								}),
+								{isCompact: _p6._0.toCompact, isAnimating: (!model.isSmallScreen) || _p6._0.fixedHeader}),
 							_1: _elm_lang$core$Platform_Cmd$none
 						}) : _elm_lang$core$Maybe$Nothing;
 				default:
@@ -12916,23 +14353,26 @@ var _debois$elm_mdl$Material_Layout$update = F2(
 		return A2(
 			_elm_lang$core$Maybe$withDefault,
 			{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none},
-			A3(_debois$elm_mdl$Material_Layout$update$, _elm_lang$core$Basics$identity, msg, model));
+			A3(_debois$elm_mdl$Material_Layout$update_, _elm_lang$core$Basics$identity, msg, model));
 	});
-var _debois$elm_mdl$Material_Layout$pack = function (fwd) {
-	return A4(
-		_debois$elm_parts$Parts$pack1,
-		_debois$elm_mdl$Material_Layout$update$,
-		function (_) {
-			return _.layout;
-		},
-		F2(
-			function (x, c) {
-				return _elm_lang$core$Native_Utils.update(
-					c,
-					{layout: x});
-			}),
-		fwd);
-};
+var _debois$elm_mdl$Material_Layout$react = F3(
+	function (lift, msg, store) {
+		var _p11 = A3(
+			_debois$elm_mdl$Material_Layout$update_,
+			lift,
+			msg,
+			_debois$elm_mdl$Material_Layout$get(store));
+		if ((_p11.ctor === 'Just') && (_p11._0.ctor === '_Tuple2')) {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Maybe$Just(
+					A2(_debois$elm_mdl$Material_Layout$set, _p11._0._0, store)),
+				_1: _p11._0._1
+			};
+		} else {
+			return {ctor: '_Tuple2', _0: _elm_lang$core$Maybe$Nothing, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
 var _debois$elm_mdl$Material_Layout$ScrollPane = F2(
 	function (a, b) {
 		return {ctor: 'ScrollPane', _0: a, _1: b};
@@ -12944,40 +14384,37 @@ var _debois$elm_mdl$Material_Layout$Resize = function (a) {
 	return {ctor: 'Resize', _0: a};
 };
 var _debois$elm_mdl$Material_Layout$init = function () {
-	var measureScreenSize = A3(
-		_elm_lang$core$Task$perform,
-		function (_p10) {
-			return _debois$elm_mdl$Material_Layout$Resize(
-				A2(_elm_lang$core$Debug$log, 'Can\'t get initial window dimensions. Guessing ', 1025));
-		},
-		_debois$elm_mdl$Material_Layout$Resize,
-		_elm_lang$window$Window$width);
+	var measureScreenSize = A2(_elm_lang$core$Task$perform, _debois$elm_mdl$Material_Layout$Resize, _elm_lang$window$Window$width);
 	return {ctor: '_Tuple2', _0: _debois$elm_mdl$Material_Layout$defaultModel, _1: measureScreenSize};
 }();
 var _debois$elm_mdl$Material_Layout$sub0 = function (lift) {
 	return A2(
 		_elm_lang$core$Platform_Cmd$map,
-		_debois$elm_mdl$Material_Layout$pack(lift),
-		_elm_lang$core$Basics$snd(_debois$elm_mdl$Material_Layout$init));
+		function (_p12) {
+			return lift(
+				_debois$elm_mdl$Material_Component$LayoutMsg(_p12));
+		},
+		_elm_lang$core$Tuple$second(_debois$elm_mdl$Material_Layout$init));
 };
 var _debois$elm_mdl$Material_Layout$subscriptions = function (model) {
 	return _elm_lang$window$Window$resizes(
-		function (_p11) {
+		function (_p13) {
 			return _debois$elm_mdl$Material_Layout$Resize(
 				function (_) {
 					return _.width;
-				}(_p11));
+				}(_p13));
 		});
 };
 var _debois$elm_mdl$Material_Layout$subs = function (lift) {
-	return function (_p12) {
+	return function (_p14) {
 		return A2(
 			_elm_lang$core$Platform_Sub$map,
-			_debois$elm_mdl$Material_Layout$pack(lift),
+			function (_p15) {
+				return lift(
+					_debois$elm_mdl$Material_Component$LayoutMsg(_p15));
+			},
 			_debois$elm_mdl$Material_Layout$subscriptions(
-				function (_) {
-					return _.layout;
-				}(_p12)));
+				_debois$elm_mdl$Material_Layout$get(_p14)));
 	};
 };
 var _debois$elm_mdl$Material_Layout$ToggleDrawer = {ctor: 'ToggleDrawer'};
@@ -12985,98 +14422,123 @@ var _debois$elm_mdl$Material_Layout$drawerButton = F2(
 	function (lift, isVisible) {
 		return A2(
 			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
 					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$classList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									{ctor: '_Tuple2', _0: 'mdl-layout__drawer-button', _1: true}
-								])),
-							A2(
-							_elm_lang$html$Html_Attributes$attribute,
-							'aria-expanded',
-							isVisible ? 'true' : 'false'),
-							_elm_lang$html$Html_Attributes$tabindex(1),
-							_elm_lang$html$Html_Events$onClick(
-							lift(_debois$elm_mdl$Material_Layout$ToggleDrawer)),
-							A3(
-							_elm_lang$html$Html_Events$onWithOptions,
-							'keydown',
-							{stopPropagation: false, preventDefault: false},
-							A2(
-								_elm_lang$core$Json_Decode$map,
-								function (_p13) {
-									return lift(
-										function (key) {
-											var _p14 = key;
-											switch (_p14) {
-												case 32:
-													return _debois$elm_mdl$Material_Layout$ToggleDrawer;
-												case 13:
-													return _debois$elm_mdl$Material_Layout$ToggleDrawer;
-												default:
-													return _debois$elm_mdl$Material_Layout$NOP;
-											}
-										}(_p13));
-								},
-								_elm_lang$html$Html_Events$keyCode))
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_debois$elm_mdl$Material_Icon$i('menu')
-						]))
-				]));
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$classList(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'mdl-layout__drawer-button', _1: true},
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html_Attributes$attribute,
+								'aria-expanded',
+								isVisible ? 'true' : 'false'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$tabindex(1),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(
+										lift(_debois$elm_mdl$Material_Layout$ToggleDrawer)),
+									_1: {
+										ctor: '::',
+										_0: A3(
+											_elm_lang$html$Html_Events$onWithOptions,
+											'keydown',
+											{stopPropagation: false, preventDefault: false},
+											A2(
+												_elm_lang$core$Json_Decode$map,
+												function (_p16) {
+													return lift(
+														function (key) {
+															var _p17 = key;
+															switch (_p17) {
+																case 32:
+																	return _debois$elm_mdl$Material_Layout$ToggleDrawer;
+																case 13:
+																	return _debois$elm_mdl$Material_Layout$ToggleDrawer;
+																default:
+																	return _debois$elm_mdl$Material_Layout$NOP;
+															}
+														}(_p16));
+												},
+												_elm_lang$html$Html_Events$keyCode)),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Icon$i('menu'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			});
 	});
 var _debois$elm_mdl$Material_Layout$obfuscator = F2(
 	function (lift, isVisible) {
 		return A2(
 			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$classList(
-					_elm_lang$core$Native_List.fromArray(
-						[
-							{ctor: '_Tuple2', _0: 'mdl-layout__obfuscator', _1: true},
-							{ctor: '_Tuple2', _0: 'is-visible', _1: isVisible}
-						])),
-					_elm_lang$html$Html_Events$onClick(
-					lift(_debois$elm_mdl$Material_Layout$ToggleDrawer))
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[]));
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$classList(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'mdl-layout__obfuscator', _1: true},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'is-visible', _1: isVisible},
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						lift(_debois$elm_mdl$Material_Layout$ToggleDrawer)),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'});
 	});
 var _debois$elm_mdl$Material_Layout$toggleDrawer = function (lift) {
-	return A2(_debois$elm_mdl$Material_Layout$pack, lift, _debois$elm_mdl$Material_Layout$ToggleDrawer);
+	return function (_p18) {
+		return lift(
+			_debois$elm_mdl$Material_Component$LayoutMsg(_p18));
+	}(_debois$elm_mdl$Material_Layout$ToggleDrawer);
 };
-var _debois$elm_mdl$Material_Layout$LinkProp = {ctor: 'LinkProp'};
 var _debois$elm_mdl$Material_Layout$Waterfall = function (a) {
 	return {ctor: 'Waterfall', _0: a};
 };
-var _debois$elm_mdl$Material_Layout$waterfall = function (b) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{
-					mode: _debois$elm_mdl$Material_Layout$Waterfall(b)
-				});
-		});
+var _debois$elm_mdl$Material_Layout$waterfall = function (_p19) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (b, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						mode: _debois$elm_mdl$Material_Layout$Waterfall(b)
+					});
+			})(_p19));
 };
 var _debois$elm_mdl$Material_Layout$Scrolling = {ctor: 'Scrolling'};
-var _debois$elm_mdl$Material_Layout$scrolling = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Layout$scrolling = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
 			{mode: _debois$elm_mdl$Material_Layout$Scrolling});
 	});
 var _debois$elm_mdl$Material_Layout$Seamed = {ctor: 'Seamed'};
-var _debois$elm_mdl$Material_Layout$seamed = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Layout$seamed = _debois$elm_mdl$Material_Options_Internal$option(
 	function (config) {
 		return _elm_lang$core$Native_Utils.update(
 			config,
@@ -13085,11 +14547,11 @@ var _debois$elm_mdl$Material_Layout$seamed = _debois$elm_mdl$Material_Options$se
 var _debois$elm_mdl$Material_Layout$Standard = {ctor: 'Standard'};
 var _debois$elm_mdl$Material_Layout$defaultConfig = {fixedHeader: false, fixedDrawer: false, fixedTabs: false, rippleTabs: true, mode: _debois$elm_mdl$Material_Layout$Standard, onSelectTab: _elm_lang$core$Maybe$Nothing, selectedTab: -1, moreTabs: false, transparentHeader: false};
 var _debois$elm_mdl$Material_Layout$headerView = F4(
-	function (lift, config, model, _p15) {
-		var _p16 = _p15;
+	function (lift, config, model, _p20) {
+		var _p21 = _p20;
 		var mode = function () {
-			var _p17 = config.mode;
-			switch (_p17.ctor) {
+			var _p22 = config.mode;
+			switch (_p22.ctor) {
 				case 'Standard':
 					return _debois$elm_mdl$Material_Options$nop;
 				case 'Scrolling':
@@ -13097,7 +14559,7 @@ var _debois$elm_mdl$Material_Layout$headerView = F4(
 				case 'Seamed':
 					return _debois$elm_mdl$Material_Options$cs('mdl-layout__header--seamed');
 				default:
-					if (_p17._0 === true) {
+					if (_p22._0 === true) {
 						return _debois$elm_mdl$Material_Options$cs('mdl-layout__header--waterfall mdl-layout__header--waterfall-hide-top');
 					} else {
 						return _debois$elm_mdl$Material_Options$cs('mdl-layout__header--waterfall');
@@ -13107,61 +14569,88 @@ var _debois$elm_mdl$Material_Layout$headerView = F4(
 		return A3(
 			_debois$elm_mdl$Material_Options$styled,
 			_elm_lang$html$Html$header,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options$cs('mdl-layout__header'),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('is-casting-shadow'),
-					_elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Standard) || (_debois$elm_mdl$Material_Layout$isWaterfall(config.mode) && model.isCompact)),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('is-animating'),
-					model.isAnimating),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('is-compact'),
-					model.isCompact),
-					mode,
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('mdl-layout__header--transparent'),
-					config.transparentHeader),
-					_debois$elm_mdl$Material_Options$attribute(
-					_elm_lang$html$Html_Events$onClick(
-						lift(
-							_debois$elm_mdl$Material_Layout$TransitionHeader(
-								{toCompact: false, fixedHeader: config.fixedHeader})))),
-					_debois$elm_mdl$Material_Options$attribute(
-					A2(
-						_elm_lang$html$Html_Events$on,
-						'transitionend',
-						_elm_lang$core$Json_Decode$succeed(
-							lift(_debois$elm_mdl$Material_Layout$TransitionEnd))))
-				]),
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-layout__header'),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_Options$when,
+						_elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Standard) || (_debois$elm_mdl$Material_Layout$isWaterfall(config.mode) && model.isCompact),
+						_debois$elm_mdl$Material_Options$cs('is-casting-shadow')),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_Options$when,
+							model.isAnimating,
+							_debois$elm_mdl$Material_Options$cs('is-animating')),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_debois$elm_mdl$Material_Options$when,
+								model.isCompact,
+								_debois$elm_mdl$Material_Options$cs('is-compact')),
+							_1: {
+								ctor: '::',
+								_0: mode,
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_debois$elm_mdl$Material_Options$when,
+										config.transparentHeader,
+										_debois$elm_mdl$Material_Options$cs('mdl-layout__header--transparent')),
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Options$onClick(
+											lift(
+												_debois$elm_mdl$Material_Layout$TransitionHeader(
+													{toCompact: false, fixedHeader: config.fixedHeader}))),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_debois$elm_mdl$Material_Options$on,
+												'transitionend',
+												_elm_lang$core$Json_Decode$succeed(
+													lift(_debois$elm_mdl$Material_Layout$TransitionEnd))),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
 			A2(
 				_elm_lang$core$List$concatMap,
 				function (x) {
 					return x;
 				},
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_debois$elm_mdl$Material_Layout$toList(_p16._0),
-						_p16._1,
-						_debois$elm_mdl$Material_Layout$toList(_p16._2)
-					])));
+				{
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Layout$toList(_p21._0),
+					_1: {
+						ctor: '::',
+						_0: _p21._1,
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Layout$toList(_p21._2),
+							_1: {ctor: '[]'}
+						}
+					}
+				}));
 	});
 var _debois$elm_mdl$Material_Layout$Right = {ctor: 'Right'};
 var _debois$elm_mdl$Material_Layout$Left = {ctor: 'Left'};
 var _debois$elm_mdl$Material_Layout$tabsView = F4(
-	function (lift, config, model, _p18) {
-		var _p19 = _p18;
-		var _p22 = _p19._1;
+	function (lift, config, model, _p23) {
+		var _p24 = _p23;
+		var _p27 = _p24._1;
 		var chevron = F2(
 			function (direction, offset) {
 				var dir = function () {
-					var _p20 = direction;
-					if (_p20.ctor === 'Left') {
+					var _p25 = direction;
+					if (_p25.ctor === 'Left') {
 						return 'left';
 					} else {
 						return 'right';
@@ -13170,163 +14659,219 @@ var _debois$elm_mdl$Material_Layout$tabsView = F4(
 				return A3(
 					_debois$elm_mdl$Material_Options$styled,
 					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_debois$elm_mdl$Material_Options$cs('mdl-layout__tab-bar-button'),
-							_debois$elm_mdl$Material_Options$cs(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								'mdl-layout__tab-bar-',
-								A2(_elm_lang$core$Basics_ops['++'], dir, '-button'))),
-							A2(
-							_debois$elm_mdl$Material_Options$when,
-							_debois$elm_mdl$Material_Options$cs('is-active'),
-							(_elm_lang$core$Native_Utils.eq(direction, _debois$elm_mdl$Material_Layout$Left) && model.tabScrollState.canScrollLeft) || (_elm_lang$core$Native_Utils.eq(direction, _debois$elm_mdl$Material_Layout$Right) && model.tabScrollState.canScrollRight)),
-							_debois$elm_mdl$Material_Options$many(_p22)
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(
+					{
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Options$cs('mdl-layout__tab-bar-button'),
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options$cs(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'mdl-layout__tab-bar-',
+									A2(_elm_lang$core$Basics_ops['++'], dir, '-button'))),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_debois$elm_mdl$Material_Options$when,
+									(_elm_lang$core$Native_Utils.eq(direction, _debois$elm_mdl$Material_Layout$Left) && model.tabScrollState.canScrollLeft) || (_elm_lang$core$Native_Utils.eq(direction, _debois$elm_mdl$Material_Layout$Right) && model.tabScrollState.canScrollRight),
+									_debois$elm_mdl$Material_Options$cs('is-active')),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$many(_p27),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: A2(
 							_debois$elm_mdl$Material_Icon$view,
 							A2(_elm_lang$core$Basics_ops['++'], 'chevron_', dir),
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_debois$elm_mdl$Material_Icon$size24,
-									_debois$elm_mdl$Material_Options_Internal$attribute(
-									A2(
-										_elm_lang$html$Html_Attributes$attribute,
-										'onclick',
+							{
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Icon$size24,
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options_Internal$attribute(
 										A2(
-											_elm_lang$core$Basics_ops['++'],
-											'document.getElementsByClassName(\'mdl-layout__tab-bar\')[0].scrollLeft += ',
-											_elm_lang$core$Basics$toString(offset))))
-								]))
-						]));
+											_elm_lang$html$Html_Attributes$attribute,
+											'onclick',
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'document.getElementsByClassName(\'mdl-layout__tab-bar\')[0].scrollLeft += ',
+												_elm_lang$core$Basics$toString(offset)))),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					});
 			});
 		return A2(
 			_debois$elm_mdl$Material_Options$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options$cs('mdl-layout__tab-bar-container')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(chevron, _debois$elm_mdl$Material_Layout$Left, -100),
-					A2(
-					_debois$elm_mdl$Material_Options$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_debois$elm_mdl$Material_Options$cs('mdl-layout__tab-bar'),
-							A2(_debois$elm_mdl$Material_Options$css, 'position', 'relative'),
-							A2(_debois$elm_mdl$Material_Options$css, 'scroll-behavior', 'smooth'),
-							config.rippleTabs ? _debois$elm_mdl$Material_Options$many(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect'),
-									_debois$elm_mdl$Material_Options$cs('mds-js-ripple-effect--ignore-events')
-								])) : _debois$elm_mdl$Material_Options$nop,
-							_elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Standard) ? _debois$elm_mdl$Material_Options$cs('is-casting-shadow') : _debois$elm_mdl$Material_Options$nop,
-							_debois$elm_mdl$Material_Options$many(_p22),
-							_debois$elm_mdl$Material_Options_Internal$attribute(
-							A2(
-								_elm_lang$html$Html_Events$on,
-								'scroll',
-								_debois$elm_dom$DOM$target(
-									A4(
-										_elm_lang$core$Json_Decode$object3,
-										F3(
-											function (scrollWidth, clientWidth, scrollLeft) {
-												return lift(
-													_debois$elm_mdl$Material_Layout$ScrollTab(
-														{
-															canScrollLeft: _elm_lang$core$Native_Utils.cmp(scrollLeft, 0) > 0,
-															canScrollRight: _elm_lang$core$Native_Utils.cmp(scrollWidth - clientWidth, scrollLeft + 1) > 0,
-															width: _elm_lang$core$Maybe$Just(scrollWidth)
-														}));
-											}),
-										A2(_elm_lang$core$Json_Decode_ops[':='], 'scrollWidth', _elm_lang$core$Json_Decode$float),
-										A2(_elm_lang$core$Json_Decode_ops[':='], 'clientWidth', _elm_lang$core$Json_Decode$float),
-										A2(_elm_lang$core$Json_Decode_ops[':='], 'scrollLeft', _elm_lang$core$Json_Decode$float)))))
-						]),
-					A2(
-						_elm_lang$core$List$indexedMap,
-						F2(
-							function (tabIndex, tab) {
-								return A3(
-									_debois$elm_mdl$Material_Helpers$filter,
-									_elm_lang$html$Html$a,
-									_elm_lang$core$Native_List.fromArray(
-										[
-											_elm_lang$html$Html_Attributes$classList(
-											_elm_lang$core$Native_List.fromArray(
-												[
-													{ctor: '_Tuple2', _0: 'mdl-layout__tab', _1: true},
-													{
-													ctor: '_Tuple2',
-													_0: 'is-active',
-													_1: _elm_lang$core$Native_Utils.eq(tabIndex, config.selectedTab)
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-layout__tab-bar-container'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(chevron, _debois$elm_mdl$Material_Layout$Left, -100),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_Options$div,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options$cs('mdl-layout__tab-bar'),
+							_1: {
+								ctor: '::',
+								_0: A2(_debois$elm_mdl$Material_Options$css, 'position', 'relative'),
+								_1: {
+									ctor: '::',
+									_0: A2(_debois$elm_mdl$Material_Options$css, 'scroll-behavior', 'smooth'),
+									_1: {
+										ctor: '::',
+										_0: config.rippleTabs ? _debois$elm_mdl$Material_Options$many(
+											{
+												ctor: '::',
+												_0: _debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect'),
+												_1: {
+													ctor: '::',
+													_0: _debois$elm_mdl$Material_Options$cs('mds-js-ripple-effect--ignore-events'),
+													_1: {ctor: '[]'}
 												}
-												])),
-											A2(
-											_elm_lang$core$Maybe$withDefault,
-											_debois$elm_mdl$Material_Helpers$noAttr,
-											A2(
-												_elm_lang$core$Maybe$map,
-												F2(
-													function (x, y) {
-														return y(x);
-													})(tabIndex),
-												config.onSelectTab))
-										]),
-									_elm_lang$core$Native_List.fromArray(
-										[
-											_elm_lang$core$Maybe$Just(tab),
-											config.rippleTabs ? _elm_lang$core$Maybe$Just(
-											A2(
-												_elm_lang$html$Html_App$map,
-												function (_p21) {
-													return lift(
-														A2(_debois$elm_mdl$Material_Layout$Ripple, tabIndex, _p21));
-												},
-												A2(
-													_debois$elm_mdl$Material_Ripple$view,
-													_elm_lang$core$Native_List.fromArray(
-														[
-															_elm_lang$html$Html_Attributes$class('mdl-layout__tab-ripple-container')
-														]),
+											}) : _debois$elm_mdl$Material_Options$nop,
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Standard) ? _debois$elm_mdl$Material_Options$cs('is-casting-shadow') : _debois$elm_mdl$Material_Options$nop,
+											_1: {
+												ctor: '::',
+												_0: _debois$elm_mdl$Material_Options$many(_p27),
+												_1: {
+													ctor: '::',
+													_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+														A2(
+															_elm_lang$html$Html_Events$on,
+															'scroll',
+															_debois$elm_dom$DOM$target(
+																A4(
+																	_elm_lang$core$Json_Decode$map3,
+																	F3(
+																		function (scrollWidth, clientWidth, scrollLeft) {
+																			return lift(
+																				_debois$elm_mdl$Material_Layout$ScrollTab(
+																					{
+																						canScrollLeft: _elm_lang$core$Native_Utils.cmp(scrollLeft, 0) > 0,
+																						canScrollRight: _elm_lang$core$Native_Utils.cmp(scrollWidth - clientWidth, scrollLeft + 1) > 0,
+																						width: _elm_lang$core$Maybe$Just(scrollWidth)
+																					}));
+																		}),
+																	A2(_elm_lang$core$Json_Decode$field, 'scrollWidth', _elm_lang$core$Json_Decode$float),
+																	A2(_elm_lang$core$Json_Decode$field, 'clientWidth', _elm_lang$core$Json_Decode$float),
+																	A2(_elm_lang$core$Json_Decode$field, 'scrollLeft', _elm_lang$core$Json_Decode$float))))),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						A2(
+							_elm_lang$core$List$indexedMap,
+							F2(
+								function (tabIndex, tab) {
+									return A3(
+										_debois$elm_mdl$Material_Helpers$filter,
+										_elm_lang$html$Html$a,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$classList(
+												{
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'mdl-layout__tab', _1: true},
+													_1: {
+														ctor: '::',
+														_0: {
+															ctor: '_Tuple2',
+															_0: 'is-active',
+															_1: _elm_lang$core$Native_Utils.eq(tabIndex, config.selectedTab)
+														},
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$core$Maybe$withDefault,
+													_debois$elm_mdl$Material_Helpers$noAttr,
 													A2(
-														_elm_lang$core$Maybe$withDefault,
-														_debois$elm_mdl$Material_Ripple$model,
-														A2(_elm_lang$core$Dict$get, tabIndex, model.ripples))))) : _elm_lang$core$Maybe$Nothing
-										]));
-							}),
-						_p19._0)),
-					A2(chevron, _debois$elm_mdl$Material_Layout$Right, 100)
-				]));
+														_elm_lang$core$Maybe$map,
+														F2(
+															function (x, y) {
+																return y(x);
+															})(tabIndex),
+														config.onSelectTab)),
+												_1: {ctor: '[]'}
+											}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$core$Maybe$Just(tab),
+											_1: {
+												ctor: '::',
+												_0: config.rippleTabs ? _elm_lang$core$Maybe$Just(
+													A2(
+														_elm_lang$html$Html$map,
+														function (_p26) {
+															return lift(
+																A2(_debois$elm_mdl$Material_Layout$Ripple, tabIndex, _p26));
+														},
+														A2(
+															_debois$elm_mdl$Material_Ripple$view,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('mdl-layout__tab-ripple-container'),
+																_1: {ctor: '[]'}
+															},
+															A2(
+																_elm_lang$core$Maybe$withDefault,
+																_debois$elm_mdl$Material_Ripple$model,
+																A2(_elm_lang$core$Dict$get, tabIndex, model.ripples))))) : _elm_lang$core$Maybe$Nothing,
+												_1: {ctor: '[]'}
+											}
+										});
+								}),
+							_p24._0)),
+					_1: {
+						ctor: '::',
+						_0: A2(chevron, _debois$elm_mdl$Material_Layout$Right, 100),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
 	});
 var _debois$elm_mdl$Material_Layout$view = F4(
-	function (lift, model, options, _p23) {
-		var _p24 = _p23;
-		var _p32 = _p24.tabs;
-		var _p31 = _p24.header;
-		var _p30 = _p24.drawer;
+	function (lift, model, options, _p28) {
+		var _p29 = _p28;
+		var _p37 = _p29.tabs;
+		var _p36 = _p29.header;
+		var _p35 = _p29.drawer;
 		var hasDrawer = !_elm_lang$core$Native_Utils.eq(
-			_p30,
-			_elm_lang$core$Native_List.fromArray(
-				[]));
-		var hasTabs = _elm_lang$core$Basics$not(
-			_elm_lang$core$List$isEmpty(
-				_elm_lang$core$Basics$fst(_p32)));
-		var hasHeader = hasTabs || _elm_lang$core$Basics$not(
-			_elm_lang$core$List$isEmpty(_p31));
-		var summary = A2(_debois$elm_mdl$Material_Options$collect, _debois$elm_mdl$Material_Layout$defaultConfig, options);
+			_p35,
+			{ctor: '[]'});
+		var hasTabs = !_elm_lang$core$List$isEmpty(
+			_elm_lang$core$Tuple$first(_p37));
+		var hasHeader = hasTabs || (!_elm_lang$core$List$isEmpty(_p36));
+		var summary = A2(_debois$elm_mdl$Material_Options_Internal$collect, _debois$elm_mdl$Material_Layout$defaultConfig, options);
 		var config = summary.config;
-		var drawerIsFixed = config.fixedDrawer && _elm_lang$core$Basics$not(model.isSmallScreen);
-		var drawerIsVisible = model.isDrawerOpen && _elm_lang$core$Basics$not(drawerIsFixed);
-		var _p25 = function () {
-			var _p26 = {ctor: '_Tuple3', _0: _p30, _1: _p31, _2: config.fixedHeader};
-			if ((_p26.ctor === '_Tuple3') && (_p26._0.ctor === '::')) {
-				if ((_p26._1.ctor === '::') && (_p26._2 === true)) {
+		var drawerIsFixed = config.fixedDrawer && (!model.isSmallScreen);
+		var drawerIsVisible = model.isDrawerOpen && (!drawerIsFixed);
+		var _p30 = function () {
+			var _p31 = {ctor: '_Tuple3', _0: _p35, _1: _p36, _2: config.fixedHeader};
+			if ((_p31.ctor === '_Tuple3') && (_p31._0.ctor === '::')) {
+				if ((_p31._1.ctor === '::') && (_p31._2 === true)) {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Maybe$Nothing,
@@ -13345,66 +14890,100 @@ var _debois$elm_mdl$Material_Layout$view = F4(
 				return {ctor: '_Tuple2', _0: _elm_lang$core$Maybe$Nothing, _1: _elm_lang$core$Maybe$Nothing};
 			}
 		}();
-		var contentDrawerButton = _p25._0;
-		var headerDrawerButton = _p25._1;
-		var tabsElems = _elm_lang$core$Basics$not(hasTabs) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
-			A4(_debois$elm_mdl$Material_Layout$tabsView, lift, config, model, _p32));
+		var contentDrawerButton = _p30._0;
+		var headerDrawerButton = _p30._1;
+		var tabsElems = (!hasTabs) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
+			A4(_debois$elm_mdl$Material_Layout$tabsView, lift, config, model, _p37));
 		return A2(
 			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$classList(
-					_elm_lang$core$Native_List.fromArray(
-						[
-							{ctor: '_Tuple2', _0: 'mdl-layout__container', _1: true},
-							{
-							ctor: '_Tuple2',
-							_0: 'has-scrolling-header',
-							_1: _elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Scrolling)
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$classList(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'mdl-layout__container', _1: true},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'has-scrolling-header',
+								_1: _elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Scrolling)
+							},
+							_1: {ctor: '[]'}
 						}
-						]))
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A3(
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A3(
 					_debois$elm_mdl$Material_Helpers$filter,
 					_elm_lang$html$Html_Keyed$node('div'),
 					A2(
 						_elm_lang$core$List$filterMap,
 						_elm_lang$core$Basics$identity,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$core$Maybe$Just(
+						{
+							ctor: '::',
+							_0: _elm_lang$core$Maybe$Just(
 								_elm_lang$html$Html_Attributes$classList(
-									_elm_lang$core$Native_List.fromArray(
-										[
-											{ctor: '_Tuple2', _0: 'mdl-layout ', _1: true},
-											{ctor: '_Tuple2', _0: 'is-upgraded', _1: true},
-											{ctor: '_Tuple2', _0: 'is-small-screen', _1: model.isSmallScreen},
-											{ctor: '_Tuple2', _0: 'has-drawer', _1: hasDrawer},
-											{ctor: '_Tuple2', _0: 'has-tabs', _1: hasTabs},
-											{ctor: '_Tuple2', _0: 'mdl-js-layout', _1: true},
-											{ctor: '_Tuple2', _0: 'mdl-layout--fixed-drawer', _1: config.fixedDrawer && hasDrawer},
-											{ctor: '_Tuple2', _0: 'mdl-layout--fixed-header', _1: config.fixedHeader && hasHeader},
-											{ctor: '_Tuple2', _0: 'mdl-layout--fixed-tabs', _1: config.fixedTabs && hasTabs}
-										]))),
-								drawerIsVisible ? _elm_lang$core$Maybe$Just(
-								A2(
-									_elm_lang$html$Html_Events$on,
-									'keydown',
+									{
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'mdl-layout ', _1: true},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'is-upgraded', _1: true},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'is-small-screen', _1: model.isSmallScreen},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'has-drawer', _1: hasDrawer},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'has-tabs', _1: hasTabs},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 'mdl-js-layout', _1: true},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 'mdl-layout--fixed-drawer', _1: config.fixedDrawer && hasDrawer},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: 'mdl-layout--fixed-header', _1: config.fixedHeader && hasHeader},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: 'mdl-layout--fixed-tabs', _1: config.fixedTabs && hasTabs},
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									})),
+							_1: {
+								ctor: '::',
+								_0: drawerIsVisible ? _elm_lang$core$Maybe$Just(
 									A2(
-										_elm_lang$core$Json_Decode$map,
-										function (_p27) {
-											return lift(
-												function (key) {
-													return _elm_lang$core$Native_Utils.eq(key, 27) ? _debois$elm_mdl$Material_Layout$ToggleDrawer : _debois$elm_mdl$Material_Layout$NOP;
-												}(_p27));
-										},
-										_elm_lang$html$Html_Events$keyCode))) : _elm_lang$core$Maybe$Nothing
-							])),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							hasHeader ? _elm_lang$core$Maybe$Just(
+										_elm_lang$html$Html_Events$on,
+										'keydown',
+										A2(
+											_elm_lang$core$Json_Decode$map,
+											function (_p32) {
+												return lift(
+													function (key) {
+														return _elm_lang$core$Native_Utils.eq(key, 27) ? _debois$elm_mdl$Material_Layout$ToggleDrawer : _debois$elm_mdl$Material_Layout$NOP;
+													}(_p32));
+											},
+											_elm_lang$html$Html_Events$keyCode))) : _elm_lang$core$Maybe$Nothing,
+								_1: {ctor: '[]'}
+							}
+						}),
+					{
+						ctor: '::',
+						_0: hasHeader ? _elm_lang$core$Maybe$Just(
 							A2(
 								F2(
 									function (v0, v1) {
@@ -13416,146 +14995,152 @@ var _debois$elm_mdl$Material_Layout$view = F4(
 									lift,
 									config,
 									model,
-									{ctor: '_Tuple3', _0: headerDrawerButton, _1: _p31, _2: tabsElems}))) : _elm_lang$core$Maybe$Nothing,
-							_elm_lang$core$Basics$not(hasDrawer) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
-							{
-								ctor: '_Tuple2',
-								_0: 'elm-mdl-drawer',
-								_1: A3(_debois$elm_mdl$Material_Layout$drawerView, lift, drawerIsVisible, _p30)
-							}),
-							_elm_lang$core$Basics$not(hasDrawer) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
-							{
-								ctor: '_Tuple2',
-								_0: 'elm-mdl-obfuscator',
-								_1: A2(_debois$elm_mdl$Material_Layout$obfuscator, lift, drawerIsVisible)
-							}),
-							A2(
-							_elm_lang$core$Maybe$map,
-							F2(
-								function (v0, v1) {
-									return {ctor: '_Tuple2', _0: v0, _1: v1};
-								})('elm-drawer-button'),
-							contentDrawerButton),
-							_elm_lang$core$Maybe$Just(
-							A2(
-								F2(
-									function (v0, v1) {
-										return {ctor: '_Tuple2', _0: v0, _1: v1};
+									{ctor: '_Tuple3', _0: headerDrawerButton, _1: _p36, _2: tabsElems}))) : _elm_lang$core$Maybe$Nothing,
+						_1: {
+							ctor: '::',
+							_0: (!hasDrawer) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
+								{
+									ctor: '_Tuple2',
+									_0: 'elm-mdl-drawer',
+									_1: A3(_debois$elm_mdl$Material_Layout$drawerView, lift, drawerIsVisible, _p35)
+								}),
+							_1: {
+								ctor: '::',
+								_0: (!hasDrawer) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
+									{
+										ctor: '_Tuple2',
+										_0: 'elm-mdl-obfuscator',
+										_1: A2(_debois$elm_mdl$Material_Layout$obfuscator, lift, drawerIsVisible)
 									}),
-								_elm_lang$core$Basics$toString(config.selectedTab),
-								A3(
-									_debois$elm_mdl$Material_Options$styled,
-									_elm_lang$html$Html$main$,
-									_elm_lang$core$Native_List.fromArray(
-										[
-											_debois$elm_mdl$Material_Options$cs('mdl-layout__content'),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$core$Maybe$map,
+										F2(
+											function (v0, v1) {
+												return {ctor: '_Tuple2', _0: v0, _1: v1};
+											})('elm-drawer-button'),
+										contentDrawerButton),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$core$Maybe$Just(
 											A2(
-											_debois$elm_mdl$Material_Options$when,
-											A2(_debois$elm_mdl$Material_Options$css, 'overflow-y', 'visible'),
-											_elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Scrolling) && config.fixedHeader),
-											A2(
-											_debois$elm_mdl$Material_Options$when,
-											A2(_debois$elm_mdl$Material_Options$css, 'overflow-x', 'visible'),
-											_elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Scrolling) && config.fixedHeader),
-											A2(
-											_debois$elm_mdl$Material_Options$when,
-											A2(_debois$elm_mdl$Material_Options$css, 'overflow', 'visible'),
-											_elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Scrolling) && config.fixedHeader),
-											A2(
-											_debois$elm_mdl$Material_Options$when,
-											function (_p28) {
-												return _debois$elm_mdl$Material_Options_Internal$attribute(
-													A2(_elm_lang$html$Html_Events$on, 'scroll', _p28));
-											}(
-												A2(
-													_elm_lang$core$Json_Decode$map,
-													function (_p29) {
-														return lift(
-															A2(_debois$elm_mdl$Material_Layout$ScrollPane, config.fixedHeader, _p29));
+												F2(
+													function (v0, v1) {
+														return {ctor: '_Tuple2', _0: v0, _1: v1};
+													}),
+												_elm_lang$core$Basics$toString(config.selectedTab),
+												A3(
+													_debois$elm_mdl$Material_Options$styled,
+													_elm_lang$html$Html$main_,
+													{
+														ctor: '::',
+														_0: _debois$elm_mdl$Material_Options$id(_debois$elm_mdl$Material_Layout$mainId),
+														_1: {
+															ctor: '::',
+															_0: _debois$elm_mdl$Material_Options$cs('mdl-layout__content'),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_debois$elm_mdl$Material_Options$when,
+																	_elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Scrolling) && config.fixedHeader,
+																	A2(_debois$elm_mdl$Material_Options$css, 'overflow-y', 'visible')),
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_debois$elm_mdl$Material_Options$when,
+																		_elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Scrolling) && config.fixedHeader,
+																		A2(_debois$elm_mdl$Material_Options$css, 'overflow-x', 'visible')),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(
+																			_debois$elm_mdl$Material_Options$when,
+																			_elm_lang$core$Native_Utils.eq(config.mode, _debois$elm_mdl$Material_Layout$Scrolling) && config.fixedHeader,
+																			A2(_debois$elm_mdl$Material_Options$css, 'overflow', 'visible')),
+																		_1: {
+																			ctor: '::',
+																			_0: A2(
+																				_debois$elm_mdl$Material_Options$when,
+																				_debois$elm_mdl$Material_Layout$isWaterfall(config.mode),
+																				function (_p33) {
+																					return _debois$elm_mdl$Material_Options_Internal$attribute(
+																						A2(_elm_lang$html$Html_Events$on, 'scroll', _p33));
+																				}(
+																					A2(
+																						_elm_lang$core$Json_Decode$map,
+																						function (_p34) {
+																							return lift(
+																								A2(_debois$elm_mdl$Material_Layout$ScrollPane, config.fixedHeader, _p34));
+																						},
+																						_debois$elm_dom$DOM$target(_debois$elm_dom$DOM$scrollTop)))),
+																			_1: {ctor: '[]'}
+																		}
+																	}
+																}
+															}
+														}
 													},
-													_debois$elm_dom$DOM$target(_debois$elm_dom$DOM$scrollTop))),
-											_debois$elm_mdl$Material_Layout$isWaterfall(config.mode))
-										]),
-									_p24.main)))
-						]))
-				]));
+													_p29.main))),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			});
 	});
-var _debois$elm_mdl$Material_Layout$render = A4(
-	_debois$elm_parts$Parts$create1,
-	_debois$elm_mdl$Material_Layout$view,
-	_debois$elm_mdl$Material_Layout$update$,
-	function (_) {
-		return _.layout;
-	},
-	F2(
-		function (x, c) {
-			return _elm_lang$core$Native_Utils.update(
-				c,
-				{layout: x});
-		}));
+var _debois$elm_mdl$Material_Layout$render = A3(_debois$elm_mdl$Material_Component$render1, _debois$elm_mdl$Material_Layout$get, _debois$elm_mdl$Material_Layout$view, _debois$elm_mdl$Material_Component$LayoutMsg);
 
-var _debois$elm_mdl$Material_Toggles$group = function (s) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (options) {
-			return _elm_lang$core$Native_Utils.update(
-				options,
-				{
-					group: _elm_lang$core$Maybe$Just(
-						_elm_lang$html$Html_Attributes$name(s))
-				});
-		});
+var _debois$elm_mdl$Material_Toggles$group = function (_p0) {
+	return _debois$elm_mdl$Material_Options$attribute(
+		_elm_lang$html$Html_Attributes$name(_p0));
 };
-var _debois$elm_mdl$Material_Toggles$value = function (b) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (options) {
-			return _elm_lang$core$Native_Utils.update(
-				options,
-				{value: b});
-		});
+var _debois$elm_mdl$Material_Toggles$value = function (_p1) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (b, options) {
+				return _elm_lang$core$Native_Utils.update(
+					options,
+					{value: b});
+			})(_p1));
 };
-var _debois$elm_mdl$Material_Toggles$disabled = _debois$elm_mdl$Material_Options$set(
-	function (options) {
-		return _elm_lang$core$Native_Utils.update(
-			options,
-			{isDisabled: true});
-	});
-var _debois$elm_mdl$Material_Toggles$ripple = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Toggles$disabled = _debois$elm_mdl$Material_Options_Internal$attribute(
+	_elm_lang$html$Html_Attributes$disabled(true));
+var _debois$elm_mdl$Material_Toggles$ripple = _debois$elm_mdl$Material_Options_Internal$option(
 	function (options) {
 		return _elm_lang$core$Native_Utils.update(
 			options,
 			{ripple: true});
 	});
-var _debois$elm_mdl$Material_Toggles$onClick = function (x) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (options) {
-			return _elm_lang$core$Native_Utils.update(
-				options,
-				{
-					onClick: _elm_lang$core$Maybe$Just(
-						A2(
-							_elm_lang$html$Html_Events$on,
-							'change',
-							_elm_lang$core$Json_Decode$succeed(x)))
-				});
-		});
-};
 var _debois$elm_mdl$Material_Toggles$defaultConfig = {
-	isDisabled: false,
 	value: false,
 	ripple: false,
-	group: _elm_lang$core$Maybe$Nothing,
-	onClick: _elm_lang$core$Maybe$Nothing,
-	inner: _elm_lang$core$Native_List.fromArray(
-		[])
+	input: {ctor: '[]'},
+	container: {ctor: '[]'}
 };
 var _debois$elm_mdl$Material_Toggles$defaultModel = {ripple: _debois$elm_mdl$Material_Ripple$model, isFocused: false};
+var _debois$elm_mdl$Material_Toggles$_p2 = A3(
+	_debois$elm_mdl$Material_Component$indexed,
+	function (_) {
+		return _.toggles;
+	},
+	F2(
+		function (x, y) {
+			return _elm_lang$core$Native_Utils.update(
+				y,
+				{toggles: x});
+		}),
+	_debois$elm_mdl$Material_Toggles$defaultModel);
+var _debois$elm_mdl$Material_Toggles$get = _debois$elm_mdl$Material_Toggles$_p2._0;
+var _debois$elm_mdl$Material_Toggles$set = _debois$elm_mdl$Material_Toggles$_p2._1;
 var _debois$elm_mdl$Material_Toggles$Model = F2(
 	function (a, b) {
 		return {ripple: a, isFocused: b};
 	});
-var _debois$elm_mdl$Material_Toggles$Config = F6(
-	function (a, b, c, d, e, f) {
-		return {isDisabled: a, value: b, ripple: c, group: d, onClick: e, inner: f};
+var _debois$elm_mdl$Material_Toggles$Config = F4(
+	function (a, b, c, d) {
+		return {value: a, ripple: b, input: c, container: d};
 	});
 var _debois$elm_mdl$Material_Toggles$SetFocus = function (a) {
 	return {ctor: 'SetFocus', _0: a};
@@ -13565,8 +15150,8 @@ var _debois$elm_mdl$Material_Toggles$Ripple = function (a) {
 };
 var _debois$elm_mdl$Material_Toggles$update = F2(
 	function (action, model) {
-		var _p0 = action;
-		if (_p0.ctor === 'Ripple') {
+		var _p3 = action;
+		if (_p3.ctor === 'Ripple') {
 			return A2(
 				_debois$elm_mdl$Material_Helpers$map2nd,
 				_elm_lang$core$Platform_Cmd$map(_debois$elm_mdl$Material_Toggles$Ripple),
@@ -13577,333 +15162,396 @@ var _debois$elm_mdl$Material_Toggles$update = F2(
 							model,
 							{ripple: r});
 					},
-					A2(_debois$elm_mdl$Material_Ripple$update, _p0._0, model.ripple)));
+					A2(_debois$elm_mdl$Material_Ripple$update, _p3._0, model.ripple)));
 		} else {
 			return {
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
 					model,
-					{isFocused: _p0._0}),
+					{isFocused: _p3._0}),
 				_1: _elm_lang$core$Platform_Cmd$none
 			};
 		}
 	});
-var _debois$elm_mdl$Material_Toggles$render = function (view) {
-	return A5(
-		_debois$elm_parts$Parts$create,
-		view,
-		_debois$elm_parts$Parts$generalize(_debois$elm_mdl$Material_Toggles$update),
-		function (_) {
-			return _.toggles;
-		},
-		F2(
-			function (x, y) {
-				return _elm_lang$core$Native_Utils.update(
-					y,
-					{toggles: x});
-			}),
-		_debois$elm_mdl$Material_Toggles$defaultModel);
-};
+var _debois$elm_mdl$Material_Toggles$react = A4(
+	_debois$elm_mdl$Material_Component$react,
+	_debois$elm_mdl$Material_Toggles$get,
+	_debois$elm_mdl$Material_Toggles$set,
+	_debois$elm_mdl$Material_Component$TogglesMsg,
+	_debois$elm_mdl$Material_Component$generalise(_debois$elm_mdl$Material_Toggles$update));
 var _debois$elm_mdl$Material_Toggles$top = F5(
-	function (lift, group, model, summary, elems) {
+	function (lift, kind, model, summary, elems) {
 		var cfg = summary.config;
-		return A5(
-			_debois$elm_mdl$Material_Options$apply,
+		return A4(
+			_debois$elm_mdl$Material_Options_Internal$applyContainer,
 			summary,
 			_elm_lang$html$Html$label,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options$cs(
-					A2(_elm_lang$core$Basics_ops['++'], 'mdl-', group)),
-					_debois$elm_mdl$Material_Options$cs(
-					A2(_elm_lang$core$Basics_ops['++'], 'mdl-js-', group)),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect'),
-					cfg.ripple),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect--ignore-events'),
-					cfg.ripple),
-					_debois$elm_mdl$Material_Options$cs('is-upgraded'),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('is-checked'),
-					cfg.value),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('is-focused'),
-					model.isFocused)
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Helpers$blurOn('mouseup'),
-					_elm_lang$html$Html_Events$onFocus(
-					lift(
-						_debois$elm_mdl$Material_Toggles$SetFocus(true))),
-					_elm_lang$html$Html_Events$onBlur(
-					lift(
-						_debois$elm_mdl$Material_Toggles$SetFocus(false))),
-					A2(_elm_lang$core$Maybe$withDefault, _debois$elm_mdl$Material_Helpers$noAttr, cfg.onClick)
-				]),
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs(
+					A2(_elm_lang$core$Basics_ops['++'], 'mdl-', kind)),
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$cs(
+						A2(_elm_lang$core$Basics_ops['++'], 'mdl-js-', kind)),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_Options$when,
+							cfg.ripple,
+							_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect')),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_debois$elm_mdl$Material_Options$when,
+								cfg.ripple,
+								_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect--ignore-events')),
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options$cs('is-upgraded'),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_debois$elm_mdl$Material_Options$when,
+										cfg.value,
+										_debois$elm_mdl$Material_Options$cs('is-checked')),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_debois$elm_mdl$Material_Options$when,
+											model.isFocused,
+											_debois$elm_mdl$Material_Options$cs('is-focused')),
+										_1: {
+											ctor: '::',
+											_0: A3(
+												_debois$elm_mdl$Material_Options_Internal$on1,
+												'focus',
+												lift,
+												_debois$elm_mdl$Material_Toggles$SetFocus(true)),
+											_1: {
+												ctor: '::',
+												_0: A3(
+													_debois$elm_mdl$Material_Options_Internal$on1,
+													'blur',
+													lift,
+													_debois$elm_mdl$Material_Toggles$SetFocus(false)),
+												_1: {
+													ctor: '::',
+													_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+														_debois$elm_mdl$Material_Helpers$blurOn('mouseup')),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
 			_elm_lang$core$List$concat(
-				_elm_lang$core$Native_List.fromArray(
-					[
-						elems,
-						cfg.ripple ? _elm_lang$core$Native_List.fromArray(
-						[
-							A2(
-							_elm_lang$html$Html_App$map,
-							function (_p1) {
-								return lift(
-									_debois$elm_mdl$Material_Toggles$Ripple(_p1));
-							},
-							A2(
-								_debois$elm_mdl$Material_Ripple$view,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$html$Html_Attributes$class('mdl-switch__ripple-container mdl-js-ripple-effect mdl-ripple--center')
-									]),
-								model.ripple))
-						]) : _elm_lang$core$Native_List.fromArray(
-						[])
-					])));
+				{
+					ctor: '::',
+					_0: elems,
+					_1: {
+						ctor: '::',
+						_0: cfg.ripple ? {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$map,
+								function (_p4) {
+									return lift(
+										_debois$elm_mdl$Material_Toggles$Ripple(_p4));
+								},
+								A2(
+									_debois$elm_mdl$Material_Ripple$view,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('mdl-switch__ripple-container mdl-js-ripple-effect mdl-ripple--center'),
+										_1: {ctor: '[]'}
+									},
+									model.ripple)),
+							_1: {ctor: '[]'}
+						} : {ctor: '[]'},
+						_1: {ctor: '[]'}
+					}
+				}));
 	});
 var _debois$elm_mdl$Material_Toggles$viewCheckbox = F4(
 	function (lift, model, config, elems) {
-		var summary = A2(_debois$elm_mdl$Material_Options$collect, _debois$elm_mdl$Material_Toggles$defaultConfig, config);
-		var cfg = summary.config;
+		var summary = A2(_debois$elm_mdl$Material_Options_Internal$collect, _debois$elm_mdl$Material_Toggles$defaultConfig, config);
 		return A5(
 			_debois$elm_mdl$Material_Toggles$top,
 			lift,
 			'checkbox',
 			model,
 			summary,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A4(
-					_debois$elm_mdl$Material_Options$styled$,
+			{
+				ctor: '::',
+				_0: A4(
+					_debois$elm_mdl$Material_Options_Internal$applyInput,
+					summary,
 					_elm_lang$html$Html$input,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_debois$elm_mdl$Material_Options$cs('mdl-checkbox__input'),
-							_debois$elm_mdl$Material_Options$many(cfg.inner)
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$type$('checkbox'),
-							_elm_lang$html$Html_Attributes$disabled(cfg.isDisabled),
-							_elm_lang$html$Html_Attributes$checked(cfg.value)
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[])),
-					A2(
-					_elm_lang$html$Html$span,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('mdl-checkbox__label')
-						]),
-					elems),
-					A2(
-					_elm_lang$html$Html$span,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('mdl-checkbox__focus-helper')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[])),
-					A2(
-					_elm_lang$html$Html$span,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('mdl-checkbox__box-outline')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(
+					{
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Options$cs('mdl-checkbox__input'),
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+								_elm_lang$html$Html_Attributes$type_('checkbox')),
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+									_elm_lang$html$Html_Attributes$checked(summary.config.value)),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mdl-checkbox__label'),
+							_1: {ctor: '[]'}
+						},
+						elems),
+					_1: {
+						ctor: '::',
+						_0: A2(
 							_elm_lang$html$Html$span,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html_Attributes$class('mdl-checkbox__tick-outline')
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[]))
-						]))
-				]));
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdl-checkbox__focus-helper'),
+								_1: {ctor: '[]'}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('mdl-checkbox__box-outline'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$span,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('mdl-checkbox__tick-outline'),
+											_1: {ctor: '[]'}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			});
 	});
-var _debois$elm_mdl$Material_Toggles$checkbox = _debois$elm_mdl$Material_Toggles$render(_debois$elm_mdl$Material_Toggles$viewCheckbox);
+var _debois$elm_mdl$Material_Toggles$checkbox = A3(_debois$elm_mdl$Material_Component$render, _debois$elm_mdl$Material_Toggles$get, _debois$elm_mdl$Material_Toggles$viewCheckbox, _debois$elm_mdl$Material_Component$TogglesMsg);
 var _debois$elm_mdl$Material_Toggles$viewSwitch = F4(
 	function (lift, model, config, elems) {
-		var summary = A2(_debois$elm_mdl$Material_Options$collect, _debois$elm_mdl$Material_Toggles$defaultConfig, config);
-		var cfg = summary.config;
+		var summary = A2(_debois$elm_mdl$Material_Options_Internal$collect, _debois$elm_mdl$Material_Toggles$defaultConfig, config);
 		return A5(
 			_debois$elm_mdl$Material_Toggles$top,
 			lift,
 			'switch',
 			model,
 			summary,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A4(
-					_debois$elm_mdl$Material_Options$styled$,
+			{
+				ctor: '::',
+				_0: A4(
+					_debois$elm_mdl$Material_Options_Internal$applyInput,
+					summary,
 					_elm_lang$html$Html$input,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_debois$elm_mdl$Material_Options$cs('mdl-switch__input'),
-							_debois$elm_mdl$Material_Options$many(cfg.inner)
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$type$('checkbox'),
-							_elm_lang$html$Html_Attributes$disabled(cfg.isDisabled),
-							_elm_lang$html$Html_Attributes$checked(cfg.value)
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[])),
-					A2(
-					_elm_lang$html$Html$span,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('mdl-switch__label')
-						]),
-					elems),
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('mdl-switch__track')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[])),
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('mdl-switch__thumb')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(
-							_elm_lang$html$Html$span,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html_Attributes$class('mdl-switch__focus-helper')
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[]))
-						]))
-				]));
+					{
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Options$cs('mdl-switch__input'),
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+								_elm_lang$html$Html_Attributes$type_('checkbox')),
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+									_elm_lang$html$Html_Attributes$checked(summary.config.value)),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mdl-switch__label'),
+							_1: {ctor: '[]'}
+						},
+						elems),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdl-switch__track'),
+								_1: {ctor: '[]'}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('mdl-switch__thumb'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$span,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('mdl-switch__focus-helper'),
+											_1: {ctor: '[]'}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			});
 	});
-var _debois$elm_mdl$Material_Toggles$switch = _debois$elm_mdl$Material_Toggles$render(_debois$elm_mdl$Material_Toggles$viewSwitch);
+var _debois$elm_mdl$Material_Toggles$switch = A3(_debois$elm_mdl$Material_Component$render, _debois$elm_mdl$Material_Toggles$get, _debois$elm_mdl$Material_Toggles$viewSwitch, _debois$elm_mdl$Material_Component$TogglesMsg);
 var _debois$elm_mdl$Material_Toggles$viewRadio = F4(
 	function (lift, model, config, elems) {
-		var summary = A2(_debois$elm_mdl$Material_Options$collect, _debois$elm_mdl$Material_Toggles$defaultConfig, config);
-		var cfg = summary.config;
+		var summary = A2(_debois$elm_mdl$Material_Options_Internal$collect, _debois$elm_mdl$Material_Toggles$defaultConfig, config);
 		return A5(
 			_debois$elm_mdl$Material_Toggles$top,
 			lift,
 			'radio',
 			model,
 			summary,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A4(
-					_debois$elm_mdl$Material_Options$styled$,
+			{
+				ctor: '::',
+				_0: A4(
+					_debois$elm_mdl$Material_Options_Internal$applyInput,
+					summary,
 					_elm_lang$html$Html$input,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_debois$elm_mdl$Material_Options$cs('mdl-radio__button'),
-							_debois$elm_mdl$Material_Options$many(cfg.inner)
-						]),
-					A2(
-						_elm_lang$core$List$filterMap,
-						_elm_lang$core$Basics$identity,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$core$Maybe$Just(
-								_elm_lang$html$Html_Attributes$type$('radio')),
-								_elm_lang$core$Maybe$Just(
-								_elm_lang$html$Html_Attributes$disabled(cfg.isDisabled)),
-								_elm_lang$core$Maybe$Just(
-								_elm_lang$html$Html_Attributes$checked(cfg.value)),
-								cfg.group
-							])),
-					_elm_lang$core$Native_List.fromArray(
-						[])),
-					A2(
-					_elm_lang$html$Html$span,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('mdl-radio__label')
-						]),
-					elems),
-					A2(
-					_elm_lang$html$Html$span,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('mdl-radio__outer-circle')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[])),
-					A2(
-					_elm_lang$html$Html$span,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$class('mdl-radio__inner-circle')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[]))
-				]));
+					{
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Options$cs('mdl-radio__button'),
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options$attribute(
+								_elm_lang$html$Html_Attributes$type_('radio')),
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options$attribute(
+									_elm_lang$html$Html_Attributes$checked(summary.config.value)),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mdl-radio__label'),
+							_1: {ctor: '[]'}
+						},
+						elems),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$span,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mdl-radio__outer-circle'),
+								_1: {ctor: '[]'}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('mdl-radio__inner-circle'),
+									_1: {ctor: '[]'}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			});
 	});
-var _debois$elm_mdl$Material_Toggles$radio = _debois$elm_mdl$Material_Toggles$render(_debois$elm_mdl$Material_Toggles$viewRadio);
+var _debois$elm_mdl$Material_Toggles$radio = A3(_debois$elm_mdl$Material_Component$render, _debois$elm_mdl$Material_Toggles$get, _debois$elm_mdl$Material_Toggles$viewRadio, _debois$elm_mdl$Material_Component$TogglesMsg);
 
-var _debois$elm_mdl$Material_Tooltip$set = F2(
-	function (x, y) {
-		return _elm_lang$core$Native_Utils.update(
-			y,
-			{tooltip: x});
-	});
-var _debois$elm_mdl$Material_Tooltip$container = function (elem) {
-	return _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Tooltip$element = function (elem) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
 		function (options) {
 			return _elm_lang$core$Native_Utils.update(
 				options,
-				{container: elem});
+				{elem: elem});
 		});
 };
 var _debois$elm_mdl$Material_Tooltip$isTooltipClass = function (path) {
 	return A2(
 		_elm_lang$core$Json_Decode$andThen,
-		A2(_elm_lang$core$Json_Decode$at, path, _debois$elm_dom$DOM$className),
 		function ($class) {
 			return A2(_elm_lang$core$String$contains, 'mdl-tooltip', $class) ? _elm_lang$core$Json_Decode$succeed(true) : _elm_lang$core$Json_Decode$succeed(false);
-		});
+		},
+		A2(_elm_lang$core$Json_Decode$at, path, _debois$elm_dom$DOM$className));
 };
 var _debois$elm_mdl$Material_Tooltip$sibling = function (d) {
 	var valid = function (path) {
 		return A2(
 			_elm_lang$core$Json_Decode$andThen,
-			_debois$elm_mdl$Material_Tooltip$isTooltipClass(path),
 			function (res) {
 				return res ? A2(_elm_lang$core$Json_Decode$at, path, d) : _elm_lang$core$Json_Decode$fail('');
-			});
+			},
+			_debois$elm_mdl$Material_Tooltip$isTooltipClass(path));
 	};
 	var createPath = function (depth) {
 		var parents = A2(_elm_lang$core$List$repeat, depth, 'parentElement');
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$Native_List.fromArray(
-				['target']),
+			{
+				ctor: '::',
+				_0: 'target',
+				_1: {ctor: '[]'}
+			},
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				parents,
-				_elm_lang$core$Native_List.fromArray(
-					['nextSibling'])));
+				{
+					ctor: '::',
+					_0: 'nextSibling',
+					_1: {ctor: '[]'}
+				}));
 	};
 	var paths = A2(
 		_elm_lang$core$List$map,
 		createPath,
-		_elm_lang$core$Native_List.range(0, 4));
+		A2(_elm_lang$core$List$range, 0, 4));
 	return _elm_lang$core$Json_Decode$oneOf(
 		A2(_elm_lang$core$List$map, valid, paths));
 };
@@ -13969,14 +15617,26 @@ var _debois$elm_mdl$Material_Tooltip$defaultDOMState = {
 };
 var _debois$elm_mdl$Material_Tooltip$defaultPos = {left: 0, top: 0, marginLeft: 0, marginTop: 0};
 var _debois$elm_mdl$Material_Tooltip$defaultModel = {isActive: false, domState: _debois$elm_mdl$Material_Tooltip$defaultDOMState};
-var _debois$elm_mdl$Material_Tooltip$pack = A4(
-	_debois$elm_parts$Parts$pack,
-	_debois$elm_parts$Parts$generalize(_debois$elm_mdl$Material_Tooltip$update),
+var _debois$elm_mdl$Material_Tooltip$_p4 = A3(
+	_debois$elm_mdl$Material_Component$indexed,
 	function (_) {
 		return _.tooltip;
 	},
-	_debois$elm_mdl$Material_Tooltip$set,
+	F2(
+		function (x, y) {
+			return _elm_lang$core$Native_Utils.update(
+				y,
+				{tooltip: x});
+		}),
 	_debois$elm_mdl$Material_Tooltip$defaultModel);
+var _debois$elm_mdl$Material_Tooltip$get = _debois$elm_mdl$Material_Tooltip$_p4._0;
+var _debois$elm_mdl$Material_Tooltip$set = _debois$elm_mdl$Material_Tooltip$_p4._1;
+var _debois$elm_mdl$Material_Tooltip$react = A4(
+	_debois$elm_mdl$Material_Component$react,
+	_debois$elm_mdl$Material_Tooltip$get,
+	_debois$elm_mdl$Material_Tooltip$set,
+	_debois$elm_mdl$Material_Component$TooltipMsg,
+	_debois$elm_mdl$Material_Component$generalise(_debois$elm_mdl$Material_Tooltip$update));
 var _debois$elm_mdl$Material_Tooltip$Model = F2(
 	function (a, b) {
 		return {isActive: a, domState: b};
@@ -13990,14 +15650,14 @@ var _debois$elm_mdl$Material_Tooltip$DOMState = F3(
 		return {rect: a, offsetWidth: b, offsetHeight: c};
 	});
 var _debois$elm_mdl$Material_Tooltip$stateDecoder = A4(
-	_elm_lang$core$Json_Decode$object3,
+	_elm_lang$core$Json_Decode$map3,
 	_debois$elm_mdl$Material_Tooltip$DOMState,
 	_debois$elm_dom$DOM$target(_debois$elm_dom$DOM$boundingClientRect),
 	_debois$elm_mdl$Material_Tooltip$sibling(_debois$elm_dom$DOM$offsetWidth),
 	_debois$elm_mdl$Material_Tooltip$sibling(_debois$elm_dom$DOM$offsetHeight));
 var _debois$elm_mdl$Material_Tooltip$Config = F3(
 	function (a, b, c) {
-		return {size: a, position: b, container: c};
+		return {size: a, position: b, elem: c};
 	});
 var _debois$elm_mdl$Material_Tooltip$Leave = {ctor: 'Leave'};
 var _debois$elm_mdl$Material_Tooltip$onMouseLeave = F2(
@@ -14006,14 +15666,17 @@ var _debois$elm_mdl$Material_Tooltip$onMouseLeave = F2(
 			_elm_lang$html$Html_Events$on,
 			'mouseleave',
 			_elm_lang$core$Json_Decode$succeed(
-				A3(_debois$elm_mdl$Material_Tooltip$pack, lift, idx, _debois$elm_mdl$Material_Tooltip$Leave)));
+				lift(
+					A2(_debois$elm_mdl$Material_Component$TooltipMsg, idx, _debois$elm_mdl$Material_Tooltip$Leave))));
 	});
 var _debois$elm_mdl$Material_Tooltip$onLeave = function (lift) {
 	return A2(
 		_elm_lang$html$Html_Events$on,
 		'mouseleave',
-		_elm_lang$core$Json_Decode$succeed(
-			lift(_debois$elm_mdl$Material_Tooltip$Leave)));
+		A2(
+			_elm_lang$core$Json_Decode$map,
+			lift,
+			_elm_lang$core$Json_Decode$succeed(_debois$elm_mdl$Material_Tooltip$Leave)));
 };
 var _debois$elm_mdl$Material_Tooltip$Enter = function (a) {
 	return {ctor: 'Enter', _0: a};
@@ -14025,25 +15688,29 @@ var _debois$elm_mdl$Material_Tooltip$onMouseEnter = F2(
 			'mouseenter',
 			A2(
 				_elm_lang$core$Json_Decode$map,
-				function (_p4) {
-					return A3(
-						_debois$elm_mdl$Material_Tooltip$pack,
-						lift,
-						idx,
-						_debois$elm_mdl$Material_Tooltip$Enter(_p4));
+				function (_p5) {
+					return lift(
+						A2(
+							_debois$elm_mdl$Material_Component$TooltipMsg,
+							idx,
+							_debois$elm_mdl$Material_Tooltip$Enter(_p5)));
 				},
 				_debois$elm_mdl$Material_Tooltip$stateDecoder));
 	});
 var _debois$elm_mdl$Material_Tooltip$attach = F2(
 	function (lift, index) {
 		return _debois$elm_mdl$Material_Options$many(
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options_Internal$attribute(
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options_Internal$attribute(
 					A2(_debois$elm_mdl$Material_Tooltip$onMouseEnter, lift, index)),
-					_debois$elm_mdl$Material_Options_Internal$attribute(
-					A2(_debois$elm_mdl$Material_Tooltip$onMouseLeave, lift, index))
-				]));
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+						A2(_debois$elm_mdl$Material_Tooltip$onMouseLeave, lift, index)),
+					_1: {ctor: '[]'}
+				}
+			});
 	});
 var _debois$elm_mdl$Material_Tooltip$onEnter = function (lift) {
 	return A2(
@@ -14051,14 +15718,11 @@ var _debois$elm_mdl$Material_Tooltip$onEnter = function (lift) {
 		'mouseenter',
 		A2(
 			_elm_lang$core$Json_Decode$map,
-			function (_p5) {
-				return lift(
-					_debois$elm_mdl$Material_Tooltip$Enter(_p5));
-			},
-			_debois$elm_mdl$Material_Tooltip$stateDecoder));
+			lift,
+			A2(_elm_lang$core$Json_Decode$map, _debois$elm_mdl$Material_Tooltip$Enter, _debois$elm_mdl$Material_Tooltip$stateDecoder)));
 };
 var _debois$elm_mdl$Material_Tooltip$Large = {ctor: 'Large'};
-var _debois$elm_mdl$Material_Tooltip$large = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Tooltip$large = _debois$elm_mdl$Material_Options_Internal$option(
 	function (options) {
 		return _elm_lang$core$Native_Utils.update(
 			options,
@@ -14066,7 +15730,7 @@ var _debois$elm_mdl$Material_Tooltip$large = _debois$elm_mdl$Material_Options$se
 	});
 var _debois$elm_mdl$Material_Tooltip$Default = {ctor: 'Default'};
 var _debois$elm_mdl$Material_Tooltip$Bottom = {ctor: 'Bottom'};
-var _debois$elm_mdl$Material_Tooltip$defaultConfig = {size: _debois$elm_mdl$Material_Tooltip$Default, position: _debois$elm_mdl$Material_Tooltip$Bottom, container: _elm_lang$html$Html$div};
+var _debois$elm_mdl$Material_Tooltip$defaultConfig = {size: _debois$elm_mdl$Material_Tooltip$Default, position: _debois$elm_mdl$Material_Tooltip$Bottom, elem: _elm_lang$html$Html$div};
 var _debois$elm_mdl$Material_Tooltip$view = F4(
 	function (lift, model, options, content) {
 		var px = function (f) {
@@ -14075,122 +15739,144 @@ var _debois$elm_mdl$Material_Tooltip$view = F4(
 				_elm_lang$core$Basics$toString(f),
 				'px');
 		};
-		var summary = A2(_debois$elm_mdl$Material_Options$collect, _debois$elm_mdl$Material_Tooltip$defaultConfig, options);
+		var summary = A2(_debois$elm_mdl$Material_Options_Internal$collect, _debois$elm_mdl$Material_Tooltip$defaultConfig, options);
 		var config = summary.config;
 		var pos = model.isActive ? A2(_debois$elm_mdl$Material_Tooltip$calculatePos, config.position, model.domState) : _debois$elm_mdl$Material_Tooltip$defaultPos;
 		return A3(
 			_debois$elm_mdl$Material_Options$styled,
-			config.container,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options$cs('mdl-tooltip'),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('is-active'),
-					model.isActive),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('mdl-tooltip--large'),
-					_elm_lang$core$Native_Utils.eq(config.size, _debois$elm_mdl$Material_Tooltip$Large)),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					A2(
-						_debois$elm_mdl$Material_Options$css,
-						'left',
-						px(pos.left)),
-					model.isActive),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					A2(
-						_debois$elm_mdl$Material_Options$css,
-						'margin-left',
-						px(pos.marginLeft)),
-					model.isActive),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					A2(
-						_debois$elm_mdl$Material_Options$css,
-						'top',
-						px(pos.top)),
-					model.isActive),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					A2(
-						_debois$elm_mdl$Material_Options$css,
-						'margin-top',
-						px(pos.marginTop)),
-					model.isActive)
-				]),
+			config.elem,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-tooltip'),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_Options$when,
+						model.isActive,
+						_debois$elm_mdl$Material_Options$cs('is-active')),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_Options$when,
+							_elm_lang$core$Native_Utils.eq(config.size, _debois$elm_mdl$Material_Tooltip$Large),
+							_debois$elm_mdl$Material_Options$cs('mdl-tooltip--large')),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_debois$elm_mdl$Material_Options$when,
+								model.isActive,
+								A2(
+									_debois$elm_mdl$Material_Options$css,
+									'left',
+									px(pos.left))),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_debois$elm_mdl$Material_Options$when,
+									model.isActive,
+									A2(
+										_debois$elm_mdl$Material_Options$css,
+										'margin-left',
+										px(pos.marginLeft))),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_debois$elm_mdl$Material_Options$when,
+										model.isActive,
+										A2(
+											_debois$elm_mdl$Material_Options$css,
+											'top',
+											px(pos.top))),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_debois$elm_mdl$Material_Options$when,
+											model.isActive,
+											A2(
+												_debois$elm_mdl$Material_Options$css,
+												'margin-top',
+												px(pos.marginTop))),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
 			content);
 	});
-var _debois$elm_mdl$Material_Tooltip$render = A5(
-	_debois$elm_parts$Parts$create,
-	_debois$elm_mdl$Material_Tooltip$view,
-	_debois$elm_parts$Parts$generalize(_debois$elm_mdl$Material_Tooltip$update),
-	function (_) {
-		return _.tooltip;
-	},
-	F2(
-		function (x, y) {
-			return _elm_lang$core$Native_Utils.update(
-				y,
-				{tooltip: x});
-		}),
-	_debois$elm_mdl$Material_Tooltip$defaultModel);
-var _debois$elm_mdl$Material_Tooltip$bottom = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Tooltip$render = A3(_debois$elm_mdl$Material_Component$render, _debois$elm_mdl$Material_Tooltip$get, _debois$elm_mdl$Material_Tooltip$view, _debois$elm_mdl$Material_Component$TooltipMsg);
+var _debois$elm_mdl$Material_Tooltip$bottom = _debois$elm_mdl$Material_Options_Internal$option(
 	function (options) {
 		return _elm_lang$core$Native_Utils.update(
 			options,
 			{position: _debois$elm_mdl$Material_Tooltip$Bottom});
 	});
 var _debois$elm_mdl$Material_Tooltip$Top = {ctor: 'Top'};
-var _debois$elm_mdl$Material_Tooltip$top = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Tooltip$top = _debois$elm_mdl$Material_Options_Internal$option(
 	function (options) {
 		return _elm_lang$core$Native_Utils.update(
 			options,
 			{position: _debois$elm_mdl$Material_Tooltip$Top});
 	});
 var _debois$elm_mdl$Material_Tooltip$Right = {ctor: 'Right'};
-var _debois$elm_mdl$Material_Tooltip$right = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Tooltip$right = _debois$elm_mdl$Material_Options_Internal$option(
 	function (options) {
 		return _elm_lang$core$Native_Utils.update(
 			options,
 			{position: _debois$elm_mdl$Material_Tooltip$Right});
 	});
 var _debois$elm_mdl$Material_Tooltip$Left = {ctor: 'Left'};
-var _debois$elm_mdl$Material_Tooltip$left = _debois$elm_mdl$Material_Options$set(
+var _debois$elm_mdl$Material_Tooltip$left = _debois$elm_mdl$Material_Options_Internal$option(
 	function (options) {
 		return _elm_lang$core$Native_Utils.update(
 			options,
 			{position: _debois$elm_mdl$Material_Tooltip$Left});
 	});
 
-var _debois$elm_mdl$Material_Tabs$activeTab = function (k) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{activeTab: k});
-		});
+var _debois$elm_mdl$Material_Tabs$activeTab = function (_p0) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (k, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{activeTab: k});
+			})(_p0));
 };
-var _debois$elm_mdl$Material_Tabs$onSelectTab = function (k) {
-	return _debois$elm_mdl$Material_Options$set(
-		function (config) {
-			return _elm_lang$core$Native_Utils.update(
-				config,
-				{
-					onSelectTab: _elm_lang$core$Maybe$Just(k)
-				});
-		});
+var _debois$elm_mdl$Material_Tabs$onSelectTab = function (_p1) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (k, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						onSelectTab: _elm_lang$core$Maybe$Just(k)
+					});
+			})(_p1));
 };
-var _debois$elm_mdl$Material_Tabs$ripple = _debois$elm_mdl$Material_Options$set(
-	function (options) {
+var _debois$elm_mdl$Material_Tabs$ripple = _debois$elm_mdl$Material_Options_Internal$option(
+	function (config) {
 		return _elm_lang$core$Native_Utils.update(
-			options,
+			config,
 			{ripple: true});
 	});
 var _debois$elm_mdl$Material_Tabs$defaultConfig = {ripple: false, onSelectTab: _elm_lang$core$Maybe$Nothing, activeTab: 0};
 var _debois$elm_mdl$Material_Tabs$defaultModel = {ripples: _elm_lang$core$Dict$empty};
+var _debois$elm_mdl$Material_Tabs$_p2 = A3(
+	_debois$elm_mdl$Material_Component$indexed,
+	function (_) {
+		return _.tabs;
+	},
+	F2(
+		function (x, y) {
+			return _elm_lang$core$Native_Utils.update(
+				y,
+				{tabs: x});
+		}),
+	_debois$elm_mdl$Material_Tabs$defaultModel);
+var _debois$elm_mdl$Material_Tabs$get = _debois$elm_mdl$Material_Tabs$_p2._0;
+var _debois$elm_mdl$Material_Tabs$set = _debois$elm_mdl$Material_Tabs$_p2._1;
 var _debois$elm_mdl$Material_Tabs$Model = function (a) {
 	return {ripples: a};
 };
@@ -14204,165 +15890,197 @@ var _debois$elm_mdl$Material_Tabs$Ripple = F2(
 	});
 var _debois$elm_mdl$Material_Tabs$update = F2(
 	function (action, model) {
-		var _p0 = action;
-		var _p2 = _p0._0;
-		var _p1 = A2(
+		var _p3 = action;
+		var _p5 = _p3._0;
+		var _p4 = A2(
 			_debois$elm_mdl$Material_Ripple$update,
-			_p0._1,
+			_p3._1,
 			A2(
 				_elm_lang$core$Maybe$withDefault,
 				_debois$elm_mdl$Material_Ripple$model,
-				A2(_elm_lang$core$Dict$get, _p2, model.ripples)));
-		var ripple$ = _p1._0;
-		var cmd = _p1._1;
+				A2(_elm_lang$core$Dict$get, _p5, model.ripples)));
+		var ripple_ = _p4._0;
+		var cmd = _p4._1;
 		return {
 			ctor: '_Tuple2',
 			_0: _elm_lang$core$Native_Utils.update(
 				model,
 				{
-					ripples: A3(_elm_lang$core$Dict$insert, _p2, ripple$, model.ripples)
+					ripples: A3(_elm_lang$core$Dict$insert, _p5, ripple_, model.ripples)
 				}),
 			_1: A2(
 				_elm_lang$core$Platform_Cmd$map,
-				_debois$elm_mdl$Material_Tabs$Ripple(_p2),
+				_debois$elm_mdl$Material_Tabs$Ripple(_p5),
 				cmd)
 		};
 	});
+var _debois$elm_mdl$Material_Tabs$react = A4(
+	_debois$elm_mdl$Material_Component$react,
+	_debois$elm_mdl$Material_Tabs$get,
+	_debois$elm_mdl$Material_Tabs$set,
+	_debois$elm_mdl$Material_Component$TabsMsg,
+	_debois$elm_mdl$Material_Component$generalise(_debois$elm_mdl$Material_Tabs$update));
 var _debois$elm_mdl$Material_Tabs$view = F5(
 	function (lift, model, options, tabs, tabContent) {
 		var wrapContent = A2(
 			_elm_lang$html$Html_Keyed$node,
 			'div',
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$classList(
-					_elm_lang$core$Native_List.fromArray(
-						[
-							{ctor: '_Tuple2', _0: 'mdl-tab__panel', _1: true},
-							{ctor: '_Tuple2', _0: 'is-active', _1: true}
-						]))
-				]));
-		var summary = A2(_debois$elm_mdl$Material_Options$collect, _debois$elm_mdl$Material_Tabs$defaultConfig, options);
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$classList(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'mdl-tab__panel', _1: true},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'is-active', _1: true},
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			});
+		var summary = A2(_debois$elm_mdl$Material_Options_Internal$collect, _debois$elm_mdl$Material_Tabs$defaultConfig, options);
 		var config = summary.config;
 		var unwrapLabel = F2(
-			function (tabIdx, _p3) {
-				var _p4 = _p3;
-				var _p6 = _p4._0._1;
+			function (tabIdx, _p6) {
+				var _p7 = _p6;
+				var _p9 = _p7._0._1;
 				return A3(
 					_debois$elm_mdl$Material_Options$styled,
 					_elm_lang$html$Html$a,
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_debois$elm_mdl$Material_Options$cs('mdl-tabs__tab'),
-								A2(
+					{
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Options$cs('mdl-tabs__tab'),
+						_1: {
+							ctor: '::',
+							_0: A2(
 								_debois$elm_mdl$Material_Options$when,
-								_debois$elm_mdl$Material_Options$cs('is-active'),
-								_elm_lang$core$Native_Utils.eq(tabIdx, config.activeTab)),
-								A2(
-								_elm_lang$core$Maybe$withDefault,
-								_debois$elm_mdl$Material_Options$nop,
-								A2(
-									_elm_lang$core$Maybe$map,
-									function (t) {
-										return _debois$elm_mdl$Material_Options_Internal$attribute(
-											_elm_lang$html$Html_Events$onClick(
-												t(tabIdx)));
-									},
-									config.onSelectTab))
-							]),
-						_p4._0._0),
+								_elm_lang$core$Native_Utils.eq(tabIdx, config.activeTab),
+								_debois$elm_mdl$Material_Options$cs('is-active')),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$Maybe$withDefault,
+									_debois$elm_mdl$Material_Options$nop,
+									A2(
+										_elm_lang$core$Maybe$map,
+										function (t) {
+											return _debois$elm_mdl$Material_Options$onClick(
+												t(tabIdx));
+										},
+										config.onSelectTab)),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$many(_p7._0._0),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					},
 					config.ripple ? _elm_lang$core$List$concat(
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_p6,
-								_elm_lang$core$Native_List.fromArray(
-								[
-									A2(
-									_elm_lang$html$Html_App$map,
-									function (_p5) {
-										return lift(
-											A2(_debois$elm_mdl$Material_Tabs$Ripple, tabIdx, _p5));
-									},
-									A2(
-										_debois$elm_mdl$Material_Ripple$view,
-										_elm_lang$core$Native_List.fromArray(
-											[
-												_elm_lang$html$Html_Attributes$classList(
-												_elm_lang$core$Native_List.fromArray(
-													[
-														{ctor: '_Tuple2', _0: 'mdl-tabs__ripple-container', _1: true},
-														{ctor: '_Tuple2', _0: 'mdl-tabs__ripple-js-effect', _1: true}
-													]))
-											]),
+						{
+							ctor: '::',
+							_0: _p9,
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$map,
+										function (_p8) {
+											return lift(
+												A2(_debois$elm_mdl$Material_Tabs$Ripple, tabIdx, _p8));
+										},
 										A2(
-											_elm_lang$core$Maybe$withDefault,
-											_debois$elm_mdl$Material_Ripple$model,
-											A2(_elm_lang$core$Dict$get, tabIdx, model.ripples))))
-								])
-							])) : _p6);
+											_debois$elm_mdl$Material_Ripple$view,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$classList(
+													{
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'mdl-tabs__ripple-container', _1: true},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 'mdl-tabs__ripple-js-effect', _1: true},
+															_1: {ctor: '[]'}
+														}
+													}),
+												_1: {ctor: '[]'}
+											},
+											A2(
+												_elm_lang$core$Maybe$withDefault,
+												_debois$elm_mdl$Material_Ripple$model,
+												A2(_elm_lang$core$Dict$get, tabIdx, model.ripples)))),
+									_1: {ctor: '[]'}
+								},
+								_1: {ctor: '[]'}
+							}
+						}) : _p9);
 			});
 		var links = A3(
 			_debois$elm_mdl$Material_Options$styled,
 			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options$cs('mdl-tabs__tab-bar')
-				]),
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-tabs__tab-bar'),
+				_1: {ctor: '[]'}
+			},
 			A2(_elm_lang$core$List$indexedMap, unwrapLabel, tabs));
 		return A5(
-			_debois$elm_mdl$Material_Options$apply,
+			_debois$elm_mdl$Material_Options_Internal$apply,
 			summary,
 			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Options$cs('mdl-tabs'),
-					_debois$elm_mdl$Material_Options$cs('mdl-js-tabs'),
-					_debois$elm_mdl$Material_Options$cs('is-upgraded'),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect'),
-					config.ripple),
-					A2(
-					_debois$elm_mdl$Material_Options$when,
-					_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect--ignore-events'),
-					config.ripple)
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					links,
-					wrapContent(
-					_elm_lang$core$Native_List.fromArray(
-						[
-							{
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Basics$toString(config.activeTab),
-							_1: A2(
-								_elm_lang$html$Html$div,
-								_elm_lang$core$Native_List.fromArray(
-									[]),
-								tabContent)
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-tabs'),
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$cs('mdl-js-tabs'),
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Options$cs('is-upgraded'),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_debois$elm_mdl$Material_Options$when,
+								config.ripple,
+								_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect')),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_debois$elm_mdl$Material_Options$when,
+									config.ripple,
+									_debois$elm_mdl$Material_Options$cs('mdl-js-ripple-effect--ignore-events')),
+								_1: {ctor: '[]'}
+							}
 						}
-						]))
-				]));
+					}
+				}
+			},
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: links,
+				_1: {
+					ctor: '::',
+					_0: wrapContent(
+						{
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: _elm_lang$core$Basics$toString(config.activeTab),
+								_1: A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									tabContent)
+							},
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
 	});
-var _debois$elm_mdl$Material_Tabs$render = A5(
-	_debois$elm_parts$Parts$create,
-	_debois$elm_mdl$Material_Tabs$view,
-	_debois$elm_parts$Parts$generalize(_debois$elm_mdl$Material_Tabs$update),
-	function (_) {
-		return _.tabs;
-	},
-	F2(
-		function (x, y) {
-			return _elm_lang$core$Native_Utils.update(
-				y,
-				{tabs: x});
-		}),
-	_debois$elm_mdl$Material_Tabs$defaultModel);
+var _debois$elm_mdl$Material_Tabs$render = A3(_debois$elm_mdl$Material_Component$render, _debois$elm_mdl$Material_Tabs$get, _debois$elm_mdl$Material_Tabs$view, _debois$elm_mdl$Material_Component$TabsMsg);
 var _debois$elm_mdl$Material_Tabs$Label = function (a) {
 	return {ctor: 'Label', _0: a};
 };
@@ -14376,10 +16094,11 @@ var _debois$elm_mdl$Material_Tabs$textLabel = F2(
 		return A2(
 			_debois$elm_mdl$Material_Tabs$label,
 			p,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text(c)
-				]));
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(c),
+				_1: {ctor: '[]'}
+			});
 	});
 
 var _debois$elm_mdl$Material$init = function (lift) {
@@ -14388,26 +16107,78 @@ var _debois$elm_mdl$Material$init = function (lift) {
 var _debois$elm_mdl$Material$subscriptions = F2(
 	function (lift, model) {
 		return _elm_lang$core$Platform_Sub$batch(
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(_debois$elm_mdl$Material_Layout$subs, lift, model.mdl),
-					A2(_debois$elm_mdl$Material_Menu$subs, lift, model.mdl)
-				]));
+			{
+				ctor: '::',
+				_0: A2(_debois$elm_mdl$Material_Layout$subs, lift, model.mdl),
+				_1: {
+					ctor: '::',
+					_0: A2(_debois$elm_mdl$Material_Menu$subs, lift, model.mdl),
+					_1: {ctor: '[]'}
+				}
+			});
 	});
-var _debois$elm_mdl$Material$update = F2(
-	function (msg, model) {
+var _debois$elm_mdl$Material$update_ = F3(
+	function (lift, msg, store) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'ButtonMsg':
+				return A4(_debois$elm_mdl$Material_Button$react, lift, _p0._1, _p0._0, store);
+			case 'TextfieldMsg':
+				return A4(_debois$elm_mdl$Material_Textfield$react, lift, _p0._1, _p0._0, store);
+			case 'MenuMsg':
+				var _p2 = _p0._0;
+				return A4(
+					_debois$elm_mdl$Material_Menu$react,
+					function (_p1) {
+						return lift(
+							A2(_debois$elm_mdl$Material_Component$MenuMsg, _p2, _p1));
+					},
+					_p0._1,
+					_p2,
+					store);
+			case 'LayoutMsg':
+				return A3(
+					_debois$elm_mdl$Material_Layout$react,
+					function (_p3) {
+						return lift(
+							_debois$elm_mdl$Material_Component$LayoutMsg(_p3));
+					},
+					_p0._0,
+					store);
+			case 'TogglesMsg':
+				return A4(_debois$elm_mdl$Material_Toggles$react, lift, _p0._1, _p0._0, store);
+			case 'TooltipMsg':
+				return A4(_debois$elm_mdl$Material_Tooltip$react, lift, _p0._1, _p0._0, store);
+			case 'TabsMsg':
+				return A4(_debois$elm_mdl$Material_Tabs$react, lift, _p0._1, _p0._0, store);
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Maybe$Nothing,
+					_1: _debois$elm_mdl$Material_Dispatch$forward(_p0._0)
+				};
+		}
+	});
+var _debois$elm_mdl$Material$update = F3(
+	function (lift, msg, container) {
 		return A2(
-			_elm_lang$core$Maybe$withDefault,
-			{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none},
+			_debois$elm_mdl$Material_Helpers$map1st,
+			_elm_lang$core$Maybe$withDefault(container),
 			A2(
-				_elm_lang$core$Maybe$map,
-				_debois$elm_mdl$Material_Helpers$map1st(
+				_debois$elm_mdl$Material_Helpers$map1st,
+				_elm_lang$core$Maybe$map(
 					function (mdl) {
 						return _elm_lang$core$Native_Utils.update(
-							model,
+							container,
 							{mdl: mdl});
 					}),
-				A2(_debois$elm_parts$Parts$update$, msg, model.mdl)));
+				A3(
+					_debois$elm_mdl$Material$update_,
+					lift,
+					msg,
+					function (_) {
+						return _.mdl;
+					}(container))));
 	});
 var _debois$elm_mdl$Material$model = {button: _elm_lang$core$Dict$empty, textfield: _elm_lang$core$Dict$empty, menu: _elm_lang$core$Dict$empty, snackbar: _elm_lang$core$Maybe$Nothing, layout: _debois$elm_mdl$Material_Layout$defaultModel, toggles: _elm_lang$core$Dict$empty, tooltip: _elm_lang$core$Dict$empty, tabs: _elm_lang$core$Dict$empty};
 var _debois$elm_mdl$Material$Model = F8(
@@ -14558,11 +16329,149 @@ var _debois$elm_mdl$Material_Color$LightBlue = {ctor: 'LightBlue'};
 var _debois$elm_mdl$Material_Color$Blue = {ctor: 'Blue'};
 var _debois$elm_mdl$Material_Color$Indigo = {ctor: 'Indigo'};
 var _debois$elm_mdl$Material_Color$hues = _elm_lang$core$Array$fromList(
-	_elm_lang$core$Native_List.fromArray(
-		[_debois$elm_mdl$Material_Color$Indigo, _debois$elm_mdl$Material_Color$Blue, _debois$elm_mdl$Material_Color$LightBlue, _debois$elm_mdl$Material_Color$Cyan, _debois$elm_mdl$Material_Color$Teal, _debois$elm_mdl$Material_Color$Green, _debois$elm_mdl$Material_Color$LightGreen, _debois$elm_mdl$Material_Color$Lime, _debois$elm_mdl$Material_Color$Yellow, _debois$elm_mdl$Material_Color$Amber, _debois$elm_mdl$Material_Color$Orange, _debois$elm_mdl$Material_Color$Brown, _debois$elm_mdl$Material_Color$BlueGrey, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$DeepOrange, _debois$elm_mdl$Material_Color$Red, _debois$elm_mdl$Material_Color$Pink, _debois$elm_mdl$Material_Color$Purple, _debois$elm_mdl$Material_Color$DeepPurple]));
+	{
+		ctor: '::',
+		_0: _debois$elm_mdl$Material_Color$Indigo,
+		_1: {
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Color$Blue,
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Color$LightBlue,
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Color$Cyan,
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Color$Teal,
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Color$Green,
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Color$LightGreen,
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Color$Lime,
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Color$Yellow,
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Color$Amber,
+											_1: {
+												ctor: '::',
+												_0: _debois$elm_mdl$Material_Color$Orange,
+												_1: {
+													ctor: '::',
+													_0: _debois$elm_mdl$Material_Color$Brown,
+													_1: {
+														ctor: '::',
+														_0: _debois$elm_mdl$Material_Color$BlueGrey,
+														_1: {
+															ctor: '::',
+															_0: _debois$elm_mdl$Material_Color$Grey,
+															_1: {
+																ctor: '::',
+																_0: _debois$elm_mdl$Material_Color$DeepOrange,
+																_1: {
+																	ctor: '::',
+																	_0: _debois$elm_mdl$Material_Color$Red,
+																	_1: {
+																		ctor: '::',
+																		_0: _debois$elm_mdl$Material_Color$Pink,
+																		_1: {
+																			ctor: '::',
+																			_0: _debois$elm_mdl$Material_Color$Purple,
+																			_1: {
+																				ctor: '::',
+																				_0: _debois$elm_mdl$Material_Color$DeepPurple,
+																				_1: {ctor: '[]'}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
 var _debois$elm_mdl$Material_Color$accentHues = _elm_lang$core$Array$fromList(
-	_elm_lang$core$Native_List.fromArray(
-		[_debois$elm_mdl$Material_Color$Indigo, _debois$elm_mdl$Material_Color$Blue, _debois$elm_mdl$Material_Color$LightBlue, _debois$elm_mdl$Material_Color$Cyan, _debois$elm_mdl$Material_Color$Teal, _debois$elm_mdl$Material_Color$Green, _debois$elm_mdl$Material_Color$LightGreen, _debois$elm_mdl$Material_Color$Lime, _debois$elm_mdl$Material_Color$Yellow, _debois$elm_mdl$Material_Color$Amber, _debois$elm_mdl$Material_Color$Orange, _debois$elm_mdl$Material_Color$DeepOrange, _debois$elm_mdl$Material_Color$Red, _debois$elm_mdl$Material_Color$Pink, _debois$elm_mdl$Material_Color$Purple, _debois$elm_mdl$Material_Color$DeepPurple]));
+	{
+		ctor: '::',
+		_0: _debois$elm_mdl$Material_Color$Indigo,
+		_1: {
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Color$Blue,
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Color$LightBlue,
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Color$Cyan,
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Color$Teal,
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Color$Green,
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Color$LightGreen,
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Color$Lime,
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Color$Yellow,
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Color$Amber,
+											_1: {
+												ctor: '::',
+												_0: _debois$elm_mdl$Material_Color$Orange,
+												_1: {
+													ctor: '::',
+													_0: _debois$elm_mdl$Material_Color$DeepOrange,
+													_1: {
+														ctor: '::',
+														_0: _debois$elm_mdl$Material_Color$Red,
+														_1: {
+															ctor: '::',
+															_0: _debois$elm_mdl$Material_Color$Pink,
+															_1: {
+																ctor: '::',
+																_0: _debois$elm_mdl$Material_Color$Purple,
+																_1: {
+																	ctor: '::',
+																	_0: _debois$elm_mdl$Material_Color$DeepPurple,
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
 var _debois$elm_mdl$Material_Color$A700 = {ctor: 'A700'};
 var _debois$elm_mdl$Material_Color$A400 = {ctor: 'A400'};
 var _debois$elm_mdl$Material_Color$A200 = {ctor: 'A200'};
@@ -14578,8 +16487,63 @@ var _debois$elm_mdl$Material_Color$S200 = {ctor: 'S200'};
 var _debois$elm_mdl$Material_Color$S100 = {ctor: 'S100'};
 var _debois$elm_mdl$Material_Color$S50 = {ctor: 'S50'};
 var _debois$elm_mdl$Material_Color$shades = _elm_lang$core$Array$fromList(
-	_elm_lang$core$Native_List.fromArray(
-		[_debois$elm_mdl$Material_Color$S50, _debois$elm_mdl$Material_Color$S100, _debois$elm_mdl$Material_Color$S200, _debois$elm_mdl$Material_Color$S300, _debois$elm_mdl$Material_Color$S400, _debois$elm_mdl$Material_Color$S500, _debois$elm_mdl$Material_Color$S600, _debois$elm_mdl$Material_Color$S700, _debois$elm_mdl$Material_Color$S800, _debois$elm_mdl$Material_Color$S900, _debois$elm_mdl$Material_Color$A100, _debois$elm_mdl$Material_Color$A200, _debois$elm_mdl$Material_Color$A400, _debois$elm_mdl$Material_Color$A700]));
+	{
+		ctor: '::',
+		_0: _debois$elm_mdl$Material_Color$S50,
+		_1: {
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Color$S100,
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Color$S200,
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Color$S300,
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Color$S400,
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Color$S500,
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Color$S600,
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Color$S700,
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Color$S800,
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Color$S900,
+											_1: {
+												ctor: '::',
+												_0: _debois$elm_mdl$Material_Color$A100,
+												_1: {
+													ctor: '::',
+													_0: _debois$elm_mdl$Material_Color$A200,
+													_1: {
+														ctor: '::',
+														_0: _debois$elm_mdl$Material_Color$A400,
+														_1: {
+															ctor: '::',
+															_0: _debois$elm_mdl$Material_Color$A700,
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
 var _debois$elm_mdl$Material_Color$C = function (a) {
 	return {ctor: 'C', _0: a};
 };
@@ -14667,13 +16631,13 @@ var _debois$elm_mdl$Material_Grid$offset = F2(
 			var _p3 = device;
 			switch (_p3.ctor) {
 				case 'All':
-					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 11, k);
+					return A3(_debois$elm_mdl$Material_Grid$clip, 0, 11, k);
 				case 'Desktop':
-					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 11, k);
+					return A3(_debois$elm_mdl$Material_Grid$clip, 0, 11, k);
 				case 'Tablet':
-					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 7, k);
+					return A3(_debois$elm_mdl$Material_Grid$clip, 0, 7, k);
 				default:
-					return A3(_debois$elm_mdl$Material_Grid$clip, 1, 3, k);
+					return A3(_debois$elm_mdl$Material_Grid$clip, 0, 3, k);
 			}
 		}();
 		return _debois$elm_mdl$Material_Options$cs(
@@ -14718,10 +16682,11 @@ var _debois$elm_mdl$Material_Grid$grid = F2(
 	function (styling, cells) {
 		return A2(
 			_debois$elm_mdl$Material_Options$div,
-			A2(
-				_elm_lang$core$List_ops['::'],
-				_debois$elm_mdl$Material_Options$cs('mdl-grid'),
-				styling),
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-grid'),
+				_1: styling
+			},
 			A2(
 				_elm_lang$core$List$map,
 				function (_p5) {
@@ -14746,10 +16711,11 @@ var _debois$elm_mdl$Material_Grid$cell = F2(
 		return _debois$elm_mdl$Material_Grid$Cell(
 			A2(
 				_debois$elm_mdl$Material_Options$div,
-				A2(
-					_elm_lang$core$List_ops['::'],
-					_debois$elm_mdl$Material_Options$cs('mdl-cell'),
-					styling),
+				{
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$cs('mdl-cell'),
+					_1: styling
+				},
 				elms));
 	});
 var _debois$elm_mdl$Material_Grid$Bottom = {ctor: 'Bottom'};
@@ -14891,451 +16857,162 @@ var _elm_lang$html$Html_Lazy$lazy3 = _elm_lang$virtual_dom$VirtualDom$lazy3;
 var _elm_lang$html$Html_Lazy$lazy2 = _elm_lang$virtual_dom$VirtualDom$lazy2;
 var _elm_lang$html$Html_Lazy$lazy = _elm_lang$virtual_dom$VirtualDom$lazy;
 
-var _elm_lang$navigation$Native_Navigation = function() {
+var _elm_lang$http$Native_Http = function() {
 
-function go(n)
+
+// ENCODING AND DECODING
+
+function encodeUri(string)
+{
+	return encodeURIComponent(string);
+}
+
+function decodeUri(string)
+{
+	try
+	{
+		return _elm_lang$core$Maybe$Just(decodeURIComponent(string));
+	}
+	catch(e)
+	{
+		return _elm_lang$core$Maybe$Nothing;
+	}
+}
+
+
+// SEND REQUEST
+
+function toTask(request, maybeProgress)
 {
 	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
 	{
-		if (n !== 0)
+		var xhr = new XMLHttpRequest();
+
+		configureProgress(xhr, maybeProgress);
+
+		xhr.addEventListener('error', function() {
+			callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'NetworkError' }));
+		});
+		xhr.addEventListener('timeout', function() {
+			callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'Timeout' }));
+		});
+		xhr.addEventListener('load', function() {
+			callback(handleResponse(xhr, request.expect.responseToResult));
+		});
+
+		try
 		{
-			history.go(n);
+			xhr.open(request.method, request.url, true);
 		}
-		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+		catch (e)
+		{
+			return callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'BadUrl', _0: request.url }));
+		}
+
+		configureRequest(xhr, request);
+		send(xhr, request.body);
+
+		return function() { xhr.abort(); };
 	});
 }
 
-function pushState(url)
+function configureProgress(xhr, maybeProgress)
 {
-	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	if (maybeProgress.ctor === 'Nothing')
 	{
-		history.pushState({}, '', url);
-		callback(_elm_lang$core$Native_Scheduler.succeed(getLocation()));
+		return;
+	}
+
+	xhr.addEventListener('progress', function(event) {
+		if (!event.lengthComputable)
+		{
+			return;
+		}
+		_elm_lang$core$Native_Scheduler.rawSpawn(maybeProgress._0({
+			bytes: event.loaded,
+			bytesExpected: event.total
+		}));
 	});
 }
 
-function replaceState(url)
+function configureRequest(xhr, request)
 {
-	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	function setHeader(pair)
 	{
-		history.replaceState({}, '', url);
-		callback(_elm_lang$core$Native_Scheduler.succeed(getLocation()));
-	});
+		xhr.setRequestHeader(pair._0, pair._1);
+	}
+
+	A2(_elm_lang$core$List$map, setHeader, request.headers);
+	xhr.responseType = request.expect.responseType;
+	xhr.withCredentials = request.withCredentials;
+
+	if (request.timeout.ctor === 'Just')
+	{
+		xhr.timeout = request.timeout._0;
+	}
 }
 
-function getLocation()
+function send(xhr, body)
 {
-	var location = document.location;
+	switch (body.ctor)
+	{
+		case 'EmptyBody':
+			xhr.send();
+			return;
 
+		case 'StringBody':
+			xhr.setRequestHeader('Content-Type', body._0);
+			xhr.send(body._1);
+			return;
+
+		case 'FormDataBody':
+			xhr.send(body._0);
+			return;
+	}
+}
+
+
+// RESPONSES
+
+function handleResponse(xhr, responseToResult)
+{
+	var response = toResponse(xhr);
+
+	if (xhr.status < 200 || 300 <= xhr.status)
+	{
+		response.body = xhr.responseText;
+		return _elm_lang$core$Native_Scheduler.fail({
+			ctor: 'BadStatus',
+			_0: response
+		});
+	}
+
+	var result = responseToResult(response);
+
+	if (result.ctor === 'Ok')
+	{
+		return _elm_lang$core$Native_Scheduler.succeed(result._0);
+	}
+	else
+	{
+		response.body = xhr.responseText;
+		return _elm_lang$core$Native_Scheduler.fail({
+			ctor: 'BadPayload',
+			_0: result._0,
+			_1: response
+		});
+	}
+}
+
+function toResponse(xhr)
+{
 	return {
-		href: location.href,
-		host: location.host,
-		hostname: location.hostname,
-		protocol: location.protocol,
-		origin: location.origin,
-		port_: location.port,
-		pathname: location.pathname,
-		search: location.search,
-		hash: location.hash,
-		username: location.username,
-		password: location.password
+		status: { code: xhr.status, message: xhr.statusText },
+		headers: parseHeaders(xhr.getAllResponseHeaders()),
+		url: xhr.responseURL,
+		body: xhr.response
 	};
 }
-
-
-return {
-	go: go,
-	pushState: pushState,
-	replaceState: replaceState,
-	getLocation: getLocation
-};
-
-}();
-
-var _elm_lang$navigation$Navigation$replaceState = _elm_lang$navigation$Native_Navigation.replaceState;
-var _elm_lang$navigation$Navigation$pushState = _elm_lang$navigation$Native_Navigation.pushState;
-var _elm_lang$navigation$Navigation$go = _elm_lang$navigation$Native_Navigation.go;
-var _elm_lang$navigation$Navigation$spawnPopState = function (router) {
-	return _elm_lang$core$Process$spawn(
-		A3(
-			_elm_lang$dom$Dom_LowLevel$onWindow,
-			'popstate',
-			_elm_lang$core$Json_Decode$value,
-			function (_p0) {
-				return A2(
-					_elm_lang$core$Platform$sendToSelf,
-					router,
-					_elm_lang$navigation$Native_Navigation.getLocation(
-						{ctor: '_Tuple0'}));
-			}));
-};
-var _elm_lang$navigation$Navigation_ops = _elm_lang$navigation$Navigation_ops || {};
-_elm_lang$navigation$Navigation_ops['&>'] = F2(
-	function (task1, task2) {
-		return A2(
-			_elm_lang$core$Task$andThen,
-			task1,
-			function (_p1) {
-				return task2;
-			});
-	});
-var _elm_lang$navigation$Navigation$notify = F3(
-	function (router, subs, location) {
-		var send = function (_p2) {
-			var _p3 = _p2;
-			return A2(
-				_elm_lang$core$Platform$sendToApp,
-				router,
-				_p3._0(location));
-		};
-		return A2(
-			_elm_lang$navigation$Navigation_ops['&>'],
-			_elm_lang$core$Task$sequence(
-				A2(_elm_lang$core$List$map, send, subs)),
-			_elm_lang$core$Task$succeed(
-				{ctor: '_Tuple0'}));
-	});
-var _elm_lang$navigation$Navigation$onSelfMsg = F3(
-	function (router, location, state) {
-		return A2(
-			_elm_lang$navigation$Navigation_ops['&>'],
-			A3(_elm_lang$navigation$Navigation$notify, router, state.subs, location),
-			_elm_lang$core$Task$succeed(state));
-	});
-var _elm_lang$navigation$Navigation$cmdHelp = F3(
-	function (router, subs, cmd) {
-		var _p4 = cmd;
-		switch (_p4.ctor) {
-			case 'Jump':
-				return _elm_lang$navigation$Navigation$go(_p4._0);
-			case 'New':
-				return A2(
-					_elm_lang$core$Task$andThen,
-					_elm_lang$navigation$Navigation$pushState(_p4._0),
-					A2(_elm_lang$navigation$Navigation$notify, router, subs));
-			default:
-				return A2(
-					_elm_lang$core$Task$andThen,
-					_elm_lang$navigation$Navigation$replaceState(_p4._0),
-					A2(_elm_lang$navigation$Navigation$notify, router, subs));
-		}
-	});
-var _elm_lang$navigation$Navigation$updateHelp = F2(
-	function (func, _p5) {
-		var _p6 = _p5;
-		return {
-			ctor: '_Tuple2',
-			_0: _p6._0,
-			_1: A2(_elm_lang$core$Platform_Cmd$map, func, _p6._1)
-		};
-	});
-var _elm_lang$navigation$Navigation$subscription = _elm_lang$core$Native_Platform.leaf('Navigation');
-var _elm_lang$navigation$Navigation$command = _elm_lang$core$Native_Platform.leaf('Navigation');
-var _elm_lang$navigation$Navigation$Location = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return {href: a, host: b, hostname: c, protocol: d, origin: e, port_: f, pathname: g, search: h, hash: i, username: j, password: k};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var _elm_lang$navigation$Navigation$State = F2(
-	function (a, b) {
-		return {subs: a, process: b};
-	});
-var _elm_lang$navigation$Navigation$init = _elm_lang$core$Task$succeed(
-	A2(
-		_elm_lang$navigation$Navigation$State,
-		_elm_lang$core$Native_List.fromArray(
-			[]),
-		_elm_lang$core$Maybe$Nothing));
-var _elm_lang$navigation$Navigation$onEffects = F4(
-	function (router, cmds, subs, _p7) {
-		var _p8 = _p7;
-		var _p10 = _p8.process;
-		var stepState = function () {
-			var _p9 = {ctor: '_Tuple2', _0: subs, _1: _p10};
-			_v4_2:
-			do {
-				if (_p9._0.ctor === '[]') {
-					if (_p9._1.ctor === 'Just') {
-						return A2(
-							_elm_lang$navigation$Navigation_ops['&>'],
-							_elm_lang$core$Process$kill(_p9._1._0),
-							_elm_lang$core$Task$succeed(
-								A2(_elm_lang$navigation$Navigation$State, subs, _elm_lang$core$Maybe$Nothing)));
-					} else {
-						break _v4_2;
-					}
-				} else {
-					if (_p9._1.ctor === 'Nothing') {
-						return A2(
-							_elm_lang$core$Task$andThen,
-							_elm_lang$navigation$Navigation$spawnPopState(router),
-							function (pid) {
-								return _elm_lang$core$Task$succeed(
-									A2(
-										_elm_lang$navigation$Navigation$State,
-										subs,
-										_elm_lang$core$Maybe$Just(pid)));
-							});
-					} else {
-						break _v4_2;
-					}
-				}
-			} while(false);
-			return _elm_lang$core$Task$succeed(
-				A2(_elm_lang$navigation$Navigation$State, subs, _p10));
-		}();
-		return A2(
-			_elm_lang$navigation$Navigation_ops['&>'],
-			_elm_lang$core$Task$sequence(
-				A2(
-					_elm_lang$core$List$map,
-					A2(_elm_lang$navigation$Navigation$cmdHelp, router, subs),
-					cmds)),
-			stepState);
-	});
-var _elm_lang$navigation$Navigation$UserMsg = function (a) {
-	return {ctor: 'UserMsg', _0: a};
-};
-var _elm_lang$navigation$Navigation$Change = function (a) {
-	return {ctor: 'Change', _0: a};
-};
-var _elm_lang$navigation$Navigation$Parser = function (a) {
-	return {ctor: 'Parser', _0: a};
-};
-var _elm_lang$navigation$Navigation$makeParser = _elm_lang$navigation$Navigation$Parser;
-var _elm_lang$navigation$Navigation$Modify = function (a) {
-	return {ctor: 'Modify', _0: a};
-};
-var _elm_lang$navigation$Navigation$modifyUrl = function (url) {
-	return _elm_lang$navigation$Navigation$command(
-		_elm_lang$navigation$Navigation$Modify(url));
-};
-var _elm_lang$navigation$Navigation$New = function (a) {
-	return {ctor: 'New', _0: a};
-};
-var _elm_lang$navigation$Navigation$newUrl = function (url) {
-	return _elm_lang$navigation$Navigation$command(
-		_elm_lang$navigation$Navigation$New(url));
-};
-var _elm_lang$navigation$Navigation$Jump = function (a) {
-	return {ctor: 'Jump', _0: a};
-};
-var _elm_lang$navigation$Navigation$back = function (n) {
-	return _elm_lang$navigation$Navigation$command(
-		_elm_lang$navigation$Navigation$Jump(0 - n));
-};
-var _elm_lang$navigation$Navigation$forward = function (n) {
-	return _elm_lang$navigation$Navigation$command(
-		_elm_lang$navigation$Navigation$Jump(n));
-};
-var _elm_lang$navigation$Navigation$cmdMap = F2(
-	function (_p11, myCmd) {
-		var _p12 = myCmd;
-		switch (_p12.ctor) {
-			case 'Jump':
-				return _elm_lang$navigation$Navigation$Jump(_p12._0);
-			case 'New':
-				return _elm_lang$navigation$Navigation$New(_p12._0);
-			default:
-				return _elm_lang$navigation$Navigation$Modify(_p12._0);
-		}
-	});
-var _elm_lang$navigation$Navigation$Monitor = function (a) {
-	return {ctor: 'Monitor', _0: a};
-};
-var _elm_lang$navigation$Navigation$programWithFlags = F2(
-	function (_p13, stuff) {
-		var _p14 = _p13;
-		var _p16 = _p14._0;
-		var location = _elm_lang$navigation$Native_Navigation.getLocation(
-			{ctor: '_Tuple0'});
-		var init = function (flags) {
-			return A2(
-				_elm_lang$navigation$Navigation$updateHelp,
-				_elm_lang$navigation$Navigation$UserMsg,
-				A2(
-					stuff.init,
-					flags,
-					_p16(location)));
-		};
-		var view = function (model) {
-			return A2(
-				_elm_lang$html$Html_App$map,
-				_elm_lang$navigation$Navigation$UserMsg,
-				stuff.view(model));
-		};
-		var subs = function (model) {
-			return _elm_lang$core$Platform_Sub$batch(
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$navigation$Navigation$subscription(
-						_elm_lang$navigation$Navigation$Monitor(_elm_lang$navigation$Navigation$Change)),
-						A2(
-						_elm_lang$core$Platform_Sub$map,
-						_elm_lang$navigation$Navigation$UserMsg,
-						stuff.subscriptions(model))
-					]));
-		};
-		var update = F2(
-			function (msg, model) {
-				return A2(
-					_elm_lang$navigation$Navigation$updateHelp,
-					_elm_lang$navigation$Navigation$UserMsg,
-					function () {
-						var _p15 = msg;
-						if (_p15.ctor === 'Change') {
-							return A2(
-								stuff.urlUpdate,
-								_p16(_p15._0),
-								model);
-						} else {
-							return A2(stuff.update, _p15._0, model);
-						}
-					}());
-			});
-		return _elm_lang$html$Html_App$programWithFlags(
-			{init: init, view: view, update: update, subscriptions: subs});
-	});
-var _elm_lang$navigation$Navigation$program = F2(
-	function (parser, stuff) {
-		return A2(
-			_elm_lang$navigation$Navigation$programWithFlags,
-			parser,
-			_elm_lang$core$Native_Utils.update(
-				stuff,
-				{
-					init: function (_p17) {
-						return stuff.init;
-					}
-				}));
-	});
-var _elm_lang$navigation$Navigation$subMap = F2(
-	function (func, _p18) {
-		var _p19 = _p18;
-		return _elm_lang$navigation$Navigation$Monitor(
-			function (_p20) {
-				return func(
-					_p19._0(_p20));
-			});
-	});
-_elm_lang$core$Native_Platform.effectManagers['Navigation'] = {pkg: 'elm-lang/navigation', init: _elm_lang$navigation$Navigation$init, onEffects: _elm_lang$navigation$Navigation$onEffects, onSelfMsg: _elm_lang$navigation$Navigation$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$navigation$Navigation$cmdMap, subMap: _elm_lang$navigation$Navigation$subMap};
-
-//import Dict, List, Maybe, Native.Scheduler //
-
-var _evancz$elm_http$Native_Http = function() {
-
-function send(settings, request)
-{
-	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
-		var req = new XMLHttpRequest();
-
-		// start
-		if (settings.onStart.ctor === 'Just')
-		{
-			req.addEventListener('loadStart', function() {
-				var task = settings.onStart._0;
-				_elm_lang$core$Native_Scheduler.rawSpawn(task);
-			});
-		}
-
-		// progress
-		if (settings.onProgress.ctor === 'Just')
-		{
-			req.addEventListener('progress', function(event) {
-				var progress = !event.lengthComputable
-					? _elm_lang$core$Maybe$Nothing
-					: _elm_lang$core$Maybe$Just({
-						loaded: event.loaded,
-						total: event.total
-					});
-				var task = settings.onProgress._0(progress);
-				_elm_lang$core$Native_Scheduler.rawSpawn(task);
-			});
-		}
-
-		// end
-		req.addEventListener('error', function() {
-			return callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'RawNetworkError' }));
-		});
-
-		req.addEventListener('timeout', function() {
-			return callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'RawTimeout' }));
-		});
-
-		req.addEventListener('load', function() {
-			return callback(_elm_lang$core$Native_Scheduler.succeed(toResponse(req)));
-		});
-
-		req.open(request.verb, request.url, true);
-
-		// set all the headers
-		function setHeader(pair) {
-			req.setRequestHeader(pair._0, pair._1);
-		}
-		A2(_elm_lang$core$List$map, setHeader, request.headers);
-
-		// set the timeout
-		req.timeout = settings.timeout;
-
-		// enable this withCredentials thing
-		req.withCredentials = settings.withCredentials;
-
-		// ask for a specific MIME type for the response
-		if (settings.desiredResponseType.ctor === 'Just')
-		{
-			req.overrideMimeType(settings.desiredResponseType._0);
-		}
-
-		// actuall send the request
-		if(request.body.ctor === "BodyFormData")
-		{
-			req.send(request.body.formData)
-		}
-		else
-		{
-			req.send(request.body._0);
-		}
-
-		return function() {
-			req.abort();
-		};
-	});
-}
-
-
-// deal with responses
-
-function toResponse(req)
-{
-	var tag = req.responseType === 'blob' ? 'Blob' : 'Text'
-	var response = tag === 'Blob' ? req.response : req.responseText;
-	return {
-		status: req.status,
-		statusText: req.statusText,
-		headers: parseHeaders(req.getAllResponseHeaders()),
-		url: req.responseURL,
-		value: { ctor: tag, _0: response }
-	};
-}
-
 
 function parseHeaders(rawHeaders)
 {
@@ -15370,1086 +17047,3931 @@ function parseHeaders(rawHeaders)
 }
 
 
-function multipart(dataList)
+// EXPECTORS
+
+function expectStringResponse(responseToResult)
+{
+	return {
+		responseType: 'text',
+		responseToResult: responseToResult
+	};
+}
+
+function mapExpect(func, expect)
+{
+	return {
+		responseType: expect.responseType,
+		responseToResult: function(response) {
+			var convertedResponse = expect.responseToResult(response);
+			return A2(_elm_lang$core$Result$map, func, convertedResponse);
+		}
+	};
+}
+
+
+// BODY
+
+function multipart(parts)
 {
 	var formData = new FormData();
 
-	while (dataList.ctor !== '[]')
+	while (parts.ctor !== '[]')
 	{
-		var data = dataList._0;
-		if (data.ctor === 'StringData')
-		{
-			formData.append(data._0, data._1);
-		}
-		else
-		{
-			var fileName = data._1.ctor === 'Nothing'
-				? undefined
-				: data._1._0;
-			formData.append(data._0, data._2, fileName);
-		}
-		dataList = dataList._1;
+		var part = parts._0;
+		formData.append(part._0, part._1);
+		parts = parts._1;
 	}
 
-	return { ctor: 'BodyFormData', formData: formData };
-}
-
-
-function uriEncode(string)
-{
-	return encodeURIComponent(string);
-}
-
-function uriDecode(string)
-{
-	return decodeURIComponent(string);
+	return { ctor: 'FormDataBody', _0: formData };
 }
 
 return {
-	send: F2(send),
+	toTask: F2(toTask),
+	expectStringResponse: expectStringResponse,
+	mapExpect: F2(mapExpect),
 	multipart: multipart,
-	uriEncode: uriEncode,
-	uriDecode: uriDecode
+	encodeUri: encodeUri,
+	decodeUri: decodeUri
 };
 
 }();
 
-var _evancz$elm_http$Http$send = _evancz$elm_http$Native_Http.send;
-var _evancz$elm_http$Http$defaultSettings = {timeout: 0, onStart: _elm_lang$core$Maybe$Nothing, onProgress: _elm_lang$core$Maybe$Nothing, desiredResponseType: _elm_lang$core$Maybe$Nothing, withCredentials: false};
-var _evancz$elm_http$Http$multipart = _evancz$elm_http$Native_Http.multipart;
-var _evancz$elm_http$Http$uriDecode = _evancz$elm_http$Native_Http.uriDecode;
-var _evancz$elm_http$Http$uriEncode = _evancz$elm_http$Native_Http.uriEncode;
-var _evancz$elm_http$Http$queryEscape = function (string) {
-	return A2(
-		_elm_lang$core$String$join,
-		'+',
-		A2(
-			_elm_lang$core$String$split,
-			'%20',
-			_evancz$elm_http$Http$uriEncode(string)));
+var _elm_lang$http$Http_Internal$map = F2(
+	function (func, request) {
+		return _elm_lang$core$Native_Utils.update(
+			request,
+			{
+				expect: A2(_elm_lang$http$Native_Http.mapExpect, func, request.expect)
+			});
+	});
+var _elm_lang$http$Http_Internal$RawRequest = F7(
+	function (a, b, c, d, e, f, g) {
+		return {method: a, headers: b, url: c, body: d, expect: e, timeout: f, withCredentials: g};
+	});
+var _elm_lang$http$Http_Internal$Request = function (a) {
+	return {ctor: 'Request', _0: a};
 };
-var _evancz$elm_http$Http$queryPair = function (_p0) {
+var _elm_lang$http$Http_Internal$Expect = {ctor: 'Expect'};
+var _elm_lang$http$Http_Internal$FormDataBody = {ctor: 'FormDataBody'};
+var _elm_lang$http$Http_Internal$StringBody = F2(
+	function (a, b) {
+		return {ctor: 'StringBody', _0: a, _1: b};
+	});
+var _elm_lang$http$Http_Internal$EmptyBody = {ctor: 'EmptyBody'};
+var _elm_lang$http$Http_Internal$Header = F2(
+	function (a, b) {
+		return {ctor: 'Header', _0: a, _1: b};
+	});
+
+var _elm_lang$http$Http$decodeUri = _elm_lang$http$Native_Http.decodeUri;
+var _elm_lang$http$Http$encodeUri = _elm_lang$http$Native_Http.encodeUri;
+var _elm_lang$http$Http$expectStringResponse = _elm_lang$http$Native_Http.expectStringResponse;
+var _elm_lang$http$Http$expectJson = function (decoder) {
+	return _elm_lang$http$Http$expectStringResponse(
+		function (response) {
+			return A2(_elm_lang$core$Json_Decode$decodeString, decoder, response.body);
+		});
+};
+var _elm_lang$http$Http$expectString = _elm_lang$http$Http$expectStringResponse(
+	function (response) {
+		return _elm_lang$core$Result$Ok(response.body);
+	});
+var _elm_lang$http$Http$multipartBody = _elm_lang$http$Native_Http.multipart;
+var _elm_lang$http$Http$stringBody = _elm_lang$http$Http_Internal$StringBody;
+var _elm_lang$http$Http$jsonBody = function (value) {
+	return A2(
+		_elm_lang$http$Http_Internal$StringBody,
+		'application/json',
+		A2(_elm_lang$core$Json_Encode$encode, 0, value));
+};
+var _elm_lang$http$Http$emptyBody = _elm_lang$http$Http_Internal$EmptyBody;
+var _elm_lang$http$Http$header = _elm_lang$http$Http_Internal$Header;
+var _elm_lang$http$Http$request = _elm_lang$http$Http_Internal$Request;
+var _elm_lang$http$Http$post = F3(
+	function (url, body, decoder) {
+		return _elm_lang$http$Http$request(
+			{
+				method: 'POST',
+				headers: {ctor: '[]'},
+				url: url,
+				body: body,
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
+	});
+var _elm_lang$http$Http$get = F2(
+	function (url, decoder) {
+		return _elm_lang$http$Http$request(
+			{
+				method: 'GET',
+				headers: {ctor: '[]'},
+				url: url,
+				body: _elm_lang$http$Http$emptyBody,
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
+	});
+var _elm_lang$http$Http$getString = function (url) {
+	return _elm_lang$http$Http$request(
+		{
+			method: 'GET',
+			headers: {ctor: '[]'},
+			url: url,
+			body: _elm_lang$http$Http$emptyBody,
+			expect: _elm_lang$http$Http$expectString,
+			timeout: _elm_lang$core$Maybe$Nothing,
+			withCredentials: false
+		});
+};
+var _elm_lang$http$Http$toTask = function (_p0) {
 	var _p1 = _p0;
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		_evancz$elm_http$Http$queryEscape(_p1._0),
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			'=',
-			_evancz$elm_http$Http$queryEscape(_p1._1)));
+	return A2(_elm_lang$http$Native_Http.toTask, _p1._0, _elm_lang$core$Maybe$Nothing);
 };
-var _evancz$elm_http$Http$url = F2(
-	function (baseUrl, args) {
-		var _p2 = args;
-		if (_p2.ctor === '[]') {
-			return baseUrl;
-		} else {
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				baseUrl,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'?',
-					A2(
-						_elm_lang$core$String$join,
-						'&',
-						A2(_elm_lang$core$List$map, _evancz$elm_http$Http$queryPair, args))));
-		}
+var _elm_lang$http$Http$send = F2(
+	function (resultToMessage, request) {
+		return A2(
+			_elm_lang$core$Task$attempt,
+			resultToMessage,
+			_elm_lang$http$Http$toTask(request));
 	});
-var _evancz$elm_http$Http$Request = F4(
+var _elm_lang$http$Http$Response = F4(
 	function (a, b, c, d) {
-		return {verb: a, headers: b, url: c, body: d};
+		return {url: a, status: b, headers: c, body: d};
 	});
-var _evancz$elm_http$Http$Settings = F5(
-	function (a, b, c, d, e) {
-		return {timeout: a, onStart: b, onProgress: c, desiredResponseType: d, withCredentials: e};
-	});
-var _evancz$elm_http$Http$Response = F5(
-	function (a, b, c, d, e) {
-		return {status: a, statusText: b, headers: c, url: d, value: e};
-	});
-var _evancz$elm_http$Http$TODO_implement_blob_in_another_library = {ctor: 'TODO_implement_blob_in_another_library'};
-var _evancz$elm_http$Http$TODO_implement_file_in_another_library = {ctor: 'TODO_implement_file_in_another_library'};
-var _evancz$elm_http$Http$BodyBlob = function (a) {
-	return {ctor: 'BodyBlob', _0: a};
-};
-var _evancz$elm_http$Http$BodyFormData = {ctor: 'BodyFormData'};
-var _evancz$elm_http$Http$ArrayBuffer = {ctor: 'ArrayBuffer'};
-var _evancz$elm_http$Http$BodyString = function (a) {
-	return {ctor: 'BodyString', _0: a};
-};
-var _evancz$elm_http$Http$string = _evancz$elm_http$Http$BodyString;
-var _evancz$elm_http$Http$Empty = {ctor: 'Empty'};
-var _evancz$elm_http$Http$empty = _evancz$elm_http$Http$Empty;
-var _evancz$elm_http$Http$FileData = F3(
-	function (a, b, c) {
-		return {ctor: 'FileData', _0: a, _1: b, _2: c};
-	});
-var _evancz$elm_http$Http$BlobData = F3(
-	function (a, b, c) {
-		return {ctor: 'BlobData', _0: a, _1: b, _2: c};
-	});
-var _evancz$elm_http$Http$blobData = _evancz$elm_http$Http$BlobData;
-var _evancz$elm_http$Http$StringData = F2(
+var _elm_lang$http$Http$BadPayload = F2(
 	function (a, b) {
-		return {ctor: 'StringData', _0: a, _1: b};
+		return {ctor: 'BadPayload', _0: a, _1: b};
 	});
-var _evancz$elm_http$Http$stringData = _evancz$elm_http$Http$StringData;
-var _evancz$elm_http$Http$Blob = function (a) {
-	return {ctor: 'Blob', _0: a};
+var _elm_lang$http$Http$BadStatus = function (a) {
+	return {ctor: 'BadStatus', _0: a};
 };
-var _evancz$elm_http$Http$Text = function (a) {
-	return {ctor: 'Text', _0: a};
+var _elm_lang$http$Http$NetworkError = {ctor: 'NetworkError'};
+var _elm_lang$http$Http$Timeout = {ctor: 'Timeout'};
+var _elm_lang$http$Http$BadUrl = function (a) {
+	return {ctor: 'BadUrl', _0: a};
 };
-var _evancz$elm_http$Http$RawNetworkError = {ctor: 'RawNetworkError'};
-var _evancz$elm_http$Http$RawTimeout = {ctor: 'RawTimeout'};
-var _evancz$elm_http$Http$BadResponse = F2(
+var _elm_lang$http$Http$StringPart = F2(
 	function (a, b) {
-		return {ctor: 'BadResponse', _0: a, _1: b};
+		return {ctor: 'StringPart', _0: a, _1: b};
 	});
-var _evancz$elm_http$Http$UnexpectedPayload = function (a) {
-	return {ctor: 'UnexpectedPayload', _0: a};
-};
-var _evancz$elm_http$Http$handleResponse = F2(
-	function (handle, response) {
-		if ((_elm_lang$core$Native_Utils.cmp(200, response.status) < 1) && (_elm_lang$core$Native_Utils.cmp(response.status, 300) < 0)) {
-			var _p3 = response.value;
-			if (_p3.ctor === 'Text') {
-				return handle(_p3._0);
-			} else {
-				return _elm_lang$core$Task$fail(
-					_evancz$elm_http$Http$UnexpectedPayload('Response body is a blob, expecting a string.'));
-			}
-		} else {
-			return _elm_lang$core$Task$fail(
-				A2(_evancz$elm_http$Http$BadResponse, response.status, response.statusText));
+var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
+
+var _elm_lang$navigation$Native_Navigation = function() {
+
+
+// FAKE NAVIGATION
+
+function go(n)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		if (n !== 0)
+		{
+			history.go(n);
 		}
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
 	});
-var _evancz$elm_http$Http$NetworkError = {ctor: 'NetworkError'};
-var _evancz$elm_http$Http$Timeout = {ctor: 'Timeout'};
-var _evancz$elm_http$Http$promoteError = function (rawError) {
-	var _p4 = rawError;
-	if (_p4.ctor === 'RawTimeout') {
-		return _evancz$elm_http$Http$Timeout;
-	} else {
-		return _evancz$elm_http$Http$NetworkError;
-	}
-};
-var _evancz$elm_http$Http$getString = function (url) {
-	var request = {
-		verb: 'GET',
-		headers: _elm_lang$core$Native_List.fromArray(
-			[]),
-		url: url,
-		body: _evancz$elm_http$Http$empty
+}
+
+function pushState(url)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		history.pushState({}, '', url);
+		callback(_elm_lang$core$Native_Scheduler.succeed(getLocation()));
+	});
+}
+
+function replaceState(url)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		history.replaceState({}, '', url);
+		callback(_elm_lang$core$Native_Scheduler.succeed(getLocation()));
+	});
+}
+
+
+// REAL NAVIGATION
+
+function reloadPage(skipCache)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		document.location.reload(skipCache);
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+function setLocation(url)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		try
+		{
+			window.location = url;
+		}
+		catch(err)
+		{
+			// Only Firefox can throw a NS_ERROR_MALFORMED_URI exception here.
+			// Other browsers reload the page, so let's be consistent about that.
+			document.location.reload(false);
+		}
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+
+// GET LOCATION
+
+function getLocation()
+{
+	var location = document.location;
+
+	return {
+		href: location.href,
+		host: location.host,
+		hostname: location.hostname,
+		protocol: location.protocol,
+		origin: location.origin,
+		port_: location.port,
+		pathname: location.pathname,
+		search: location.search,
+		hash: location.hash,
+		username: location.username,
+		password: location.password
 	};
-	return A2(
-		_elm_lang$core$Task$andThen,
-		A2(
-			_elm_lang$core$Task$mapError,
-			_evancz$elm_http$Http$promoteError,
-			A2(_evancz$elm_http$Http$send, _evancz$elm_http$Http$defaultSettings, request)),
-		_evancz$elm_http$Http$handleResponse(_elm_lang$core$Task$succeed));
+}
+
+
+// DETECT IE11 PROBLEMS
+
+function isInternetExplorer11()
+{
+	return window.navigator.userAgent.indexOf('Trident') !== -1;
+}
+
+
+return {
+	go: go,
+	setLocation: setLocation,
+	reloadPage: reloadPage,
+	pushState: pushState,
+	replaceState: replaceState,
+	getLocation: getLocation,
+	isInternetExplorer11: isInternetExplorer11
 };
-var _evancz$elm_http$Http$fromJson = F2(
-	function (decoder, response) {
-		var decode = function (str) {
-			var _p5 = A2(_elm_lang$core$Json_Decode$decodeString, decoder, str);
-			if (_p5.ctor === 'Ok') {
-				return _elm_lang$core$Task$succeed(_p5._0);
-			} else {
-				return _elm_lang$core$Task$fail(
-					_evancz$elm_http$Http$UnexpectedPayload(_p5._0));
-			}
-		};
+
+}();
+
+var _elm_lang$navigation$Navigation$replaceState = _elm_lang$navigation$Native_Navigation.replaceState;
+var _elm_lang$navigation$Navigation$pushState = _elm_lang$navigation$Native_Navigation.pushState;
+var _elm_lang$navigation$Navigation$go = _elm_lang$navigation$Native_Navigation.go;
+var _elm_lang$navigation$Navigation$reloadPage = _elm_lang$navigation$Native_Navigation.reloadPage;
+var _elm_lang$navigation$Navigation$setLocation = _elm_lang$navigation$Native_Navigation.setLocation;
+var _elm_lang$navigation$Navigation_ops = _elm_lang$navigation$Navigation_ops || {};
+_elm_lang$navigation$Navigation_ops['&>'] = F2(
+	function (task1, task2) {
 		return A2(
 			_elm_lang$core$Task$andThen,
-			A2(_elm_lang$core$Task$mapError, _evancz$elm_http$Http$promoteError, response),
-			_evancz$elm_http$Http$handleResponse(decode));
+			function (_p0) {
+				return task2;
+			},
+			task1);
 	});
-var _evancz$elm_http$Http$get = F2(
-	function (decoder, url) {
-		var request = {
-			verb: 'GET',
-			headers: _elm_lang$core$Native_List.fromArray(
-				[]),
-			url: url,
-			body: _evancz$elm_http$Http$empty
+var _elm_lang$navigation$Navigation$notify = F3(
+	function (router, subs, location) {
+		var send = function (_p1) {
+			var _p2 = _p1;
+			return A2(
+				_elm_lang$core$Platform$sendToApp,
+				router,
+				_p2._0(location));
 		};
 		return A2(
-			_evancz$elm_http$Http$fromJson,
-			decoder,
-			A2(_evancz$elm_http$Http$send, _evancz$elm_http$Http$defaultSettings, request));
+			_elm_lang$navigation$Navigation_ops['&>'],
+			_elm_lang$core$Task$sequence(
+				A2(_elm_lang$core$List$map, send, subs)),
+			_elm_lang$core$Task$succeed(
+				{ctor: '_Tuple0'}));
 	});
-var _evancz$elm_http$Http$post = F3(
-	function (decoder, url, body) {
-		var request = {
-			verb: 'POST',
-			headers: _elm_lang$core$Native_List.fromArray(
-				[]),
-			url: url,
-			body: body
-		};
+var _elm_lang$navigation$Navigation$cmdHelp = F3(
+	function (router, subs, cmd) {
+		var _p3 = cmd;
+		switch (_p3.ctor) {
+			case 'Jump':
+				return _elm_lang$navigation$Navigation$go(_p3._0);
+			case 'New':
+				return A2(
+					_elm_lang$core$Task$andThen,
+					A2(_elm_lang$navigation$Navigation$notify, router, subs),
+					_elm_lang$navigation$Navigation$pushState(_p3._0));
+			case 'Modify':
+				return A2(
+					_elm_lang$core$Task$andThen,
+					A2(_elm_lang$navigation$Navigation$notify, router, subs),
+					_elm_lang$navigation$Navigation$replaceState(_p3._0));
+			case 'Visit':
+				return _elm_lang$navigation$Navigation$setLocation(_p3._0);
+			default:
+				return _elm_lang$navigation$Navigation$reloadPage(_p3._0);
+		}
+	});
+var _elm_lang$navigation$Navigation$killPopWatcher = function (popWatcher) {
+	var _p4 = popWatcher;
+	if (_p4.ctor === 'Normal') {
+		return _elm_lang$core$Process$kill(_p4._0);
+	} else {
 		return A2(
-			_evancz$elm_http$Http$fromJson,
-			decoder,
-			A2(_evancz$elm_http$Http$send, _evancz$elm_http$Http$defaultSettings, request));
+			_elm_lang$navigation$Navigation_ops['&>'],
+			_elm_lang$core$Process$kill(_p4._0),
+			_elm_lang$core$Process$kill(_p4._1));
+	}
+};
+var _elm_lang$navigation$Navigation$onSelfMsg = F3(
+	function (router, location, state) {
+		return A2(
+			_elm_lang$navigation$Navigation_ops['&>'],
+			A3(_elm_lang$navigation$Navigation$notify, router, state.subs, location),
+			_elm_lang$core$Task$succeed(state));
 	});
+var _elm_lang$navigation$Navigation$subscription = _elm_lang$core$Native_Platform.leaf('Navigation');
+var _elm_lang$navigation$Navigation$command = _elm_lang$core$Native_Platform.leaf('Navigation');
+var _elm_lang$navigation$Navigation$Location = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return {href: a, host: b, hostname: c, protocol: d, origin: e, port_: f, pathname: g, search: h, hash: i, username: j, password: k};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _elm_lang$navigation$Navigation$State = F2(
+	function (a, b) {
+		return {subs: a, popWatcher: b};
+	});
+var _elm_lang$navigation$Navigation$init = _elm_lang$core$Task$succeed(
+	A2(
+		_elm_lang$navigation$Navigation$State,
+		{ctor: '[]'},
+		_elm_lang$core$Maybe$Nothing));
+var _elm_lang$navigation$Navigation$Reload = function (a) {
+	return {ctor: 'Reload', _0: a};
+};
+var _elm_lang$navigation$Navigation$reload = _elm_lang$navigation$Navigation$command(
+	_elm_lang$navigation$Navigation$Reload(false));
+var _elm_lang$navigation$Navigation$reloadAndSkipCache = _elm_lang$navigation$Navigation$command(
+	_elm_lang$navigation$Navigation$Reload(true));
+var _elm_lang$navigation$Navigation$Visit = function (a) {
+	return {ctor: 'Visit', _0: a};
+};
+var _elm_lang$navigation$Navigation$load = function (url) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Visit(url));
+};
+var _elm_lang$navigation$Navigation$Modify = function (a) {
+	return {ctor: 'Modify', _0: a};
+};
+var _elm_lang$navigation$Navigation$modifyUrl = function (url) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Modify(url));
+};
+var _elm_lang$navigation$Navigation$New = function (a) {
+	return {ctor: 'New', _0: a};
+};
+var _elm_lang$navigation$Navigation$newUrl = function (url) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$New(url));
+};
+var _elm_lang$navigation$Navigation$Jump = function (a) {
+	return {ctor: 'Jump', _0: a};
+};
+var _elm_lang$navigation$Navigation$back = function (n) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Jump(0 - n));
+};
+var _elm_lang$navigation$Navigation$forward = function (n) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Jump(n));
+};
+var _elm_lang$navigation$Navigation$cmdMap = F2(
+	function (_p5, myCmd) {
+		var _p6 = myCmd;
+		switch (_p6.ctor) {
+			case 'Jump':
+				return _elm_lang$navigation$Navigation$Jump(_p6._0);
+			case 'New':
+				return _elm_lang$navigation$Navigation$New(_p6._0);
+			case 'Modify':
+				return _elm_lang$navigation$Navigation$Modify(_p6._0);
+			case 'Visit':
+				return _elm_lang$navigation$Navigation$Visit(_p6._0);
+			default:
+				return _elm_lang$navigation$Navigation$Reload(_p6._0);
+		}
+	});
+var _elm_lang$navigation$Navigation$Monitor = function (a) {
+	return {ctor: 'Monitor', _0: a};
+};
+var _elm_lang$navigation$Navigation$program = F2(
+	function (locationToMessage, stuff) {
+		var init = stuff.init(
+			_elm_lang$navigation$Native_Navigation.getLocation(
+				{ctor: '_Tuple0'}));
+		var subs = function (model) {
+			return _elm_lang$core$Platform_Sub$batch(
+				{
+					ctor: '::',
+					_0: _elm_lang$navigation$Navigation$subscription(
+						_elm_lang$navigation$Navigation$Monitor(locationToMessage)),
+					_1: {
+						ctor: '::',
+						_0: stuff.subscriptions(model),
+						_1: {ctor: '[]'}
+					}
+				});
+		};
+		return _elm_lang$html$Html$program(
+			{init: init, view: stuff.view, update: stuff.update, subscriptions: subs});
+	});
+var _elm_lang$navigation$Navigation$programWithFlags = F2(
+	function (locationToMessage, stuff) {
+		var init = function (flags) {
+			return A2(
+				stuff.init,
+				flags,
+				_elm_lang$navigation$Native_Navigation.getLocation(
+					{ctor: '_Tuple0'}));
+		};
+		var subs = function (model) {
+			return _elm_lang$core$Platform_Sub$batch(
+				{
+					ctor: '::',
+					_0: _elm_lang$navigation$Navigation$subscription(
+						_elm_lang$navigation$Navigation$Monitor(locationToMessage)),
+					_1: {
+						ctor: '::',
+						_0: stuff.subscriptions(model),
+						_1: {ctor: '[]'}
+					}
+				});
+		};
+		return _elm_lang$html$Html$programWithFlags(
+			{init: init, view: stuff.view, update: stuff.update, subscriptions: subs});
+	});
+var _elm_lang$navigation$Navigation$subMap = F2(
+	function (func, _p7) {
+		var _p8 = _p7;
+		return _elm_lang$navigation$Navigation$Monitor(
+			function (_p9) {
+				return func(
+					_p8._0(_p9));
+			});
+	});
+var _elm_lang$navigation$Navigation$InternetExplorer = F2(
+	function (a, b) {
+		return {ctor: 'InternetExplorer', _0: a, _1: b};
+	});
+var _elm_lang$navigation$Navigation$Normal = function (a) {
+	return {ctor: 'Normal', _0: a};
+};
+var _elm_lang$navigation$Navigation$spawnPopWatcher = function (router) {
+	var reportLocation = function (_p10) {
+		return A2(
+			_elm_lang$core$Platform$sendToSelf,
+			router,
+			_elm_lang$navigation$Native_Navigation.getLocation(
+				{ctor: '_Tuple0'}));
+	};
+	return _elm_lang$navigation$Native_Navigation.isInternetExplorer11(
+		{ctor: '_Tuple0'}) ? A3(
+		_elm_lang$core$Task$map2,
+		_elm_lang$navigation$Navigation$InternetExplorer,
+		_elm_lang$core$Process$spawn(
+			A3(_elm_lang$dom$Dom_LowLevel$onWindow, 'popstate', _elm_lang$core$Json_Decode$value, reportLocation)),
+		_elm_lang$core$Process$spawn(
+			A3(_elm_lang$dom$Dom_LowLevel$onWindow, 'hashchange', _elm_lang$core$Json_Decode$value, reportLocation))) : A2(
+		_elm_lang$core$Task$map,
+		_elm_lang$navigation$Navigation$Normal,
+		_elm_lang$core$Process$spawn(
+			A3(_elm_lang$dom$Dom_LowLevel$onWindow, 'popstate', _elm_lang$core$Json_Decode$value, reportLocation)));
+};
+var _elm_lang$navigation$Navigation$onEffects = F4(
+	function (router, cmds, subs, _p11) {
+		var _p12 = _p11;
+		var _p15 = _p12.popWatcher;
+		var stepState = function () {
+			var _p13 = {ctor: '_Tuple2', _0: subs, _1: _p15};
+			_v6_2:
+			do {
+				if (_p13._0.ctor === '[]') {
+					if (_p13._1.ctor === 'Just') {
+						return A2(
+							_elm_lang$navigation$Navigation_ops['&>'],
+							_elm_lang$navigation$Navigation$killPopWatcher(_p13._1._0),
+							_elm_lang$core$Task$succeed(
+								A2(_elm_lang$navigation$Navigation$State, subs, _elm_lang$core$Maybe$Nothing)));
+					} else {
+						break _v6_2;
+					}
+				} else {
+					if (_p13._1.ctor === 'Nothing') {
+						return A2(
+							_elm_lang$core$Task$map,
+							function (_p14) {
+								return A2(
+									_elm_lang$navigation$Navigation$State,
+									subs,
+									_elm_lang$core$Maybe$Just(_p14));
+							},
+							_elm_lang$navigation$Navigation$spawnPopWatcher(router));
+					} else {
+						break _v6_2;
+					}
+				}
+			} while(false);
+			return _elm_lang$core$Task$succeed(
+				A2(_elm_lang$navigation$Navigation$State, subs, _p15));
+		}();
+		return A2(
+			_elm_lang$navigation$Navigation_ops['&>'],
+			_elm_lang$core$Task$sequence(
+				A2(
+					_elm_lang$core$List$map,
+					A2(_elm_lang$navigation$Navigation$cmdHelp, router, subs),
+					cmds)),
+			stepState);
+	});
+_elm_lang$core$Native_Platform.effectManagers['Navigation'] = {pkg: 'elm-lang/navigation', init: _elm_lang$navigation$Navigation$init, onEffects: _elm_lang$navigation$Navigation$onEffects, onSelfMsg: _elm_lang$navigation$Navigation$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$navigation$Navigation$cmdMap, subMap: _elm_lang$navigation$Navigation$subMap};
 
 var _jinjor$elm_html_parser$Escape$dict = _elm_lang$core$Dict$fromList(
-	_elm_lang$core$Native_List.fromArray(
-		[
-			{ctor: '_Tuple2', _0: '&#8482;', _1: '™'},
-			{ctor: '_Tuple2', _0: '&#32;', _1: ' '},
-			{ctor: '_Tuple2', _0: '&#33;', _1: '!'},
-			{ctor: '_Tuple2', _0: '&#34;', _1: '\"'},
-			{ctor: '_Tuple2', _0: '&#35;', _1: '#'},
-			{ctor: '_Tuple2', _0: '&#36;', _1: '$'},
-			{ctor: '_Tuple2', _0: '&#37;', _1: '%'},
-			{ctor: '_Tuple2', _0: '&#38;', _1: '&'},
-			{ctor: '_Tuple2', _0: '&#39;', _1: '\''},
-			{ctor: '_Tuple2', _0: '&#40;', _1: '('},
-			{ctor: '_Tuple2', _0: '&#41;', _1: ')'},
-			{ctor: '_Tuple2', _0: '&#42;', _1: '*'},
-			{ctor: '_Tuple2', _0: '&#43;', _1: '+'},
-			{ctor: '_Tuple2', _0: '&#44;', _1: ','},
-			{ctor: '_Tuple2', _0: '&#45;', _1: '-'},
-			{ctor: '_Tuple2', _0: '&#46;', _1: '.'},
-			{ctor: '_Tuple2', _0: '&#47;', _1: '/'},
-			{ctor: '_Tuple2', _0: '&#48;', _1: '0'},
-			{ctor: '_Tuple2', _0: '&#49;', _1: '1'},
-			{ctor: '_Tuple2', _0: '&#50;', _1: '2'},
-			{ctor: '_Tuple2', _0: '&#51;', _1: '3'},
-			{ctor: '_Tuple2', _0: '&#52;', _1: '4'},
-			{ctor: '_Tuple2', _0: '&#53;', _1: '5'},
-			{ctor: '_Tuple2', _0: '&#54;', _1: '6'},
-			{ctor: '_Tuple2', _0: '&#55;', _1: '7'},
-			{ctor: '_Tuple2', _0: '&#56;', _1: '8'},
-			{ctor: '_Tuple2', _0: '&#57;', _1: '9'},
-			{ctor: '_Tuple2', _0: '&#58;', _1: ':'},
-			{ctor: '_Tuple2', _0: '&#59;', _1: ';'},
-			{ctor: '_Tuple2', _0: '&#60;', _1: '<'},
-			{ctor: '_Tuple2', _0: '&#61;', _1: '='},
-			{ctor: '_Tuple2', _0: '&#62;', _1: '>'},
-			{ctor: '_Tuple2', _0: '&#63;', _1: '?'},
-			{ctor: '_Tuple2', _0: '&#64;', _1: '@'},
-			{ctor: '_Tuple2', _0: '&#65;', _1: 'A'},
-			{ctor: '_Tuple2', _0: '&#66;', _1: 'B'},
-			{ctor: '_Tuple2', _0: '&#67;', _1: 'C'},
-			{ctor: '_Tuple2', _0: '&#68;', _1: 'D'},
-			{ctor: '_Tuple2', _0: '&#69;', _1: 'E'},
-			{ctor: '_Tuple2', _0: '&#70;', _1: 'F'},
-			{ctor: '_Tuple2', _0: '&#71;', _1: 'G'},
-			{ctor: '_Tuple2', _0: '&#72;', _1: 'H'},
-			{ctor: '_Tuple2', _0: '&#73;', _1: 'I'},
-			{ctor: '_Tuple2', _0: '&#74;', _1: 'J'},
-			{ctor: '_Tuple2', _0: '&#75;', _1: 'K'},
-			{ctor: '_Tuple2', _0: '&#76;', _1: 'L'},
-			{ctor: '_Tuple2', _0: '&#77;', _1: 'M'},
-			{ctor: '_Tuple2', _0: '&#78;', _1: 'N'},
-			{ctor: '_Tuple2', _0: '&#79;', _1: 'O'},
-			{ctor: '_Tuple2', _0: '&#80;', _1: 'P'},
-			{ctor: '_Tuple2', _0: '&#81;', _1: 'Q'},
-			{ctor: '_Tuple2', _0: '&#82;', _1: 'R'},
-			{ctor: '_Tuple2', _0: '&#83;', _1: 'S'},
-			{ctor: '_Tuple2', _0: '&#84;', _1: 'T'},
-			{ctor: '_Tuple2', _0: '&#85;', _1: 'U'},
-			{ctor: '_Tuple2', _0: '&#86;', _1: 'V'},
-			{ctor: '_Tuple2', _0: '&#87;', _1: 'W'},
-			{ctor: '_Tuple2', _0: '&#88;', _1: 'X'},
-			{ctor: '_Tuple2', _0: '&#89;', _1: 'Y'},
-			{ctor: '_Tuple2', _0: '&#90;', _1: 'Z'},
-			{ctor: '_Tuple2', _0: '&#91;', _1: '['},
-			{ctor: '_Tuple2', _0: '&#92;', _1: '\\'},
-			{ctor: '_Tuple2', _0: '&#93;', _1: ']'},
-			{ctor: '_Tuple2', _0: '&#94;', _1: '^'},
-			{ctor: '_Tuple2', _0: '&#95;', _1: '_'},
-			{ctor: '_Tuple2', _0: '&#96;', _1: '`'},
-			{ctor: '_Tuple2', _0: '&#97;', _1: 'a'},
-			{ctor: '_Tuple2', _0: '&#98;', _1: 'b'},
-			{ctor: '_Tuple2', _0: '&#99;', _1: 'c'},
-			{ctor: '_Tuple2', _0: '&#100;', _1: 'd'},
-			{ctor: '_Tuple2', _0: '&#101;', _1: 'e'},
-			{ctor: '_Tuple2', _0: '&#102;', _1: 'f'},
-			{ctor: '_Tuple2', _0: '&#103;', _1: 'g'},
-			{ctor: '_Tuple2', _0: '&#104;', _1: 'h'},
-			{ctor: '_Tuple2', _0: '&#105;', _1: 'i'},
-			{ctor: '_Tuple2', _0: '&#106;', _1: 'j'},
-			{ctor: '_Tuple2', _0: '&#107;', _1: 'k'},
-			{ctor: '_Tuple2', _0: '&#108;', _1: 'l'},
-			{ctor: '_Tuple2', _0: '&#109;', _1: 'm'},
-			{ctor: '_Tuple2', _0: '&#110;', _1: 'n'},
-			{ctor: '_Tuple2', _0: '&#111;', _1: 'o'},
-			{ctor: '_Tuple2', _0: '&#112;', _1: 'p'},
-			{ctor: '_Tuple2', _0: '&#113;', _1: 'q'},
-			{ctor: '_Tuple2', _0: '&#114;', _1: 'r'},
-			{ctor: '_Tuple2', _0: '&#115;', _1: 's'},
-			{ctor: '_Tuple2', _0: '&#116;', _1: 't'},
-			{ctor: '_Tuple2', _0: '&#117;', _1: 'u'},
-			{ctor: '_Tuple2', _0: '&#118;', _1: 'v'},
-			{ctor: '_Tuple2', _0: '&#119;', _1: 'w'},
-			{ctor: '_Tuple2', _0: '&#120;', _1: 'x'},
-			{ctor: '_Tuple2', _0: '&#121;', _1: 'y'},
-			{ctor: '_Tuple2', _0: '&#122;', _1: 'z'},
-			{ctor: '_Tuple2', _0: '&#123;', _1: '{'},
-			{ctor: '_Tuple2', _0: '&#124;', _1: '|'},
-			{ctor: '_Tuple2', _0: '&#125;', _1: '}'},
-			{ctor: '_Tuple2', _0: '&#126;', _1: '~'},
-			{ctor: '_Tuple2', _0: '&#160;', _1: ' '},
-			{ctor: '_Tuple2', _0: '&#161;', _1: '¡'},
-			{ctor: '_Tuple2', _0: '&#162;', _1: '¢'},
-			{ctor: '_Tuple2', _0: '&#163;', _1: '£'},
-			{ctor: '_Tuple2', _0: '&#164;', _1: '¤'},
-			{ctor: '_Tuple2', _0: '&#165;', _1: '¥'},
-			{ctor: '_Tuple2', _0: '&#166;', _1: '¦'},
-			{ctor: '_Tuple2', _0: '&#167;', _1: '§'},
-			{ctor: '_Tuple2', _0: '&#168;', _1: '¨'},
-			{ctor: '_Tuple2', _0: '&#169;', _1: '©'},
-			{ctor: '_Tuple2', _0: '&#170;', _1: 'ª'},
-			{ctor: '_Tuple2', _0: '&#171;', _1: '«'},
-			{ctor: '_Tuple2', _0: '&#172;', _1: '¬'},
-			{ctor: '_Tuple2', _0: '&#173;', _1: ''},
-			{ctor: '_Tuple2', _0: '&#174;', _1: '®'},
-			{ctor: '_Tuple2', _0: '&#175;', _1: '¯'},
-			{ctor: '_Tuple2', _0: '&#176;', _1: '°'},
-			{ctor: '_Tuple2', _0: '&#177;', _1: '±'},
-			{ctor: '_Tuple2', _0: '&#178;', _1: '²'},
-			{ctor: '_Tuple2', _0: '&#179;', _1: '³'},
-			{ctor: '_Tuple2', _0: '&#180;', _1: '´'},
-			{ctor: '_Tuple2', _0: '&#181;', _1: 'µ'},
-			{ctor: '_Tuple2', _0: '&#182;', _1: '¶'},
-			{ctor: '_Tuple2', _0: '&#183;', _1: '·'},
-			{ctor: '_Tuple2', _0: '&#184;', _1: '¸'},
-			{ctor: '_Tuple2', _0: '&#185;', _1: '¹'},
-			{ctor: '_Tuple2', _0: '&#186;', _1: 'º'},
-			{ctor: '_Tuple2', _0: '&#187;', _1: '»'},
-			{ctor: '_Tuple2', _0: '&#188;', _1: '¼'},
-			{ctor: '_Tuple2', _0: '&#189;', _1: '½'},
-			{ctor: '_Tuple2', _0: '&#190;', _1: '¾'},
-			{ctor: '_Tuple2', _0: '&#191;', _1: '¿'},
-			{ctor: '_Tuple2', _0: '&#192;', _1: 'À'},
-			{ctor: '_Tuple2', _0: '&#193;', _1: 'Á'},
-			{ctor: '_Tuple2', _0: '&#194;', _1: 'Â'},
-			{ctor: '_Tuple2', _0: '&#195;', _1: 'Ã'},
-			{ctor: '_Tuple2', _0: '&#196;', _1: 'Ä'},
-			{ctor: '_Tuple2', _0: '&#197', _1: 'Å'},
-			{ctor: '_Tuple2', _0: '&#198;', _1: 'Æ'},
-			{ctor: '_Tuple2', _0: '&#199;', _1: 'Ç'},
-			{ctor: '_Tuple2', _0: '&#200;', _1: 'È'},
-			{ctor: '_Tuple2', _0: '&#201;', _1: 'É'},
-			{ctor: '_Tuple2', _0: '&#202;', _1: 'Ê'},
-			{ctor: '_Tuple2', _0: '&#203;', _1: 'Ë'},
-			{ctor: '_Tuple2', _0: '&#204;', _1: 'Ì'},
-			{ctor: '_Tuple2', _0: '&#205;', _1: 'Í'},
-			{ctor: '_Tuple2', _0: '&#206;', _1: 'Î'},
-			{ctor: '_Tuple2', _0: '&#207;', _1: 'Ï'},
-			{ctor: '_Tuple2', _0: '&#208;', _1: 'Ð'},
-			{ctor: '_Tuple2', _0: '&#209;', _1: 'Ñ'},
-			{ctor: '_Tuple2', _0: '&#210;', _1: 'Ò'},
-			{ctor: '_Tuple2', _0: '&#211;', _1: 'Ó'},
-			{ctor: '_Tuple2', _0: '&#212;', _1: 'Ô'},
-			{ctor: '_Tuple2', _0: '&#213;', _1: 'Õ'},
-			{ctor: '_Tuple2', _0: '&#214;', _1: 'Ö'},
-			{ctor: '_Tuple2', _0: '&#215;', _1: '×'},
-			{ctor: '_Tuple2', _0: '&#216;', _1: 'Ø'},
-			{ctor: '_Tuple2', _0: '&#217;', _1: 'Ù'},
-			{ctor: '_Tuple2', _0: '&#218;', _1: 'Ú'},
-			{ctor: '_Tuple2', _0: '&#219;', _1: 'Û'},
-			{ctor: '_Tuple2', _0: '&#220;', _1: 'Ü'},
-			{ctor: '_Tuple2', _0: '&#221;', _1: 'Ý'},
-			{ctor: '_Tuple2', _0: '&#222;', _1: 'Þ'},
-			{ctor: '_Tuple2', _0: '&#223;', _1: 'ß'},
-			{ctor: '_Tuple2', _0: '&#224;', _1: 'à'},
-			{ctor: '_Tuple2', _0: '&#225;', _1: 'á'},
-			{ctor: '_Tuple2', _0: '&#226;', _1: 'â'},
-			{ctor: '_Tuple2', _0: '&#227;', _1: 'ã'},
-			{ctor: '_Tuple2', _0: '&#228;', _1: 'ä'},
-			{ctor: '_Tuple2', _0: '&#229;', _1: 'å'},
-			{ctor: '_Tuple2', _0: '&#230;', _1: 'æ'},
-			{ctor: '_Tuple2', _0: '&#231;', _1: 'ç'},
-			{ctor: '_Tuple2', _0: '&#232;', _1: 'è'},
-			{ctor: '_Tuple2', _0: '&#233;', _1: 'é'},
-			{ctor: '_Tuple2', _0: '&#234;', _1: 'ê'},
-			{ctor: '_Tuple2', _0: '&#235;', _1: 'ë'},
-			{ctor: '_Tuple2', _0: '&#236;', _1: 'ì'},
-			{ctor: '_Tuple2', _0: '&#237', _1: 'í'},
-			{ctor: '_Tuple2', _0: '&#238;', _1: 'î'},
-			{ctor: '_Tuple2', _0: '&#239;', _1: 'ï'},
-			{ctor: '_Tuple2', _0: '&#240;', _1: 'ð'},
-			{ctor: '_Tuple2', _0: '&#241;', _1: 'ñ'},
-			{ctor: '_Tuple2', _0: '&#242;', _1: 'ò'},
-			{ctor: '_Tuple2', _0: '&#243;', _1: 'ó'},
-			{ctor: '_Tuple2', _0: '&#244;', _1: 'ô'},
-			{ctor: '_Tuple2', _0: '&#245;', _1: 'õ'},
-			{ctor: '_Tuple2', _0: '&#246;', _1: 'ö'},
-			{ctor: '_Tuple2', _0: '&#247;', _1: '÷'},
-			{ctor: '_Tuple2', _0: '&#248;', _1: 'ø'},
-			{ctor: '_Tuple2', _0: '&#249;', _1: 'ù'},
-			{ctor: '_Tuple2', _0: '&#250;', _1: 'ú'},
-			{ctor: '_Tuple2', _0: '&#251;', _1: 'û'},
-			{ctor: '_Tuple2', _0: '&#252;', _1: 'ü'},
-			{ctor: '_Tuple2', _0: '&#253;', _1: 'ý'},
-			{ctor: '_Tuple2', _0: '&#254;', _1: 'þ'},
-			{ctor: '_Tuple2', _0: '&#255;', _1: 'ÿ'},
-			{ctor: '_Tuple2', _0: '&#256;', _1: 'Ā'},
-			{ctor: '_Tuple2', _0: '&#257;', _1: 'ā'},
-			{ctor: '_Tuple2', _0: '&#258;', _1: 'Ă'},
-			{ctor: '_Tuple2', _0: '&#259;', _1: 'ă'},
-			{ctor: '_Tuple2', _0: '&#260;', _1: 'Ą'},
-			{ctor: '_Tuple2', _0: '&#261;', _1: 'ą'},
-			{ctor: '_Tuple2', _0: '&#262;', _1: 'Ć'},
-			{ctor: '_Tuple2', _0: '&#263;', _1: 'ć'},
-			{ctor: '_Tuple2', _0: '&#264;', _1: 'Ĉ'},
-			{ctor: '_Tuple2', _0: '&#265;', _1: 'ĉ'},
-			{ctor: '_Tuple2', _0: '&#266;', _1: 'Ċ'},
-			{ctor: '_Tuple2', _0: '&#267;', _1: 'ċ'},
-			{ctor: '_Tuple2', _0: '&#268;', _1: 'Č'},
-			{ctor: '_Tuple2', _0: '&#269;', _1: 'č'},
-			{ctor: '_Tuple2', _0: '&#270;', _1: 'Ď'},
-			{ctor: '_Tuple2', _0: '&#271;', _1: 'ď'},
-			{ctor: '_Tuple2', _0: '&#272;', _1: 'Đ'},
-			{ctor: '_Tuple2', _0: '&#273;', _1: 'đ'},
-			{ctor: '_Tuple2', _0: '&#274;', _1: 'Ē'},
-			{ctor: '_Tuple2', _0: '&#275;', _1: 'ē'},
-			{ctor: '_Tuple2', _0: '&#276;', _1: 'Ĕ'},
-			{ctor: '_Tuple2', _0: '&#277', _1: 'ĕ'},
-			{ctor: '_Tuple2', _0: '&#278;', _1: 'Ė'},
-			{ctor: '_Tuple2', _0: '&#279;', _1: 'ė'},
-			{ctor: '_Tuple2', _0: '&#280;', _1: 'Ę'},
-			{ctor: '_Tuple2', _0: '&#281;', _1: 'ę'},
-			{ctor: '_Tuple2', _0: '&#282;', _1: 'Ě'},
-			{ctor: '_Tuple2', _0: '&#283;', _1: 'ě'},
-			{ctor: '_Tuple2', _0: '&#284;', _1: 'Ĝ'},
-			{ctor: '_Tuple2', _0: '&#285;', _1: 'ĝ'},
-			{ctor: '_Tuple2', _0: '&#286;', _1: 'Ğ'},
-			{ctor: '_Tuple2', _0: '&#287;', _1: 'ğ'},
-			{ctor: '_Tuple2', _0: '&#288;', _1: 'Ġ'},
-			{ctor: '_Tuple2', _0: '&#289;', _1: 'ġ'},
-			{ctor: '_Tuple2', _0: '&#290;', _1: 'Ģ'},
-			{ctor: '_Tuple2', _0: '&#291;', _1: 'ģ'},
-			{ctor: '_Tuple2', _0: '&#292;', _1: 'Ĥ'},
-			{ctor: '_Tuple2', _0: '&#293;', _1: 'ĥ'},
-			{ctor: '_Tuple2', _0: '&#294;', _1: 'Ħ'},
-			{ctor: '_Tuple2', _0: '&#295;', _1: 'ħ'},
-			{ctor: '_Tuple2', _0: '&#296;', _1: 'Ĩ'},
-			{ctor: '_Tuple2', _0: '&#297;', _1: 'ĩ'},
-			{ctor: '_Tuple2', _0: '&#298;', _1: 'Ī'},
-			{ctor: '_Tuple2', _0: '&#299;', _1: 'ī'},
-			{ctor: '_Tuple2', _0: '&#300;', _1: 'Ĭ'},
-			{ctor: '_Tuple2', _0: '&#301;', _1: 'ĭ'},
-			{ctor: '_Tuple2', _0: '&#302;', _1: 'Į'},
-			{ctor: '_Tuple2', _0: '&#303;', _1: 'į'},
-			{ctor: '_Tuple2', _0: '&#304;', _1: 'İ'},
-			{ctor: '_Tuple2', _0: '&#305;', _1: 'ı'},
-			{ctor: '_Tuple2', _0: '&#306;', _1: 'Ĳ'},
-			{ctor: '_Tuple2', _0: '&#307;', _1: 'ĳ'},
-			{ctor: '_Tuple2', _0: '&#308;', _1: 'Ĵ'},
-			{ctor: '_Tuple2', _0: '&#309;', _1: 'ĵ'},
-			{ctor: '_Tuple2', _0: '&#310;', _1: 'Ķ'},
-			{ctor: '_Tuple2', _0: '&#311;', _1: 'ķ'},
-			{ctor: '_Tuple2', _0: '&#312;', _1: 'ĸ'},
-			{ctor: '_Tuple2', _0: '&#313;', _1: 'Ĺ'},
-			{ctor: '_Tuple2', _0: '&#314;', _1: 'ĺ'},
-			{ctor: '_Tuple2', _0: '&#315;', _1: 'Ļ'},
-			{ctor: '_Tuple2', _0: '&#316;', _1: 'ļ'},
-			{ctor: '_Tuple2', _0: '&#317', _1: 'Ľ'},
-			{ctor: '_Tuple2', _0: '&#318;', _1: 'ľ'},
-			{ctor: '_Tuple2', _0: '&#319;', _1: 'Ŀ'},
-			{ctor: '_Tuple2', _0: '&#320;', _1: 'ŀ'},
-			{ctor: '_Tuple2', _0: '&#321;', _1: 'Ł'},
-			{ctor: '_Tuple2', _0: '&#322;', _1: 'ł'},
-			{ctor: '_Tuple2', _0: '&#323;', _1: 'Ń'},
-			{ctor: '_Tuple2', _0: '&#324;', _1: 'ń'},
-			{ctor: '_Tuple2', _0: '&#325;', _1: 'Ņ'},
-			{ctor: '_Tuple2', _0: '&#326;', _1: 'ņ'},
-			{ctor: '_Tuple2', _0: '&#327;', _1: 'Ň'},
-			{ctor: '_Tuple2', _0: '&#328;', _1: 'ň'},
-			{ctor: '_Tuple2', _0: '&#329;', _1: 'ŉ'},
-			{ctor: '_Tuple2', _0: '&#330;', _1: 'Ŋ'},
-			{ctor: '_Tuple2', _0: '&#331;', _1: 'ŋ'},
-			{ctor: '_Tuple2', _0: '&#332;', _1: 'Ō'},
-			{ctor: '_Tuple2', _0: '&#333;', _1: 'ō'},
-			{ctor: '_Tuple2', _0: '&#334;', _1: 'Ŏ'},
-			{ctor: '_Tuple2', _0: '&#335;', _1: 'ŏ'},
-			{ctor: '_Tuple2', _0: '&#336;', _1: 'Ő'},
-			{ctor: '_Tuple2', _0: '&#337;', _1: 'ő'},
-			{ctor: '_Tuple2', _0: '&#338;', _1: 'Œ'},
-			{ctor: '_Tuple2', _0: '&#339;', _1: 'œ'},
-			{ctor: '_Tuple2', _0: '&#340;', _1: 'Ŕ'},
-			{ctor: '_Tuple2', _0: '&#341;', _1: 'ŕ'},
-			{ctor: '_Tuple2', _0: '&#342;', _1: 'Ŗ'},
-			{ctor: '_Tuple2', _0: '&#343;', _1: 'ŗ'},
-			{ctor: '_Tuple2', _0: '&#344;', _1: 'Ř'},
-			{ctor: '_Tuple2', _0: '&#345;', _1: 'ř'},
-			{ctor: '_Tuple2', _0: '&#346;', _1: 'Ś'},
-			{ctor: '_Tuple2', _0: '&#347;', _1: 'ś'},
-			{ctor: '_Tuple2', _0: '&#348;', _1: 'Ŝ'},
-			{ctor: '_Tuple2', _0: '&#349;', _1: 'ŝ'},
-			{ctor: '_Tuple2', _0: '&#350;', _1: 'Ş'},
-			{ctor: '_Tuple2', _0: '&#351;', _1: 'ş'},
-			{ctor: '_Tuple2', _0: '&#352;', _1: 'Š'},
-			{ctor: '_Tuple2', _0: '&#353;', _1: 'š'},
-			{ctor: '_Tuple2', _0: '&#354;', _1: 'Ţ'},
-			{ctor: '_Tuple2', _0: '&#355;', _1: 'ţ'},
-			{ctor: '_Tuple2', _0: '&#356;', _1: 'Ť'},
-			{ctor: '_Tuple2', _0: '&#357', _1: 'ť'},
-			{ctor: '_Tuple2', _0: '&#358;', _1: 'Ŧ'},
-			{ctor: '_Tuple2', _0: '&#359;', _1: 'ŧ'},
-			{ctor: '_Tuple2', _0: '&#360;', _1: 'Ũ'},
-			{ctor: '_Tuple2', _0: '&#361;', _1: 'ũ'},
-			{ctor: '_Tuple2', _0: '&#362;', _1: 'Ū'},
-			{ctor: '_Tuple2', _0: '&#363;', _1: 'ū'},
-			{ctor: '_Tuple2', _0: '&#364;', _1: 'Ŭ'},
-			{ctor: '_Tuple2', _0: '&#365;', _1: 'ŭ'},
-			{ctor: '_Tuple2', _0: '&#366;', _1: 'Ů'},
-			{ctor: '_Tuple2', _0: '&#367;', _1: 'ů'},
-			{ctor: '_Tuple2', _0: '&#368;', _1: 'Ű'},
-			{ctor: '_Tuple2', _0: '&#369;', _1: 'ű'},
-			{ctor: '_Tuple2', _0: '&#370;', _1: 'Ų'},
-			{ctor: '_Tuple2', _0: '&#371;', _1: 'ų'},
-			{ctor: '_Tuple2', _0: '&#372;', _1: 'Ŵ'},
-			{ctor: '_Tuple2', _0: '&#373;', _1: 'ŵ'},
-			{ctor: '_Tuple2', _0: '&#374;', _1: 'Ŷ'},
-			{ctor: '_Tuple2', _0: '&#375;', _1: 'ŷ'},
-			{ctor: '_Tuple2', _0: '&#376;', _1: 'Ÿ'},
-			{ctor: '_Tuple2', _0: '&#377;', _1: 'Ź'},
-			{ctor: '_Tuple2', _0: '&#378;', _1: 'ź'},
-			{ctor: '_Tuple2', _0: '&#379;', _1: 'Ż'},
-			{ctor: '_Tuple2', _0: '&#380;', _1: 'ż'},
-			{ctor: '_Tuple2', _0: '&#381;', _1: 'Ž'},
-			{ctor: '_Tuple2', _0: '&#382;', _1: 'ž'},
-			{ctor: '_Tuple2', _0: '&#383;', _1: 'ſ'},
-			{ctor: '_Tuple2', _0: '&#340;', _1: 'Ŕ'},
-			{ctor: '_Tuple2', _0: '&#341;', _1: 'ŕ'},
-			{ctor: '_Tuple2', _0: '&#342;', _1: 'Ŗ'},
-			{ctor: '_Tuple2', _0: '&#343;', _1: 'ŗ'},
-			{ctor: '_Tuple2', _0: '&#344;', _1: 'Ř'},
-			{ctor: '_Tuple2', _0: '&#345;', _1: 'ř'},
-			{ctor: '_Tuple2', _0: '&#346;', _1: 'Ś'},
-			{ctor: '_Tuple2', _0: '&#347;', _1: 'ś'},
-			{ctor: '_Tuple2', _0: '&#348;', _1: 'Ŝ'},
-			{ctor: '_Tuple2', _0: '&#349;', _1: 'ŝ'},
-			{ctor: '_Tuple2', _0: '&#350;', _1: 'Ş'},
-			{ctor: '_Tuple2', _0: '&#351;', _1: 'ş'},
-			{ctor: '_Tuple2', _0: '&#352;', _1: 'Š'},
-			{ctor: '_Tuple2', _0: '&#353;', _1: 'š'},
-			{ctor: '_Tuple2', _0: '&#354;', _1: 'Ţ'},
-			{ctor: '_Tuple2', _0: '&#355;', _1: 'ţ'},
-			{ctor: '_Tuple2', _0: '&#356;', _1: 'Ť'},
-			{ctor: '_Tuple2', _0: '&#577;', _1: 'ť'},
-			{ctor: '_Tuple2', _0: '&#358;', _1: 'Ŧ'},
-			{ctor: '_Tuple2', _0: '&#359;', _1: 'ŧ'},
-			{ctor: '_Tuple2', _0: '&#360;', _1: 'Ũ'},
-			{ctor: '_Tuple2', _0: '&#361;', _1: 'ũ'},
-			{ctor: '_Tuple2', _0: '&#362;', _1: 'Ū'},
-			{ctor: '_Tuple2', _0: '&#363;', _1: 'ū'},
-			{ctor: '_Tuple2', _0: '&#364;', _1: 'Ŭ'},
-			{ctor: '_Tuple2', _0: '&#365;', _1: 'ŭ'},
-			{ctor: '_Tuple2', _0: '&#366;', _1: 'Ů'},
-			{ctor: '_Tuple2', _0: '&#367;', _1: 'ů'},
-			{ctor: '_Tuple2', _0: '&#368;', _1: 'Ű'},
-			{ctor: '_Tuple2', _0: '&#369;', _1: 'ű'},
-			{ctor: '_Tuple2', _0: '&#370;', _1: 'Ų'},
-			{ctor: '_Tuple2', _0: '&#371;', _1: 'ų'},
-			{ctor: '_Tuple2', _0: '&#372;', _1: 'Ŵ'},
-			{ctor: '_Tuple2', _0: '&#373;', _1: 'ŵ'},
-			{ctor: '_Tuple2', _0: '&#374;', _1: 'Ŷ'},
-			{ctor: '_Tuple2', _0: '&#375;', _1: 'ŷ'},
-			{ctor: '_Tuple2', _0: '&#376;', _1: 'Ÿ'},
-			{ctor: '_Tuple2', _0: '&#377', _1: 'Ź'},
-			{ctor: '_Tuple2', _0: '&#378;', _1: 'ź'},
-			{ctor: '_Tuple2', _0: '&#379;', _1: 'Ż'},
-			{ctor: '_Tuple2', _0: '&#380;', _1: 'ż'},
-			{ctor: '_Tuple2', _0: '&#381;', _1: 'Ž'},
-			{ctor: '_Tuple2', _0: '&#382;', _1: 'ž'},
-			{ctor: '_Tuple2', _0: '&#383;', _1: 'ſ'},
-			{ctor: '_Tuple2', _0: '&#x2122;', _1: '™'},
-			{ctor: '_Tuple2', _0: '&#x20;', _1: ' '},
-			{ctor: '_Tuple2', _0: '&#x21;', _1: '!'},
-			{ctor: '_Tuple2', _0: '&#x22;', _1: '\"'},
-			{ctor: '_Tuple2', _0: '&#x23;', _1: '#'},
-			{ctor: '_Tuple2', _0: '&#x24;', _1: '$'},
-			{ctor: '_Tuple2', _0: '&#x25;', _1: '%'},
-			{ctor: '_Tuple2', _0: '&#x26;', _1: '&'},
-			{ctor: '_Tuple2', _0: '&#x27;', _1: '\''},
-			{ctor: '_Tuple2', _0: '&#x28;', _1: '('},
-			{ctor: '_Tuple2', _0: '&#x29;', _1: ')'},
-			{ctor: '_Tuple2', _0: '&#x2A;', _1: '*'},
-			{ctor: '_Tuple2', _0: '&#x2B;', _1: '+'},
-			{ctor: '_Tuple2', _0: '&#x2C;', _1: ','},
-			{ctor: '_Tuple2', _0: '&#x2D;', _1: '-'},
-			{ctor: '_Tuple2', _0: '&#x2E;', _1: '.'},
-			{ctor: '_Tuple2', _0: '&#x2F;', _1: '/'},
-			{ctor: '_Tuple2', _0: '&#x30;', _1: '0'},
-			{ctor: '_Tuple2', _0: '&#x31;', _1: '1'},
-			{ctor: '_Tuple2', _0: '&#x32;', _1: '2'},
-			{ctor: '_Tuple2', _0: '&#x33;', _1: '3'},
-			{ctor: '_Tuple2', _0: '&#x34;', _1: '4'},
-			{ctor: '_Tuple2', _0: '&#x35;', _1: '5'},
-			{ctor: '_Tuple2', _0: '&#x36;', _1: '6'},
-			{ctor: '_Tuple2', _0: '&#x37;', _1: '7'},
-			{ctor: '_Tuple2', _0: '&#x38;', _1: '8'},
-			{ctor: '_Tuple2', _0: '&#x39;', _1: '9'},
-			{ctor: '_Tuple2', _0: '&#x3A;', _1: ':'},
-			{ctor: '_Tuple2', _0: '&#x3B;', _1: ';'},
-			{ctor: '_Tuple2', _0: '&#x3C;', _1: '<'},
-			{ctor: '_Tuple2', _0: '&#x3D;', _1: '='},
-			{ctor: '_Tuple2', _0: '&#x3E;', _1: '>'},
-			{ctor: '_Tuple2', _0: '&#x3F;', _1: '?'},
-			{ctor: '_Tuple2', _0: '&#x40;', _1: '@'},
-			{ctor: '_Tuple2', _0: '&#x41;', _1: 'A'},
-			{ctor: '_Tuple2', _0: '&#x42;', _1: 'B'},
-			{ctor: '_Tuple2', _0: '&#x43;', _1: 'C'},
-			{ctor: '_Tuple2', _0: '&#x44;', _1: 'D'},
-			{ctor: '_Tuple2', _0: '&#x45;', _1: 'E'},
-			{ctor: '_Tuple2', _0: '&#x46;', _1: 'F'},
-			{ctor: '_Tuple2', _0: '&#x47;', _1: 'G'},
-			{ctor: '_Tuple2', _0: '&#x48;', _1: 'H'},
-			{ctor: '_Tuple2', _0: '&#x49;', _1: 'I'},
-			{ctor: '_Tuple2', _0: '&#x4A;', _1: 'J'},
-			{ctor: '_Tuple2', _0: '&#x4B;', _1: 'K'},
-			{ctor: '_Tuple2', _0: '&#x4C;', _1: 'L'},
-			{ctor: '_Tuple2', _0: '&#x4D;', _1: 'M'},
-			{ctor: '_Tuple2', _0: '&#x4E;', _1: 'N'},
-			{ctor: '_Tuple2', _0: '&#x4F;', _1: 'O'},
-			{ctor: '_Tuple2', _0: '&#x50;', _1: 'P'},
-			{ctor: '_Tuple2', _0: '&#x51;', _1: 'Q'},
-			{ctor: '_Tuple2', _0: '&#x52;', _1: 'R'},
-			{ctor: '_Tuple2', _0: '&#x53;', _1: 'S'},
-			{ctor: '_Tuple2', _0: '&#x54;', _1: 'T'},
-			{ctor: '_Tuple2', _0: '&#x55;', _1: 'U'},
-			{ctor: '_Tuple2', _0: '&#x56;', _1: 'V'},
-			{ctor: '_Tuple2', _0: '&#x57;', _1: 'W'},
-			{ctor: '_Tuple2', _0: '&#x58;', _1: 'X'},
-			{ctor: '_Tuple2', _0: '&#x59;', _1: 'Y'},
-			{ctor: '_Tuple2', _0: '&#x5A;', _1: 'Z'},
-			{ctor: '_Tuple2', _0: '&#x5B;', _1: '['},
-			{ctor: '_Tuple2', _0: '&#x5C;', _1: '\\'},
-			{ctor: '_Tuple2', _0: '&#x5D;', _1: ']'},
-			{ctor: '_Tuple2', _0: '&#x5E;', _1: '^'},
-			{ctor: '_Tuple2', _0: '&#x5F;', _1: '_'},
-			{ctor: '_Tuple2', _0: '&#x60;', _1: '`'},
-			{ctor: '_Tuple2', _0: '&#x61;', _1: 'a'},
-			{ctor: '_Tuple2', _0: '&#x62;', _1: 'b'},
-			{ctor: '_Tuple2', _0: '&#x63;', _1: 'c'},
-			{ctor: '_Tuple2', _0: '&#x64;', _1: 'd'},
-			{ctor: '_Tuple2', _0: '&#x65;', _1: 'e'},
-			{ctor: '_Tuple2', _0: '&#x66;', _1: 'f'},
-			{ctor: '_Tuple2', _0: '&#x67;', _1: 'g'},
-			{ctor: '_Tuple2', _0: '&#x68;', _1: 'h'},
-			{ctor: '_Tuple2', _0: '&#x69;', _1: 'i'},
-			{ctor: '_Tuple2', _0: '&#x6A;', _1: 'j'},
-			{ctor: '_Tuple2', _0: '&#x6B;', _1: 'k'},
-			{ctor: '_Tuple2', _0: '&#x6C;', _1: 'l'},
-			{ctor: '_Tuple2', _0: '&#x6D;', _1: 'm'},
-			{ctor: '_Tuple2', _0: '&#x6E;', _1: 'n'},
-			{ctor: '_Tuple2', _0: '&#x6F;', _1: 'o'},
-			{ctor: '_Tuple2', _0: '&#x70;', _1: 'p'},
-			{ctor: '_Tuple2', _0: '&#x71;', _1: 'q'},
-			{ctor: '_Tuple2', _0: '&#x72;', _1: 'r'},
-			{ctor: '_Tuple2', _0: '&#x73;', _1: 's'},
-			{ctor: '_Tuple2', _0: '&#x74;', _1: 't'},
-			{ctor: '_Tuple2', _0: '&#x75;', _1: 'u'},
-			{ctor: '_Tuple2', _0: '&#x76;', _1: 'v'},
-			{ctor: '_Tuple2', _0: '&#x77;', _1: 'w'},
-			{ctor: '_Tuple2', _0: '&#x78;', _1: 'x'},
-			{ctor: '_Tuple2', _0: '&#x79;', _1: 'y'},
-			{ctor: '_Tuple2', _0: '&#x7A;', _1: 'z'},
-			{ctor: '_Tuple2', _0: '&#x7B;', _1: '{'},
-			{ctor: '_Tuple2', _0: '&#x7C;', _1: '|'},
-			{ctor: '_Tuple2', _0: '&#x7D;', _1: '}'},
-			{ctor: '_Tuple2', _0: '&#x7E;', _1: '~'},
-			{ctor: '_Tuple2', _0: '&#xA0;', _1: ' '},
-			{ctor: '_Tuple2', _0: '&#xA1;', _1: '¡'},
-			{ctor: '_Tuple2', _0: '&#xA2;', _1: '¢'},
-			{ctor: '_Tuple2', _0: '&#xA3;', _1: '£'},
-			{ctor: '_Tuple2', _0: '&#xA4;', _1: '¤'},
-			{ctor: '_Tuple2', _0: '&#xA5;', _1: '¥'},
-			{ctor: '_Tuple2', _0: '&#xA6;', _1: '¦'},
-			{ctor: '_Tuple2', _0: '&#xA7;', _1: '§'},
-			{ctor: '_Tuple2', _0: '&#xA8;', _1: '¨'},
-			{ctor: '_Tuple2', _0: '&#xA9;', _1: '©'},
-			{ctor: '_Tuple2', _0: '&#xAA;', _1: 'ª'},
-			{ctor: '_Tuple2', _0: '&#xAB;', _1: '«'},
-			{ctor: '_Tuple2', _0: '&#xAC;', _1: '¬'},
-			{ctor: '_Tuple2', _0: '&#xAD;', _1: ''},
-			{ctor: '_Tuple2', _0: '&#xAE;', _1: '®'},
-			{ctor: '_Tuple2', _0: '&#xAF;', _1: '¯'},
-			{ctor: '_Tuple2', _0: '&#xB0;', _1: '°'},
-			{ctor: '_Tuple2', _0: '&#xB1;', _1: '±'},
-			{ctor: '_Tuple2', _0: '&#xB2;', _1: '²'},
-			{ctor: '_Tuple2', _0: '&#xB3;', _1: '³'},
-			{ctor: '_Tuple2', _0: '&#xB4;', _1: '´'},
-			{ctor: '_Tuple2', _0: '&#xB5;', _1: 'µ'},
-			{ctor: '_Tuple2', _0: '&#xB6;', _1: '¶'},
-			{ctor: '_Tuple2', _0: '&#xB7;', _1: '·'},
-			{ctor: '_Tuple2', _0: '&#xB8;', _1: '¸'},
-			{ctor: '_Tuple2', _0: '&#xB9;', _1: '¹'},
-			{ctor: '_Tuple2', _0: '&#xBA;', _1: 'º'},
-			{ctor: '_Tuple2', _0: '&#xBB;', _1: '»'},
-			{ctor: '_Tuple2', _0: '&#xBC;', _1: '¼'},
-			{ctor: '_Tuple2', _0: '&#xBD;', _1: '½'},
-			{ctor: '_Tuple2', _0: '&#xBE;', _1: '¾'},
-			{ctor: '_Tuple2', _0: '&#xBF;', _1: '¿'},
-			{ctor: '_Tuple2', _0: '&#xC0;', _1: 'À'},
-			{ctor: '_Tuple2', _0: '&#xC1;', _1: 'Á'},
-			{ctor: '_Tuple2', _0: '&#xC2;', _1: 'Â'},
-			{ctor: '_Tuple2', _0: '&#xC3;', _1: 'Ã'},
-			{ctor: '_Tuple2', _0: '&#xC4;', _1: 'Ä'},
-			{ctor: '_Tuple2', _0: '&#xC5;', _1: 'Å'},
-			{ctor: '_Tuple2', _0: '&#xC6;', _1: 'Æ'},
-			{ctor: '_Tuple2', _0: '&#xC7;', _1: 'Ç'},
-			{ctor: '_Tuple2', _0: '&#xC8;', _1: 'È'},
-			{ctor: '_Tuple2', _0: '&#xC9;', _1: 'É'},
-			{ctor: '_Tuple2', _0: '&#xCA;', _1: 'Ê'},
-			{ctor: '_Tuple2', _0: '&#xCB;', _1: 'Ë'},
-			{ctor: '_Tuple2', _0: '&#xCC;', _1: 'Ì'},
-			{ctor: '_Tuple2', _0: '&#xCD;', _1: 'Í'},
-			{ctor: '_Tuple2', _0: '&#xCE;', _1: 'Î'},
-			{ctor: '_Tuple2', _0: '&#xCF;', _1: 'Ï'},
-			{ctor: '_Tuple2', _0: '&#xD0;', _1: 'Ð'},
-			{ctor: '_Tuple2', _0: '&#xD1;', _1: 'Ñ'},
-			{ctor: '_Tuple2', _0: '&#xD2;', _1: 'Ò'},
-			{ctor: '_Tuple2', _0: '&#xD3;', _1: 'Ó'},
-			{ctor: '_Tuple2', _0: '&#xD4;', _1: 'Ô'},
-			{ctor: '_Tuple2', _0: '&#xD5;', _1: 'Õ'},
-			{ctor: '_Tuple2', _0: '&#xD6;', _1: 'Ö'},
-			{ctor: '_Tuple2', _0: '&#xD7;', _1: '×'},
-			{ctor: '_Tuple2', _0: '&#xD8;', _1: 'Ø'},
-			{ctor: '_Tuple2', _0: '&#xD9;', _1: 'Ù'},
-			{ctor: '_Tuple2', _0: '&#xDA;', _1: 'Ú'},
-			{ctor: '_Tuple2', _0: '&#xDB;', _1: 'Û'},
-			{ctor: '_Tuple2', _0: '&#xDC;', _1: 'Ü'},
-			{ctor: '_Tuple2', _0: '&#xDD;', _1: 'Ý'},
-			{ctor: '_Tuple2', _0: '&#xDE;', _1: 'Þ'},
-			{ctor: '_Tuple2', _0: '&#xDF;', _1: 'ß'},
-			{ctor: '_Tuple2', _0: '&#xE0;', _1: 'à'},
-			{ctor: '_Tuple2', _0: '&#xE1;', _1: 'á'},
-			{ctor: '_Tuple2', _0: '&#xE2;', _1: 'â'},
-			{ctor: '_Tuple2', _0: '&#xE3;', _1: 'ã'},
-			{ctor: '_Tuple2', _0: '&#xE4;', _1: 'ä'},
-			{ctor: '_Tuple2', _0: '&#xE5;', _1: 'å'},
-			{ctor: '_Tuple2', _0: '&#xE6;', _1: 'æ'},
-			{ctor: '_Tuple2', _0: '&#xE7;', _1: 'ç'},
-			{ctor: '_Tuple2', _0: '&#xE8;', _1: 'è'},
-			{ctor: '_Tuple2', _0: '&#xE9;', _1: 'é'},
-			{ctor: '_Tuple2', _0: '&#xEA;', _1: 'ê'},
-			{ctor: '_Tuple2', _0: '&#xEB;', _1: 'ë'},
-			{ctor: '_Tuple2', _0: '&#xEC;', _1: 'ì'},
-			{ctor: '_Tuple2', _0: '&#xED;', _1: 'í'},
-			{ctor: '_Tuple2', _0: '&#xEE;', _1: 'î'},
-			{ctor: '_Tuple2', _0: '&#xEF;', _1: 'ï'},
-			{ctor: '_Tuple2', _0: '&#xF0;', _1: 'ð'},
-			{ctor: '_Tuple2', _0: '&#xF1;', _1: 'ñ'},
-			{ctor: '_Tuple2', _0: '&#xF2;', _1: 'ò'},
-			{ctor: '_Tuple2', _0: '&#xF3;', _1: 'ó'},
-			{ctor: '_Tuple2', _0: '&#xF4;', _1: 'ô'},
-			{ctor: '_Tuple2', _0: '&#xF5;', _1: 'õ'},
-			{ctor: '_Tuple2', _0: '&#xF6;', _1: 'ö'},
-			{ctor: '_Tuple2', _0: '&#xF7;', _1: '÷'},
-			{ctor: '_Tuple2', _0: '&#xF8;', _1: 'ø'},
-			{ctor: '_Tuple2', _0: '&#xF9;', _1: 'ù'},
-			{ctor: '_Tuple2', _0: '&#xFA;', _1: 'ú'},
-			{ctor: '_Tuple2', _0: '&#xFB;', _1: 'û'},
-			{ctor: '_Tuple2', _0: '&#xFC;', _1: 'ü'},
-			{ctor: '_Tuple2', _0: '&#xFD;', _1: 'ý'},
-			{ctor: '_Tuple2', _0: '&#xFE;', _1: 'þ'},
-			{ctor: '_Tuple2', _0: '&#xFF;', _1: 'ÿ'},
-			{ctor: '_Tuple2', _0: '&#x100;', _1: 'Ā'},
-			{ctor: '_Tuple2', _0: '&#x101;', _1: 'ā'},
-			{ctor: '_Tuple2', _0: '&#x102;', _1: 'Ă'},
-			{ctor: '_Tuple2', _0: '&#x103;', _1: 'ă'},
-			{ctor: '_Tuple2', _0: '&#x104;', _1: 'Ą'},
-			{ctor: '_Tuple2', _0: '&#x105;', _1: 'ą'},
-			{ctor: '_Tuple2', _0: '&#x106;', _1: 'Ć'},
-			{ctor: '_Tuple2', _0: '&#x107;', _1: 'ć'},
-			{ctor: '_Tuple2', _0: '&#x108;', _1: 'Ĉ'},
-			{ctor: '_Tuple2', _0: '&#x109;', _1: 'ĉ'},
-			{ctor: '_Tuple2', _0: '&#x10A;', _1: 'Ċ'},
-			{ctor: '_Tuple2', _0: '&#x10B;', _1: 'ċ'},
-			{ctor: '_Tuple2', _0: '&#x10C;', _1: 'Č'},
-			{ctor: '_Tuple2', _0: '&#x10D;', _1: 'č'},
-			{ctor: '_Tuple2', _0: '&#x10E;', _1: 'Ď'},
-			{ctor: '_Tuple2', _0: '&#x10F;', _1: 'ď'},
-			{ctor: '_Tuple2', _0: '&#x110;', _1: 'Đ'},
-			{ctor: '_Tuple2', _0: '&#x111;', _1: 'đ'},
-			{ctor: '_Tuple2', _0: '&#x112;', _1: 'Ē'},
-			{ctor: '_Tuple2', _0: '&#x113;', _1: 'ē'},
-			{ctor: '_Tuple2', _0: '&#x114;', _1: 'Ĕ'},
-			{ctor: '_Tuple2', _0: '&#x115;', _1: 'ĕ'},
-			{ctor: '_Tuple2', _0: '&#x116;', _1: 'Ė'},
-			{ctor: '_Tuple2', _0: '&#x117;', _1: 'ė'},
-			{ctor: '_Tuple2', _0: '&#x118;', _1: 'Ę'},
-			{ctor: '_Tuple2', _0: '&#x119;', _1: 'ę'},
-			{ctor: '_Tuple2', _0: '&#x11A;', _1: 'Ě'},
-			{ctor: '_Tuple2', _0: '&#x11B;', _1: 'ě'},
-			{ctor: '_Tuple2', _0: '&#x11C;', _1: 'Ĝ'},
-			{ctor: '_Tuple2', _0: '&#x11D;', _1: 'ĝ'},
-			{ctor: '_Tuple2', _0: '&#x11E;', _1: 'Ğ'},
-			{ctor: '_Tuple2', _0: '&#x11F;', _1: 'ğ'},
-			{ctor: '_Tuple2', _0: '&#x120;', _1: 'Ġ'},
-			{ctor: '_Tuple2', _0: '&#x121;', _1: 'ġ'},
-			{ctor: '_Tuple2', _0: '&#x122;', _1: 'Ģ'},
-			{ctor: '_Tuple2', _0: '&#x123;', _1: 'ģ'},
-			{ctor: '_Tuple2', _0: '&#x124;', _1: 'Ĥ'},
-			{ctor: '_Tuple2', _0: '&#x125;', _1: 'ĥ'},
-			{ctor: '_Tuple2', _0: '&#x126;', _1: 'Ħ'},
-			{ctor: '_Tuple2', _0: '&#x127;', _1: 'ħ'},
-			{ctor: '_Tuple2', _0: '&#x128;', _1: 'Ĩ'},
-			{ctor: '_Tuple2', _0: '&#x129;', _1: 'ĩ'},
-			{ctor: '_Tuple2', _0: '&#x12A;', _1: 'Ī'},
-			{ctor: '_Tuple2', _0: '&#x12B;', _1: 'ī'},
-			{ctor: '_Tuple2', _0: '&#x12C;', _1: 'Ĭ'},
-			{ctor: '_Tuple2', _0: '&#x12D;', _1: 'ĭ'},
-			{ctor: '_Tuple2', _0: '&#x12E;', _1: 'Į'},
-			{ctor: '_Tuple2', _0: '&#x12F;', _1: 'į'},
-			{ctor: '_Tuple2', _0: '&#x130;', _1: 'İ'},
-			{ctor: '_Tuple2', _0: '&#x131;', _1: 'ı'},
-			{ctor: '_Tuple2', _0: '&#x132;', _1: 'Ĳ'},
-			{ctor: '_Tuple2', _0: '&#x133;', _1: 'ĳ'},
-			{ctor: '_Tuple2', _0: '&#x134;', _1: 'Ĵ'},
-			{ctor: '_Tuple2', _0: '&#x135;', _1: 'ĵ'},
-			{ctor: '_Tuple2', _0: '&#x136;', _1: 'Ķ'},
-			{ctor: '_Tuple2', _0: '&#x137;', _1: 'ķ'},
-			{ctor: '_Tuple2', _0: '&#x138;', _1: 'ĸ'},
-			{ctor: '_Tuple2', _0: '&#x139;', _1: 'Ĺ'},
-			{ctor: '_Tuple2', _0: '&#x13A;', _1: 'ĺ'},
-			{ctor: '_Tuple2', _0: '&#x13B;', _1: 'Ļ'},
-			{ctor: '_Tuple2', _0: '&#x13C;', _1: 'ļ'},
-			{ctor: '_Tuple2', _0: '&#x13D;', _1: 'Ľ'},
-			{ctor: '_Tuple2', _0: '&#x13E;', _1: 'ľ'},
-			{ctor: '_Tuple2', _0: '&#x13F;', _1: 'Ŀ'},
-			{ctor: '_Tuple2', _0: '&#x140;', _1: 'ŀ'},
-			{ctor: '_Tuple2', _0: '&#x141;', _1: 'Ł'},
-			{ctor: '_Tuple2', _0: '&#x142;', _1: 'ł'},
-			{ctor: '_Tuple2', _0: '&#x143;', _1: 'Ń'},
-			{ctor: '_Tuple2', _0: '&#x144;', _1: 'ń'},
-			{ctor: '_Tuple2', _0: '&#x145;', _1: 'Ņ'},
-			{ctor: '_Tuple2', _0: '&#x146;', _1: 'ņ'},
-			{ctor: '_Tuple2', _0: '&#x147;', _1: 'Ň'},
-			{ctor: '_Tuple2', _0: '&#x148;', _1: 'ň'},
-			{ctor: '_Tuple2', _0: '&#x149;', _1: 'ŉ'},
-			{ctor: '_Tuple2', _0: '&#x14A;', _1: 'Ŋ'},
-			{ctor: '_Tuple2', _0: '&#x14B;', _1: 'ŋ'},
-			{ctor: '_Tuple2', _0: '&#x14C;', _1: 'Ō'},
-			{ctor: '_Tuple2', _0: '&#x14D;', _1: 'ō'},
-			{ctor: '_Tuple2', _0: '&#x14E;', _1: 'Ŏ'},
-			{ctor: '_Tuple2', _0: '&#x14F;', _1: 'ŏ'},
-			{ctor: '_Tuple2', _0: '&#x150;', _1: 'Ő'},
-			{ctor: '_Tuple2', _0: '&#x151;', _1: 'ő'},
-			{ctor: '_Tuple2', _0: '&#x152;', _1: 'Œ'},
-			{ctor: '_Tuple2', _0: '&#x153;', _1: 'œ'},
-			{ctor: '_Tuple2', _0: '&#x154;', _1: 'Ŕ'},
-			{ctor: '_Tuple2', _0: '&#x155;', _1: 'ŕ'},
-			{ctor: '_Tuple2', _0: '&#x156;', _1: 'Ŗ'},
-			{ctor: '_Tuple2', _0: '&#x157;', _1: 'ŗ'},
-			{ctor: '_Tuple2', _0: '&#x158;', _1: 'Ř'},
-			{ctor: '_Tuple2', _0: '&#x159;', _1: 'ř'},
-			{ctor: '_Tuple2', _0: '&#x15A;', _1: 'Ś'},
-			{ctor: '_Tuple2', _0: '&#x15B;', _1: 'ś'},
-			{ctor: '_Tuple2', _0: '&#x15C;', _1: 'Ŝ'},
-			{ctor: '_Tuple2', _0: '&#x15D;', _1: 'ŝ'},
-			{ctor: '_Tuple2', _0: '&#x15E;', _1: 'Ş'},
-			{ctor: '_Tuple2', _0: '&#x15F;', _1: 'ş'},
-			{ctor: '_Tuple2', _0: '&#x160;', _1: 'Š'},
-			{ctor: '_Tuple2', _0: '&#x161;', _1: 'š'},
-			{ctor: '_Tuple2', _0: '&#x162;', _1: 'Ţ'},
-			{ctor: '_Tuple2', _0: '&#x163;', _1: 'ţ'},
-			{ctor: '_Tuple2', _0: '&#x164;', _1: 'Ť'},
-			{ctor: '_Tuple2', _0: '&#x165;', _1: 'ť'},
-			{ctor: '_Tuple2', _0: '&#x166;', _1: 'Ŧ'},
-			{ctor: '_Tuple2', _0: '&#x167;', _1: 'ŧ'},
-			{ctor: '_Tuple2', _0: '&#x168;', _1: 'Ũ'},
-			{ctor: '_Tuple2', _0: '&#x169;', _1: 'ũ'},
-			{ctor: '_Tuple2', _0: '&#x16A;', _1: 'Ū'},
-			{ctor: '_Tuple2', _0: '&#x16B;', _1: 'ū'},
-			{ctor: '_Tuple2', _0: '&#x16C;', _1: 'Ŭ'},
-			{ctor: '_Tuple2', _0: '&#x16D;', _1: 'ŭ'},
-			{ctor: '_Tuple2', _0: '&#x16E;', _1: 'Ů'},
-			{ctor: '_Tuple2', _0: '&#x16F;', _1: 'ů'},
-			{ctor: '_Tuple2', _0: '&#x170;', _1: 'Ű'},
-			{ctor: '_Tuple2', _0: '&#x171;', _1: 'ű'},
-			{ctor: '_Tuple2', _0: '&#x172;', _1: 'Ų'},
-			{ctor: '_Tuple2', _0: '&#x173;', _1: 'ų'},
-			{ctor: '_Tuple2', _0: '&#x174;', _1: 'Ŵ'},
-			{ctor: '_Tuple2', _0: '&#x175;', _1: 'ŵ'},
-			{ctor: '_Tuple2', _0: '&#x176;', _1: 'Ŷ'},
-			{ctor: '_Tuple2', _0: '&#x177;', _1: 'ŷ'},
-			{ctor: '_Tuple2', _0: '&#x178;', _1: 'Ÿ'},
-			{ctor: '_Tuple2', _0: '&#x179;', _1: 'Ź'},
-			{ctor: '_Tuple2', _0: '&#x17A;', _1: 'ź'},
-			{ctor: '_Tuple2', _0: '&#x17B;', _1: 'Ż'},
-			{ctor: '_Tuple2', _0: '&#x17C;', _1: 'ż'},
-			{ctor: '_Tuple2', _0: '&#x17D;', _1: 'Ž'},
-			{ctor: '_Tuple2', _0: '&#x17E;', _1: 'ž'},
-			{ctor: '_Tuple2', _0: '&#x17F;', _1: 'ſ'},
-			{ctor: '_Tuple2', _0: '&#x154;', _1: 'Ŕ'},
-			{ctor: '_Tuple2', _0: '&#x155;', _1: 'ŕ'},
-			{ctor: '_Tuple2', _0: '&#x156;', _1: 'Ŗ'},
-			{ctor: '_Tuple2', _0: '&#x157;', _1: 'ŗ'},
-			{ctor: '_Tuple2', _0: '&#x158;', _1: 'Ř'},
-			{ctor: '_Tuple2', _0: '&#x159;', _1: 'ř'},
-			{ctor: '_Tuple2', _0: '&#x15A;', _1: 'Ś'},
-			{ctor: '_Tuple2', _0: '&#x15B;', _1: 'ś'},
-			{ctor: '_Tuple2', _0: '&#x15C;', _1: 'Ŝ'},
-			{ctor: '_Tuple2', _0: '&#x15D;', _1: 'ŝ'},
-			{ctor: '_Tuple2', _0: '&#x15E;', _1: 'Ş'},
-			{ctor: '_Tuple2', _0: '&#x15F;', _1: 'ş'},
-			{ctor: '_Tuple2', _0: '&#x160;', _1: 'Š'},
-			{ctor: '_Tuple2', _0: '&#x161;', _1: 'š'},
-			{ctor: '_Tuple2', _0: '&#x162;', _1: 'Ţ'},
-			{ctor: '_Tuple2', _0: '&#x163;', _1: 'ţ'},
-			{ctor: '_Tuple2', _0: '&#x164;', _1: 'Ť'},
-			{ctor: '_Tuple2', _0: '&#x241;', _1: 'ť'},
-			{ctor: '_Tuple2', _0: '&#x166;', _1: 'Ŧ'},
-			{ctor: '_Tuple2', _0: '&#x167;', _1: 'ŧ'},
-			{ctor: '_Tuple2', _0: '&#x168;', _1: 'Ũ'},
-			{ctor: '_Tuple2', _0: '&#x169;', _1: 'ũ'},
-			{ctor: '_Tuple2', _0: '&#x16A;', _1: 'Ū'},
-			{ctor: '_Tuple2', _0: '&#x16B;', _1: 'ū'},
-			{ctor: '_Tuple2', _0: '&#x16C;', _1: 'Ŭ'},
-			{ctor: '_Tuple2', _0: '&#x16D;', _1: 'ŭ'},
-			{ctor: '_Tuple2', _0: '&#x16E;', _1: 'Ů'},
-			{ctor: '_Tuple2', _0: '&#x16F;', _1: 'ů'},
-			{ctor: '_Tuple2', _0: '&#x170;', _1: 'Ű'},
-			{ctor: '_Tuple2', _0: '&#x171;', _1: 'ű'},
-			{ctor: '_Tuple2', _0: '&#x172;', _1: 'Ų'},
-			{ctor: '_Tuple2', _0: '&#x173;', _1: 'ų'},
-			{ctor: '_Tuple2', _0: '&#x174;', _1: 'Ŵ'},
-			{ctor: '_Tuple2', _0: '&#x175;', _1: 'ŵ'},
-			{ctor: '_Tuple2', _0: '&#x176;', _1: 'Ŷ'},
-			{ctor: '_Tuple2', _0: '&#x177;', _1: 'ŷ'},
-			{ctor: '_Tuple2', _0: '&#x178;', _1: 'Ÿ'},
-			{ctor: '_Tuple2', _0: '&#x179;', _1: 'Ź'},
-			{ctor: '_Tuple2', _0: '&#x17A;', _1: 'ź'},
-			{ctor: '_Tuple2', _0: '&#x17B;', _1: 'Ż'},
-			{ctor: '_Tuple2', _0: '&#x17C;', _1: 'ż'},
-			{ctor: '_Tuple2', _0: '&#x17D;', _1: 'Ž'},
-			{ctor: '_Tuple2', _0: '&#x17E;', _1: 'ž'},
-			{ctor: '_Tuple2', _0: '&#x17F;', _1: 'ſ'},
-			{ctor: '_Tuple2', _0: '&euro;', _1: '€'},
-			{ctor: '_Tuple2', _0: '&nbsp;', _1: ' '},
-			{ctor: '_Tuple2', _0: '&quot;', _1: '\"'},
-			{ctor: '_Tuple2', _0: '&amp;', _1: '&'},
-			{ctor: '_Tuple2', _0: '&lt;', _1: '<'},
-			{ctor: '_Tuple2', _0: '&gt;', _1: '>'},
-			{ctor: '_Tuple2', _0: '&nbsp;', _1: ' '},
-			{ctor: '_Tuple2', _0: '&iexcl;', _1: '¡'},
-			{ctor: '_Tuple2', _0: '&cent;', _1: '¢'},
-			{ctor: '_Tuple2', _0: '&pound;', _1: '£'},
-			{ctor: '_Tuple2', _0: '&curren;', _1: '¤'},
-			{ctor: '_Tuple2', _0: '&yen;', _1: '¥'},
-			{ctor: '_Tuple2', _0: '&brvbar;', _1: '¦'},
-			{ctor: '_Tuple2', _0: '&sect;', _1: '§'},
-			{ctor: '_Tuple2', _0: '&uml;', _1: '¨'},
-			{ctor: '_Tuple2', _0: '&copy;', _1: '©'},
-			{ctor: '_Tuple2', _0: '&ordf;', _1: 'ª'},
-			{ctor: '_Tuple2', _0: '&not;', _1: '¬'},
-			{ctor: '_Tuple2', _0: '&shy;', _1: ''},
-			{ctor: '_Tuple2', _0: '&reg;', _1: '®'},
-			{ctor: '_Tuple2', _0: '&macr;', _1: '¯'},
-			{ctor: '_Tuple2', _0: '&deg;', _1: '°'},
-			{ctor: '_Tuple2', _0: '&plusmn;', _1: '±'},
-			{ctor: '_Tuple2', _0: '&sup2;', _1: '²'},
-			{ctor: '_Tuple2', _0: '&sup3;', _1: '³'},
-			{ctor: '_Tuple2', _0: '&acute;', _1: '´'},
-			{ctor: '_Tuple2', _0: '&micro;', _1: 'µ'},
-			{ctor: '_Tuple2', _0: '&para;', _1: '¶'},
-			{ctor: '_Tuple2', _0: '&middot;', _1: '·'},
-			{ctor: '_Tuple2', _0: '&cedil;', _1: '¸'},
-			{ctor: '_Tuple2', _0: '&sup1;', _1: '¹'},
-			{ctor: '_Tuple2', _0: '&ordm;', _1: 'º'},
-			{ctor: '_Tuple2', _0: '&raquo;', _1: '»'},
-			{ctor: '_Tuple2', _0: '&frac14;', _1: '¼'},
-			{ctor: '_Tuple2', _0: '&frac12;', _1: '½'},
-			{ctor: '_Tuple2', _0: '&frac34;', _1: '¾'},
-			{ctor: '_Tuple2', _0: '&iquest;', _1: '¿'},
-			{ctor: '_Tuple2', _0: '&Agrave;', _1: 'À'},
-			{ctor: '_Tuple2', _0: '&Aacute;', _1: 'Á'},
-			{ctor: '_Tuple2', _0: '&Acirc;', _1: 'Â'},
-			{ctor: '_Tuple2', _0: '&Atilde;', _1: 'Ã'},
-			{ctor: '_Tuple2', _0: '&Auml;', _1: 'Ä'},
-			{ctor: '_Tuple2', _0: '&Aring;', _1: 'Å'},
-			{ctor: '_Tuple2', _0: '&AElig;', _1: 'Æ'},
-			{ctor: '_Tuple2', _0: '&Ccedil;', _1: 'Ç'},
-			{ctor: '_Tuple2', _0: '&Egrave;', _1: 'È'},
-			{ctor: '_Tuple2', _0: '&Eacute;', _1: 'É'},
-			{ctor: '_Tuple2', _0: '&Ecirc;', _1: 'Ê'},
-			{ctor: '_Tuple2', _0: '&Euml;', _1: 'Ë'},
-			{ctor: '_Tuple2', _0: '&Igrave;', _1: 'Ì'},
-			{ctor: '_Tuple2', _0: '&Iacute;', _1: 'Í'},
-			{ctor: '_Tuple2', _0: '&Icirc;', _1: 'Î'},
-			{ctor: '_Tuple2', _0: '&Iuml;', _1: 'Ï'},
-			{ctor: '_Tuple2', _0: '&ETH;', _1: 'Ð'},
-			{ctor: '_Tuple2', _0: '&Ntilde;', _1: 'Ñ'},
-			{ctor: '_Tuple2', _0: '&Ograve;', _1: 'Ò'},
-			{ctor: '_Tuple2', _0: '&Oacute;', _1: 'Ó'},
-			{ctor: '_Tuple2', _0: '&Ocirc;', _1: 'Ô'},
-			{ctor: '_Tuple2', _0: '&Otilde;', _1: 'Õ'},
-			{ctor: '_Tuple2', _0: '&Ouml;', _1: 'Ö'},
-			{ctor: '_Tuple2', _0: '&times;', _1: '×'},
-			{ctor: '_Tuple2', _0: '&Oslash;', _1: 'Ø'},
-			{ctor: '_Tuple2', _0: '&Ugrave;', _1: 'Ù'},
-			{ctor: '_Tuple2', _0: '&Uacute;', _1: 'Ú'},
-			{ctor: '_Tuple2', _0: '&Ucirc;', _1: 'Û'},
-			{ctor: '_Tuple2', _0: '&Uuml;', _1: 'Ü'},
-			{ctor: '_Tuple2', _0: '&Yacute;', _1: 'Ý'},
-			{ctor: '_Tuple2', _0: '&THORN;', _1: 'Þ'},
-			{ctor: '_Tuple2', _0: '&szlig;', _1: 'ß'},
-			{ctor: '_Tuple2', _0: '&agrave;', _1: 'à'},
-			{ctor: '_Tuple2', _0: '&aacute;', _1: 'á'},
-			{ctor: '_Tuple2', _0: '&acirc;', _1: 'â'},
-			{ctor: '_Tuple2', _0: '&atilde;', _1: 'ã'},
-			{ctor: '_Tuple2', _0: '&auml;', _1: 'ä'},
-			{ctor: '_Tuple2', _0: '&aring;', _1: 'å'},
-			{ctor: '_Tuple2', _0: '&aelig;', _1: 'æ'},
-			{ctor: '_Tuple2', _0: '&ccedil;', _1: 'ç'},
-			{ctor: '_Tuple2', _0: '&egrave;', _1: 'è'},
-			{ctor: '_Tuple2', _0: '&eacute;', _1: 'é'},
-			{ctor: '_Tuple2', _0: '&ecirc;', _1: 'ê'},
-			{ctor: '_Tuple2', _0: '&euml;', _1: 'ë'},
-			{ctor: '_Tuple2', _0: '&igrave;', _1: 'ì'},
-			{ctor: '_Tuple2', _0: '&iacute;', _1: 'í'},
-			{ctor: '_Tuple2', _0: '&icirc;', _1: 'î'},
-			{ctor: '_Tuple2', _0: '&iuml;', _1: 'ï'},
-			{ctor: '_Tuple2', _0: '&eth;', _1: 'ð'},
-			{ctor: '_Tuple2', _0: '&ntilde;', _1: 'ñ'},
-			{ctor: '_Tuple2', _0: '&ograve;', _1: 'ò'},
-			{ctor: '_Tuple2', _0: '&oacute;', _1: 'ó'},
-			{ctor: '_Tuple2', _0: '&ocirc;', _1: 'ô'},
-			{ctor: '_Tuple2', _0: '&otilde;', _1: 'õ'},
-			{ctor: '_Tuple2', _0: '&ouml;', _1: 'ö'},
-			{ctor: '_Tuple2', _0: '&divide;', _1: '÷'},
-			{ctor: '_Tuple2', _0: '&oslash;', _1: 'ø'},
-			{ctor: '_Tuple2', _0: '&ugrave;', _1: 'ù'},
-			{ctor: '_Tuple2', _0: '&uacute;', _1: 'ú'},
-			{ctor: '_Tuple2', _0: '&ucirc;', _1: 'û'},
-			{ctor: '_Tuple2', _0: '&uuml;', _1: 'ü'},
-			{ctor: '_Tuple2', _0: '&yacute;', _1: 'ý'},
-			{ctor: '_Tuple2', _0: '&thorn;', _1: 'þ'}
-		]));
-
-var _jinjor$elm_html_parser$HtmlParser_ops = _jinjor$elm_html_parser$HtmlParser_ops || {};
-_jinjor$elm_html_parser$HtmlParser_ops['*>'] = F2(
-	function (lp, rp) {
-		return A2(
-			_Bogdanp$elm_combine$Combine$andMap,
+	A2(
+		_elm_lang$core$Basics_ops['++'],
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: '&#8482;', _1: '™'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: '&#32;', _1: ' '},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: '&#33;', _1: '!'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: '&#34;', _1: '\"'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: '&#35;', _1: '#'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: '&#36;', _1: '$'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: '&#37;', _1: '%'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: '&#38;', _1: '&'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: '&#39;', _1: '\''},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: '&#40;', _1: '('},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: '&#41;', _1: ')'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: '&#42;', _1: '*'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: '&#43;', _1: '+'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: '&#44;', _1: ','},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: '&#45;', _1: '-'},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: '&#46;', _1: '.'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: '&#47;', _1: '/'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: '&#48;', _1: '0'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: '&#49;', _1: '1'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: '&#50;', _1: '2'},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: '&#51;', _1: '3'},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: '&#52;', _1: '4'},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: '&#53;', _1: '5'},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: '&#54;', _1: '6'},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: '&#55;', _1: '7'},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: '&#56;', _1: '8'},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: '&#57;', _1: '9'},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: '&#58;', _1: ':'},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: '&#59;', _1: ';'},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: '&#60;', _1: '<'},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: '&#61;', _1: '='},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: '&#62;', _1: '>'},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: '&#63;', _1: '?'},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: '&#64;', _1: '@'},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: '&#65;', _1: 'A'},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: '&#66;', _1: 'B'},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: '&#67;', _1: 'C'},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: '&#68;', _1: 'D'},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: '&#69;', _1: 'E'},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: '&#70;', _1: 'F'},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: '&#71;', _1: 'G'},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: '&#72;', _1: 'H'},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: '&#73;', _1: 'I'},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: '&#74;', _1: 'J'},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: '&#75;', _1: 'K'},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: '&#76;', _1: 'L'},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: '&#77;', _1: 'M'},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: '&#78;', _1: 'N'},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: '&#79;', _1: 'O'},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: '&#80;', _1: 'P'},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: '&#81;', _1: 'Q'},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: '&#82;', _1: 'R'},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: '&#83;', _1: 'S'},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: '&#84;', _1: 'T'},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: '&#85;', _1: 'U'},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: '&#86;', _1: 'V'},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: '&#87;', _1: 'W'},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: '&#88;', _1: 'X'},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: '&#89;', _1: 'Y'},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: '&#90;', _1: 'Z'},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: '&#91;', _1: '['},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: '&#92;', _1: '\\'},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: '&#93;', _1: ']'},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: '&#94;', _1: '^'},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: '&#95;', _1: '_'},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: '&#96;', _1: '`'},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: '&#97;', _1: 'a'},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: '&#98;', _1: 'b'},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: '&#99;', _1: 'c'},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: '&#100;', _1: 'd'},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: '&#101;', _1: 'e'},
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: {ctor: '_Tuple2', _0: '&#102;', _1: 'f'},
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: {ctor: '_Tuple2', _0: '&#103;', _1: 'g'},
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: {ctor: '_Tuple2', _0: '&#104;', _1: 'h'},
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: {ctor: '_Tuple2', _0: '&#105;', _1: 'i'},
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: {ctor: '_Tuple2', _0: '&#106;', _1: 'j'},
+																																																																														_1: {
+																																																																															ctor: '::',
+																																																																															_0: {ctor: '_Tuple2', _0: '&#107;', _1: 'k'},
+																																																																															_1: {
+																																																																																ctor: '::',
+																																																																																_0: {ctor: '_Tuple2', _0: '&#108;', _1: 'l'},
+																																																																																_1: {
+																																																																																	ctor: '::',
+																																																																																	_0: {ctor: '_Tuple2', _0: '&#109;', _1: 'm'},
+																																																																																	_1: {
+																																																																																		ctor: '::',
+																																																																																		_0: {ctor: '_Tuple2', _0: '&#110;', _1: 'n'},
+																																																																																		_1: {
+																																																																																			ctor: '::',
+																																																																																			_0: {ctor: '_Tuple2', _0: '&#111;', _1: 'o'},
+																																																																																			_1: {
+																																																																																				ctor: '::',
+																																																																																				_0: {ctor: '_Tuple2', _0: '&#112;', _1: 'p'},
+																																																																																				_1: {
+																																																																																					ctor: '::',
+																																																																																					_0: {ctor: '_Tuple2', _0: '&#113;', _1: 'q'},
+																																																																																					_1: {
+																																																																																						ctor: '::',
+																																																																																						_0: {ctor: '_Tuple2', _0: '&#114;', _1: 'r'},
+																																																																																						_1: {
+																																																																																							ctor: '::',
+																																																																																							_0: {ctor: '_Tuple2', _0: '&#115;', _1: 's'},
+																																																																																							_1: {
+																																																																																								ctor: '::',
+																																																																																								_0: {ctor: '_Tuple2', _0: '&#116;', _1: 't'},
+																																																																																								_1: {
+																																																																																									ctor: '::',
+																																																																																									_0: {ctor: '_Tuple2', _0: '&#117;', _1: 'u'},
+																																																																																									_1: {
+																																																																																										ctor: '::',
+																																																																																										_0: {ctor: '_Tuple2', _0: '&#118;', _1: 'v'},
+																																																																																										_1: {
+																																																																																											ctor: '::',
+																																																																																											_0: {ctor: '_Tuple2', _0: '&#119;', _1: 'w'},
+																																																																																											_1: {
+																																																																																												ctor: '::',
+																																																																																												_0: {ctor: '_Tuple2', _0: '&#120;', _1: 'x'},
+																																																																																												_1: {
+																																																																																													ctor: '::',
+																																																																																													_0: {ctor: '_Tuple2', _0: '&#121;', _1: 'y'},
+																																																																																													_1: {
+																																																																																														ctor: '::',
+																																																																																														_0: {ctor: '_Tuple2', _0: '&#122;', _1: 'z'},
+																																																																																														_1: {
+																																																																																															ctor: '::',
+																																																																																															_0: {ctor: '_Tuple2', _0: '&#123;', _1: '{'},
+																																																																																															_1: {
+																																																																																																ctor: '::',
+																																																																																																_0: {ctor: '_Tuple2', _0: '&#124;', _1: '|'},
+																																																																																																_1: {
+																																																																																																	ctor: '::',
+																																																																																																	_0: {ctor: '_Tuple2', _0: '&#125;', _1: '}'},
+																																																																																																	_1: {
+																																																																																																		ctor: '::',
+																																																																																																		_0: {ctor: '_Tuple2', _0: '&#126;', _1: '~'},
+																																																																																																		_1: {ctor: '[]'}
+																																																																																																	}
+																																																																																																}
+																																																																																															}
+																																																																																														}
+																																																																																													}
+																																																																																												}
+																																																																																											}
+																																																																																										}
+																																																																																									}
+																																																																																								}
+																																																																																							}
+																																																																																						}
+																																																																																					}
+																																																																																				}
+																																																																																			}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: '&#160;', _1: ' '},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: '&#161;', _1: '¡'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: '&#162;', _1: '¢'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: '&#163;', _1: '£'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: '&#164;', _1: '¤'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: '&#165;', _1: '¥'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: '&#166;', _1: '¦'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: '&#167;', _1: '§'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: '&#168;', _1: '¨'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: '&#169;', _1: '©'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: '&#170;', _1: 'ª'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: '&#171;', _1: '«'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: '&#172;', _1: '¬'},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: '&#173;', _1: ''},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: '&#174;', _1: '®'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: '&#175;', _1: '¯'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: '&#176;', _1: '°'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: '&#177;', _1: '±'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: '&#178;', _1: '²'},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: '&#179;', _1: '³'},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: '&#180;', _1: '´'},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: '&#181;', _1: 'µ'},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: '&#182;', _1: '¶'},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: '&#183;', _1: '·'},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: '&#184;', _1: '¸'},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: '&#185;', _1: '¹'},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: '&#186;', _1: 'º'},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: '&#187;', _1: '»'},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: '&#188;', _1: '¼'},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: '&#189;', _1: '½'},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: '&#190;', _1: '¾'},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: '&#191;', _1: '¿'},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: '&#192;', _1: 'À'},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: '&#193;', _1: 'Á'},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: '&#194;', _1: 'Â'},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: '&#195;', _1: 'Ã'},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: '&#196;', _1: 'Ä'},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: '&#197;', _1: 'Å'},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: '&#198;', _1: 'Æ'},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: '&#199;', _1: 'Ç'},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: '&#200;', _1: 'È'},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: '&#201;', _1: 'É'},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: '&#202;', _1: 'Ê'},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: '&#203;', _1: 'Ë'},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: '&#204;', _1: 'Ì'},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: '&#205;', _1: 'Í'},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: '&#206;', _1: 'Î'},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: '&#207;', _1: 'Ï'},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: '&#208;', _1: 'Ð'},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: '&#209;', _1: 'Ñ'},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: '&#210;', _1: 'Ò'},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: '&#211;', _1: 'Ó'},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: '&#212;', _1: 'Ô'},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: '&#213;', _1: 'Õ'},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: '&#214;', _1: 'Ö'},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: '&#215;', _1: '×'},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: '&#216;', _1: 'Ø'},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: '&#217;', _1: 'Ù'},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: '&#218;', _1: 'Ú'},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: '&#219;', _1: 'Û'},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: '&#220;', _1: 'Ü'},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: '&#221;', _1: 'Ý'},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: '&#222;', _1: 'Þ'},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: '&#223;', _1: 'ß'},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: '&#224;', _1: 'à'},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: '&#225;', _1: 'á'},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: '&#226;', _1: 'â'},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: '&#227;', _1: 'ã'},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: '&#228;', _1: 'ä'},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: '&#229;', _1: 'å'},
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: {ctor: '_Tuple2', _0: '&#230;', _1: 'æ'},
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: {ctor: '_Tuple2', _0: '&#231;', _1: 'ç'},
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: {ctor: '_Tuple2', _0: '&#232;', _1: 'è'},
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: {ctor: '_Tuple2', _0: '&#233;', _1: 'é'},
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: {ctor: '_Tuple2', _0: '&#234;', _1: 'ê'},
+																																																																														_1: {
+																																																																															ctor: '::',
+																																																																															_0: {ctor: '_Tuple2', _0: '&#235;', _1: 'ë'},
+																																																																															_1: {
+																																																																																ctor: '::',
+																																																																																_0: {ctor: '_Tuple2', _0: '&#236;', _1: 'ì'},
+																																																																																_1: {
+																																																																																	ctor: '::',
+																																																																																	_0: {ctor: '_Tuple2', _0: '&#237;', _1: 'í'},
+																																																																																	_1: {
+																																																																																		ctor: '::',
+																																																																																		_0: {ctor: '_Tuple2', _0: '&#238;', _1: 'î'},
+																																																																																		_1: {
+																																																																																			ctor: '::',
+																																																																																			_0: {ctor: '_Tuple2', _0: '&#239;', _1: 'ï'},
+																																																																																			_1: {ctor: '[]'}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
 			A2(
-				_Bogdanp$elm_combine$Combine$map,
-				_elm_lang$core$Basics$flip(_elm_lang$core$Basics$always),
-				lp),
-			rp);
-	});
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: '&#240;', _1: 'ð'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: '&#241;', _1: 'ñ'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: '&#242;', _1: 'ò'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: '&#243;', _1: 'ó'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: '&#244;', _1: 'ô'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: '&#245;', _1: 'õ'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: '&#246;', _1: 'ö'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: '&#247;', _1: '÷'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: '&#248;', _1: 'ø'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: '&#249;', _1: 'ù'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: '&#250;', _1: 'ú'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: '&#251;', _1: 'û'},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: '&#252;', _1: 'ü'},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: '&#253;', _1: 'ý'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: '&#254;', _1: 'þ'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: '&#255;', _1: 'ÿ'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: '&#256;', _1: 'Ā'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: '&#257;', _1: 'ā'},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: '&#258;', _1: 'Ă'},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: '&#259;', _1: 'ă'},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: '&#260;', _1: 'Ą'},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: '&#261;', _1: 'ą'},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: '&#262;', _1: 'Ć'},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: '&#263;', _1: 'ć'},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: '&#264;', _1: 'Ĉ'},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: '&#265;', _1: 'ĉ'},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: '&#266;', _1: 'Ċ'},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: '&#267;', _1: 'ċ'},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: '&#268;', _1: 'Č'},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: '&#269;', _1: 'č'},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: '&#270;', _1: 'Ď'},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: '&#271;', _1: 'ď'},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: '&#272;', _1: 'Đ'},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: '&#273;', _1: 'đ'},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: '&#274;', _1: 'Ē'},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: '&#275;', _1: 'ē'},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: '&#276;', _1: 'Ĕ'},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: '&#277;', _1: 'ĕ'},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: '&#278;', _1: 'Ė'},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: '&#279;', _1: 'ė'},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: '&#280;', _1: 'Ę'},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: '&#281;', _1: 'ę'},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: '&#282;', _1: 'Ě'},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: '&#283;', _1: 'ě'},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: '&#284;', _1: 'Ĝ'},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: '&#285;', _1: 'ĝ'},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: '&#286;', _1: 'Ğ'},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: '&#287;', _1: 'ğ'},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: '&#288;', _1: 'Ġ'},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: '&#289;', _1: 'ġ'},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: '&#290;', _1: 'Ģ'},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: '&#291;', _1: 'ģ'},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: '&#292;', _1: 'Ĥ'},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: '&#293;', _1: 'ĥ'},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: '&#294;', _1: 'Ħ'},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: '&#295;', _1: 'ħ'},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: '&#296;', _1: 'Ĩ'},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: '&#297;', _1: 'ĩ'},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: '&#298;', _1: 'Ī'},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: '&#299;', _1: 'ī'},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: '&#300;', _1: 'Ĭ'},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: '&#301;', _1: 'ĭ'},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: '&#302;', _1: 'Į'},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: '&#303;', _1: 'į'},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: '&#304;', _1: 'İ'},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: '&#305;', _1: 'ı'},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: '&#306;', _1: 'Ĳ'},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: '&#307;', _1: 'ĳ'},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: '&#308;', _1: 'Ĵ'},
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: {ctor: '_Tuple2', _0: '&#309;', _1: 'ĵ'},
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: {ctor: '_Tuple2', _0: '&#310;', _1: 'Ķ'},
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: {ctor: '_Tuple2', _0: '&#311;', _1: 'ķ'},
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: {ctor: '_Tuple2', _0: '&#312;', _1: 'ĸ'},
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: {ctor: '_Tuple2', _0: '&#313;', _1: 'Ĺ'},
+																																																																														_1: {
+																																																																															ctor: '::',
+																																																																															_0: {ctor: '_Tuple2', _0: '&#314;', _1: 'ĺ'},
+																																																																															_1: {
+																																																																																ctor: '::',
+																																																																																_0: {ctor: '_Tuple2', _0: '&#315;', _1: 'Ļ'},
+																																																																																_1: {
+																																																																																	ctor: '::',
+																																																																																	_0: {ctor: '_Tuple2', _0: '&#316;', _1: 'ļ'},
+																																																																																	_1: {
+																																																																																		ctor: '::',
+																																																																																		_0: {ctor: '_Tuple2', _0: '&#317;', _1: 'Ľ'},
+																																																																																		_1: {
+																																																																																			ctor: '::',
+																																																																																			_0: {ctor: '_Tuple2', _0: '&#318;', _1: 'ľ'},
+																																																																																			_1: {
+																																																																																				ctor: '::',
+																																																																																				_0: {ctor: '_Tuple2', _0: '&#319;', _1: 'Ŀ'},
+																																																																																				_1: {
+																																																																																					ctor: '::',
+																																																																																					_0: {ctor: '_Tuple2', _0: '&#320;', _1: 'ŀ'},
+																																																																																					_1: {
+																																																																																						ctor: '::',
+																																																																																						_0: {ctor: '_Tuple2', _0: '&#321;', _1: 'Ł'},
+																																																																																						_1: {
+																																																																																							ctor: '::',
+																																																																																							_0: {ctor: '_Tuple2', _0: '&#322;', _1: 'ł'},
+																																																																																							_1: {
+																																																																																								ctor: '::',
+																																																																																								_0: {ctor: '_Tuple2', _0: '&#323;', _1: 'Ń'},
+																																																																																								_1: {
+																																																																																									ctor: '::',
+																																																																																									_0: {ctor: '_Tuple2', _0: '&#324;', _1: 'ń'},
+																																																																																									_1: {
+																																																																																										ctor: '::',
+																																																																																										_0: {ctor: '_Tuple2', _0: '&#325;', _1: 'Ņ'},
+																																																																																										_1: {
+																																																																																											ctor: '::',
+																																																																																											_0: {ctor: '_Tuple2', _0: '&#326;', _1: 'ņ'},
+																																																																																											_1: {
+																																																																																												ctor: '::',
+																																																																																												_0: {ctor: '_Tuple2', _0: '&#327;', _1: 'Ň'},
+																																																																																												_1: {
+																																																																																													ctor: '::',
+																																																																																													_0: {ctor: '_Tuple2', _0: '&#328;', _1: 'ň'},
+																																																																																													_1: {
+																																																																																														ctor: '::',
+																																																																																														_0: {ctor: '_Tuple2', _0: '&#329;', _1: 'ŉ'},
+																																																																																														_1: {
+																																																																																															ctor: '::',
+																																																																																															_0: {ctor: '_Tuple2', _0: '&#330;', _1: 'Ŋ'},
+																																																																																															_1: {
+																																																																																																ctor: '::',
+																																																																																																_0: {ctor: '_Tuple2', _0: '&#331;', _1: 'ŋ'},
+																																																																																																_1: {
+																																																																																																	ctor: '::',
+																																																																																																	_0: {ctor: '_Tuple2', _0: '&#332;', _1: 'Ō'},
+																																																																																																	_1: {
+																																																																																																		ctor: '::',
+																																																																																																		_0: {ctor: '_Tuple2', _0: '&#333;', _1: 'ō'},
+																																																																																																		_1: {
+																																																																																																			ctor: '::',
+																																																																																																			_0: {ctor: '_Tuple2', _0: '&#334;', _1: 'Ŏ'},
+																																																																																																			_1: {
+																																																																																																				ctor: '::',
+																																																																																																				_0: {ctor: '_Tuple2', _0: '&#335;', _1: 'ŏ'},
+																																																																																																				_1: {
+																																																																																																					ctor: '::',
+																																																																																																					_0: {ctor: '_Tuple2', _0: '&#336;', _1: 'Ő'},
+																																																																																																					_1: {
+																																																																																																						ctor: '::',
+																																																																																																						_0: {ctor: '_Tuple2', _0: '&#337;', _1: 'ő'},
+																																																																																																						_1: {
+																																																																																																							ctor: '::',
+																																																																																																							_0: {ctor: '_Tuple2', _0: '&#338;', _1: 'Œ'},
+																																																																																																							_1: {
+																																																																																																								ctor: '::',
+																																																																																																								_0: {ctor: '_Tuple2', _0: '&#339;', _1: 'œ'},
+																																																																																																								_1: {
+																																																																																																									ctor: '::',
+																																																																																																									_0: {ctor: '_Tuple2', _0: '&#340;', _1: 'Ŕ'},
+																																																																																																									_1: {
+																																																																																																										ctor: '::',
+																																																																																																										_0: {ctor: '_Tuple2', _0: '&#341;', _1: 'ŕ'},
+																																																																																																										_1: {
+																																																																																																											ctor: '::',
+																																																																																																											_0: {ctor: '_Tuple2', _0: '&#342;', _1: 'Ŗ'},
+																																																																																																											_1: {
+																																																																																																												ctor: '::',
+																																																																																																												_0: {ctor: '_Tuple2', _0: '&#343;', _1: 'ŗ'},
+																																																																																																												_1: {
+																																																																																																													ctor: '::',
+																																																																																																													_0: {ctor: '_Tuple2', _0: '&#344;', _1: 'Ř'},
+																																																																																																													_1: {
+																																																																																																														ctor: '::',
+																																																																																																														_0: {ctor: '_Tuple2', _0: '&#345;', _1: 'ř'},
+																																																																																																														_1: {
+																																																																																																															ctor: '::',
+																																																																																																															_0: {ctor: '_Tuple2', _0: '&#346;', _1: 'Ś'},
+																																																																																																															_1: {
+																																																																																																																ctor: '::',
+																																																																																																																_0: {ctor: '_Tuple2', _0: '&#347;', _1: 'ś'},
+																																																																																																																_1: {
+																																																																																																																	ctor: '::',
+																																																																																																																	_0: {ctor: '_Tuple2', _0: '&#348;', _1: 'Ŝ'},
+																																																																																																																	_1: {
+																																																																																																																		ctor: '::',
+																																																																																																																		_0: {ctor: '_Tuple2', _0: '&#349;', _1: 'ŝ'},
+																																																																																																																		_1: {
+																																																																																																																			ctor: '::',
+																																																																																																																			_0: {ctor: '_Tuple2', _0: '&#350;', _1: 'Ş'},
+																																																																																																																			_1: {
+																																																																																																																				ctor: '::',
+																																																																																																																				_0: {ctor: '_Tuple2', _0: '&#351;', _1: 'ş'},
+																																																																																																																				_1: {
+																																																																																																																					ctor: '::',
+																																																																																																																					_0: {ctor: '_Tuple2', _0: '&#352;', _1: 'Š'},
+																																																																																																																					_1: {
+																																																																																																																						ctor: '::',
+																																																																																																																						_0: {ctor: '_Tuple2', _0: '&#353;', _1: 'š'},
+																																																																																																																						_1: {
+																																																																																																																							ctor: '::',
+																																																																																																																							_0: {ctor: '_Tuple2', _0: '&#354;', _1: 'Ţ'},
+																																																																																																																							_1: {
+																																																																																																																								ctor: '::',
+																																																																																																																								_0: {ctor: '_Tuple2', _0: '&#355;', _1: 'ţ'},
+																																																																																																																								_1: {
+																																																																																																																									ctor: '::',
+																																																																																																																									_0: {ctor: '_Tuple2', _0: '&#356;', _1: 'Ť'},
+																																																																																																																									_1: {
+																																																																																																																										ctor: '::',
+																																																																																																																										_0: {ctor: '_Tuple2', _0: '&#357;', _1: 'ť'},
+																																																																																																																										_1: {
+																																																																																																																											ctor: '::',
+																																																																																																																											_0: {ctor: '_Tuple2', _0: '&#358;', _1: 'Ŧ'},
+																																																																																																																											_1: {
+																																																																																																																												ctor: '::',
+																																																																																																																												_0: {ctor: '_Tuple2', _0: '&#359;', _1: 'ŧ'},
+																																																																																																																												_1: {ctor: '[]'}
+																																																																																																																											}
+																																																																																																																										}
+																																																																																																																									}
+																																																																																																																								}
+																																																																																																																							}
+																																																																																																																						}
+																																																																																																																					}
+																																																																																																																				}
+																																																																																																																			}
+																																																																																																																		}
+																																																																																																																	}
+																																																																																																																}
+																																																																																																															}
+																																																																																																														}
+																																																																																																													}
+																																																																																																												}
+																																																																																																											}
+																																																																																																										}
+																																																																																																									}
+																																																																																																								}
+																																																																																																							}
+																																																																																																						}
+																																																																																																					}
+																																																																																																				}
+																																																																																																			}
+																																																																																																		}
+																																																																																																	}
+																																																																																																}
+																																																																																															}
+																																																																																														}
+																																																																																													}
+																																																																																												}
+																																																																																											}
+																																																																																										}
+																																																																																									}
+																																																																																								}
+																																																																																							}
+																																																																																						}
+																																																																																					}
+																																																																																				}
+																																																																																			}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: '&#360;', _1: 'Ũ'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: '&#361;', _1: 'ũ'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: '&#362;', _1: 'Ū'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: '&#363;', _1: 'ū'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: '&#364;', _1: 'Ŭ'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: '&#365;', _1: 'ŭ'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: '&#366;', _1: 'Ů'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: '&#367;', _1: 'ů'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: '&#368;', _1: 'Ű'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: '&#369;', _1: 'ű'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: '&#370;', _1: 'Ų'},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: '&#371;', _1: 'ų'},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: '&#372;', _1: 'Ŵ'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: '&#373;', _1: 'ŵ'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: '&#374;', _1: 'Ŷ'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: '&#375;', _1: 'ŷ'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: '&#376;', _1: 'Ÿ'},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: '&#377;', _1: 'Ź'},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: '&#378;', _1: 'ź'},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: '&#379;', _1: 'Ż'},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: '&#380;', _1: 'ż'},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: '&#381;', _1: 'Ž'},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: '&#382;', _1: 'ž'},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: '&#383;', _1: 'ſ'},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: '&#340;', _1: 'Ŕ'},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: '&#341;', _1: 'ŕ'},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: '&#342;', _1: 'Ŗ'},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: '&#343;', _1: 'ŗ'},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: '&#344;', _1: 'Ř'},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: '&#345;', _1: 'ř'},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: '&#346;', _1: 'Ś'},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: '&#347;', _1: 'ś'},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: '&#348;', _1: 'Ŝ'},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: '&#349;', _1: 'ŝ'},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: '&#350;', _1: 'Ş'},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: '&#351;', _1: 'ş'},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: '&#352;', _1: 'Š'},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: '&#353;', _1: 'š'},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: '&#354;', _1: 'Ţ'},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: '&#355;', _1: 'ţ'},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: '&#356;', _1: 'Ť'},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: '&#577;', _1: 'ť'},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: '&#358;', _1: 'Ŧ'},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: '&#359;', _1: 'ŧ'},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: '&#360;', _1: 'Ũ'},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: '&#361;', _1: 'ũ'},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: '&#362;', _1: 'Ū'},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: '&#363;', _1: 'ū'},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: '&#364;', _1: 'Ŭ'},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: '&#365;', _1: 'ŭ'},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: '&#366;', _1: 'Ů'},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: '&#367;', _1: 'ů'},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: '&#368;', _1: 'Ű'},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: '&#369;', _1: 'ű'},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: '&#370;', _1: 'Ų'},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: '&#371;', _1: 'ų'},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: '&#372;', _1: 'Ŵ'},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: '&#373;', _1: 'ŵ'},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: '&#374;', _1: 'Ŷ'},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: '&#375;', _1: 'ŷ'},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: '&#376;', _1: 'Ÿ'},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: '&#377;', _1: 'Ź'},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: '&#378;', _1: 'ź'},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: '&#379;', _1: 'Ż'},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: '&#380;', _1: 'ż'},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: '&#381;', _1: 'Ž'},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: '&#382;', _1: 'ž'},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: '&#383;', _1: 'ſ'},
+																																																																									_1: {ctor: '[]'}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: '&#x2122;', _1: '™'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: '&#x20;', _1: ' '},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: '&#x21;', _1: '!'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: '&#x22;', _1: '\"'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: '&#x23;', _1: '#'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: '&#x24;', _1: '$'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: '&#x25;', _1: '%'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: '&#x26;', _1: '&'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: '&#x27;', _1: '\''},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: '&#x28;', _1: '('},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: '&#x29;', _1: ')'},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: '&#x2A;', _1: '*'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: '&#x2B;', _1: '+'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: '&#x2C;', _1: ','},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: '&#x2D;', _1: '-'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: '&#x2E;', _1: '.'},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: '&#x2F;', _1: '/'},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: '&#x30;', _1: '0'},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: '&#x31;', _1: '1'},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: '&#x32;', _1: '2'},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: '&#x33;', _1: '3'},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: '&#x34;', _1: '4'},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: '&#x35;', _1: '5'},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: '&#x36;', _1: '6'},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: '&#x37;', _1: '7'},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: '&#x38;', _1: '8'},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: '&#x39;', _1: '9'},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: '&#x3A;', _1: ':'},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: '&#x3B;', _1: ';'},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: '&#x3C;', _1: '<'},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: '&#x3D;', _1: '='},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: '&#x3E;', _1: '>'},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: '&#x3F;', _1: '?'},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: '&#x40;', _1: '@'},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: '&#x41;', _1: 'A'},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: '&#x42;', _1: 'B'},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: '&#x43;', _1: 'C'},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: '&#x44;', _1: 'D'},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: '&#x45;', _1: 'E'},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: '&#x46;', _1: 'F'},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: '&#x47;', _1: 'G'},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: '&#x48;', _1: 'H'},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: '&#x49;', _1: 'I'},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: '&#x4A;', _1: 'J'},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: '&#x4B;', _1: 'K'},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: '&#x4C;', _1: 'L'},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: '&#x4D;', _1: 'M'},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: '&#x4E;', _1: 'N'},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: '&#x4F;', _1: 'O'},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: '&#x50;', _1: 'P'},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: '&#x51;', _1: 'Q'},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: '&#x52;', _1: 'R'},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: '&#x53;', _1: 'S'},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: '&#x54;', _1: 'T'},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: '&#x55;', _1: 'U'},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: '&#x56;', _1: 'V'},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: '&#x57;', _1: 'W'},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: '&#x58;', _1: 'X'},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: '&#x59;', _1: 'Y'},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: '&#x5A;', _1: 'Z'},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: '&#x5B;', _1: '['},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: '&#x5C;', _1: '\\'},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: '&#x5D;', _1: ']'},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: '&#x5E;', _1: '^'},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: '&#x5F;', _1: '_'},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: '&#x60;', _1: '`'},
+																																																																								_1: {ctor: '[]'}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: '&#x61;', _1: 'a'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: '&#x62;', _1: 'b'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: '&#x63;', _1: 'c'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: '&#x64;', _1: 'd'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: '&#x65;', _1: 'e'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: '&#x66;', _1: 'f'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: '&#x67;', _1: 'g'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: '&#x68;', _1: 'h'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: '&#x69;', _1: 'i'},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: '&#x6A;', _1: 'j'},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: '&#x6B;', _1: 'k'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: '&#x6C;', _1: 'l'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: '&#x6D;', _1: 'm'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: '&#x6E;', _1: 'n'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: '&#x6F;', _1: 'o'},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: '&#x70;', _1: 'p'},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: '&#x71;', _1: 'q'},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: '&#x72;', _1: 'r'},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: '&#x73;', _1: 's'},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: '&#x74;', _1: 't'},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: '&#x75;', _1: 'u'},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: '&#x76;', _1: 'v'},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: '&#x77;', _1: 'w'},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: '&#x78;', _1: 'x'},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: '&#x79;', _1: 'y'},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: '&#x7A;', _1: 'z'},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: '&#x7B;', _1: '{'},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: '&#x7C;', _1: '|'},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: '&#x7D;', _1: '}'},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: '&#x7E;', _1: '~'},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: '&#xA0;', _1: ' '},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: '&#xA1;', _1: '¡'},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: '&#xA2;', _1: '¢'},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: '&#xA3;', _1: '£'},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: '&#xA4;', _1: '¤'},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: '&#xA5;', _1: '¥'},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: '&#xA6;', _1: '¦'},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: '&#xA7;', _1: '§'},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: '&#xA8;', _1: '¨'},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: '&#xA9;', _1: '©'},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: '&#xAA;', _1: 'ª'},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: '&#xAB;', _1: '«'},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: '&#xAC;', _1: '¬'},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: '&#xAD;', _1: ''},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: '&#xAE;', _1: '®'},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: '&#xAF;', _1: '¯'},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: '&#xB0;', _1: '°'},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: '&#xB1;', _1: '±'},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: '&#xB2;', _1: '²'},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: '&#xB3;', _1: '³'},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: '&#xB4;', _1: '´'},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: '&#xB5;', _1: 'µ'},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: '&#xB6;', _1: '¶'},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: '&#xB7;', _1: '·'},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: '&#xB8;', _1: '¸'},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: '&#xB9;', _1: '¹'},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: '&#xBA;', _1: 'º'},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: '&#xBB;', _1: '»'},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: '&#xBC;', _1: '¼'},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: '&#xBD;', _1: '½'},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: '&#xBE;', _1: '¾'},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: '&#xBF;', _1: '¿'},
+																																																																					_1: {ctor: '[]'}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							},
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								{
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: '&#xC0;', _1: 'À'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: '&#xC1;', _1: 'Á'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: '&#xC2;', _1: 'Â'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: '&#xC3;', _1: 'Ã'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: '&#xC4;', _1: 'Ä'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: '&#xC5;', _1: 'Å'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: '&#xC6;', _1: 'Æ'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: '&#xC7;', _1: 'Ç'},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: '&#xC8;', _1: 'È'},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: '&#xC9;', _1: 'É'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: '&#xCA;', _1: 'Ê'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: '&#xCB;', _1: 'Ë'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: '&#xCC;', _1: 'Ì'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: '&#xCD;', _1: 'Í'},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: '&#xCE;', _1: 'Î'},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: '&#xCF;', _1: 'Ï'},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: '&#xD0;', _1: 'Ð'},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: '&#xD1;', _1: 'Ñ'},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: '&#xD2;', _1: 'Ò'},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: '&#xD3;', _1: 'Ó'},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: '&#xD4;', _1: 'Ô'},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: '&#xD5;', _1: 'Õ'},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: '&#xD6;', _1: 'Ö'},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: '&#xD7;', _1: '×'},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: '&#xD8;', _1: 'Ø'},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: '&#xD9;', _1: 'Ù'},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: '&#xDA;', _1: 'Ú'},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: '&#xDB;', _1: 'Û'},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: '&#xDC;', _1: 'Ü'},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: '&#xDD;', _1: 'Ý'},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: '&#xDE;', _1: 'Þ'},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: '&#xDF;', _1: 'ß'},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: '&#xE0;', _1: 'à'},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: '&#xE1;', _1: 'á'},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: '&#xE2;', _1: 'â'},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: '&#xE3;', _1: 'ã'},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: '&#xE4;', _1: 'ä'},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: '&#xE5;', _1: 'å'},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: '&#xE6;', _1: 'æ'},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: '&#xE7;', _1: 'ç'},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: '&#xE8;', _1: 'è'},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: '&#xE9;', _1: 'é'},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: '&#xEA;', _1: 'ê'},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: '&#xEB;', _1: 'ë'},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: '&#xEC;', _1: 'ì'},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: '&#xED;', _1: 'í'},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: '&#xEE;', _1: 'î'},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: '&#xEF;', _1: 'ï'},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: '&#xF0;', _1: 'ð'},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: '&#xF1;', _1: 'ñ'},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: '&#xF2;', _1: 'ò'},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: '&#xF3;', _1: 'ó'},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: '&#xF4;', _1: 'ô'},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: '&#xF5;', _1: 'õ'},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: '&#xF6;', _1: 'ö'},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: '&#xF7;', _1: '÷'},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: '&#xF8;', _1: 'ø'},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: '&#xF9;', _1: 'ù'},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: '&#xFA;', _1: 'ú'},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: '&#xFB;', _1: 'û'},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: '&#xFC;', _1: 'ü'},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: '&#xFD;', _1: 'ý'},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: '&#xFE;', _1: 'þ'},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: '&#xFF;', _1: 'ÿ'},
+																																																																								_1: {ctor: '[]'}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									{
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: '&#x100;', _1: 'Ā'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: '&#x101;', _1: 'ā'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: '&#x102;', _1: 'Ă'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: '&#x103;', _1: 'ă'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: '&#x104;', _1: 'Ą'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: '&#x105;', _1: 'ą'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: '&#x106;', _1: 'Ć'},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: '&#x107;', _1: 'ć'},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: '&#x108;', _1: 'Ĉ'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: '&#x109;', _1: 'ĉ'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: '&#x10A;', _1: 'Ċ'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: '&#x10B;', _1: 'ċ'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: '&#x10C;', _1: 'Č'},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: '&#x10D;', _1: 'č'},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: '&#x10E;', _1: 'Ď'},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: '&#x10F;', _1: 'ď'},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: '&#x110;', _1: 'Đ'},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: '&#x111;', _1: 'đ'},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: '&#x112;', _1: 'Ē'},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: '&#x113;', _1: 'ē'},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: '&#x114;', _1: 'Ĕ'},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: '&#x115;', _1: 'ĕ'},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: '&#x116;', _1: 'Ė'},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: '&#x117;', _1: 'ė'},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: '&#x118;', _1: 'Ę'},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: '&#x119;', _1: 'ę'},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: '&#x11A;', _1: 'Ě'},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: '&#x11B;', _1: 'ě'},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: '&#x11C;', _1: 'Ĝ'},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: '&#x11D;', _1: 'ĝ'},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: '&#x11E;', _1: 'Ğ'},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: '&#x11F;', _1: 'ğ'},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: '&#x120;', _1: 'Ġ'},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: '&#x121;', _1: 'ġ'},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: '&#x122;', _1: 'Ģ'},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: '&#x123;', _1: 'ģ'},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: '&#x124;', _1: 'Ĥ'},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: '&#x125;', _1: 'ĥ'},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: '&#x126;', _1: 'Ħ'},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: '&#x127;', _1: 'ħ'},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: '&#x128;', _1: 'Ĩ'},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: '&#x129;', _1: 'ĩ'},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: '&#x12A;', _1: 'Ī'},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: '&#x12B;', _1: 'ī'},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: '&#x12C;', _1: 'Ĭ'},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: '&#x12D;', _1: 'ĭ'},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: '&#x12E;', _1: 'Į'},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: '&#x12F;', _1: 'į'},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: '&#x130;', _1: 'İ'},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: '&#x131;', _1: 'ı'},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: '&#x132;', _1: 'Ĳ'},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: '&#x133;', _1: 'ĳ'},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: '&#x134;', _1: 'Ĵ'},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: '&#x135;', _1: 'ĵ'},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: '&#x136;', _1: 'Ķ'},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: '&#x137;', _1: 'ķ'},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: '&#x138;', _1: 'ĸ'},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: '&#x139;', _1: 'Ĺ'},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: '&#x13A;', _1: 'ĺ'},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: '&#x13B;', _1: 'Ļ'},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: '&#x13C;', _1: 'ļ'},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: '&#x13D;', _1: 'Ľ'},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: '&#x13E;', _1: 'ľ'},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: '&#x13F;', _1: 'Ŀ'},
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: {ctor: '_Tuple2', _0: '&#x140;', _1: 'ŀ'},
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: {ctor: '_Tuple2', _0: '&#x141;', _1: 'Ł'},
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: {ctor: '_Tuple2', _0: '&#x142;', _1: 'ł'},
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: {ctor: '_Tuple2', _0: '&#x143;', _1: 'Ń'},
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: {ctor: '_Tuple2', _0: '&#x144;', _1: 'ń'},
+																																																																														_1: {
+																																																																															ctor: '::',
+																																																																															_0: {ctor: '_Tuple2', _0: '&#x145;', _1: 'Ņ'},
+																																																																															_1: {
+																																																																																ctor: '::',
+																																																																																_0: {ctor: '_Tuple2', _0: '&#x146;', _1: 'ņ'},
+																																																																																_1: {
+																																																																																	ctor: '::',
+																																																																																	_0: {ctor: '_Tuple2', _0: '&#x147;', _1: 'Ň'},
+																																																																																	_1: {
+																																																																																		ctor: '::',
+																																																																																		_0: {ctor: '_Tuple2', _0: '&#x148;', _1: 'ň'},
+																																																																																		_1: {
+																																																																																			ctor: '::',
+																																																																																			_0: {ctor: '_Tuple2', _0: '&#x149;', _1: 'ŉ'},
+																																																																																			_1: {
+																																																																																				ctor: '::',
+																																																																																				_0: {ctor: '_Tuple2', _0: '&#x14A;', _1: 'Ŋ'},
+																																																																																				_1: {
+																																																																																					ctor: '::',
+																																																																																					_0: {ctor: '_Tuple2', _0: '&#x14B;', _1: 'ŋ'},
+																																																																																					_1: {
+																																																																																						ctor: '::',
+																																																																																						_0: {ctor: '_Tuple2', _0: '&#x14C;', _1: 'Ō'},
+																																																																																						_1: {
+																																																																																							ctor: '::',
+																																																																																							_0: {ctor: '_Tuple2', _0: '&#x14D;', _1: 'ō'},
+																																																																																							_1: {
+																																																																																								ctor: '::',
+																																																																																								_0: {ctor: '_Tuple2', _0: '&#x14E;', _1: 'Ŏ'},
+																																																																																								_1: {
+																																																																																									ctor: '::',
+																																																																																									_0: {ctor: '_Tuple2', _0: '&#x14F;', _1: 'ŏ'},
+																																																																																									_1: {
+																																																																																										ctor: '::',
+																																																																																										_0: {ctor: '_Tuple2', _0: '&#x150;', _1: 'Ő'},
+																																																																																										_1: {
+																																																																																											ctor: '::',
+																																																																																											_0: {ctor: '_Tuple2', _0: '&#x151;', _1: 'ő'},
+																																																																																											_1: {
+																																																																																												ctor: '::',
+																																																																																												_0: {ctor: '_Tuple2', _0: '&#x152;', _1: 'Œ'},
+																																																																																												_1: {
+																																																																																													ctor: '::',
+																																																																																													_0: {ctor: '_Tuple2', _0: '&#x153;', _1: 'œ'},
+																																																																																													_1: {
+																																																																																														ctor: '::',
+																																																																																														_0: {ctor: '_Tuple2', _0: '&#x154;', _1: 'Ŕ'},
+																																																																																														_1: {
+																																																																																															ctor: '::',
+																																																																																															_0: {ctor: '_Tuple2', _0: '&#x155;', _1: 'ŕ'},
+																																																																																															_1: {
+																																																																																																ctor: '::',
+																																																																																																_0: {ctor: '_Tuple2', _0: '&#x156;', _1: 'Ŗ'},
+																																																																																																_1: {
+																																																																																																	ctor: '::',
+																																																																																																	_0: {ctor: '_Tuple2', _0: '&#x157;', _1: 'ŗ'},
+																																																																																																	_1: {
+																																																																																																		ctor: '::',
+																																																																																																		_0: {ctor: '_Tuple2', _0: '&#x158;', _1: 'Ř'},
+																																																																																																		_1: {
+																																																																																																			ctor: '::',
+																																																																																																			_0: {ctor: '_Tuple2', _0: '&#x159;', _1: 'ř'},
+																																																																																																			_1: {
+																																																																																																				ctor: '::',
+																																																																																																				_0: {ctor: '_Tuple2', _0: '&#x15A;', _1: 'Ś'},
+																																																																																																				_1: {
+																																																																																																					ctor: '::',
+																																																																																																					_0: {ctor: '_Tuple2', _0: '&#x15B;', _1: 'ś'},
+																																																																																																					_1: {
+																																																																																																						ctor: '::',
+																																																																																																						_0: {ctor: '_Tuple2', _0: '&#x15C;', _1: 'Ŝ'},
+																																																																																																						_1: {
+																																																																																																							ctor: '::',
+																																																																																																							_0: {ctor: '_Tuple2', _0: '&#x15D;', _1: 'ŝ'},
+																																																																																																							_1: {
+																																																																																																								ctor: '::',
+																																																																																																								_0: {ctor: '_Tuple2', _0: '&#x15E;', _1: 'Ş'},
+																																																																																																								_1: {
+																																																																																																									ctor: '::',
+																																																																																																									_0: {ctor: '_Tuple2', _0: '&#x15F;', _1: 'ş'},
+																																																																																																									_1: {
+																																																																																																										ctor: '::',
+																																																																																																										_0: {ctor: '_Tuple2', _0: '&#x160;', _1: 'Š'},
+																																																																																																										_1: {
+																																																																																																											ctor: '::',
+																																																																																																											_0: {ctor: '_Tuple2', _0: '&#x161;', _1: 'š'},
+																																																																																																											_1: {
+																																																																																																												ctor: '::',
+																																																																																																												_0: {ctor: '_Tuple2', _0: '&#x162;', _1: 'Ţ'},
+																																																																																																												_1: {
+																																																																																																													ctor: '::',
+																																																																																																													_0: {ctor: '_Tuple2', _0: '&#x163;', _1: 'ţ'},
+																																																																																																													_1: {
+																																																																																																														ctor: '::',
+																																																																																																														_0: {ctor: '_Tuple2', _0: '&#x164;', _1: 'Ť'},
+																																																																																																														_1: {
+																																																																																																															ctor: '::',
+																																																																																																															_0: {ctor: '_Tuple2', _0: '&#x165;', _1: 'ť'},
+																																																																																																															_1: {
+																																																																																																																ctor: '::',
+																																																																																																																_0: {ctor: '_Tuple2', _0: '&#x166;', _1: 'Ŧ'},
+																																																																																																																_1: {
+																																																																																																																	ctor: '::',
+																																																																																																																	_0: {ctor: '_Tuple2', _0: '&#x167;', _1: 'ŧ'},
+																																																																																																																	_1: {ctor: '[]'}
+																																																																																																																}
+																																																																																																															}
+																																																																																																														}
+																																																																																																													}
+																																																																																																												}
+																																																																																																											}
+																																																																																																										}
+																																																																																																									}
+																																																																																																								}
+																																																																																																							}
+																																																																																																						}
+																																																																																																					}
+																																																																																																				}
+																																																																																																			}
+																																																																																																		}
+																																																																																																	}
+																																																																																																}
+																																																																																															}
+																																																																																														}
+																																																																																													}
+																																																																																												}
+																																																																																											}
+																																																																																										}
+																																																																																									}
+																																																																																								}
+																																																																																							}
+																																																																																						}
+																																																																																					}
+																																																																																				}
+																																																																																			}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										{
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: '&#x168;', _1: 'Ũ'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: '&#x169;', _1: 'ũ'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: '&#x16A;', _1: 'Ū'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: '&#x16B;', _1: 'ū'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: '&#x16C;', _1: 'Ŭ'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: '&#x16D;', _1: 'ŭ'},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: '&#x16E;', _1: 'Ů'},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: '&#x16F;', _1: 'ů'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: '&#x170;', _1: 'Ű'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: '&#x171;', _1: 'ű'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: '&#x172;', _1: 'Ų'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: '&#x173;', _1: 'ų'},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: '&#x174;', _1: 'Ŵ'},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: '&#x175;', _1: 'ŵ'},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: '&#x176;', _1: 'Ŷ'},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: '&#x177;', _1: 'ŷ'},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: '&#x178;', _1: 'Ÿ'},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: '&#x179;', _1: 'Ź'},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: '&#x17A;', _1: 'ź'},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: '&#x17B;', _1: 'Ż'},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: '&#x17C;', _1: 'ż'},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: '&#x17D;', _1: 'Ž'},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: '&#x17E;', _1: 'ž'},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: '&#x17F;', _1: 'ſ'},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: '&#x154;', _1: 'Ŕ'},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: '&#x155;', _1: 'ŕ'},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: '&#x156;', _1: 'Ŗ'},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: '&#x157;', _1: 'ŗ'},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: '&#x158;', _1: 'Ř'},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: '&#x159;', _1: 'ř'},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: '&#x15A;', _1: 'Ś'},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: '&#x15B;', _1: 'ś'},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: '&#x15C;', _1: 'Ŝ'},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: '&#x15D;', _1: 'ŝ'},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: '&#x15E;', _1: 'Ş'},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: '&#x15F;', _1: 'ş'},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: '&#x160;', _1: 'Š'},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: '&#x161;', _1: 'š'},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: '&#x162;', _1: 'Ţ'},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: '&#x163;', _1: 'ţ'},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: '&#x164;', _1: 'Ť'},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: '&#x241;', _1: 'ť'},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: '&#x166;', _1: 'Ŧ'},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: '&#x167;', _1: 'ŧ'},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: '&#x168;', _1: 'Ũ'},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: '&#x169;', _1: 'ũ'},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: '&#x16A;', _1: 'Ū'},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: '&#x16B;', _1: 'ū'},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: '&#x16C;', _1: 'Ŭ'},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: '&#x16D;', _1: 'ŭ'},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: '&#x16E;', _1: 'Ů'},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: '&#x16F;', _1: 'ů'},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: '&#x170;', _1: 'Ű'},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: '&#x171;', _1: 'ű'},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: '&#x172;', _1: 'Ų'},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: '&#x173;', _1: 'ų'},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: '&#x174;', _1: 'Ŵ'},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: '&#x175;', _1: 'ŵ'},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: '&#x176;', _1: 'Ŷ'},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: '&#x177;', _1: 'ŷ'},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: '&#x178;', _1: 'Ÿ'},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: '&#x179;', _1: 'Ź'},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: '&#x17A;', _1: 'ź'},
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: {ctor: '_Tuple2', _0: '&#x17B;', _1: 'Ż'},
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: {ctor: '_Tuple2', _0: '&#x17C;', _1: 'ż'},
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: {ctor: '_Tuple2', _0: '&#x17D;', _1: 'Ž'},
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: {ctor: '_Tuple2', _0: '&#x17E;', _1: 'ž'},
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: {ctor: '_Tuple2', _0: '&#x17F;', _1: 'ſ'},
+																																																																														_1: {ctor: '[]'}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										{
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: '&euro;', _1: '€'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: '&nbsp;', _1: ' '},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: '&quot;', _1: '\"'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: '&amp;', _1: '&'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: '&lt;', _1: '<'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: '&gt;', _1: '>'},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: '&nbsp;', _1: ' '},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: '&iexcl;', _1: '¡'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: '&cent;', _1: '¢'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: '&pound;', _1: '£'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: '&curren;', _1: '¤'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: '&yen;', _1: '¥'},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: '&brvbar;', _1: '¦'},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: '&sect;', _1: '§'},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: '&uml;', _1: '¨'},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: '&copy;', _1: '©'},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: '&ordf;', _1: 'ª'},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: '&not;', _1: '¬'},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: '&shy;', _1: ''},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: '&reg;', _1: '®'},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: '&macr;', _1: '¯'},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: '&deg;', _1: '°'},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: '&plusmn;', _1: '±'},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: '&sup2;', _1: '²'},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: '&sup3;', _1: '³'},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: '&acute;', _1: '´'},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: '&micro;', _1: 'µ'},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: '&para;', _1: '¶'},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: '&middot;', _1: '·'},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: '&cedil;', _1: '¸'},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: '&sup1;', _1: '¹'},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: '&ordm;', _1: 'º'},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: '&raquo;', _1: '»'},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: '&frac14;', _1: '¼'},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: '&frac12;', _1: '½'},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: '&frac34;', _1: '¾'},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: '&iquest;', _1: '¿'},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: '&Agrave;', _1: 'À'},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: '&Aacute;', _1: 'Á'},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: '&Acirc;', _1: 'Â'},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: '&Atilde;', _1: 'Ã'},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: '&Auml;', _1: 'Ä'},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: '&Aring;', _1: 'Å'},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: '&AElig;', _1: 'Æ'},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: '&Ccedil;', _1: 'Ç'},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: '&Egrave;', _1: 'È'},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: '&Eacute;', _1: 'É'},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: '&Ecirc;', _1: 'Ê'},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: '&Euml;', _1: 'Ë'},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: '&Igrave;', _1: 'Ì'},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: '&Iacute;', _1: 'Í'},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: '&Icirc;', _1: 'Î'},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: '&Iuml;', _1: 'Ï'},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: '&ETH;', _1: 'Ð'},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: '&Ntilde;', _1: 'Ñ'},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: '&Ograve;', _1: 'Ò'},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: '&Oacute;', _1: 'Ó'},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: '&Ocirc;', _1: 'Ô'},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: '&Otilde;', _1: 'Õ'},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: '&Ouml;', _1: 'Ö'},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: '&times;', _1: '×'},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: '&Oslash;', _1: 'Ø'},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: '&Ugrave;', _1: 'Ù'},
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: {ctor: '_Tuple2', _0: '&Uacute;', _1: 'Ú'},
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: {ctor: '_Tuple2', _0: '&Ucirc;', _1: 'Û'},
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: {ctor: '_Tuple2', _0: '&Uuml;', _1: 'Ü'},
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: {ctor: '_Tuple2', _0: '&Yacute;', _1: 'Ý'},
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: {ctor: '_Tuple2', _0: '&THORN;', _1: 'Þ'},
+																																																																														_1: {
+																																																																															ctor: '::',
+																																																																															_0: {ctor: '_Tuple2', _0: '&szlig;', _1: 'ß'},
+																																																																															_1: {
+																																																																																ctor: '::',
+																																																																																_0: {ctor: '_Tuple2', _0: '&agrave;', _1: 'à'},
+																																																																																_1: {
+																																																																																	ctor: '::',
+																																																																																	_0: {ctor: '_Tuple2', _0: '&aacute;', _1: 'á'},
+																																																																																	_1: {
+																																																																																		ctor: '::',
+																																																																																		_0: {ctor: '_Tuple2', _0: '&acirc;', _1: 'â'},
+																																																																																		_1: {
+																																																																																			ctor: '::',
+																																																																																			_0: {ctor: '_Tuple2', _0: '&atilde;', _1: 'ã'},
+																																																																																			_1: {
+																																																																																				ctor: '::',
+																																																																																				_0: {ctor: '_Tuple2', _0: '&auml;', _1: 'ä'},
+																																																																																				_1: {
+																																																																																					ctor: '::',
+																																																																																					_0: {ctor: '_Tuple2', _0: '&aring;', _1: 'å'},
+																																																																																					_1: {
+																																																																																						ctor: '::',
+																																																																																						_0: {ctor: '_Tuple2', _0: '&aelig;', _1: 'æ'},
+																																																																																						_1: {
+																																																																																							ctor: '::',
+																																																																																							_0: {ctor: '_Tuple2', _0: '&ccedil;', _1: 'ç'},
+																																																																																							_1: {
+																																																																																								ctor: '::',
+																																																																																								_0: {ctor: '_Tuple2', _0: '&egrave;', _1: 'è'},
+																																																																																								_1: {
+																																																																																									ctor: '::',
+																																																																																									_0: {ctor: '_Tuple2', _0: '&eacute;', _1: 'é'},
+																																																																																									_1: {
+																																																																																										ctor: '::',
+																																																																																										_0: {ctor: '_Tuple2', _0: '&ecirc;', _1: 'ê'},
+																																																																																										_1: {
+																																																																																											ctor: '::',
+																																																																																											_0: {ctor: '_Tuple2', _0: '&euml;', _1: 'ë'},
+																																																																																											_1: {
+																																																																																												ctor: '::',
+																																																																																												_0: {ctor: '_Tuple2', _0: '&igrave;', _1: 'ì'},
+																																																																																												_1: {
+																																																																																													ctor: '::',
+																																																																																													_0: {ctor: '_Tuple2', _0: '&iacute;', _1: 'í'},
+																																																																																													_1: {
+																																																																																														ctor: '::',
+																																																																																														_0: {ctor: '_Tuple2', _0: '&icirc;', _1: 'î'},
+																																																																																														_1: {
+																																																																																															ctor: '::',
+																																																																																															_0: {ctor: '_Tuple2', _0: '&iuml;', _1: 'ï'},
+																																																																																															_1: {
+																																																																																																ctor: '::',
+																																																																																																_0: {ctor: '_Tuple2', _0: '&eth;', _1: 'ð'},
+																																																																																																_1: {
+																																																																																																	ctor: '::',
+																																																																																																	_0: {ctor: '_Tuple2', _0: '&ntilde;', _1: 'ñ'},
+																																																																																																	_1: {
+																																																																																																		ctor: '::',
+																																																																																																		_0: {ctor: '_Tuple2', _0: '&ograve;', _1: 'ò'},
+																																																																																																		_1: {
+																																																																																																			ctor: '::',
+																																																																																																			_0: {ctor: '_Tuple2', _0: '&oacute;', _1: 'ó'},
+																																																																																																			_1: {
+																																																																																																				ctor: '::',
+																																																																																																				_0: {ctor: '_Tuple2', _0: '&ocirc;', _1: 'ô'},
+																																																																																																				_1: {
+																																																																																																					ctor: '::',
+																																																																																																					_0: {ctor: '_Tuple2', _0: '&otilde;', _1: 'õ'},
+																																																																																																					_1: {
+																																																																																																						ctor: '::',
+																																																																																																						_0: {ctor: '_Tuple2', _0: '&ouml;', _1: 'ö'},
+																																																																																																						_1: {
+																																																																																																							ctor: '::',
+																																																																																																							_0: {ctor: '_Tuple2', _0: '&divide;', _1: '÷'},
+																																																																																																							_1: {
+																																																																																																								ctor: '::',
+																																																																																																								_0: {ctor: '_Tuple2', _0: '&oslash;', _1: 'ø'},
+																																																																																																								_1: {
+																																																																																																									ctor: '::',
+																																																																																																									_0: {ctor: '_Tuple2', _0: '&ugrave;', _1: 'ù'},
+																																																																																																									_1: {
+																																																																																																										ctor: '::',
+																																																																																																										_0: {ctor: '_Tuple2', _0: '&uacute;', _1: 'ú'},
+																																																																																																										_1: {
+																																																																																																											ctor: '::',
+																																																																																																											_0: {ctor: '_Tuple2', _0: '&ucirc;', _1: 'û'},
+																																																																																																											_1: {
+																																																																																																												ctor: '::',
+																																																																																																												_0: {ctor: '_Tuple2', _0: '&uuml;', _1: 'ü'},
+																																																																																																												_1: {
+																																																																																																													ctor: '::',
+																																																																																																													_0: {ctor: '_Tuple2', _0: '&yacute;', _1: 'ý'},
+																																																																																																													_1: {
+																																																																																																														ctor: '::',
+																																																																																																														_0: {ctor: '_Tuple2', _0: '&thorn;', _1: 'þ'},
+																																																																																																														_1: {ctor: '[]'}
+																																																																																																													}
+																																																																																																												}
+																																																																																																											}
+																																																																																																										}
+																																																																																																									}
+																																																																																																								}
+																																																																																																							}
+																																																																																																						}
+																																																																																																					}
+																																																																																																				}
+																																																																																																			}
+																																																																																																		}
+																																																																																																	}
+																																																																																																}
+																																																																																															}
+																																																																																														}
+																																																																																													}
+																																																																																												}
+																																																																																											}
+																																																																																										}
+																																																																																									}
+																																																																																								}
+																																																																																							}
+																																																																																						}
+																																																																																					}
+																																																																																				}
+																																																																																			}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}))))))))));
+
 var _jinjor$elm_html_parser$HtmlParser$attributeValueEntityString = function (quote) {
 	return _Bogdanp$elm_combine$Combine$regex(
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			'[^<^&^',
+			'[^<&',
 			A2(_elm_lang$core$Basics_ops['++'], quote, ']*')));
 };
-var _jinjor$elm_html_parser$HtmlParser$textNodeNonEntityString = _Bogdanp$elm_combine$Combine$regex('[^<^&]*');
+var _jinjor$elm_html_parser$HtmlParser$textNodeNonEntityString = _Bogdanp$elm_combine$Combine$regex('[^<&]*');
 var _jinjor$elm_html_parser$HtmlParser$entityString = A2(
-	_Bogdanp$elm_combine$Combine$map,
+	_Bogdanp$elm_combine$Combine_ops['<$>'],
 	function (code) {
 		return A2(
 			_elm_lang$core$Maybe$withDefault,
@@ -16459,39 +20981,297 @@ var _jinjor$elm_html_parser$HtmlParser$entityString = A2(
 	_Bogdanp$elm_combine$Combine$regex('&[#0-9a-zA-Z]*;'));
 var _jinjor$elm_html_parser$HtmlParser$attributeString = function (quote) {
 	return A2(
-		_Bogdanp$elm_combine$Combine$map,
+		_Bogdanp$elm_combine$Combine_ops['<$>'],
 		function (list) {
 			return A2(_elm_lang$core$String$join, '', list);
 		},
 		_Bogdanp$elm_combine$Combine$many(
 			A2(
-				_Bogdanp$elm_combine$Combine$or,
+				_Bogdanp$elm_combine$Combine_ops['<|>'],
 				_jinjor$elm_html_parser$HtmlParser$entityString,
-				_jinjor$elm_html_parser$HtmlParser$attributeValueEntityString(quote))));
+				A2(
+					_Bogdanp$elm_combine$Combine_ops['<|>'],
+					_Bogdanp$elm_combine$Combine$string('&'),
+					_jinjor$elm_html_parser$HtmlParser$attributeValueEntityString(quote)))));
 };
 var _jinjor$elm_html_parser$HtmlParser$textNodeString = A2(
-	_Bogdanp$elm_combine$Combine$map,
+	_Bogdanp$elm_combine$Combine_ops['<$>'],
 	function (list) {
 		return A2(_elm_lang$core$String$join, '', list);
 	},
 	_Bogdanp$elm_combine$Combine$many(
-		A2(_Bogdanp$elm_combine$Combine$or, _jinjor$elm_html_parser$HtmlParser$entityString, _jinjor$elm_html_parser$HtmlParser$textNodeNonEntityString)));
+		A2(
+			_Bogdanp$elm_combine$Combine_ops['<|>'],
+			_jinjor$elm_html_parser$HtmlParser$entityString,
+			A2(
+				_Bogdanp$elm_combine$Combine_ops['<|>'],
+				_Bogdanp$elm_combine$Combine$string('&'),
+				_jinjor$elm_html_parser$HtmlParser$textNodeNonEntityString))));
 var _jinjor$elm_html_parser$HtmlParser$ngSetForP = _elm_lang$core$Set$fromList(
-	_elm_lang$core$Native_List.fromArray(
-		['address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'main', 'menu', 'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul']));
+	{
+		ctor: '::',
+		_0: 'address',
+		_1: {
+			ctor: '::',
+			_0: 'article',
+			_1: {
+				ctor: '::',
+				_0: 'aside',
+				_1: {
+					ctor: '::',
+					_0: 'blockquote',
+					_1: {
+						ctor: '::',
+						_0: 'details',
+						_1: {
+							ctor: '::',
+							_0: 'div',
+							_1: {
+								ctor: '::',
+								_0: 'dl',
+								_1: {
+									ctor: '::',
+									_0: 'fieldset',
+									_1: {
+										ctor: '::',
+										_0: 'figcaption',
+										_1: {
+											ctor: '::',
+											_0: 'figure',
+											_1: {
+												ctor: '::',
+												_0: 'footer',
+												_1: {
+													ctor: '::',
+													_0: 'form',
+													_1: {
+														ctor: '::',
+														_0: 'h1',
+														_1: {
+															ctor: '::',
+															_0: 'h2',
+															_1: {
+																ctor: '::',
+																_0: 'h3',
+																_1: {
+																	ctor: '::',
+																	_0: 'h4',
+																	_1: {
+																		ctor: '::',
+																		_0: 'h5',
+																		_1: {
+																			ctor: '::',
+																			_0: 'h6',
+																			_1: {
+																				ctor: '::',
+																				_0: 'header',
+																				_1: {
+																					ctor: '::',
+																					_0: 'hgroup',
+																					_1: {
+																						ctor: '::',
+																						_0: 'hr',
+																						_1: {
+																							ctor: '::',
+																							_0: 'main',
+																							_1: {
+																								ctor: '::',
+																								_0: 'menu',
+																								_1: {
+																									ctor: '::',
+																									_0: 'nav',
+																									_1: {
+																										ctor: '::',
+																										_0: 'ol',
+																										_1: {
+																											ctor: '::',
+																											_0: 'p',
+																											_1: {
+																												ctor: '::',
+																												_0: 'pre',
+																												_1: {
+																													ctor: '::',
+																													_0: 'section',
+																													_1: {
+																														ctor: '::',
+																														_0: 'table',
+																														_1: {
+																															ctor: '::',
+																															_0: 'ul',
+																															_1: {ctor: '[]'}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
 var _jinjor$elm_html_parser$HtmlParser$isInvalidNest = F2(
 	function (tagName, childTagName) {
 		return (_elm_lang$core$Native_Utils.eq(tagName, 'head') && _elm_lang$core$Native_Utils.eq(childTagName, 'body')) || ((_elm_lang$core$Native_Utils.eq(tagName, 'li') && _elm_lang$core$Native_Utils.eq(childTagName, 'li')) || ((_elm_lang$core$Native_Utils.eq(tagName, 'dt') && (_elm_lang$core$Native_Utils.eq(childTagName, 'dt') || _elm_lang$core$Native_Utils.eq(childTagName, 'dd'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'dd') && (_elm_lang$core$Native_Utils.eq(childTagName, 'dt') || _elm_lang$core$Native_Utils.eq(childTagName, 'dd'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'p') && A2(_elm_lang$core$Set$member, childTagName, _jinjor$elm_html_parser$HtmlParser$ngSetForP)) || ((_elm_lang$core$Native_Utils.eq(tagName, 'rt') && (_elm_lang$core$Native_Utils.eq(childTagName, 'rt') || _elm_lang$core$Native_Utils.eq(childTagName, 'rp'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'rp') && (_elm_lang$core$Native_Utils.eq(childTagName, 'rt') || _elm_lang$core$Native_Utils.eq(childTagName, 'rp'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'optgroup') && _elm_lang$core$Native_Utils.eq(childTagName, 'optgroup')) || ((_elm_lang$core$Native_Utils.eq(tagName, 'option') && (_elm_lang$core$Native_Utils.eq(childTagName, 'option') || _elm_lang$core$Native_Utils.eq(childTagName, 'optgroup'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'colgroup') && (!_elm_lang$core$Native_Utils.eq(childTagName, 'col'))) || (_elm_lang$core$Native_Utils.eq(tagName, 'caption') || ((_elm_lang$core$Native_Utils.eq(tagName, 'thead') && (_elm_lang$core$Native_Utils.eq(childTagName, 'tbody') || _elm_lang$core$Native_Utils.eq(childTagName, 'tfoot'))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'tbody') && (_elm_lang$core$Native_Utils.eq(childTagName, 'tbody') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tfoot') || _elm_lang$core$Native_Utils.eq(childTagName, 'table')))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'tfoot') && _elm_lang$core$Native_Utils.eq(childTagName, 'table')) || ((_elm_lang$core$Native_Utils.eq(tagName, 'tr') && (_elm_lang$core$Native_Utils.eq(childTagName, 'tr') || (_elm_lang$core$Native_Utils.eq(childTagName, 'thead') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tbody') || _elm_lang$core$Native_Utils.eq(childTagName, 'tfoot'))))) || ((_elm_lang$core$Native_Utils.eq(tagName, 'td') && (_elm_lang$core$Native_Utils.eq(childTagName, 'td') || (_elm_lang$core$Native_Utils.eq(childTagName, 'th') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tr') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tbody') || _elm_lang$core$Native_Utils.eq(childTagName, 'tfoot')))))) || (_elm_lang$core$Native_Utils.eq(tagName, 'th') && (_elm_lang$core$Native_Utils.eq(childTagName, 'td') || (_elm_lang$core$Native_Utils.eq(childTagName, 'th') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tr') || (_elm_lang$core$Native_Utils.eq(childTagName, 'tbody') || _elm_lang$core$Native_Utils.eq(childTagName, 'tfoot')))))))))))))))))))));
 	});
 var _jinjor$elm_html_parser$HtmlParser$optionalEndTag = _elm_lang$core$Set$fromList(
-	_elm_lang$core$Native_List.fromArray(
-		['li', 'dt', 'dd', 'p', 'rt', 'rp', 'optgroup', 'option', 'colgroup', 'caption', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th']));
+	{
+		ctor: '::',
+		_0: 'li',
+		_1: {
+			ctor: '::',
+			_0: 'dt',
+			_1: {
+				ctor: '::',
+				_0: 'dd',
+				_1: {
+					ctor: '::',
+					_0: 'p',
+					_1: {
+						ctor: '::',
+						_0: 'rt',
+						_1: {
+							ctor: '::',
+							_0: 'rp',
+							_1: {
+								ctor: '::',
+								_0: 'optgroup',
+								_1: {
+									ctor: '::',
+									_0: 'option',
+									_1: {
+										ctor: '::',
+										_0: 'colgroup',
+										_1: {
+											ctor: '::',
+											_0: 'caption',
+											_1: {
+												ctor: '::',
+												_0: 'thead',
+												_1: {
+													ctor: '::',
+													_0: 'tbody',
+													_1: {
+														ctor: '::',
+														_0: 'tfoot',
+														_1: {
+															ctor: '::',
+															_0: 'tr',
+															_1: {
+																ctor: '::',
+																_0: 'td',
+																_1: {
+																	ctor: '::',
+																	_0: 'th',
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
 var _jinjor$elm_html_parser$HtmlParser$startTagOnly = _elm_lang$core$Set$fromList(
-	_elm_lang$core$Native_List.fromArray(
-		['br', 'img', 'hr', 'meta', 'input', 'embed', 'area', 'base', 'col', 'keygen', 'link', 'param', 'source', 'command', 'link', 'track', 'wbr']));
-var _jinjor$elm_html_parser$HtmlParser$attributeBareValue = _Bogdanp$elm_combine$Combine$regex('[^ ^`^\"^\'^<^>^=^\n^\r^\t]+');
+	{
+		ctor: '::',
+		_0: 'br',
+		_1: {
+			ctor: '::',
+			_0: 'img',
+			_1: {
+				ctor: '::',
+				_0: 'hr',
+				_1: {
+					ctor: '::',
+					_0: 'meta',
+					_1: {
+						ctor: '::',
+						_0: 'input',
+						_1: {
+							ctor: '::',
+							_0: 'embed',
+							_1: {
+								ctor: '::',
+								_0: 'area',
+								_1: {
+									ctor: '::',
+									_0: 'base',
+									_1: {
+										ctor: '::',
+										_0: 'col',
+										_1: {
+											ctor: '::',
+											_0: 'keygen',
+											_1: {
+												ctor: '::',
+												_0: 'link',
+												_1: {
+													ctor: '::',
+													_0: 'param',
+													_1: {
+														ctor: '::',
+														_0: 'source',
+														_1: {
+															ctor: '::',
+															_0: 'command',
+															_1: {
+																ctor: '::',
+																_0: 'link',
+																_1: {
+																	ctor: '::',
+																	_0: 'track',
+																	_1: {
+																		ctor: '::',
+																		_0: 'wbr',
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
+var _jinjor$elm_html_parser$HtmlParser$attributeBareValue = _Bogdanp$elm_combine$Combine$regex('[^ `\"\'<>=\n\r\t]+');
 var _jinjor$elm_html_parser$HtmlParser$attributeQuotedValue = A2(
-	_Bogdanp$elm_combine$Combine$or,
+	_Bogdanp$elm_combine$Combine_ops['<|>'],
 	A3(
 		_Bogdanp$elm_combine$Combine$between,
 		_Bogdanp$elm_combine$Combine$string('\"'),
@@ -16502,7 +21282,7 @@ var _jinjor$elm_html_parser$HtmlParser$attributeQuotedValue = A2(
 		_Bogdanp$elm_combine$Combine$string('\''),
 		_Bogdanp$elm_combine$Combine$string('\''),
 		_jinjor$elm_html_parser$HtmlParser$attributeString('\'')));
-var _jinjor$elm_html_parser$HtmlParser$attributeValue = A2(_Bogdanp$elm_combine$Combine$or, _jinjor$elm_html_parser$HtmlParser$attributeQuotedValue, _jinjor$elm_html_parser$HtmlParser$attributeBareValue);
+var _jinjor$elm_html_parser$HtmlParser$attributeValue = A2(_Bogdanp$elm_combine$Combine_ops['<|>'], _jinjor$elm_html_parser$HtmlParser$attributeQuotedValue, _jinjor$elm_html_parser$HtmlParser$attributeBareValue);
 var _jinjor$elm_html_parser$HtmlParser$attributeName = A2(
 	_Bogdanp$elm_combine$Combine$map,
 	_elm_lang$core$String$toLower,
@@ -16517,11 +21297,11 @@ var _jinjor$elm_html_parser$HtmlParser$spaced = function (p) {
 	return A3(_Bogdanp$elm_combine$Combine$between, _jinjor$elm_html_parser$HtmlParser$spaces, _jinjor$elm_html_parser$HtmlParser$spaces, p);
 };
 var _jinjor$elm_html_parser$HtmlParser$attributeNameValuePair = A2(
-	_Bogdanp$elm_combine$Combine$andMap,
+	_Bogdanp$elm_combine$Combine_ops['<*>'],
 	A2(
-		_Bogdanp$elm_combine$Combine$andMap,
+		_Bogdanp$elm_combine$Combine_ops['<*>'],
 		A2(
-			_Bogdanp$elm_combine$Combine$map,
+			_Bogdanp$elm_combine$Combine_ops['<$>'],
 			F3(
 				function (name, _p0, value) {
 					return {ctor: '_Tuple2', _0: name, _1: value};
@@ -16534,7 +21314,7 @@ var _jinjor$elm_html_parser$HtmlParser$attributeNameValuePair = A2(
 			_Bogdanp$elm_combine$Combine$string('='))),
 	_jinjor$elm_html_parser$HtmlParser$attributeValue);
 var _jinjor$elm_html_parser$HtmlParser$attribute = A2(
-	_Bogdanp$elm_combine$Combine$or,
+	_Bogdanp$elm_combine$Combine_ops['<|>'],
 	_jinjor$elm_html_parser$HtmlParser$attributeNameValuePair,
 	A2(
 		_Bogdanp$elm_combine$Combine$map,
@@ -16547,13 +21327,13 @@ var _jinjor$elm_html_parser$HtmlParser$attribute = A2(
 			''),
 		_jinjor$elm_html_parser$HtmlParser$attributeName));
 var _jinjor$elm_html_parser$HtmlParser$startTag = A2(
-	_Bogdanp$elm_combine$Combine$andMap,
+	_Bogdanp$elm_combine$Combine_ops['<*>'],
 	A2(
-		_Bogdanp$elm_combine$Combine$andMap,
+		_Bogdanp$elm_combine$Combine_ops['<*>'],
 		A2(
-			_Bogdanp$elm_combine$Combine$andMap,
+			_Bogdanp$elm_combine$Combine_ops['<*>'],
 			A2(
-				_Bogdanp$elm_combine$Combine$map,
+				_Bogdanp$elm_combine$Combine_ops['<$>'],
 				F4(
 					function (_p2, tagName, attrs, _p1) {
 						return {ctor: '_Tuple2', _0: tagName, _1: attrs};
@@ -16567,13 +21347,13 @@ var _jinjor$elm_html_parser$HtmlParser$startTag = A2(
 			A2(_Bogdanp$elm_combine$Combine$sepBy, _jinjor$elm_html_parser$HtmlParser$spaces, _jinjor$elm_html_parser$HtmlParser$attribute))),
 	_Bogdanp$elm_combine$Combine$string('>'));
 var _jinjor$elm_html_parser$HtmlParser$generalEndTag = A2(
-	_Bogdanp$elm_combine$Combine$andMap,
+	_Bogdanp$elm_combine$Combine_ops['<*>'],
 	A2(
-		_Bogdanp$elm_combine$Combine$andMap,
+		_Bogdanp$elm_combine$Combine_ops['<*>'],
 		A2(
-			_Bogdanp$elm_combine$Combine$andMap,
+			_Bogdanp$elm_combine$Combine_ops['<*>'],
 			A2(
-				_Bogdanp$elm_combine$Combine$map,
+				_Bogdanp$elm_combine$Combine_ops['<$>'],
 				F4(
 					function (_p5, tagName, _p4, _p3) {
 						return tagName;
@@ -16585,24 +21365,22 @@ var _jinjor$elm_html_parser$HtmlParser$generalEndTag = A2(
 var _jinjor$elm_html_parser$HtmlParser$endTag = function (tagName) {
 	return A2(
 		_Bogdanp$elm_combine$Combine$andThen,
-		_jinjor$elm_html_parser$HtmlParser$generalEndTag,
 		function (endTagName) {
 			return _elm_lang$core$Native_Utils.eq(tagName, endTagName) ? _Bogdanp$elm_combine$Combine$succeed(
-				{ctor: '_Tuple0'}) : _Bogdanp$elm_combine$Combine$fail(
-				_elm_lang$core$Native_List.fromArray(
-					[]));
-		});
+				{ctor: '_Tuple0'}) : _Bogdanp$elm_combine$Combine$fail('');
+		},
+		_jinjor$elm_html_parser$HtmlParser$generalEndTag);
 };
-var _jinjor$elm_html_parser$HtmlParser$singleTag = _Bogdanp$elm_combine$Combine$rec(
+var _jinjor$elm_html_parser$HtmlParser$singleTag = _Bogdanp$elm_combine$Combine$lazy(
 	function (_p6) {
 		return A2(
-			_Bogdanp$elm_combine$Combine$andMap,
+			_Bogdanp$elm_combine$Combine_ops['<*>'],
 			A2(
-				_Bogdanp$elm_combine$Combine$andMap,
+				_Bogdanp$elm_combine$Combine_ops['<*>'],
 				A2(
-					_Bogdanp$elm_combine$Combine$andMap,
+					_Bogdanp$elm_combine$Combine_ops['<*>'],
 					A2(
-						_Bogdanp$elm_combine$Combine$map,
+						_Bogdanp$elm_combine$Combine_ops['<$>'],
 						F4(
 							function (_p8, tagName, attrs, _p7) {
 								return {ctor: '_Tuple2', _0: tagName, _1: attrs};
@@ -16630,7 +21408,7 @@ var _jinjor$elm_html_parser$HtmlParser$untilCommentEnd = A2(
 			_Bogdanp$elm_combine$Combine_Char$anyChar,
 			_Bogdanp$elm_combine$Combine$string('-->'))));
 var _jinjor$elm_html_parser$HtmlParser$commentNode = A2(
-	_jinjor$elm_html_parser$HtmlParser_ops['*>'],
+	_Bogdanp$elm_combine$Combine_ops['*>'],
 	_Bogdanp$elm_combine$Combine$string('<!--'),
 	_jinjor$elm_html_parser$HtmlParser$untilCommentEnd);
 var _jinjor$elm_html_parser$HtmlParser$Element = F3(
@@ -16643,10 +21421,8 @@ var _jinjor$elm_html_parser$HtmlParser$doctypeNode = A2(
 		return A3(
 			_jinjor$elm_html_parser$HtmlParser$Element,
 			'!DOCTYPE',
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[]));
+			{ctor: '[]'},
+			{ctor: '[]'});
 	},
 	_Bogdanp$elm_combine$Combine$regex('<!DOCTYPE [^>]*>'));
 var _jinjor$elm_html_parser$HtmlParser$singleNode = A2(
@@ -16657,8 +21433,7 @@ var _jinjor$elm_html_parser$HtmlParser$singleNode = A2(
 			_jinjor$elm_html_parser$HtmlParser$Element,
 			_p11._0,
 			_p11._1,
-			_elm_lang$core$Native_List.fromArray(
-				[]));
+			{ctor: '[]'});
 	},
 	_jinjor$elm_html_parser$HtmlParser$singleTag);
 var _jinjor$elm_html_parser$HtmlParser$Text = function (a) {
@@ -16666,121 +21441,118 @@ var _jinjor$elm_html_parser$HtmlParser$Text = function (a) {
 };
 var _jinjor$elm_html_parser$HtmlParser$textNode = A2(_Bogdanp$elm_combine$Combine$map, _jinjor$elm_html_parser$HtmlParser$Text, _jinjor$elm_html_parser$HtmlParser$textNodeString);
 var _jinjor$elm_html_parser$HtmlParser$untilScriptEnd = function (tagName) {
-	return _Bogdanp$elm_combine$Combine$rec(
+	return _Bogdanp$elm_combine$Combine$lazy(
 		function (_p12) {
 			return A2(
-				_Bogdanp$elm_combine$Combine$map,
+				_Bogdanp$elm_combine$Combine_ops['<$>'],
 				function (_p13) {
 					var _p14 = _p13;
 					var _p16 = _p14._0;
 					var _p15 = _p14._1;
-					return _elm_lang$core$Native_Utils.eq(_p16, '') ? _p15 : A2(
-						_elm_lang$core$List_ops['::'],
-						_jinjor$elm_html_parser$HtmlParser$Text(_p16),
-						_p15);
+					return _elm_lang$core$Native_Utils.eq(_p16, '') ? _p15 : {
+						ctor: '::',
+						_0: _jinjor$elm_html_parser$HtmlParser$Text(_p16),
+						_1: _p15
+					};
 				},
 				_jinjor$elm_html_parser$HtmlParser$untilScriptEndHelp(tagName));
 		});
 };
 var _jinjor$elm_html_parser$HtmlParser$untilScriptEndHelp = function (tagName) {
-	return _Bogdanp$elm_combine$Combine$rec(
+	return _Bogdanp$elm_combine$Combine$lazy(
 		function (_p17) {
 			return A2(
 				_Bogdanp$elm_combine$Combine$andThen,
-				_Bogdanp$elm_combine$Combine$regex('[^<]*'),
 				function (s) {
 					return A2(
-						_Bogdanp$elm_combine$Combine$or,
+						_Bogdanp$elm_combine$Combine_ops['<|>'],
 						A2(
-							_Bogdanp$elm_combine$Combine$or,
+							_Bogdanp$elm_combine$Combine_ops['<*>'],
 							A2(
-								_Bogdanp$elm_combine$Combine$andMap,
+								_Bogdanp$elm_combine$Combine_ops['<*>'],
 								A2(
-									_Bogdanp$elm_combine$Combine$andMap,
-									A2(
-										_Bogdanp$elm_combine$Combine$map,
-										F3(
-											function (_p18, comment, rest) {
-												return {
-													ctor: '_Tuple2',
-													_0: s,
-													_1: A2(_elm_lang$core$List_ops['::'], comment, rest)
-												};
-											}),
-										_Bogdanp$elm_combine$Combine$string('<!--')),
-									_jinjor$elm_html_parser$HtmlParser$untilCommentEnd),
-								_jinjor$elm_html_parser$HtmlParser$untilScriptEnd(tagName)),
+									_Bogdanp$elm_combine$Combine_ops['<$>'],
+									F3(
+										function (_p18, comment, rest) {
+											return {
+												ctor: '_Tuple2',
+												_0: s,
+												_1: {ctor: '::', _0: comment, _1: rest}
+											};
+										}),
+									_Bogdanp$elm_combine$Combine$string('<!--')),
+								_jinjor$elm_html_parser$HtmlParser$untilCommentEnd),
+							_jinjor$elm_html_parser$HtmlParser$untilScriptEnd(tagName)),
+						A2(
+							_Bogdanp$elm_combine$Combine_ops['<|>'],
 							A2(
-								_Bogdanp$elm_combine$Combine$map,
+								_Bogdanp$elm_combine$Combine_ops['<$>'],
 								function (_p19) {
 									return {
 										ctor: '_Tuple2',
 										_0: s,
-										_1: _elm_lang$core$Native_List.fromArray(
-											[])
+										_1: {ctor: '[]'}
 									};
 								},
-								_jinjor$elm_html_parser$HtmlParser$endTag(tagName))),
-						A2(
-							_Bogdanp$elm_combine$Combine$andMap,
+								_jinjor$elm_html_parser$HtmlParser$endTag(tagName)),
 							A2(
-								_Bogdanp$elm_combine$Combine$map,
-								F2(
-									function (lt, _p20) {
-										var _p21 = _p20;
-										return {
-											ctor: '_Tuple2',
-											_0: A2(
-												_elm_lang$core$Basics_ops['++'],
-												s,
-												A2(_elm_lang$core$Basics_ops['++'], lt, _p21._0)),
-											_1: _p21._1
-										};
-									}),
-								_Bogdanp$elm_combine$Combine$string('<')),
-							_jinjor$elm_html_parser$HtmlParser$untilScriptEndHelp(tagName)));
-				});
+								_Bogdanp$elm_combine$Combine_ops['<*>'],
+								A2(
+									_Bogdanp$elm_combine$Combine_ops['<$>'],
+									F2(
+										function (lt, _p20) {
+											var _p21 = _p20;
+											return {
+												ctor: '_Tuple2',
+												_0: A2(
+													_elm_lang$core$Basics_ops['++'],
+													s,
+													A2(_elm_lang$core$Basics_ops['++'], lt, _p21._0)),
+												_1: _p21._1
+											};
+										}),
+									_Bogdanp$elm_combine$Combine$string('<')),
+								_jinjor$elm_html_parser$HtmlParser$untilScriptEndHelp(tagName))));
+				},
+				_Bogdanp$elm_combine$Combine$regex('[^<]*'));
 		});
 };
 var _jinjor$elm_html_parser$HtmlParser$normalNode = function (parentTagName) {
-	return _Bogdanp$elm_combine$Combine$rec(
+	return _Bogdanp$elm_combine$Combine$lazy(
 		function (_p22) {
 			return A2(
 				_Bogdanp$elm_combine$Combine$andThen,
-				_jinjor$elm_html_parser$HtmlParser$startTag,
 				function (_p23) {
 					var _p24 = _p23;
 					var _p26 = _p24._0;
 					var _p25 = _p24._1;
 					return (_elm_lang$core$Native_Utils.eq(_p26, 'script') || _elm_lang$core$Native_Utils.eq(_p26, 'style')) ? A2(
-						_Bogdanp$elm_combine$Combine$map,
+						_Bogdanp$elm_combine$Combine_ops['<$>'],
 						function (children) {
 							return A3(_jinjor$elm_html_parser$HtmlParser$Element, _p26, _p25, children);
 						},
-						_jinjor$elm_html_parser$HtmlParser$untilScriptEnd(_p26)) : (A2(_jinjor$elm_html_parser$HtmlParser$isInvalidNest, parentTagName, _p26) ? _Bogdanp$elm_combine$Combine$fail(
-						_elm_lang$core$Native_List.fromArray(
-							[])) : (A2(_elm_lang$core$Set$member, _p26, _jinjor$elm_html_parser$HtmlParser$startTagOnly) ? _Bogdanp$elm_combine$Combine$succeed(
+						_jinjor$elm_html_parser$HtmlParser$untilScriptEnd(_p26)) : (A2(_jinjor$elm_html_parser$HtmlParser$isInvalidNest, parentTagName, _p26) ? _Bogdanp$elm_combine$Combine$fail('') : (A2(_elm_lang$core$Set$member, _p26, _jinjor$elm_html_parser$HtmlParser$startTagOnly) ? _Bogdanp$elm_combine$Combine$succeed(
 						A3(
 							_jinjor$elm_html_parser$HtmlParser$Element,
 							_p26,
 							_p25,
-							_elm_lang$core$Native_List.fromArray(
-								[]))) : A2(
-						_Bogdanp$elm_combine$Combine$map,
+							{ctor: '[]'})) : A2(
+						_Bogdanp$elm_combine$Combine_ops['<$>'],
 						function (children) {
 							return A3(_jinjor$elm_html_parser$HtmlParser$Element, _p26, _p25, children);
 						},
 						_jinjor$elm_html_parser$HtmlParser$untilEndTag(_p26))));
-				});
+				},
+				_jinjor$elm_html_parser$HtmlParser$startTag);
 		});
 };
 var _jinjor$elm_html_parser$HtmlParser$untilEndTag = function (tagName) {
-	return _Bogdanp$elm_combine$Combine$rec(
+	return _Bogdanp$elm_combine$Combine$lazy(
 		function (_p27) {
 			return A2(
-				_Bogdanp$elm_combine$Combine$andMap,
+				_Bogdanp$elm_combine$Combine_ops['<*>'],
 				A2(
-					_Bogdanp$elm_combine$Combine$map,
+					_Bogdanp$elm_combine$Combine_ops['<$>'],
 					F2(
 						function (children1, children2) {
 							return A2(_elm_lang$core$Basics_ops['++'], children1, children2);
@@ -16789,37 +21561,35 @@ var _jinjor$elm_html_parser$HtmlParser$untilEndTag = function (tagName) {
 						_jinjor$elm_html_parser$HtmlParser$node(tagName))),
 				A2(
 					_Bogdanp$elm_combine$Combine$optional,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
+					{ctor: '[]'},
 					A2(
 						_Bogdanp$elm_combine$Combine$andThen,
-						_jinjor$elm_html_parser$HtmlParser$generalEndTag,
 						function (endTagName) {
 							return _elm_lang$core$Native_Utils.eq(tagName, endTagName) ? _Bogdanp$elm_combine$Combine$succeed(
-								_elm_lang$core$Native_List.fromArray(
-									[])) : _jinjor$elm_html_parser$HtmlParser$untilEndTag(tagName);
-						})));
+								{ctor: '[]'}) : _jinjor$elm_html_parser$HtmlParser$untilEndTag(tagName);
+						},
+						_jinjor$elm_html_parser$HtmlParser$generalEndTag)));
 		});
 };
 var _jinjor$elm_html_parser$HtmlParser$node = function (parentTagName) {
-	return _Bogdanp$elm_combine$Combine$rec(
+	return _Bogdanp$elm_combine$Combine$lazy(
 		function (_p28) {
 			return A2(
-				_Bogdanp$elm_combine$Combine$or,
+				_Bogdanp$elm_combine$Combine_ops['<|>'],
+				_jinjor$elm_html_parser$HtmlParser$doctypeNode,
 				A2(
-					_Bogdanp$elm_combine$Combine$or,
+					_Bogdanp$elm_combine$Combine_ops['<|>'],
+					_jinjor$elm_html_parser$HtmlParser$singleNode,
 					A2(
-						_Bogdanp$elm_combine$Combine$or,
-						A2(_Bogdanp$elm_combine$Combine$or, _jinjor$elm_html_parser$HtmlParser$doctypeNode, _jinjor$elm_html_parser$HtmlParser$singleNode),
-						_jinjor$elm_html_parser$HtmlParser$normalNode(parentTagName)),
-					_jinjor$elm_html_parser$HtmlParser$commentNode),
-				_jinjor$elm_html_parser$HtmlParser$textNode);
+						_Bogdanp$elm_combine$Combine_ops['<|>'],
+						_jinjor$elm_html_parser$HtmlParser$normalNode(parentTagName),
+						A2(_Bogdanp$elm_combine$Combine_ops['<|>'], _jinjor$elm_html_parser$HtmlParser$commentNode, _jinjor$elm_html_parser$HtmlParser$textNode))));
 		});
 };
 var _jinjor$elm_html_parser$HtmlParser$nodesAndEnd = A2(
-	_Bogdanp$elm_combine$Combine$andMap,
+	_Bogdanp$elm_combine$Combine_ops['<*>'],
 	A2(
-		_Bogdanp$elm_combine$Combine$map,
+		_Bogdanp$elm_combine$Combine_ops['<$>'],
 		F2(
 			function (nodes, _p29) {
 				return nodes;
@@ -16827,13 +21597,11 @@ var _jinjor$elm_html_parser$HtmlParser$nodesAndEnd = A2(
 		_jinjor$elm_html_parser$HtmlParser$untilEndTag('')),
 	_Bogdanp$elm_combine$Combine$end);
 var _jinjor$elm_html_parser$HtmlParser$parse = function (s) {
-	var _p30 = _elm_lang$core$Basics$fst(
-		A2(_Bogdanp$elm_combine$Combine$parse, _jinjor$elm_html_parser$HtmlParser$nodesAndEnd, s));
+	var _p30 = A2(_Bogdanp$elm_combine$Combine$parse, _jinjor$elm_html_parser$HtmlParser$nodesAndEnd, s);
 	if (_p30.ctor === 'Ok') {
-		return _p30._0;
+		return _p30._0._2;
 	} else {
-		return _elm_lang$core$Native_List.fromArray(
-			[]);
+		return {ctor: '[]'};
 	}
 };
 
@@ -16874,12 +21642,11 @@ var _sporto$erl$Erl$new = {
 	protocol: '',
 	username: '',
 	password: '',
-	host: _elm_lang$core$Native_List.fromArray(
-		[]),
-	path: _elm_lang$core$Native_List.fromArray(
-		[]),
+	host: {ctor: '[]'},
+	path: {ctor: '[]'},
+	hasLeadingSlash: false,
 	hasTrailingSlash: false,
-	port$: 0,
+	port_: 0,
 	hash: '',
 	query: _elm_lang$core$Dict$empty
 };
@@ -16889,17 +21656,8 @@ var _sporto$erl$Erl$hashToString = function (url) {
 var _sporto$erl$Erl$trailingSlashComponent = function (url) {
 	return _elm_lang$core$Native_Utils.eq(url.hasTrailingSlash, true) ? '/' : '';
 };
-var _sporto$erl$Erl$pathComponent = function (url) {
-	var encoded = A2(_elm_lang$core$List$map, _evancz$elm_http$Http$uriEncode, url.path);
-	return _elm_lang$core$Native_Utils.eq(
-		_elm_lang$core$List$length(url.path),
-		0) ? '' : A2(
-		_elm_lang$core$Basics_ops['++'],
-		'/',
-		A2(_elm_lang$core$String$join, '/', encoded));
-};
 var _sporto$erl$Erl$portComponent = function (url) {
-	var _p0 = url.port$;
+	var _p0 = url.port_;
 	switch (_p0) {
 		case 0:
 			return '';
@@ -16909,12 +21667,24 @@ var _sporto$erl$Erl$portComponent = function (url) {
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
 				':',
-				_elm_lang$core$Basics$toString(url.port$));
+				_elm_lang$core$Basics$toString(url.port_));
 	}
 };
 var _sporto$erl$Erl$hostComponent = function (url) {
-	return _evancz$elm_http$Http$uriEncode(
+	return _elm_lang$http$Http$encodeUri(
 		A2(_elm_lang$core$String$join, '.', url.host));
+};
+var _sporto$erl$Erl$pathComponent = function (url) {
+	var leadingSlash = ((!_elm_lang$core$Native_Utils.eq(
+		_sporto$erl$Erl$hostComponent(url),
+		'')) || url.hasLeadingSlash) ? '/' : '';
+	var encoded = A2(_elm_lang$core$List$map, _elm_lang$http$Http$encodeUri, url.path);
+	return _elm_lang$core$Native_Utils.eq(
+		_elm_lang$core$List$length(url.path),
+		0) ? '' : A2(
+		_elm_lang$core$Basics_ops['++'],
+		leadingSlash,
+		A2(_elm_lang$core$String$join, '/', encoded));
 };
 var _sporto$erl$Erl$protocolComponent = function (url) {
 	var _p1 = url.protocol;
@@ -16932,8 +21702,8 @@ var _sporto$erl$Erl$queryToString = function (url) {
 			var _p3 = _p2;
 			return {
 				ctor: '_Tuple2',
-				_0: _evancz$elm_http$Http$uriEncode(_p3._0),
-				_1: _evancz$elm_http$Http$uriEncode(_p3._1)
+				_0: _elm_lang$http$Http$encodeUri(_p3._0),
+				_1: _elm_lang$http$Http$encodeUri(_p3._1)
 			};
 		},
 		tuples);
@@ -16954,28 +21724,28 @@ var _sporto$erl$Erl$queryToString = function (url) {
 };
 var _sporto$erl$Erl$toString = function (url) {
 	var hash = _sporto$erl$Erl$hashToString(url);
-	var query$ = _sporto$erl$Erl$queryToString(url);
-	var trailingSlash$ = _sporto$erl$Erl$trailingSlashComponent(url);
-	var path$ = _sporto$erl$Erl$pathComponent(url);
-	var port$ = _sporto$erl$Erl$portComponent(url);
-	var host$ = _sporto$erl$Erl$hostComponent(url);
-	var protocol$ = _sporto$erl$Erl$protocolComponent(url);
+	var query_ = _sporto$erl$Erl$queryToString(url);
+	var trailingSlash_ = _sporto$erl$Erl$trailingSlashComponent(url);
+	var path_ = _sporto$erl$Erl$pathComponent(url);
+	var port_ = _sporto$erl$Erl$portComponent(url);
+	var host_ = _sporto$erl$Erl$hostComponent(url);
+	var protocol_ = _sporto$erl$Erl$protocolComponent(url);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
-		protocol$,
+		protocol_,
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			host$,
+			host_,
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				port$,
+				port_,
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					path$,
+					path_,
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						trailingSlash$,
-						A2(_elm_lang$core$Basics_ops['++'], query$, hash))))));
+						trailingSlash_,
+						A2(_elm_lang$core$Basics_ops['++'], query_, hash))))));
 };
 var _sporto$erl$Erl$queryStringElementToTuple = function (element) {
 	var splitted = A2(_elm_lang$core$String$split, '=', element);
@@ -16983,19 +21753,24 @@ var _sporto$erl$Erl$queryStringElementToTuple = function (element) {
 		_elm_lang$core$Maybe$withDefault,
 		'',
 		_elm_lang$core$List$head(splitted));
-	var firstDecoded = _evancz$elm_http$Http$uriDecode(first);
+	var firstDecoded = A2(
+		_elm_lang$core$Maybe$withDefault,
+		'',
+		_elm_lang$http$Http$decodeUri(first));
 	var second = A2(
 		_elm_lang$core$Maybe$withDefault,
 		'',
 		_elm_lang$core$List$head(
 			A2(_elm_lang$core$List$drop, 1, splitted)));
-	var secondDecoded = _evancz$elm_http$Http$uriDecode(second);
+	var secondDecoded = A2(
+		_elm_lang$core$Maybe$withDefault,
+		'',
+		_elm_lang$http$Http$decodeUri(second));
 	return {ctor: '_Tuple2', _0: firstDecoded, _1: secondDecoded};
 };
 var _sporto$erl$Erl$queryTuples = function (queryString) {
 	var splitted = A2(_elm_lang$core$String$split, '&', queryString);
-	return _elm_lang$core$String$isEmpty(queryString) ? _elm_lang$core$Native_List.fromArray(
-		[]) : A2(_elm_lang$core$List$map, _sporto$erl$Erl$queryStringElementToTuple, splitted);
+	return _elm_lang$core$String$isEmpty(queryString) ? {ctor: '[]'} : A2(_elm_lang$core$List$map, _sporto$erl$Erl$queryStringElementToTuple, splitted);
 };
 var _sporto$erl$Erl$parseQuery = function (str) {
 	return _elm_lang$core$Dict$fromList(
@@ -17035,32 +21810,6 @@ var _sporto$erl$Erl$extractHash = function (str) {
 var _sporto$erl$Erl$hashFromAll = function (str) {
 	return _sporto$erl$Erl$extractHash(str);
 };
-var _sporto$erl$Erl$extractPort = function (str) {
-	var rx = _elm_lang$core$Regex$regex(':\\d+');
-	var res = A3(
-		_elm_lang$core$Regex$find,
-		_elm_lang$core$Regex$AtMost(1),
-		rx,
-		str);
-	return A2(
-		_elm_lang$core$Maybe$withDefault,
-		80,
-		_elm_lang$core$Result$toMaybe(
-			_elm_lang$core$String$toInt(
-				A2(
-					_elm_lang$core$String$dropLeft,
-					1,
-					A2(
-						_elm_lang$core$Maybe$withDefault,
-						'',
-						_elm_lang$core$List$head(
-							A2(
-								_elm_lang$core$List$map,
-								function (_) {
-									return _.match;
-								},
-								res)))))));
-};
 var _sporto$erl$Erl$parseHost = function (str) {
 	return A2(_elm_lang$core$String$split, '.', str);
 };
@@ -17076,12 +21825,54 @@ var _sporto$erl$Erl$extractProtocol = function (str) {
 			_elm_lang$core$List$head(parts));
 	}
 };
+var _sporto$erl$Erl$extractPort = function (str) {
+	var rx = _elm_lang$core$Regex$regex(':\\d+');
+	var res = A3(
+		_elm_lang$core$Regex$find,
+		_elm_lang$core$Regex$AtMost(1),
+		rx,
+		str);
+	return function (result) {
+		var _p7 = result;
+		if (_p7.ctor === 'Ok') {
+			return _p7._0;
+		} else {
+			var _p8 = _sporto$erl$Erl$extractProtocol(str);
+			switch (_p8) {
+				case 'http':
+					return 80;
+				case 'https':
+					return 443;
+				case 'ftp':
+					return 21;
+				case 'sftp':
+					return 22;
+				default:
+					return 0;
+			}
+		}
+	}(
+		_elm_lang$core$String$toInt(
+			A2(
+				_elm_lang$core$String$dropLeft,
+				1,
+				A2(
+					_elm_lang$core$Maybe$withDefault,
+					'',
+					_elm_lang$core$List$head(
+						A2(
+							_elm_lang$core$List$map,
+							function (_) {
+								return _.match;
+							},
+							res))))));
+};
 var _sporto$erl$Erl$leftFrom = F2(
 	function (delimiter, str) {
 		var parts = A2(_elm_lang$core$String$split, delimiter, str);
 		var head = _elm_lang$core$List$head(parts);
-		var _p7 = _elm_lang$core$List$length(parts);
-		switch (_p7) {
+		var _p9 = _elm_lang$core$List$length(parts);
+		switch (_p9) {
 			case 0:
 				return '';
 			case 1:
@@ -17148,14 +21939,14 @@ var _sporto$erl$Erl$extractPath = function (str) {
 		_elm_lang$core$Regex$replace,
 		_elm_lang$core$Regex$AtMost(1),
 		_elm_lang$core$Regex$regex(':\\d+'),
-		function (_p8) {
+		function (_p10) {
 			return '';
 		},
 		A4(
 			_elm_lang$core$Regex$replace,
 			_elm_lang$core$Regex$AtMost(1),
 			_elm_lang$core$Regex$regex(host),
-			function (_p9) {
+			function (_p11) {
 				return '';
 			},
 			A2(
@@ -17166,6 +21957,12 @@ var _sporto$erl$Erl$extractPath = function (str) {
 					'?',
 					A2(_sporto$erl$Erl$rightFromOrSame, '//', str)))));
 };
+var _sporto$erl$Erl$hasLeadingSlashFromAll = function (str) {
+	return A2(
+		_elm_lang$core$Regex$contains,
+		_elm_lang$core$Regex$regex('^/'),
+		_sporto$erl$Erl$extractPath(str));
+};
 var _sporto$erl$Erl$hasTrailingSlashFromAll = function (str) {
 	return A2(
 		_elm_lang$core$Regex$contains,
@@ -17175,8 +21972,8 @@ var _sporto$erl$Erl$hasTrailingSlashFromAll = function (str) {
 var _sporto$erl$Erl$rightFrom = F2(
 	function (delimiter, str) {
 		var parts = A2(_elm_lang$core$String$split, delimiter, str);
-		var _p10 = _elm_lang$core$List$length(parts);
-		switch (_p10) {
+		var _p12 = _elm_lang$core$List$length(parts);
+		switch (_p12) {
 			case 0:
 				return '';
 			case 1:
@@ -17190,17 +21987,19 @@ var _sporto$erl$Erl$rightFrom = F2(
 		}
 	});
 var _sporto$erl$Erl$notEmpty = function (str) {
-	return _elm_lang$core$Basics$not(
-		_elm_lang$core$String$isEmpty(str));
+	return !_elm_lang$core$String$isEmpty(str);
 };
 var _sporto$erl$Erl$parsePath = function (str) {
 	return A2(
 		_elm_lang$core$List$map,
-		_evancz$elm_http$Http$uriDecode,
+		_elm_lang$core$Maybe$withDefault(''),
 		A2(
-			_elm_lang$core$List$filter,
-			_sporto$erl$Erl$notEmpty,
-			A2(_elm_lang$core$String$split, '/', str)));
+			_elm_lang$core$List$map,
+			_elm_lang$http$Http$decodeUri,
+			A2(
+				_elm_lang$core$List$filter,
+				_sporto$erl$Erl$notEmpty,
+				A2(_elm_lang$core$String$split, '/', str))));
 };
 var _sporto$erl$Erl$pathFromAll = function (str) {
 	return _sporto$erl$Erl$parsePath(
@@ -17212,17 +22011,35 @@ var _sporto$erl$Erl$parse = function (str) {
 		hash: _sporto$erl$Erl$hashFromAll(str),
 		password: '',
 		path: _sporto$erl$Erl$pathFromAll(str),
+		hasLeadingSlash: _sporto$erl$Erl$hasLeadingSlashFromAll(str),
 		hasTrailingSlash: _sporto$erl$Erl$hasTrailingSlashFromAll(str),
-		port$: _sporto$erl$Erl$extractPort(str),
+		port_: _sporto$erl$Erl$extractPort(str),
 		protocol: _sporto$erl$Erl$extractProtocol(str),
 		query: _sporto$erl$Erl$queryFromAll(str),
 		username: ''
 	};
 };
-var _sporto$erl$Erl$Url = F9(
-	function (a, b, c, d, e, f, g, h, i) {
-		return {protocol: a, username: b, password: c, host: d, port$: e, path: f, hasTrailingSlash: g, hash: h, query: i};
-	});
+var _sporto$erl$Erl$Url = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return {protocol: a, username: b, password: c, host: d, port_: e, path: f, hasLeadingSlash: g, hasTrailingSlash: h, hash: i, query: j};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 
 var _rgrempel$elm_route_url$RouteUrl$url2path = function (url) {
 	return A2(
@@ -17231,8 +22048,7 @@ var _rgrempel$elm_route_url$RouteUrl$url2path = function (url) {
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			A2(_elm_lang$core$String$join, '/', url.path),
-			(url.hasTrailingSlash && _elm_lang$core$Basics$not(
-				_elm_lang$core$List$isEmpty(url.path))) ? '/' : ''));
+			(url.hasTrailingSlash && (!_elm_lang$core$List$isEmpty(url.path))) ? '/' : ''));
 };
 var _rgrempel$elm_route_url$RouteUrl$eqUrl = F2(
 	function (u1, u2) {
@@ -17287,167 +22103,36 @@ var _rgrempel$elm_route_url$RouteUrl$urlChange2Cmd = function (change) {
 		}
 	}()(change.url);
 };
-var _rgrempel$elm_route_url$RouteUrl$update = F3(
-	function (app, msg, model) {
-		var _p1 = A2(app.update, msg, model.user);
-		var newUserModel = _p1._0;
-		var userCommand = _p1._1;
-		var maybeUrlChange = A2(
-			_elm_lang$core$Maybe$andThen,
-			A2(
-				_elm_lang$core$Maybe$map,
-				_rgrempel$elm_route_url$RouteUrl$normalizeUrl(model.router.reportedUrl),
-				A2(app.delta2url, model.user, newUserModel)),
-			_rgrempel$elm_route_url$RouteUrl$checkDistinctUrl(model.router.reportedUrl));
-		var _p2 = maybeUrlChange;
-		if (_p2.ctor === 'Just') {
-			var _p3 = _p2._0;
-			return {
-				ctor: '_Tuple2',
-				_0: {
-					user: newUserModel,
-					router: {
-						reportedUrl: _sporto$erl$Erl$parse(_p3.url),
-						expectedUrlUpdates: model.router.expectedUrlUpdates + 1
-					}
-				},
-				_1: _elm_lang$core$Platform_Cmd$batch(
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_rgrempel$elm_route_url$RouteUrl$urlChange2Cmd(_p3),
-							userCommand
-						]))
-			};
-		} else {
-			return {
-				ctor: '_Tuple2',
-				_0: {user: newUserModel, router: model.router},
-				_1: userCommand
-			};
-		}
-	});
-var _rgrempel$elm_route_url$RouteUrl$init = F3(
-	function (app, flags, location) {
-		var routerModel = {
-			expectedUrlUpdates: 0,
-			reportedUrl: _sporto$erl$Erl$parse(location.href)
-		};
-		var step = F2(
-			function (msg, _p4) {
-				var _p5 = _p4;
-				var _p6 = A2(app.update, msg, _p5._0);
-				return {
-					ctor: '_Tuple2',
-					_0: _p6._0,
-					_1: A2(_elm_lang$core$List_ops['::'], _p6._1, _p5._1)
-				};
-			});
-		var _p7 = app.init(flags);
-		var userModelFromFlags = _p7._0;
-		var commandFromFlags = _p7._1;
-		var _p8 = A3(
-			_elm_lang$core$List$foldl,
-			step,
-			{
-				ctor: '_Tuple2',
-				_0: userModelFromFlags,
-				_1: _elm_lang$core$Native_List.fromArray(
-					[commandFromFlags])
-			},
-			app.location2messages(location));
-		var userModelFromLocation = _p8._0;
-		var commands = _p8._1;
-		return {
-			ctor: '_Tuple2',
-			_0: {user: userModelFromLocation, router: routerModel},
-			_1: _elm_lang$core$Platform_Cmd$batch(commands)
-		};
-	});
-var _rgrempel$elm_route_url$RouteUrl$urlUpdate = F3(
-	function (app, location, model) {
-		var newRouterModel = {
-			reportedUrl: _sporto$erl$Erl$parse(location.href),
-			expectedUrlUpdates: (_elm_lang$core$Native_Utils.cmp(model.router.expectedUrlUpdates, 0) > 0) ? (model.router.expectedUrlUpdates - 1) : 0
-		};
-		if (_elm_lang$core$Native_Utils.cmp(model.router.expectedUrlUpdates, 0) > 0) {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{router: newRouterModel}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		} else {
-			var step = F2(
-				function (msg, _p9) {
-					var _p10 = _p9;
-					var _p11 = A2(app.update, msg, _p10._0);
-					return {
-						ctor: '_Tuple2',
-						_0: _p11._0,
-						_1: A2(_elm_lang$core$List_ops['::'], _p11._1, _p10._1)
-					};
-				});
-			var _p12 = A3(
-				_elm_lang$core$List$foldl,
-				step,
-				{
-					ctor: '_Tuple2',
-					_0: model.user,
-					_1: _elm_lang$core$Native_List.fromArray(
-						[])
-				},
-				app.location2messages(location));
-			var newUserModel = _p12._0;
-			var commands = _p12._1;
-			return {
-				ctor: '_Tuple2',
-				_0: {user: newUserModel, router: newRouterModel},
-				_1: _elm_lang$core$Platform_Cmd$batch(commands)
-			};
-		}
-	});
-var _rgrempel$elm_route_url$RouteUrl$subscriptions = F2(
-	function (app, model) {
-		return app.subscriptions(model.user);
-	});
-var _rgrempel$elm_route_url$RouteUrl$view = F2(
-	function (app, model) {
-		return app.view(model.user);
-	});
-var _rgrempel$elm_route_url$RouteUrl$runNavigationApp = function (app) {
+var _rgrempel$elm_route_url$RouteUrl$runNavigationAppWithFlags = function (app) {
 	return A2(
 		_elm_lang$navigation$Navigation$programWithFlags,
-		app.parser,
-		{init: app.init, update: app.update, urlUpdate: app.urlUpdate, view: app.view, subscriptions: app.subscriptions});
+		app.locationToMessage,
+		{init: app.init, update: app.update, view: app.view, subscriptions: app.subscriptions});
 };
-var _rgrempel$elm_route_url$RouteUrl$navigationAppWithFlags = function (app) {
-	return {
-		parser: _elm_lang$navigation$Navigation$makeParser(_elm_lang$core$Basics$identity),
-		init: _rgrempel$elm_route_url$RouteUrl$init(app),
-		update: _rgrempel$elm_route_url$RouteUrl$update(app),
-		urlUpdate: _rgrempel$elm_route_url$RouteUrl$urlUpdate(app),
-		view: _rgrempel$elm_route_url$RouteUrl$view(app),
-		subscriptions: _rgrempel$elm_route_url$RouteUrl$subscriptions(app)
-	};
+var _rgrempel$elm_route_url$RouteUrl$runNavigationApp = function (app) {
+	return A2(
+		_elm_lang$navigation$Navigation$program,
+		app.locationToMessage,
+		{init: app.init, update: app.update, view: app.view, subscriptions: app.subscriptions});
 };
-var _rgrempel$elm_route_url$RouteUrl$programWithFlags = function (_p13) {
-	return _rgrempel$elm_route_url$RouteUrl$runNavigationApp(
-		_rgrempel$elm_route_url$RouteUrl$navigationAppWithFlags(_p13));
+var _rgrempel$elm_route_url$RouteUrl$unwrapMsg = F3(
+	function (handleLocation, handleUserMsg, wrapped) {
+		var _p1 = wrapped;
+		if (_p1.ctor === 'RouterMsg') {
+			return handleLocation(_p1._0);
+		} else {
+			return handleUserMsg(_p1._0);
+		}
+	});
+var _rgrempel$elm_route_url$RouteUrl$unwrapModel = function (_p2) {
+	var _p3 = _p2;
+	return _p3._0;
 };
-var _rgrempel$elm_route_url$RouteUrl$navigationApp = function (app) {
-	return _rgrempel$elm_route_url$RouteUrl$navigationAppWithFlags(
-		_elm_lang$core$Native_Utils.update(
-			app,
-			{
-				init: function (_p14) {
-					return app.init;
-				}
-			}));
+var _rgrempel$elm_route_url$RouteUrl$appWithFlags2Common = function (app) {
+	return {delta2url: app.delta2url, location2messages: app.location2messages, update: app.update, subscriptions: app.subscriptions, view: app.view};
 };
-var _rgrempel$elm_route_url$RouteUrl$program = function (_p15) {
-	return _rgrempel$elm_route_url$RouteUrl$runNavigationApp(
-		_rgrempel$elm_route_url$RouteUrl$navigationApp(_p15));
+var _rgrempel$elm_route_url$RouteUrl$app2Common = function (app) {
+	return {delta2url: app.delta2url, location2messages: app.location2messages, update: app.update, subscriptions: app.subscriptions, view: app.view};
 };
 var _rgrempel$elm_route_url$RouteUrl$App = F6(
 	function (a, b, c, d, e, f) {
@@ -17457,31 +22142,219 @@ var _rgrempel$elm_route_url$RouteUrl$AppWithFlags = F6(
 	function (a, b, c, d, e, f) {
 		return {delta2url: a, location2messages: b, init: c, update: d, subscriptions: e, view: f};
 	});
+var _rgrempel$elm_route_url$RouteUrl$AppCommon = F5(
+	function (a, b, c, d, e) {
+		return {delta2url: a, location2messages: b, update: c, subscriptions: d, view: e};
+	});
 var _rgrempel$elm_route_url$RouteUrl$UrlChange = F2(
 	function (a, b) {
 		return {entry: a, url: b};
 	});
 var _rgrempel$elm_route_url$RouteUrl$RouterModel = F2(
 	function (a, b) {
-		return {reportedUrl: a, expectedUrlUpdates: b};
+		return {reportedUrl: a, expectedUrlChanges: b};
 	});
-var _rgrempel$elm_route_url$RouteUrl$Model = F2(
-	function (a, b) {
-		return {user: a, router: b};
+var _rgrempel$elm_route_url$RouteUrl$NavigationApp = F5(
+	function (a, b, c, d, e) {
+		return {locationToMessage: a, init: b, update: c, view: d, subscriptions: e};
 	});
-var _rgrempel$elm_route_url$RouteUrl$NavigationApp = F6(
-	function (a, b, c, d, e, f) {
-		return {parser: a, init: b, update: c, urlUpdate: d, view: e, subscriptions: f};
+var _rgrempel$elm_route_url$RouteUrl$NavigationAppWithFlags = F5(
+	function (a, b, c, d, e) {
+		return {locationToMessage: a, init: b, update: c, view: d, subscriptions: e};
 	});
 var _rgrempel$elm_route_url$RouteUrl$ModifyEntry = {ctor: 'ModifyEntry'};
 var _rgrempel$elm_route_url$RouteUrl$NewEntry = {ctor: 'NewEntry'};
+var _rgrempel$elm_route_url$RouteUrl$WrappedModel = F2(
+	function (a, b) {
+		return {ctor: 'WrappedModel', _0: a, _1: b};
+	});
+var _rgrempel$elm_route_url$RouteUrl$mapModel = F2(
+	function (mapper, _p4) {
+		var _p5 = _p4;
+		return A2(
+			_rgrempel$elm_route_url$RouteUrl$WrappedModel,
+			mapper(_p5._0),
+			_p5._1);
+	});
+var _rgrempel$elm_route_url$RouteUrl$UserMsg = function (a) {
+	return {ctor: 'UserMsg', _0: a};
+};
+var _rgrempel$elm_route_url$RouteUrl$wrapUserMsg = _rgrempel$elm_route_url$RouteUrl$UserMsg;
+var _rgrempel$elm_route_url$RouteUrl$view = F2(
+	function (app, _p6) {
+		var _p7 = _p6;
+		return A2(
+			_elm_lang$html$Html$map,
+			_rgrempel$elm_route_url$RouteUrl$UserMsg,
+			app.view(_p7._0));
+	});
+var _rgrempel$elm_route_url$RouteUrl$subscriptions = F2(
+	function (app, _p8) {
+		var _p9 = _p8;
+		return A2(
+			_elm_lang$core$Platform_Sub$map,
+			_rgrempel$elm_route_url$RouteUrl$UserMsg,
+			app.subscriptions(_p9._0));
+	});
+var _rgrempel$elm_route_url$RouteUrl$initWithFlags = F4(
+	function (appInit, app, flags, location) {
+		var routerModel = {
+			expectedUrlChanges: 0,
+			reportedUrl: _sporto$erl$Erl$parse(location.href)
+		};
+		var _p10 = A3(
+			_ccapndave$elm_update_extra$Update_Extra$sequence,
+			app.update,
+			app.location2messages(location),
+			appInit(flags));
+		var userModel = _p10._0;
+		var command = _p10._1;
+		return {
+			ctor: '_Tuple2',
+			_0: A2(_rgrempel$elm_route_url$RouteUrl$WrappedModel, userModel, routerModel),
+			_1: A2(_elm_lang$core$Platform_Cmd$map, _rgrempel$elm_route_url$RouteUrl$UserMsg, command)
+		};
+	});
+var _rgrempel$elm_route_url$RouteUrl$init = F3(
+	function (appInit, app, location) {
+		var routerModel = {
+			expectedUrlChanges: 0,
+			reportedUrl: _sporto$erl$Erl$parse(location.href)
+		};
+		var _p11 = A3(
+			_ccapndave$elm_update_extra$Update_Extra$sequence,
+			app.update,
+			app.location2messages(location),
+			appInit);
+		var userModel = _p11._0;
+		var command = _p11._1;
+		return {
+			ctor: '_Tuple2',
+			_0: A2(_rgrempel$elm_route_url$RouteUrl$WrappedModel, userModel, routerModel),
+			_1: A2(_elm_lang$core$Platform_Cmd$map, _rgrempel$elm_route_url$RouteUrl$UserMsg, command)
+		};
+	});
+var _rgrempel$elm_route_url$RouteUrl$update = F3(
+	function (app, msg, _p12) {
+		var _p13 = _p12;
+		var _p21 = _p13._0;
+		var _p20 = _p13._1;
+		var _p14 = msg;
+		if (_p14.ctor === 'RouterMsg') {
+			var _p16 = _p14._0;
+			var newRouterModel = {
+				reportedUrl: _sporto$erl$Erl$parse(_p16.href),
+				expectedUrlChanges: (_elm_lang$core$Native_Utils.cmp(_p20.expectedUrlChanges, 0) > 0) ? (_p20.expectedUrlChanges - 1) : 0
+			};
+			if (_elm_lang$core$Native_Utils.cmp(_p20.expectedUrlChanges, 0) > 0) {
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_rgrempel$elm_route_url$RouteUrl$WrappedModel, _p21, newRouterModel),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			} else {
+				var _p15 = A3(
+					_ccapndave$elm_update_extra$Update_Extra$sequence,
+					app.update,
+					app.location2messages(_p16),
+					{ctor: '_Tuple2', _0: _p21, _1: _elm_lang$core$Platform_Cmd$none});
+				var newUserModel = _p15._0;
+				var commands = _p15._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_rgrempel$elm_route_url$RouteUrl$WrappedModel, newUserModel, newRouterModel),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _rgrempel$elm_route_url$RouteUrl$UserMsg, commands)
+				};
+			}
+		} else {
+			var _p17 = A2(app.update, _p14._0, _p21);
+			var newUserModel = _p17._0;
+			var userCommand = _p17._1;
+			var maybeUrlChange = A2(
+				_elm_lang$core$Maybe$andThen,
+				_rgrempel$elm_route_url$RouteUrl$checkDistinctUrl(_p20.reportedUrl),
+				A2(
+					_elm_lang$core$Maybe$map,
+					_rgrempel$elm_route_url$RouteUrl$normalizeUrl(_p20.reportedUrl),
+					A2(app.delta2url, _p21, newUserModel)));
+			var _p18 = maybeUrlChange;
+			if (_p18.ctor === 'Just') {
+				var _p19 = _p18._0;
+				return {
+					ctor: '_Tuple2',
+					_0: A2(
+						_rgrempel$elm_route_url$RouteUrl$WrappedModel,
+						newUserModel,
+						{
+							reportedUrl: _sporto$erl$Erl$parse(_p19.url),
+							expectedUrlChanges: _p20.expectedUrlChanges + 1
+						}),
+					_1: A2(
+						_elm_lang$core$Platform_Cmd$map,
+						_rgrempel$elm_route_url$RouteUrl$UserMsg,
+						_elm_lang$core$Platform_Cmd$batch(
+							{
+								ctor: '::',
+								_0: _rgrempel$elm_route_url$RouteUrl$urlChange2Cmd(_p19),
+								_1: {
+									ctor: '::',
+									_0: userCommand,
+									_1: {ctor: '[]'}
+								}
+							}))
+				};
+			} else {
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_rgrempel$elm_route_url$RouteUrl$WrappedModel, newUserModel, _p20),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _rgrempel$elm_route_url$RouteUrl$UserMsg, userCommand)
+				};
+			}
+		}
+	});
+var _rgrempel$elm_route_url$RouteUrl$RouterMsg = function (a) {
+	return {ctor: 'RouterMsg', _0: a};
+};
+var _rgrempel$elm_route_url$RouteUrl$wrapLocation = _rgrempel$elm_route_url$RouteUrl$RouterMsg;
+var _rgrempel$elm_route_url$RouteUrl$navigationApp = function (app) {
+	var common = _rgrempel$elm_route_url$RouteUrl$app2Common(app);
+	return {
+		locationToMessage: _rgrempel$elm_route_url$RouteUrl$RouterMsg,
+		init: A2(_rgrempel$elm_route_url$RouteUrl$init, app.init, common),
+		update: _rgrempel$elm_route_url$RouteUrl$update(common),
+		view: _rgrempel$elm_route_url$RouteUrl$view(common),
+		subscriptions: _rgrempel$elm_route_url$RouteUrl$subscriptions(common)
+	};
+};
+var _rgrempel$elm_route_url$RouteUrl$program = function (_p22) {
+	return _rgrempel$elm_route_url$RouteUrl$runNavigationApp(
+		_rgrempel$elm_route_url$RouteUrl$navigationApp(_p22));
+};
+var _rgrempel$elm_route_url$RouteUrl$navigationAppWithFlags = function (app) {
+	var common = _rgrempel$elm_route_url$RouteUrl$appWithFlags2Common(app);
+	return {
+		locationToMessage: _rgrempel$elm_route_url$RouteUrl$RouterMsg,
+		init: A2(_rgrempel$elm_route_url$RouteUrl$initWithFlags, app.init, common),
+		update: _rgrempel$elm_route_url$RouteUrl$update(common),
+		view: _rgrempel$elm_route_url$RouteUrl$view(common),
+		subscriptions: _rgrempel$elm_route_url$RouteUrl$subscriptions(common)
+	};
+};
+var _rgrempel$elm_route_url$RouteUrl$programWithFlags = function (_p23) {
+	return _rgrempel$elm_route_url$RouteUrl$runNavigationAppWithFlags(
+		_rgrempel$elm_route_url$RouteUrl$navigationAppWithFlags(_p23));
+};
 
 var _user$project$Constants$langsText = _elm_lang$core$Dict$fromList(
-	_elm_lang$core$Native_List.fromArray(
-		[
-			{ctor: '_Tuple2', _0: 'fr', _1: 'Francais'},
-			{ctor: '_Tuple2', _0: 'en', _1: 'English'}
-		]));
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'fr', _1: 'Francais'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'en', _1: 'English'},
+			_1: {ctor: '[]'}
+		}
+	});
 var _user$project$Constants$constants = {email: 'info@campinglequebecois.qc.ca', phone: '(450) 788-2680'};
 
 var _user$project$Types$defaultTab = {url: '', title: ''};
@@ -17496,8 +22369,7 @@ var _user$project$Types$initLanguages = function (languages) {
 		return A2(
 			_user$project$Types$Languages,
 			'fr',
-			_elm_lang$core$Native_List.fromArray(
-				[]));
+			{ctor: '[]'});
 	} else {
 		return A2(_user$project$Types$Languages, _p0._0, _p0._1);
 	}
@@ -17516,45 +22388,45 @@ var _user$project$Types$BackendData = F3(
 	});
 
 var _user$project$JsonDecoder$decodeLanguages = A2(
-	_elm_lang$core$Json_Decode$object1,
+	_elm_lang$core$Json_Decode$map,
 	_user$project$Types$initLanguages,
 	_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string));
 var _user$project$JsonDecoder$decodeTab = A3(
-	_elm_lang$core$Json_Decode$object2,
+	_elm_lang$core$Json_Decode$map2,
 	_user$project$Types$Tab,
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'title', _elm_lang$core$Json_Decode$string));
+	A2(_elm_lang$core$Json_Decode$field, 'url', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'title', _elm_lang$core$Json_Decode$string));
 var _user$project$JsonDecoder$decodeTabs = A2(
 	_elm_lang$core$Json_Decode$at,
-	_elm_lang$core$Native_List.fromArray(
-		[]),
+	{ctor: '[]'},
 	_elm_lang$core$Json_Decode$list(_user$project$JsonDecoder$decodeTab));
 var _user$project$JsonDecoder$decodePage = A4(
-	_elm_lang$core$Json_Decode$object3,
+	_elm_lang$core$Json_Decode$map3,
 	_user$project$Types$Page,
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'title', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'content', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'title', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'content', _elm_lang$core$Json_Decode$string),
 	_elm_lang$core$Json_Decode$maybe(
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'children', _user$project$JsonDecoder$decodeTabs)));
+		A2(_elm_lang$core$Json_Decode$field, 'children', _user$project$JsonDecoder$decodeTabs)));
 var _user$project$JsonDecoder$decodeData = A4(
-	_elm_lang$core$Json_Decode$object3,
+	_elm_lang$core$Json_Decode$map3,
 	_user$project$Types$BackendData,
 	_elm_lang$core$Json_Decode$maybe(
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'langs', _user$project$JsonDecoder$decodeLanguages)),
+		A2(_elm_lang$core$Json_Decode$field, 'langs', _user$project$JsonDecoder$decodeLanguages)),
 	_elm_lang$core$Json_Decode$maybe(
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'tabs', _user$project$JsonDecoder$decodeTabs)),
-	A2(_elm_lang$core$Json_Decode_ops[':='], 'page', _user$project$JsonDecoder$decodePage));
+		A2(_elm_lang$core$Json_Decode$field, 'tabs', _user$project$JsonDecoder$decodeTabs)),
+	A2(_elm_lang$core$Json_Decode$field, 'page', _user$project$JsonDecoder$decodePage));
 var _user$project$JsonDecoder$extractTabs = function (tabs) {
 	var _p0 = A2(_elm_lang$core$Json_Decode$decodeValue, _user$project$JsonDecoder$decodeTabs, tabs);
 	if (_p0.ctor === 'Err') {
 		var $default = _user$project$Types$defaultTab;
 		var two = A2(_elm_lang$core$Debug$log, 'err', _p0._0);
-		return _elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$core$Native_Utils.update(
+		return {
+			ctor: '::',
+			_0: _elm_lang$core$Native_Utils.update(
 				$default,
-				{title: 'error'})
-			]);
+				{title: 'error'}),
+			_1: {ctor: '[]'}
+		};
 	} else {
 		return _p0._0;
 	}
@@ -17566,11 +22438,8 @@ var _user$project$Messages$ChangeLanguage = function (a) {
 var _user$project$Messages$ChangePage = function (a) {
 	return {ctor: 'ChangePage', _0: a};
 };
-var _user$project$Messages$FetchSucceed = function (a) {
-	return {ctor: 'FetchSucceed', _0: a};
-};
-var _user$project$Messages$FetchFail = function (a) {
-	return {ctor: 'FetchFail', _0: a};
+var _user$project$Messages$RequestResult = function (a) {
+	return {ctor: 'RequestResult', _0: a};
 };
 var _user$project$Messages$Nop = {ctor: 'Nop'};
 var _user$project$Messages$Mdl = function (a) {
@@ -17579,34 +22448,55 @@ var _user$project$Messages$Mdl = function (a) {
 
 var _user$project$Tabs$viewTab = F2(
 	function (current, tab) {
-		var fontStyle = _elm_lang$core$Native_List.fromArray(
-			[
-				_debois$elm_mdl$Material_Options$cs('mdl-layout__tab'),
-				A2(_debois$elm_mdl$Material_Options$css, 'font-weight', '500'),
-				A2(_debois$elm_mdl$Material_Options$css, 'padding', '0 20px'),
-				A2(_debois$elm_mdl$Material_Options$css, 'line-height', '48px'),
-				A2(_debois$elm_mdl$Material_Options$css, 'outline', 'none'),
-				A2(_debois$elm_mdl$Material_Options$css, 'cursor', 'default')
-			]);
+		var fontStyle = {
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('mdl-layout__tab'),
+			_1: {
+				ctor: '::',
+				_0: A2(_debois$elm_mdl$Material_Options$css, 'font-weight', '500'),
+				_1: {
+					ctor: '::',
+					_0: A2(_debois$elm_mdl$Material_Options$css, 'padding', '0 20px'),
+					_1: {
+						ctor: '::',
+						_0: A2(_debois$elm_mdl$Material_Options$css, 'line-height', '48px'),
+						_1: {
+							ctor: '::',
+							_0: A2(_debois$elm_mdl$Material_Options$css, 'outline', 'none'),
+							_1: {
+								ctor: '::',
+								_0: A2(_debois$elm_mdl$Material_Options$css, 'cursor', 'default'),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		};
 		return A2(
 			_debois$elm_mdl$Material_Layout$link,
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_debois$elm_mdl$Material_Layout$onClick(
+				{
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$onClick(
 						_user$project$Messages$ChangePage(tab.url)),
-						A2(
-						_debois$elm_mdl$Material_Options$when,
-						_debois$elm_mdl$Material_Options$cs('is-active'),
-						_elm_lang$core$Native_Utils.eq(tab.url, current))
-					]),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_Options$when,
+							_elm_lang$core$Native_Utils.eq(tab.url, current),
+							_debois$elm_mdl$Material_Options$cs('is-active')),
+						_1: {ctor: '[]'}
+					}
+				},
 				fontStyle),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text(
-					_elm_lang$core$String$toUpper(tab.title))
-				]));
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(
+					_elm_lang$core$String$toUpper(tab.title)),
+				_1: {ctor: '[]'}
+			});
 	});
 var _user$project$Tabs$view = F2(
 	function (tabs, current) {
@@ -17615,10 +22505,11 @@ var _user$project$Tabs$view = F2(
 			return A2(
 				_debois$elm_mdl$Material_Icon$view,
 				name,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(_debois$elm_mdl$Material_Options$css, 'width', '40px')
-					]));
+				{
+					ctor: '::',
+					_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '40px'),
+					_1: {ctor: '[]'}
+				});
 		};
 		return A2(
 			_elm_lang$core$List$map,
@@ -17627,17 +22518,18 @@ var _user$project$Tabs$view = F2(
 	});
 
 var _user$project$Main$location2messages = function (location) {
-	return _elm_lang$core$Native_List.fromArray(
-		[
-			function () {
+	return {
+		ctor: '::',
+		_0: function () {
 			var _p0 = A2(_elm_lang$core$String$dropLeft, 1, location.hash);
 			if (_p0 === '') {
 				return _user$project$Messages$ChangePage('index');
 			} else {
 				return _user$project$Messages$ChangePage(_p0);
 			}
-		}()
-		]);
+		}(),
+		_1: {ctor: '[]'}
+	};
 };
 var _user$project$Main$urlOf = function (model) {
 	return A2(_elm_lang$core$Basics_ops['++'], '#', model.current);
@@ -17668,12 +22560,69 @@ var _user$project$Main$htmlNodeToElm = function (node) {
 		case 'Text':
 			return _elm_lang$html$Html$text(_p3._0);
 		case 'Element':
-			var children$ = _user$project$Main$htmlNodesToElm(_p3._2);
+			var children_ = _user$project$Main$htmlNodesToElm(_p3._2);
 			var attrs = _user$project$Main$htmlAttributesToElm(_p3._1);
-			return A3(_elm_lang$html$Html$node, _p3._0, attrs, children$);
+			return A3(_elm_lang$html$Html$node, _p3._0, attrs, children_);
 		default:
 			return _elm_lang$html$Html$text('');
 	}
+};
+var _user$project$Main$boxed = {
+	ctor: '::',
+	_0: A2(_debois$elm_mdl$Material_Options$css, 'margin', 'auto'),
+	_1: {
+		ctor: '::',
+		_0: A2(_debois$elm_mdl$Material_Options$css, 'padding-left', '8%'),
+		_1: {
+			ctor: '::',
+			_0: A2(_debois$elm_mdl$Material_Options$css, 'padding-right', '8%'),
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$Main$viewBody = function (page) {
+	var htmlContent = _user$project$Main$htmlNodesToElm(
+		_jinjor$elm_html_parser$HtmlParser$parse(page.content));
+	return A2(
+		_debois$elm_mdl$Material_Options$div,
+		_user$project$Main$boxed,
+		{
+			ctor: '::',
+			_0: A2(
+				_debois$elm_mdl$Material_Grid$grid,
+				{
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Grid$noSpacing,
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_Grid$cell,
+						{
+							ctor: '::',
+							_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12),
+							_1: {ctor: '[]'}
+						},
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$h3,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(page.title),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							},
+							htmlContent)),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
 };
 var _user$project$Main$getLanguageText = F2(
 	function (key, texts) {
@@ -17688,153 +22637,156 @@ var _user$project$Main$viewLanguages = function (langs) {
 		var _p5 = _p4._0;
 		return A2(
 			_debois$elm_mdl$Material_Layout$link,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material_Layout$onClick(
-					_user$project$Messages$ChangeLanguage(_p5))
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html$text(
-					A2(_user$project$Main$getLanguageText, _p5, _user$project$Constants$langsText))
-				]));
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$onClick(
+					_user$project$Messages$ChangeLanguage(_p5)),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(
+					A2(_user$project$Main$getLanguageText, _p5, _user$project$Constants$langsText)),
+				_1: {ctor: '[]'}
+			});
 	} else {
 		return _elm_lang$html$Html$text('languages');
 	}
 };
-var _user$project$Main$boxed = _elm_lang$core$Native_List.fromArray(
-	[
-		A2(_debois$elm_mdl$Material_Options$css, 'margin', 'auto'),
-		A2(_debois$elm_mdl$Material_Options$css, 'padding-left', '8%'),
-		A2(_debois$elm_mdl$Material_Options$css, 'padding-right', '8%')
-	]);
-var _user$project$Main$viewBody = function (page) {
-	var htmlContent = _user$project$Main$htmlNodesToElm(
-		_jinjor$elm_html_parser$HtmlParser$parse(page.content));
-	return A2(
-		_debois$elm_mdl$Material_Options$div,
-		_user$project$Main$boxed,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_debois$elm_mdl$Material_Grid$grid,
-				_elm_lang$core$Native_List.fromArray(
-					[_debois$elm_mdl$Material_Grid$noSpacing]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_debois$elm_mdl$Material_Grid$cell,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12)
-							]),
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							_elm_lang$core$Native_List.fromArray(
-								[
-									A2(
-									_elm_lang$html$Html$h3,
-									_elm_lang$core$Native_List.fromArray(
-										[]),
-									_elm_lang$core$Native_List.fromArray(
-										[
-											_elm_lang$html$Html$text(page.title)
-										]))
-								]),
-							htmlContent))
-					]))
-			]));
-};
 var _user$project$Main$header = function (model) {
-	return _elm_lang$core$Native_List.fromArray(
-		[
-			A2(
+	return {
+		ctor: '::',
+		_0: A2(
 			_debois$elm_mdl$Material_Layout$row,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(_debois$elm_mdl$Material_Options$css, 'height', '120px'),
-					_debois$elm_mdl$Material_Color$background(
-					A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$LightBlue, _debois$elm_mdl$Material_Color$S50))
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
+			{
+				ctor: '::',
+				_0: A2(_debois$elm_mdl$Material_Options$css, 'height', '120px'),
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Color$background(
+						A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$LightBlue, _debois$elm_mdl$Material_Color$S50)),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
 					_debois$elm_mdl$Material_Layout$title,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
 							_elm_lang$html$Html$img,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$html$Html_Attributes$src('theme/clq/css/img/logo3-simple.png')
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[]))
-						])),
-					_debois$elm_mdl$Material_Layout$spacer,
-					A2(
-					_debois$elm_mdl$Material_Layout$navigation,
-					_elm_lang$core$Native_List.fromArray(
-						[]),
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						A2(_user$project$Tabs$view, model.tabs, model.current),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_user$project$Main$viewLanguages(model.languages)
-							])))
-				]))
-		]);
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$src('theme/clq/css/img/logo3-simple.png'),
+								_1: {ctor: '[]'}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Layout$spacer,
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_Layout$navigation,
+							{ctor: '[]'},
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								A2(_user$project$Tabs$view, model.tabs, model.current),
+								{
+									ctor: '::',
+									_0: _user$project$Main$viewLanguages(model.languages),
+									_1: {ctor: '[]'}
+								})),
+						_1: {ctor: '[]'}
+					}
+				}
+			}),
+		_1: {ctor: '[]'}
+	};
 };
-var _user$project$Main$view$ = function (model) {
+var _user$project$Main$view_ = function (model) {
 	return A4(
 		_debois$elm_mdl$Material_Layout$render,
 		_user$project$Messages$Mdl,
 		model.mdl,
-		_elm_lang$core$Native_List.fromArray(
-			[_debois$elm_mdl$Material_Layout$fixedHeader]),
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Layout$fixedHeader,
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Layout$scrolling,
+				_1: {ctor: '[]'}
+			}
+		},
 		{
 			header: _user$project$Main$header(model),
-			drawer: _elm_lang$core$Native_List.fromArray(
-				[]),
+			drawer: {ctor: '[]'},
 			tabs: {
 				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_List.fromArray(
-					[]),
-				_1: _elm_lang$core$Native_List.fromArray(
-					[])
+				_0: {ctor: '[]'},
+				_1: {ctor: '[]'}
 			},
-			main: _elm_lang$core$Native_List.fromArray(
-				[
-					_user$project$Main$viewBody(model.page)
-				])
+			main: {
+				ctor: '::',
+				_0: _user$project$Main$viewBody(model.page),
+				_1: {ctor: '[]'}
+			}
 		});
 };
-var _user$project$Main$view = _elm_lang$html$Html_Lazy$lazy(_user$project$Main$view$);
+var _user$project$Main$view = _elm_lang$html$Html_Lazy$lazy(_user$project$Main$view_);
+var _user$project$Main$createUrl = F2(
+	function (baseUrl, query) {
+		var _p6 = query;
+		if (_p6.ctor === '[]') {
+			return baseUrl;
+		} else {
+			var queryPairs = A2(
+				_elm_lang$core$List$map,
+				function (_p7) {
+					var _p8 = _p7;
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$http$Http$encodeUri(_p8._0),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'=',
+							_elm_lang$http$Http$encodeUri(_p8._1)));
+				},
+				query);
+			var queryString = A2(_elm_lang$core$String$join, '&', queryPairs);
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				baseUrl,
+				A2(_elm_lang$core$Basics_ops['++'], '?', queryString));
+		}
+	});
 var _user$project$Main$getData = F2(
 	function (siteUrl, args) {
-		var args = A2(
-			_elm_lang$core$List_ops['::'],
-			{ctor: '_Tuple2', _0: 'id', _1: 'fetchdata'},
-			args);
+		var args_ = {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'id', _1: 'fetchdata'},
+			_1: args
+		};
 		var url = A2(
-			_evancz$elm_http$Http$url,
+			_user$project$Main$createUrl,
 			A2(_elm_lang$core$Basics_ops['++'], siteUrl, 'index.php'),
-			args);
-		return A3(
-			_elm_lang$core$Task$perform,
-			_user$project$Messages$FetchFail,
-			_user$project$Messages$FetchSucceed,
-			A2(_evancz$elm_http$Http$get, _user$project$JsonDecoder$decodeData, url));
+			args_);
+		return A2(
+			_elm_lang$http$Http$send,
+			_user$project$Messages$RequestResult,
+			A2(_elm_lang$http$Http$get, url, _user$project$JsonDecoder$decodeData));
 	});
 var _user$project$Main$getPageData = F2(
 	function (page, model) {
-		var args = _elm_lang$core$Native_List.fromArray(
-			[
-				{ctor: '_Tuple2', _0: 'page', _1: page}
-			]);
+		var args = {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'page', _1: page},
+			_1: {ctor: '[]'}
+		};
 		return A2(_user$project$Main$getData, model.siteUrl, args);
 	});
 var _user$project$Main$changePage = F2(
@@ -17844,86 +22796,91 @@ var _user$project$Main$changePage = F2(
 var _user$project$Main$changeLanguage = F2(
 	function (lang, model) {
 		var one = A2(_elm_lang$core$Debug$log, 'changelang', lang);
-		var args = _elm_lang$core$Native_List.fromArray(
-			[
-				{ctor: '_Tuple2', _0: 'page', _1: model.current},
-				{ctor: '_Tuple2', _0: 'setlang', _1: lang}
-			]);
+		var args = {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'page', _1: model.current},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'setlang', _1: lang},
+				_1: {ctor: '[]'}
+			}
+		};
 		return A2(_user$project$Main$getData, model.siteUrl, args);
 	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p6 = msg;
-		switch (_p6.ctor) {
+		var _p9 = msg;
+		switch (_p9.ctor) {
 			case 'Mdl':
-				return A2(_debois$elm_mdl$Material$update, _p6._0, model);
+				return A3(_debois$elm_mdl$Material$update, _user$project$Messages$Mdl, _p9._0, model);
 			case 'Nop':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'ChangePage':
-				var _p7 = _p6._0;
+				var _p10 = _p9._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{current: _p7}),
-					_1: A2(_user$project$Main$changePage, _p7, model)
+						{current: _p10}),
+					_1: A2(_user$project$Main$changePage, _p10, model)
 				};
 			case 'ChangeLanguage':
 				return {
 					ctor: '_Tuple2',
 					_0: model,
-					_1: A2(_user$project$Main$changeLanguage, _p6._0, model)
-				};
-			case 'FetchSucceed':
-				var _p10 = _p6._0;
-				var one = A2(_elm_lang$core$Debug$log, 'data', _p10);
-				var tabs_ = function () {
-					var _p8 = _p10.tabs;
-					if (_p8.ctor === 'Nothing') {
-						return model.tabs;
-					} else {
-						return _p8._0;
-					}
-				}();
-				var langs = function () {
-					var _p9 = _p10.lang;
-					if (_p9.ctor === 'Nothing') {
-						return model.languages;
-					} else {
-						return _p9._0;
-					}
-				}();
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{languages: langs, tabs: tabs_, page: _p10.page}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: A2(_user$project$Main$changeLanguage, _p9._0, model)
 				};
 			default:
-				var one = A2(_elm_lang$core$Debug$log, 'err', _p6._0);
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				if (_p9._0.ctor === 'Ok') {
+					var _p13 = _p9._0._0;
+					var one = A2(_elm_lang$core$Debug$log, 'data', _p13);
+					var tabs_ = function () {
+						var _p11 = _p13.tabs;
+						if (_p11.ctor === 'Nothing') {
+							return model.tabs;
+						} else {
+							return _p11._0;
+						}
+					}();
+					var langs = function () {
+						var _p12 = _p13.lang;
+						if (_p12.ctor === 'Nothing') {
+							return model.languages;
+						} else {
+							return _p12._0;
+						}
+					}();
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{languages: langs, tabs: tabs_, page: _p13.page}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					var one = A2(_elm_lang$core$Debug$log, 'err', _p9._0._0);
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
 		}
 	});
 var _user$project$Main$getInit = function (siteUrl) {
 	return A2(
 		_user$project$Main$getData,
 		siteUrl,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				{ctor: '_Tuple2', _0: 'page', _1: 'init'}
-			]));
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'page', _1: 'init'},
+			_1: {ctor: '[]'}
+		});
 };
 var _user$project$Main$model = {
 	mdl: _debois$elm_mdl$Material$model,
-	tabs: _elm_lang$core$Native_List.fromArray(
-		[]),
+	tabs: {ctor: '[]'},
 	siteUrl: '',
 	languages: A2(
 		_user$project$Types$Languages,
 		'fr',
-		_elm_lang$core$Native_List.fromArray(
-			[])),
+		{ctor: '[]'}),
 	current: 'index',
 	page: _user$project$Types$defaultPage
 };
@@ -17937,31 +22894,33 @@ var _user$project$Main$init = function (flags) {
 				siteUrl: flags.siteUrl
 			}),
 		_1: _elm_lang$core$Platform_Cmd$batch(
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_debois$elm_mdl$Material$init(_user$project$Messages$Mdl),
-					_user$project$Main$getInit(flags.siteUrl)
-				]))
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material$init(_user$project$Messages$Mdl),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$getInit(flags.siteUrl),
+					_1: {ctor: '[]'}
+				}
+			})
 	};
 };
-var _user$project$Main$main = {
-	main: _rgrempel$elm_route_url$RouteUrl$programWithFlags(
-		{
-			delta2url: _user$project$Main$delta2url,
-			location2messages: _user$project$Main$location2messages,
-			init: _user$project$Main$init,
-			view: _user$project$Main$view,
-			subscriptions: _debois$elm_mdl$Material$subscriptions(_user$project$Messages$Mdl),
-			update: _user$project$Main$update
-		}),
-	flags: A2(
+var _user$project$Main$main = _rgrempel$elm_route_url$RouteUrl$programWithFlags(
+	{
+		delta2url: _user$project$Main$delta2url,
+		location2messages: _user$project$Main$location2messages,
+		init: _user$project$Main$init,
+		view: _user$project$Main$view,
+		subscriptions: _debois$elm_mdl$Material$subscriptions(_user$project$Messages$Mdl),
+		update: _user$project$Main$update
+	})(
+	A2(
 		_elm_lang$core$Json_Decode$andThen,
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'siteUrl', _elm_lang$core$Json_Decode$string),
 		function (siteUrl) {
 			return _elm_lang$core$Json_Decode$succeed(
 				{siteUrl: siteUrl});
-		})
-};
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'siteUrl', _elm_lang$core$Json_Decode$string)));
 var _user$project$Main$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {mdl: a, tabs: b, siteUrl: c, languages: d, current: e, page: f};
@@ -17972,7 +22931,9 @@ var _user$project$Main$Flags = function (a) {
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['Main'], 'Main', typeof _user$project$Main$main === 'undefined' ? null : _user$project$Main$main);
+if (typeof _user$project$Main$main !== 'undefined') {
+    _user$project$Main$main(Elm['Main'], 'Main', undefined);
+}
 
 if (typeof define === "function" && define['amd'])
 {

@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<item><pubDate>Sun, 01 May 2016 23:19:11 -0400</pubDate><title><![CDATA[Tarifs]]></title><url><![CDATA[tarifs]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Tarifs]]></menu><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template_nosidebar.php]]></template><parent><![CDATA[]]></parent><content><![CDATA[&lt;p&gt;{% tarifs %}&lt;/p&gt;
-]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author><menuOrder><![CDATA[5]]></menuOrder></item>

@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<item><pubDate>Thu, 28 Apr 2016 13:36:27 -0400</pubDate><title><![CDATA[Calendar]]></title><url><![CDATA[calendrier_en]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menuOrder><![CDATA[0]]></menuOrder><menuStatus><![CDATA[]]></menuStatus><template><![CDATA[template.php]]></template><content><![CDATA[&lt;p&gt;{%calendar%}&lt;/p&gt;
-]]></content><author><![CDATA[admin]]></author><parent><![CDATA[]]></parent><private><![CDATA[]]></private><menu><![CDATA[]]></menu></item>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<item><pubDate>Wed, 09 Mar 2016 11:50:42 -0500</pubDate><title><![CDATA[Règlements]]></title><url><![CDATA[reglements]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><template><![CDATA[template.php]]></template><content><![CDATA[&lt;p&gt;Voici certains règlements importants&lt;/p&gt;
+<item><pubDate>Mon, 06 Mar 2017 19:18:30 -0500</pubDate><title><![CDATA[Règlements]]></title><url><![CDATA[rules]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Règlements]]></menu><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><parent><![CDATA[installations]]></parent><content><![CDATA[&lt;p&gt;Voici certains règlements importants&lt;/p&gt;
+
 &lt;ul&gt;
 	&lt;li class=&quot;important&quot;&gt;Suite à la nouvelle loi de l’ACIA, concernant l’agrile du frêne, nous interdisons dorénavant à tous les campeurs d’apporter leur bois pour les feux de camp.&lt;/li&gt;
 	&lt;li&gt;L’enregistrement et frais de location doivent être réglés à l’arrivée. Départ avant 13 heures.&lt;/li&gt;
@@ -10,4 +11,4 @@
 	&lt;li&gt;Aucune circulation à bicyclette après le coucher du soleil.&lt;/li&gt;
 	&lt;li&gt;Il est interdit d’endommager les plantes et les arbres sur le site et dans la forêt environnante (aucune cueillette de plantes et fleurs sauvages).&lt;/li&gt;
 &lt;/ul&gt;
-]]></content><author><![CDATA[admin]]></author><parent><![CDATA[installations-et-services]]></parent><menuOrder><![CDATA[1]]></menuOrder><menu><![CDATA[R&egrave;glements]]></menu><menuStatus><![CDATA[Y]]></menuStatus><private><![CDATA[]]></private></item>
+]]></content><private><![CDATA[]]></private><author><![CDATA[admin]]></author><menuOrder><![CDATA[1]]></menuOrder></item>

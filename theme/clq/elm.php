@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="<?php get_theme_url(); ?>/css/material.min.css" />
     <link rel="stylesheet" href="<?php get_theme_url(); ?>/css/clq.css" type="text/css">
+    <link rel="stylesheet" href="<?php get_theme_url(); ?>/css/clqless.css" type="text/css">
 
   </head>
   <body>

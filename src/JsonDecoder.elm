@@ -1,6 +1,6 @@
 module JsonDecoder exposing (extractTabs, decodeData)
 
-import Json.Decode as Json exposing ((:=))
+import Json.Decode as Json exposing (field)
 import Types exposing (Tab, BackendData, initLanguages, Languages, Page)
 
 
@@ -32,27 +32,27 @@ decodeTabs =
 
 decodeTab : Json.Decoder Tab
 decodeTab =
-    Json.object2 Tab
-        ("url" := Json.string)
-        ("title" := Json.string)
+    Json.map2 Tab
+        (field "url" Json.string)
+        (field "title" Json.string)
 
 
 decodeLanguages : Json.Decoder Languages
 decodeLanguages =
-    Json.object1 initLanguages <| Json.list Json.string
+    Json.map initLanguages <| Json.list Json.string
 
 
 decodePage : Json.Decoder Page
 decodePage =
-    Json.object3 Page
-        ("title" := Json.string)
-        ("content" := Json.string)
-        (Json.maybe <| "children" := decodeTabs)
+    Json.map3 Page
+        (field "title" Json.string)
+        (field "content" Json.string)
+        (Json.maybe <| field "children" decodeTabs)
 
 
 decodeData : Json.Decoder BackendData
 decodeData =
-    Json.object3 BackendData
-        (Json.maybe <| "langs" := decodeLanguages)
-        (Json.maybe <| "tabs" := decodeTabs)
-        ("page" := decodePage)
+    Json.map3 BackendData
+        (Json.maybe <| field "langs" decodeLanguages)
+        (Json.maybe <| field "tabs" decodeTabs)
+        (field "page" decodePage)

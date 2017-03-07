@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item><pubDate>Mon, 06 Mar 2017 19:25:51 -0500</pubDate><title><![CDATA[Rates]]></title><url><![CDATA[rates_en]]></url><meta><![CDATA[]]></meta><metad><![CDATA[]]></metad><menu><![CDATA[Rates]]></menu><menuOrder><![CDATA[0]]></menuOrder><menuStatus><![CDATA[Y]]></menuStatus><template><![CDATA[template.php]]></template><content><![CDATA[&lt;p&gt;&lt;strong&gt;Here are our rates for the 2017 season:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;{% tarifs %}&lt;/p&gt;
+]]></content><author><![CDATA[admin]]></author><parent><![CDATA[]]></parent><private><![CDATA[]]></private></item>

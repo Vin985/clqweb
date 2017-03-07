@@ -1,8 +1,7 @@
 Elm
 *** Menu mobile
 *** modules getSimple/Elm
-*** Changement de langue
-
+*** sous navigation par tabs
 
 
 Ajouter des photos!!!

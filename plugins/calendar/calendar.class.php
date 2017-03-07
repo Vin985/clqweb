@@ -23,6 +23,7 @@ class Calendar
     {
         $success = true;
         $gdir = GSDATAOTHERPATH . CALENDAR_DIR;
+
         if (!file_exists($gdir)) {
             $success = mkdir(substr($gdir, 0, strlen($gdir)-1), 0777) && $success;
             $fp = fopen($gdir . '.htaccess', 'w');

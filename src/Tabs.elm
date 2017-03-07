@@ -74,7 +74,7 @@ viewTab current tab =
             ]
     in
         Layout.link
-            ([ Layout.onClick (ChangePage tab.url), when (cs "is-active") (tab.url == current) ]
+            ([ Options.onClick (ChangePage tab.url), when (tab.url == current)(cs "is-active") ]
                 ++ fontStyle
             )
             [ text (toUpper tab.title)

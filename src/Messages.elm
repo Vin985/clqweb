@@ -8,7 +8,6 @@ import Material
 type Msg
     = Mdl (Material.Msg Msg)
     | Nop
-    | FetchFail Http.Error
-    | FetchSucceed BackendData
+    | RequestResult (Result Http.Error BackendData)
     | ChangePage String
     | ChangeLanguage String
