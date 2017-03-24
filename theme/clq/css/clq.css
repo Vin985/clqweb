@@ -6,6 +6,11 @@
   display: none;
 }
 
+.elm-subnav {
+  display : flex;
+  justify-content: center;
+}
+
 body, input, select, textarea {
   color: #6e6e6e;
   font-family: 'Roboto', sans-serif;

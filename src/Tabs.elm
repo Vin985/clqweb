@@ -1,68 +1,28 @@
-module Tabs exposing (view)
+module Tabs exposing (view, viewSubTabs)
 
-import Material.Icon as Icon
+import Html exposing (..)
+import Html.Attributes
 import Material.Options exposing (css)
-import Html exposing (..)
-import Html exposing (..)
 import Material.Layout as Layout
 import Material.Options as Options exposing (css, when, cs, nop)
 import String exposing (..)
 import Messages exposing (..)
+import Json.Encode
 import Types exposing (Tabs, Tab, defaultTab)
-
-
-{-
-   update : Msg -> Model -> ( Model, Cmd Msg, String )
-   update msg model =
-       case msg of
-           -- When the `Mdl` messages come through, update appropriately.
-           Mdl msg' ->
-               let
-                   ( updated, cmd ) =
-                       Material.update msg' model
-               in
-                   ( updated, cmd, "" )
-
-           Nop ->
-               ( model, Cmd.none, "" )
-
-           ChangePage url ->
-               ( { model | current = url }, Cmd.none, url )
--}
 
 
 view : Tabs -> String -> List (Html Msg)
 view tabs current =
-    let
-        i name =
-            Icon.view name [ css "width" "40px" ]
-
-        padding =
-            css "padding-right" "24px"
-    in
-        List.map (viewTab current) tabs
+    List.map (viewTab True current) tabs
 
 
-
-{- ++ [ Menu.render Mdl
-        [ 0 ]
-        model.mdl
-        [ Menu.bottomRight, Menu.icon "contact_phone" ]
-        [ Menu.item [ Menu.onSelect Nop, padding ]
-            [ i "phone"
-            , text constants.phone
-            ]
-        , Menu.item [ Menu.onSelect Nop, padding ]
-            [ i "email"
-            , text constants.email
-            ]
-        ]
-   ]
--}
+viewSubTabs : Tabs -> String -> List (Html Msg)
+viewSubTabs tabs current =
+    List.map (viewTab False current) tabs
 
 
-viewTab : String -> Tab -> Html Msg
-viewTab current tab =
+viewTab : Bool -> String -> Tab -> Html Msg
+viewTab top current tab =
     let
         fontStyle =
             [ cs "mdl-layout__tab"
@@ -74,8 +34,12 @@ viewTab current tab =
             ]
     in
         Layout.link
-            ([ Options.onClick (ChangePage tab.url), when (tab.url == current)(cs "is-active") ]
+            ([ Options.onClick (ChangePage tab.url)
+             , when (tab.url == current) (cs "is-active")
+             , when (not top) (cs "subtab")
+             , Options.attribute <|
+                Html.Attributes.property "innerHTML" (Json.Encode.string (toUpper tab.title))
+             ]
                 ++ fontStyle
             )
-            [ text (toUpper tab.title)
-            ]
+            []

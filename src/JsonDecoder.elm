@@ -32,9 +32,10 @@ decodeTabs =
 
 decodeTab : Json.Decoder Tab
 decodeTab =
-    Json.map2 Tab
+    Json.map3 Tab
         (field "url" Json.string)
         (field "title" Json.string)
+        (Json.maybe <| field "parent" Json.string)
 
 
 decodeLanguages : Json.Decoder Languages

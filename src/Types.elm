@@ -24,6 +24,7 @@ initLanguages languages =
 type alias Tab =
     { url : String
     , title : String
+    , parent : Maybe String
     }
 
 
@@ -53,4 +54,5 @@ defaultTab : Tab
 defaultTab =
     { url = ""
     , title = ""
+    , parent = Just ""
     }

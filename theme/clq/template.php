@@ -1,59 +1,40 @@
-<?php if (!defined('IN_GS')) {
-    die('you cannot load this page directly.');
-}
 
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-$sidebar = isset($sidebar) ? $sidebar : true;
-/****************************************************
-*
-* @File: 		template.php
-* @Package:		GetSimple
-* @Action:		clq theme for GetSimple CMS
-*
-*****************************************************/
-?>
+    <title>
+      <?php if (function_exists('get_custom_title_tag')) {
+                    echo(get_custom_title_tag());
+} else {
+    get_page_clean_title();
+    echo"&nbsp;&mdash;&nbsp;";
+    get_site_name();
+}?>
+    </title>
 
-<?php include('inc/include.php'); ?>
+    <!-- MDL
+      The library relies on Google's Material Design fonts, icons, and the CSS
+      of Google's Material Design Lite implementation. Load these as follows.
+    -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500|Roboto+Mono|Roboto+Condensed:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="<?php get_theme_url(); ?>/css/material.min.css" />
+    <link rel="stylesheet" href="<?php get_theme_url(); ?>/css/clq.css" type="text/css">
+    <link rel="stylesheet" href="<?php get_theme_url(); ?>/css/clqless.css" type="text/css">
 
-<!-- BODY -->
-
-<body id="<?php get_page_slug(); ?>" class="stickybody clq">
-  <div class="container">
-
-    <!-- HEADER -->
-    <?php include('inc/header.php'); ?>
-
-    <!-- SITE CONTENT -->
-    <h2 class="title"><?php get_page_title(); ?></h2>
-    <div class="flex fullwidth">
-    <nav class="side sidenav">
-      <div class="sidemenu root">
-        <?php get_i18n_navigation(return_page_slug(), 1, 1, I18N_SHOW_MENU, "navbar"); ?>
-      </div>
-    </nav>
-    <?php  ?>
-    <div class="content">
-      <div class="page-text">
-        <?php get_page_content(); ?>
-      </div>
-    </div>
-    <?php if ($sidebar) { ?>
-        <div class="side">
-          sidebar
-        </div>
-<?php
-}
-    ?>
-  </div>
-</div>
-  <!-- FOOTER -->
-
-    <?php include('inc/footer.php'); ?>
-
-  <!-- SCRIPTS-->
-  <!-- JavaScript -->
-
-
-</body>
-
-</html>
+  </head>
+  <body>
+    <!-- elm -->
+    <script src="<?php get_theme_url(); ?>/js/elm.js"></script>
+    <script>
+      var app = Elm.Main.fullscreen({"siteUrl" : '<?php get_site_url(); ?>'});
+    /*  app.ports.getSlug.subscribe(function (test) {
+        console.log(test);
+      setTimeout(function(){ app.ports.slug.send("<?php get_page_title(); ?>"); }, 0);
+    });*/
+      window.app = app;
+    </script>
+  </body>

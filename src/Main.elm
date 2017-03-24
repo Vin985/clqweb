@@ -16,15 +16,16 @@ import Material.Layout as Layout
 import Material.Color as Color
 import Material.Options as Options exposing (css, when, cs)
 import Http
-import Task
 import String
 import Navigation
 import Tabs exposing (view)
 import HtmlParser
-import RouteUrl as Routing
+import RouteUrl as Routing exposing (RouteUrlProgram, UrlChange)
+import RouteUrl.Builder as Builder exposing (Builder, builder, path, replacePath, prependToPath)
 import Messages exposing (..)
 import Types exposing (Tabs, BackendData, Languages, Page, defaultPage)
 import JsonDecoder
+import Json.Encode
 import Dict exposing (Dict)
 import Constants
 
@@ -71,16 +72,34 @@ model =
 -- appropriately.
 
 
+createUrl : String -> List ( String, String ) -> String
+createUrl baseUrl query =
+    case query of
+        [] ->
+            baseUrl
+
+        _ ->
+            let
+                queryPairs =
+                    query |> List.map (\( key, value ) -> Http.encodeUri key ++ "=" ++ Http.encodeUri value)
+
+                queryString =
+                    queryPairs |> String.join "&"
+            in
+                baseUrl ++ "?" ++ queryString
+
+
 getData : String -> UrlArgs -> Cmd Msg
 getData siteUrl args =
     let
-        args =
+        args_ =
             ( "id", "fetchdata" ) :: args
 
         url =
-            Http.url (siteUrl ++ "index.php") args
+            createUrl (siteUrl ++ "index.php") args_
     in
-        Task.perform FetchFail FetchSucceed (Http.get JsonDecoder.decodeData url)
+        Http.send RequestResult <|
+            Http.get url JsonDecoder.decodeData
 
 
 getPageData : String -> Model -> Cmd Msg
@@ -109,11 +128,6 @@ getInit siteUrl =
     getData siteUrl [ ( "page", "init" ) ]
 
 
-
-{- getInit : String -> String -> Decoder -> Cmd Msg -}
--- Boilerplate: Msg clause for internal Mdl messages.
-
-
 changePage : String -> Model -> Cmd Msg
 changePage url model =
     if url /= model.current && url /= "" then
@@ -126,8 +140,8 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         -- When the `Mdl` messages come through, update appropriately.
-        Mdl msg' ->
-            Material.update msg' model
+        Mdl msg_ ->
+            Material.update Mdl msg_ model
 
         Nop ->
             ( model, Cmd.none )
@@ -147,7 +161,7 @@ update msg model =
                , Cmd.batch [ Cmd.map TabMsg cmd', changePage url model ]
                )
         -}
-        FetchSucceed data ->
+        RequestResult (Ok data) ->
             let
                 langs =
                     case data.lang of
@@ -170,7 +184,7 @@ update msg model =
             in
                 ( { model | languages = langs, tabs = tabs_, page = data.page }, Cmd.none )
 
-        FetchFail err ->
+        RequestResult (Err err) ->
             let
                 one =
                     Debug.log "err" err
@@ -188,19 +202,20 @@ type alias Mdl =
 
 view : Model -> Html Msg
 view =
-    Html.Lazy.lazy view'
+    Html.Lazy.lazy view_
 
 
-view' : Model -> Html Msg
-view' model =
+view_ : Model -> Html Msg
+view_ model =
     Layout.render Mdl
         model.mdl
         [ Layout.fixedHeader
+        , Layout.scrolling
         ]
         { header = header model
         , drawer = []
         , tabs = ( [], [] )
-        , main = [ viewBody model.page ]
+        , main = [ viewBody model ]
         }
 
 
@@ -220,21 +235,13 @@ header model =
     ]
 
 
-boxed : List (Options.Property a b)
-boxed =
-    [ css "margin" "auto"
-    , css "padding-left" "8%"
-    , css "padding-right" "8%"
-    ]
-
-
 viewLanguages : Languages -> Html Msg
 viewLanguages langs =
     case langs.other of
         lang :: [] ->
-            Layout.link [ Layout.onClick (ChangeLanguage lang) ]
-                [ text
-                    <| getLanguageText lang Constants.langsText
+            Layout.link [ Options.onClick (ChangeLanguage lang) ]
+                [ text <|
+                    getLanguageText lang Constants.langsText
                 ]
 
         _ ->
@@ -246,18 +253,66 @@ getLanguageText key texts =
     Maybe.withDefault "Key not found" <| Dict.get key texts
 
 
-viewBody : Page -> Html Msg
-viewBody page =
+boxed : List (Options.Property a b)
+boxed =
+    [ css "margin" "auto"
+    , css "padding-left" "8%"
+    , css "padding-right" "8%"
+    ]
+
+
+viewBody : Model -> Html Msg
+viewBody model =
     let
+        page =
+            model.page
+
+        a =
+            Debug.log "page" page
+
+        subnav =
+            viewSubTabs model
+
         htmlContent =
             HtmlParser.parse page.content |> htmlNodesToElm
     in
         Options.div boxed
             [ grid [ noSpacing ]
                 [ cell [ size All 12 ]
-                    ([ h3 [] [ text page.title ] ] ++ htmlContent)
+                    [ grid [ noSpacing ]
+                        [ cell [ size All 12 ] [ Options.div [ cs "elm-subnav" ] subnav ] ]
+                    , grid []
+                        [ cell [ size All 12 ]
+                            ([ Options.styled h3
+                                [ css "margin-top" "0"
+                                , Options.attribute <|
+                                    Html.Attributes.property "innerHTML" (Json.Encode.string page.title)
+                                ]
+                                []
+                             ]
+                                ++ htmlContent
+                            )
+                        ]
+                    ]
                 ]
             ]
+
+
+viewSubTabs : Model -> List (Html Msg)
+viewSubTabs model =
+    let
+        children =
+            model.page.children
+
+        a =
+            Debug.log "children" children
+    in
+        case children of
+            Nothing ->
+                []
+
+            Just children ->
+                Tabs.viewSubTabs children model.current
 
 
 htmlNodesToElm : List HtmlParser.Node -> List (Html Msg)
@@ -276,10 +331,10 @@ htmlNodeToElm node =
                 attrs =
                     htmlAttributesToElm attributes
 
-                children' =
+                children_ =
                     htmlNodesToElm children
             in
-                Html.node element attrs children'
+                Html.node element attrs children_
 
         HtmlParser.Comment comment ->
             Html.text ""
@@ -299,6 +354,34 @@ urlOf model =
     "#" ++ model.current
 
 
+delta2builder : Model -> Model -> Maybe Builder
+delta2builder previousModel currentModel =
+    let
+        sitePath =
+            currentModel.siteUrl
+                |> Builder.fromUrl
+                |> Builder.path
+
+        a =
+            Debug.log "path" sitePath
+    in
+        if previousModel.current /= currentModel.current || previousModel.languages.current /= currentModel.languages.current then
+            builder
+                |> Builder.replacePath sitePath
+                |> Builder.appendToPath [ currentModel.current ]
+                |> Just
+        else
+            Nothing
+
+
+delta2url : Model -> Model -> Maybe UrlChange
+delta2url previous current =
+    Maybe.map Builder.toUrlChange <|
+        delta2builder previous current
+
+
+
+{--
 delta2url : Model -> Model -> Maybe Routing.UrlChange
 delta2url model1 model2 =
     if model1.current /= model2.current || model1.languages.current /= model2.languages.current then
@@ -308,10 +391,32 @@ delta2url model1 model2 =
             |> Just
     else
         Nothing
+--}
 
 
+url2messages : Navigation.Location -> List Msg
+url2messages location =
+    builder2messages (Builder.fromUrl location.href)
+
+
+builder2messages : Builder -> List Msg
+builder2messages builder =
+    case List.reverse <| Builder.path builder of
+        first :: rest ->
+            [ ChangePage first ]
+
+        _ ->
+            [ ChangePage "index" ]
+
+
+
+{--
 location2messages : Navigation.Location -> List Msg
 location2messages location =
+  let
+    one =
+        Debug.log "err" location
+  in
     [ case String.dropLeft 1 location.hash of
         "" ->
             ChangePage "index"
@@ -319,6 +424,7 @@ location2messages location =
         x ->
             ChangePage x
     ]
+--}
 
 
 type alias Flags =
@@ -336,11 +442,11 @@ init flags =
     )
 
 
-main : Program Flags
+main : RouteUrlProgram Flags Model Msg
 main =
     Routing.programWithFlags
         { delta2url = delta2url
-        , location2messages = location2messages
+        , location2messages = url2messages
         , init = init
         , view = view
         , subscriptions = Material.subscriptions Mdl
