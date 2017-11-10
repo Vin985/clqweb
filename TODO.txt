@@ -1,7 +1,6 @@
 Elm
 *** Menu mobile
 *** modules getSimple/Elm
-*** sous navigation par tabs
 
 
 Ajouter des photos!!!
@@ -19,5 +18,8 @@ Calendrier:
   up/down event
   changer langue
   choix heure
+  mise a jour date
+  tri dates...
+  Pas prendre en compte annee
 
 Nouvelles!

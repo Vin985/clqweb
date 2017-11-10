@@ -16,7 +16,8 @@ class Rates
 
     public function __construct()
     {
-        $this->cur_lang = return_i18n_languages()[0];
+        $l = return_i18n_languages();
+        $this->cur_lang = $l[0];
         if (!$this->checkPrerequisites()) {
             throw new \Exception(i18n_r('rates/MISSING_DIR'));
         }

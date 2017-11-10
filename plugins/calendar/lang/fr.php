@@ -68,7 +68,7 @@ $i18n = array(
 
     'CHANGE_LANGUAGE' => "Changer la langue",
     'CONFIRM_DEL_EVENT' => "\u00cates vous s\u00fbr de vouloir supprimer cette activit\u00e9?",
-    'EVENTS_LIST' => "Liste des activit&#233s de la saison:",
+    'EVENTS_LIST' => "Liste des activit\u00e9s de la saison:",
     'MISSING_DIR' => "L'un des repertoires ne peut pas être créé. SVP créez les"
     . "repertoires data/calendar et data/backups/calendar.",
     'PLACEHOLDER_CATEGORY_NAME' => 'Entrez une nouvelle catégorie...',

@@ -23,6 +23,7 @@ if (isset($_POST['date']) && isset($_POST['pos'])) {
 ?>
 <form action="load.php?id=calendar" class="schedule" method="POST">
     <input type="hidden" name="edit" value="<?php echo empty($_POST['date']) ? 'false' : 'true' ?>" />
+    <input type="hidden" name="olddate" value="<?php echo $_POST['date'] ?>" /> 
     <input type="hidden" name="pos" value="<?php echo isset($_POST['pos']) ? $_POST['pos'] : '' ?>" />
     <input type="hidden" name="action" value="save" />
     <p>

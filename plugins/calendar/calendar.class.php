@@ -11,7 +11,8 @@ class Calendar
 
     public function __construct()
     {
-        $this->cur_lang = return_i18n_languages()[0];
+        $l = return_i18n_languages();
+        $this->cur_lang = $l[0];
         if (!$this->checkPrerequisites()) {
             throw new \Exception(i18n_r('calendar/MISSING_DIR'));
         }
@@ -101,6 +102,7 @@ class Calendar
             $day = strtotime($_POST['date']);
         }
         $edit = $_POST['edit'];
+        $olddate = $_POST['olddate'];
 
         $event = new \StdClass();
         $event->description = $_POST['post-content'];
@@ -109,13 +111,14 @@ class Calendar
         $idx = 0;
         // Schedule is not empty
         if (!empty($this->schedule) && isset($this->schedule->dates)) {
-            $dates = $this->schedule->dates;
+            $dates = &$this->schedule->dates;
             // Iterate on dates
-            foreach ($dates as $date) {
+            foreach ($dates as &$date) {
                 // Dates should be ordered. If greater, we got too far
                 if ($day != '' && $date->date > $day) {
                     break;
                 }
+
                 // Date already exists
                 if ($date->date == $day) {
                     // If we edit, just change contents
@@ -126,6 +129,13 @@ class Calendar
                         $date->events[] = $event;
                     }
                     $found = true;
+                } elseif (!empty($olddate) && $date->date == $olddate && $olddate != $day) {
+                  // Date has been modified, delete old event
+                  if (count($date->events) == 1) {
+                      array_splice($this->schedule->dates, $idx, 1);
+                  } else {
+                      array_splice($date->events, $_POST['pos'], 1);
+                  }
                 }
                 $idx++;
             }

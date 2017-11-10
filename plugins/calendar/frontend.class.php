@@ -14,7 +14,7 @@ class CalendarFrontend
         }
         require_once(GSPLUGINPATH . 'calendar/calendar.class.php');
         $text = '<div class="schedule">';
-        $text .= '<div class="cal_title">'. i18n_r('calendar/EVENTS_LIST') .'</div>';
+        $text .= '<div class="cal_title">'. json_decode('"' . i18n_r('calendar/EVENTS_LIST'). '"') .'</div>';
         $text .= '<div class="spacer"></div>';
         $calendar = new Calendar();
         $schedule = $calendar->getSchedule();
@@ -37,7 +37,13 @@ class CalendarFrontend
         if ($date->date != '') {
             $day = strftime('%d', $date->date);
             $month = i18n_r('calendar/'. strftime('%B', $date->date));
-            $disp_date = $day . ' '  . $month;
+            if ($admin) {
+                $year = ' ' . strftime('%Y', $date->date);
+            } else {
+              $year = '';
+            }
+            $day = strftime('%d', $date->date);
+            $disp_date = $day . ' '  . $month . $year;
         }
         $text .= $disp_date;
         $text .= '</div>';
